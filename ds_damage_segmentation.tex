@@ -71,7 +71,7 @@
     
     \begin{document}
     
-    \title{Difference Subspaces \& U-Net for Multi-spectral Change \& Damage Segmentation Using Sentinel-2 Satellite Multi-band Imaging}
+    \title{Difference Subspaces in Change Segmentation: Sentinel-2 Satellite Damage Mapping}
     
     \author{\name \studentName \email \studentEmail \\
     \studentNumber
@@ -85,292 +85,397 @@
 \begin{abstract}
 \noindent
 Accurate and timely assessment of disaster damage from satellite imagery is
-crucial for emergency response and reconstruction. This work describes a
-two--phase pipeline that combines classical subspace--based change detection
-with supervised segmentation on multi--temporal Sentinel--2 data. In Phase~1
-we implement Difference Subspace (DS) change detection on the Onera Satellite
-Change Detection (OSCD) benchmark and on the unlabeled MultiSenGE dataset,
-comparing DS against classical unsupervised baselines: pixel differencing,
-change vector analysis (CVA), PCA--based difference (PCA--diff), Celik's
-local PCA+K--means method, and IR--MAD. Phase~1 produces continuous change
-maps and quantitative OSCD results (AUROC, F1, IoU) that serve as
-interpretable priors. In Phase~2 we train U--Net and ResNet--U--Net models
-for pixel--wise change segmentation on OSCD, using Sentinel--2 pre/post
-bands alone and in combination with DS and PCA--diff change maps as
-additional channels and fusion branches. On OSCD, raw Sentinel--2
-segmentation achieves the best IoU/F1, while DS/PCA--diff priors slightly
-improve AUROC and serve as valuable explanatory overlays. The code and
-design are structured so that the same architecture and priors can be
-transferred to damage--labeled datasets such as xBD, forming the basis of a
-future Phase~3 for building damage segmentation.
+crucial for emergency response and long--term reconstruction. This work
+describes a two--phase pipeline that combines classical subspace--based change
+detection with supervised segmentation on multi--temporal Sentinel--2 data. In
+Phase~1 we implement Difference Subspace (DS) change detection on the Onera
+Satellite Change Detection (OSCD) benchmark and on the unlabeled MultiSenGE
+Sentinel--2 dataset, comparing DS against classical unsupervised baselines:
+pixel differencing, change vector analysis (CVA), PCA--based difference
+(PCA--diff), Celik's local PCA+K--means method, and IR--MAD. Phase~1 produces
+continuous change maps and quantitative OSCD results (AUROC, F1, IoU) that
+serve as interpretable priors. In Phase~2 we train U--Net and ResNet--U--Net
+models for pixel--wise change segmentation on OSCD, using Sentinel--2 pre/post
+bands alone and in combination with DS and PCA--diff change maps as additional
+channels and fusion branches. On OSCD, raw Sentinel--2 segmentation achieves
+the best IoU/F1, while DS/PCA--diff priors slightly improve AUROC and serve as
+valuable explanatory overlays. The code and design are structured so that the
+same architecture and priors can be transferred to true damage--labeled
+datasets such as xBD, forming the basis of a future Phase~3 for building damage
+segmentation.
 \end{abstract}
 
 \section{Introduction}
 
-Remote sensing offers a global, repeatable view of urban and rural areas
-before and after disasters. Robust damage assessment from satellite imagery
+Remote sensing offers a global, repeatable view of urban and rural areas before
+and after disasters. However, robust damage assessment from satellite imagery
 remains challenging: annotations are expensive, radiometric conditions vary,
-and small changes in vegetation or illumination can confound simple
-difference metrics. At the same time, classical linear subspace methods
-provide a principled way to model spectral manifolds and their changes over
-time \cite{FukuiMaki2015,FukuiSubspace}.
+and small changes in vegetation or illumination can confound simple difference
+metrics. At the same time, classical linear subspace methods provide a
+principled way to model spectral manifolds and their changes over time
+\cite{FukuiMaki2015,FukuiSubspace}.
 
 The long--term goal of this project is label--efficient \emph{disaster damage
-segmentation} from multi--temporal satellite data. Instead of directly
+segmentation} from multi--temporal satellite data. Rather than directly
 training a deep model on a damage dataset, we decompose the problem into two
 complementary phases:
 
 \begin{itemize}
-  \item \textbf{Phase~1:} Unsupervised Difference--Subspace (DS) change
-  detection on Sentinel--2, evaluated on OSCD and visualized on MultiSenGE.
-  The output is a set of continuous change maps and classical baselines that
-  act as priors.
-  \item \textbf{Phase~2:} Supervised change segmentation on OSCD, using
-  Sentinel--2 pre/post bands and optionally DS/PCA--diff change maps as
-  extra channels or fusion branches.
+  \item \textbf{Phase 1:} Unsupervised difference--subspace (DS) change
+  detection on Sentinel--2, evaluated on the OSCD benchmark and visualized on
+  the MultiSenGE Sentinel--2 dataset. Phase~1 produces continuous change maps
+  and classical baselines that serve as priors.
+
+  \item \textbf{Phase 2:} Supervised change segmentation on OSCD, using
+  Sentinel--2 pre/post bands as inputs and incorporating DS/PCA--diff change
+  maps as additional channels or fusion branches. Phase~2 establishes strong
+  change--segmentation baselines and tests how much DS/PCA priors help.
 \end{itemize}
 
-Both phases are designed with forward compatibility: by changing only the
-dataset adapter and the number of output classes, the same pipeline can be
-ported to damage--labeled datasets such as xBD \cite{Gupta2019xBD} in a
-future Phase~3.
+Both phases are designed with \emph{forward compatibility}: by changing only
+the dataset adapter and the number of output classes, the same pipeline can be
+ported to damage--labeled datasets such as xBD~\cite{Gupta2019xBD} in a future
+Phase~3.
 
 \section{Related Work}
 
-\paragraph{Subspace methods and Difference Subspace.}
-Subspace methods such as mutual subspace methods and Grassmannian learning
-are widely used for image--set recognition and time--series modeling
-\cite{FukuiSubspace}. Fukui and Maki introduced the \emph{Difference
-Subspace} (DS) and its generalization for subspace--based methods
-\cite{FukuiMaki2015}, providing a framework to separate common and
-difference components between two subspaces. DS and higher--order variants
-\cite{SecondOrderDS} have been applied to anomaly detection, showing that
-difference subspaces can highlight subtle changes between signal subspaces.
-Here we apply DS in the spectral domain of Sentinel--2 images.
+\subsection{Subspace methods and difference subspace}
 
-\paragraph{Classical change detection.}
-Unsupervised change detection in satellite images includes pixel
-differencing, CVA, PCA--based methods, and multivariate approaches. PCA--diff
-performs dimensionality reduction on the difference image and uses the
-magnitude of projections onto leading principal components as change scores.
-Celik proposed a local PCA + K--means detector that operates on patches of
-the difference image \cite{Celik2009}, while IR--MAD iteratively reweights
-canonical variates between pre/post images. We implement these as Phase~1
-baselines.
+Subspace methods such as mutual subspace methods and related Grassmannian
+learning techniques are widely used for image set recognition and time--series
+modeling~\cite{FukuiSubspace}. Fukui and Maki introduced the
+\emph{Difference Subspace} (DS) and its generalization for subspace--based
+methods, providing a unified framework for separating common and
+difference components between two subspaces~\cite{FukuiMaki2015}. DS has been
+extended to time--series anomaly detection and higher--order
+variants~\cite{FukuiMaki2015,SecondOrderDS}, showing that difference
+subspaces can highlight subtle yet systematic changes between signal
+subspaces.
 
-\paragraph{Deep learning for change and damage.}
-CNNs have been successfully applied to multi--temporal change detection
-\cite{Daudt2018}. U--Net architectures \cite{Ronneberger2015} are standard
-for semantic segmentation, and ResNets provide strong backbones
-\cite{He2016ResNet}. For damage assessment, the xBD dataset introduced
-large--scale pre/post imagery with building damage labels
-\cite{Gupta2019xBD}. Our Phase~2 experiments deliberately use simple
-U--Net/ResNet baselines on OSCD binary change masks to isolate the effect of
-DS/PCA--diff priors rather than to compete directly with the latest
-specialized change--detection architectures. The added value of our work is
-to bring DS--style spectral priors and interpretability into a segmentation
-pipeline that can later be attached to damage--labeled datasets.
+In our work, DS is used in a purely spectral sense: each Sentinel--2 image is
+represented as a cloud of 13--dimensional spectral vectors, and DS is
+constructed between pre-- and post--event spectral subspaces. The resulting
+DS projection energy acts as an unsupervised change score; we also compare a
+cross--residual variant inspired by illumination--robust formulations.
+
+\subsection{Classical change detection in remote sensing}
+
+Unsupervised change detection in satellite images is a mature field. Simple
+methods such as pixel differencing and change vector analysis (CVA) compute
+L2 norms between pre/post spectra. PCA--based methods perform dimensionality
+reduction on the difference image and use the magnitude of projections onto
+leading principal components as change scores, often yielding strong
+performance with low computational cost. Celik proposed a local PCA + K--means
+change detector that partitions the difference image into local
+patches, learns a PCA basis per patch, and clusters projected feature vectors
+into change/no--change classes using K--means~\cite{Celik2009}. IR--MAD
+iteratively reweights canonical variates between pre and post images to
+produce robust multivariate difference maps.
+
+We implement all of these baselines in Phase~1 for comparison with DS.
+
+\subsection{Deep learning for change and damage detection}
+
+Convolutional neural networks (CNNs) have been successfully applied to
+multi--temporal image change detection~\cite{Daudt2018}. U--Net
+architectures~\cite{Ronneberger2015} are widely adopted for semantic
+segmentation, while deep residual networks (ResNets)~\cite{He2016ResNet}
+provide strong backbones. For damage assessment, the xBD dataset introduced a
+large--scale benchmark of pre/post imagery with multi--level building damage
+labels~\cite{Gupta2019xBD}, enabling supervised training of damage
+segmentation networks.
+
+Our Phase~2 segmentation experiments are intentionally conservative: we use
+standard U--Net and ResNet--U--Net architectures on OSCD binary change masks
+to build a clear baseline, and we investigate whether classical DS/PCA priors
+add value beyond raw Sentinel--2 bands.
 
 \section{Datasets and Preprocessing}
 
-\paragraph{OSCD.}
-The Onera Satellite Change Detection (OSCD) dataset consists of 24
-Sentinel--2 tiles with pre/post images (13 spectral bands) and binary change
-masks at multiple resolutions \cite{Daudt2018}. We treat each city as a tile
-with tensors \(X_{\text{pre}},X_{\text{post}} \in \mathbb{R}^{13 \times H
-\times W}\) and a binary mask \(Y \in \{0,1\}^{1 \times H \times W}\). We
-adopt the official split into 14 train and 10 test cities, and we choose a
-small subset of train cities (e.g.\ \emph{abudhabi, aguasclaras, beihai})
-for validation. For all tiles, we build a valid--pixel mask based on a
-NODATA value and apply global per--band z--score normalization using
-statistics computed over OSCD training data.
+\subsection{OSCD: Onera Satellite Change Detection}
 
-\paragraph{MultiSenGE.}
-The MultiSenGE dataset provides about 8k unlabeled multi--temporal
-Sentinel--2 patches (256\(\times\)256) over the Grand--Est region. In
-Phase~1 we use the Sentinel--2 L2A bands as an unlabeled testbed: patches
-are grouped by tile and spatial index, and date--sorted pairs (e.g.\ earliest
-vs latest) are selected for DS visualization. Band statistics from OSCD are
-reindexed to the MultiSenGE band order for consistent normalization.
+The Onera Satellite Change Detection (OSCD) dataset consists of 24 Sentinel--2
+tiles with pre-- and post--event images (13 spectral bands) and binary change
+masks at \SI{10}{\metre}/\SI{20}{\metre}/\SI{60}{\metre}
+resolutions~\cite{Daudt2018}. Following standard practice, we treat each city
+as a tile with tensors
+\(
+X_{\text{pre}}, X_{\text{post}} \in \mathbb{R}^{13 \times H \times W}
+\)
+and a binary change mask
+\(Y \in \{0,1\}^{1 \times H \times W}\).
+
+We adopt the official train/test split provided with the dataset (14 train
+cities, 10 test cities) and choose a subset of train cities as validation. For
+all tiles, we build a valid--pixel mask based on a configurable NODATA value
+and a minimum number of valid bands, and we apply global per--band z--score
+normalization using statistics computed over the OSCD training set.
+
+\subsection{MultiSenGE Sentinel--2 dataset}
+
+The MultiSenGE dataset provides \(\sim\!8000\) unlabeled
+multi--temporal Sentinel--2 patches (256\(\times\)256) over the Grand--Est
+region. In Phase~1 we use only the Sentinel--2 L2A bands as an unlabeled
+testbed: patches are grouped by tile and spatial index, and date--sorted
+pairs (e.g.\ earliest vs.\ latest) are selected for DS visualization. Band
+statistics from OSCD are reindexed to the MultiSenGE band order so that
+normalization is consistent across datasets.
 
 \section{Phase 1: Difference--Subspace Change Detection}
 
-For each OSCD tile we assemble normalized spectral matrices
-\(X_1,X_2 \in \mathbb{R}^{d \times n}\) (pre/post, \(d=13\) bands). We fit
-PCA bases \(\Phi,\Psi \in \mathbb{R}^{d \times r}\) with either fixed rank
-or a variance threshold. We implement two DS variants following
-\cite{FukuiMaki2015}: a residual--stacked construction using residual
-projectors \(R_\Phi = I - \Phi\Phi^\top\), \(R_\Psi = I - \Psi\Psi^\top\),
-and an eigen--based construction from \(G = \Phi\Phi^\top + \Psi\Psi^\top\).
-On OSCD, both variants yield almost identical scores, so we use the
-residual--stacked DS as default.
+\subsection{Difference subspace construction}
 
-Given a pixel pair \((x_1,x_2)\) and DS basis \(D\), we use the projection
-energy
-\[
-p_{\text{DS}} = \lVert D^\top (x_2 - x_1) \rVert_2^2
-\]
-as the main DS change score. We compare DS against pixel diff/CVA,
-PCA--diff, Celik PCA+K--means \cite{Celik2009}, and IR--MAD. Scores are
-normalized per tile and thresholded via unsupervised Otsu or a
-train--calibrated global threshold. We evaluate AUROC on continuous scores
-and IoU/F1 on binary masks.
+For a given OSCD tile, we assemble normalized spectral matrices
+\(
+X_1, X_2 \in \mathbb{R}^{d \times n}
+\)
+from pre/post images, where \(d=13\) bands and \(n\) is the number of valid
+pixels. We fit rank--\(r\) PCA bases using a scikit--learn style PCA:
 
-On the OSCD test split, PCA--diff achieves the highest AUROC (\(\sim 0.81\)),
+\begin{align}
+\Phi &= \text{PCA}(X_1) \in \mathbb{R}^{d \times r},\\
+\Psi &= \text{PCA}(X_2) \in \mathbb{R}^{d \times r},
+\end{align}
+with either fixed rank or a variance threshold (e.g.\ \(95\%\)).
+
+We implement two DS variants:
+\begin{itemize}
+  \item \textbf{Residual--stacked DS} (default). Let \(P_\Phi = \Phi \Phi^\top\)
+  and \(P_\Psi = \Psi \Psi^\top\). The residual projectors
+  \(R_\Phi = I - P_\Phi\), \(R_\Psi = I - P_\Psi\) isolate components outside
+  each subspace. The difference subspace basis \(D\) is formed by
+  orthonormalizing the concatenation of residual projections:
+  \begin{equation}
+      D = \operatorname{orth}\left(
+      \left[ R_\Psi \Phi,\, R_\Phi \Psi \right]
+      \right).
+  \end{equation}
+
+  \item \textbf{Eigen--based DS}. Following the generalized DS formulation
+  in~\cite{FukuiMaki2015}, we construct
+  \(G = P_\Phi + P_\Psi\) and compute its eigenpairs. Eigenvectors associated
+  with eigenvalues in \((\varepsilon, 1-\varepsilon)\) span the difference
+  subspace, while values near 2 correspond to the common subspace.
+\end{itemize}
+
+Empirically, on OSCD both variants produce almost identical scores and
+evaluation metrics.
+
+\subsection{DS scores and classical baselines}
+
+Given a pixel pair \((x_1,x_2)\) and basis \(D\), we define two DS scores:
+\begin{align}
+p_{\text{DS}} &= \lVert D^\top (x_2 - x_1) \rVert_2^2,\\
+r_{\text{cross}} &= \lVert R_\Psi x_2 \rVert_2^2 + \lVert R_\Phi x_1 \rVert_2^2.
+\end{align}
+Phase~1 primarily uses \(p_{\text{DS}}\) as the DS projection score.
+
+We compare DS against:
+\begin{itemize}
+  \item \textbf{Pixel diff / CVA:} \(s_{\text{pix}} = \lVert x_2 - x_1
+  \rVert_2\).
+  \item \textbf{PCA--diff:} PCA on the difference image \(X_2 - X_1\), using
+  the magnitudes of projections onto leading PCs as scores.
+  \item \textbf{Celik PCA+K--means:} local PCA on difference--image patches and
+  K--means clustering into change/no--change
+  classes~\cite{Celik2009}.
+  \item \textbf{IR--MAD:} iteratively reweighted multivariate alteration
+  detection, implemented as a stretch baseline.
+\end{itemize}
+
+Scores are normalized per tile and converted to binary masks using either
+unsupervised Otsu thresholds (per tile) or a train--calibrated global
+threshold. We evaluate AUROC on continuous scores and IoU/F1 on binary masks
+for train/val/test splits.
+
+\subsection{Phase 1 results}
+
+On the OSCD test split, PCA--diff achieves the highest AUROC (around 0.81),
 with F1/IoU slightly above DS and pixel diff. DS projection is competitive
 (AUROC \(\sim 0.75\)) and often produces cleaner, less noisy change maps than
-pixel differencing, while the cross--residual variant and IR--MAD are
-weaker. Celik's method performs reasonably but is heavier computationally.
-Qualitative OSCD figures show that DS/PCA--diff highlight many of the same
-regions as the ground truth but also respond to subtle spectral changes that
-are not labeled as change. On MultiSenGE, DS maps reveal diverse spectral
-change patterns without labels.
+direct pixel differencing, while the cross--residual variant and IR--MAD are
+weaker. Celik's method performs reasonably but is computationally heavier due
+to local PCA and clustering.
 
-The key outcome of Phase~1 is a set of interpretable, unsupervised change
-maps (DS, PCA--diff, pixel diff, etc.) and a robust evaluation pipeline that
-we reuse in Phase~2 as priors and analysis tools.
+Qualitative OSCD figures show that DS and PCA--diff highlight many of the
+same regions as the ground truth but also respond to subtle spectral changes
+(e.g.\ vegetation, radiometric shifts) not labeled as ``change'' in OSCD. On
+MultiSenGE, DS maps provide a broad picture of spectral change across diverse
+scenes without any labels.
+
+The key outcome of Phase~1 is thus a set of interpretable, unsupervised
+change maps (DS, PCA--diff, pixel diff, etc.) on OSCD and MultiSenGE, together
+with a robust evaluation pipeline.
 
 \section{Phase 2: OSCD Change Segmentation with DS/PCA Priors}
 
-\paragraph{Models and inputs.}
+\subsection{Segmentation models}
+
 Phase~2 introduces supervised change segmentation on OSCD, using the Phase~1
-change maps as optional priors. The core baseline is a 2D U--Net
-\cite{Ronneberger2015} with four encoder/decoder levels and a final
-\(1\times 1\) convolution producing logits in \(\mathbb{R}^{1 \times H
-\times W}\). We also implement a stronger U--Net with a ResNet--34 encoder
-\cite{He2016ResNet}. Input feature configurations include: raw pre+post
-bands (26 channels), raw+DS, raw+PCA--diff, raw+DS+PCA, and priors--only
-(DS+PCA). In addition to naive concatenation, we design a small
-\emph{PriorsFusionUNet} where raw bands and priors are first processed by
-separate \(1\times 1\) convolutions before fusion.
+change maps as priors.
 
-\paragraph{Training and evaluation.}
-We extract overlapping 256\(\times\)256 patches from OSCD tiles, apply random
-flips and 90° rotations, and train with a combination of
-BCEWithLogits and soft Dice loss on valid pixels. We use AdamW with a cosine
-learning rate schedule over 50 epochs. We report mean IoU, mean F1, and
-AUROC over the OSCD test split, and we generate combined figures showing
-pre/post RGB, ground truth, DS/PCA--diff maps, prediction probabilities, and
-binary segmentation masks.
+The core baseline is a 2D U--Net~\cite{Ronneberger2015} with 4 encoder/decoder
+levels (channels 64--128--256--512) and a final \(1\times 1\) convolution to
+produce logits in \(\mathbb{R}^{1 \times H \times W}\). We also implement a
+stronger U--Net with a ResNet--34 encoder~\cite{He2016ResNet} and a custom
+decoder.
 
-\paragraph{Results.}
-Raw Sentinel--2 segmentation is a strong baseline: a plain U--Net with raw
-pre/post bands reaches mean IoU \(\approx 0.23\), mean F1 \(\approx 0.33\),
-and AUROC \(\approx 0.87\). A ResNet--U--Net with raw bands achieves similar
-IoU/F1. Adding DS or PCA--diff as extra channels does not improve IoU/F1 and
-often slightly degrades them; combined DS+PCA priors behave similarly.
-PriorsFusionUNet improves over naive concatenation in F1 and AUROC but still
-does not surpass the best raw--only models in IoU/F1. In several
-configurations AUROC increases modestly when priors are included, suggesting
-that priors sharpen ranking but introduce more false positives at a fixed
-threshold. Table~\ref{tab:oscd-seg-results} summarizes representative OSCD
-test metrics (approximate) for key configurations.
+Input feature configurations include:
+\begin{itemize}
+  \item \textbf{Raw only}: 26 channels, concatenating normalized pre and post
+  Sentinel--2 bands.
+  \item \textbf{Raw + DS}: 26 raw channels plus DS projection score (27).
+  \item \textbf{Raw + PCA}: 26 raw channels plus PCA--diff score (27).
+  \item \textbf{Raw + DS + PCA}: 26 raw channels plus both priors (28).
+  \item \textbf{Priors only}: DS and PCA--diff maps without raw bands (for
+  ablation).
+\end{itemize}
 
-\begin{table}[t]
-  \centering
-  \caption{Approximate OSCD test--split segmentation results for key
-    configurations. Raw Sentinel--2 segmentation (U--Net/ResNet) achieves the
-    best IoU/F1; priors improve AUROC slightly but tend to reduce IoU/F1.}
-  \label{tab:oscd-seg-results}
-  \begin{tabular}{lccc}
-    \hline
-    Model / input                    & mean IoU & mean F1 & AUROC \\
-    \hline
-    U--Net, raw pre+post             & 0.229 & 0.334 & 0.865 \\
-    U--Net, raw + DS + PCA--diff     & 0.205 & 0.300 & 0.828 \\
-    ResNet--U--Net, raw pre+post     & 0.230 & 0.336 & 0.826 \\
-    ResNet--U--Net, raw + DS + PCA   & 0.206 & 0.305 & 0.845 \\
-    PriorsFusionUNet, raw + DS + PCA & 0.207 & 0.311 & 0.854 \\
-    \hline
-  \end{tabular}
-\end{table}
+In addition to naive concatenation, we design a small
+\emph{PriorsFusionUNet}, where raw bands and priors are first processed by
+separate \(1\times 1\) convolutions and then fused channel--wise before
+entering the U--Net. This allows priors to have their own feature branches.
 
-Per--tile visualizations confirm that DS/PCA--diff often highlight broader
-regions of spectral change than the binary OSCD masks, including vegetation
-and radiometric artefacts. Networks that consume priors tend to be more
-sensitive to these regions, which is helpful for weak changes but harmful for
-strict evaluation against OSCD labels.
+\subsection{Training and evaluation protocol}
 
-\section{Discussion and Conclusion}
+We extract overlapping 256\(\times\)256 patches from OSCD tiles with a
+configurable overlap (e.g.\ 64 pixels), and we apply random flips and 90°
+rotations to both images and masks. Training uses a combination of
+BCEWithLogits and soft Dice loss on valid pixels, with AdamW optimizer and a
+cosine learning rate schedule over 50 epochs.
 
-The two--phase pipeline provides a coherent story. Phase~1 shows that DS and
-PCA--diff are strong, interpretable unsupervised change detectors on
-Sentinel--2: PCA--diff has the best AUROC on OSCD among classical methods,
-while DS is competitive and often cleaner than pixel diff. Phase~2
-demonstrates that, on OSCD, a well--trained segmentation network on raw
-Sentinel--2 data is hard to beat in IoU/F1 when evaluated strictly against
-the provided change masks.
+We report mean IoU, mean F1, and AUROC over the OSCD test split, averaging
+over all test tiles. For qualitative analysis, Phase~2 includes visualization
+scripts that overlay pre/post RGB, ground truth, DS/PCA--diff maps, prediction
+probabilities, and binary segmentation masks in combined multi--panel figures.
 
-Even when priors do not improve IoU/F1, they remain useful in two ways.
-First, they improve \textbf{explainability}: combined DS/PCA--diff and
-segmentation figures reveal where the network follows or ignores unsupervised
-spectral change signals, which matters when labels are noisy or incomplete.
-Second, they offer \textbf{transferability}: the DS machinery is
-dataset--agnostic and can be recomputed on future damage datasets such as xBD
-\cite{Gupta2019xBD} and used as priors, pseudo--labels, or loss weights in a
-Phase~3 damage--segmentation pipeline.
+\subsection{Phase 2 results}
 
-Future work includes longer training and multiple seeds, ImageNet
-pretraining for the ResNet encoder, pseudo--label pretraining on MultiSenGE
-using DS/PCA--diff targets, alternative uses of priors (e.g.\ loss weighting
-on DS--strong regions), and extending from binary change masks (OSCD) to
-multi--class damage levels on xBD/xBD--S12 via a dataset adapter and
-multi--class output heads.
+On OSCD, raw Sentinel--2 segmentation is a strong baseline:
+\begin{itemize}
+  \item A plain U--Net with raw pre/post bands achieves mean IoU
+  \(\approx 0.23\), mean F1 \(\approx 0.33\), and AUROC \(\approx 0.87\) on the
+  test split.
+  \item A ResNet--U--Net with raw bands yields similar IoU/F1 and slightly
+  different AUROC, depending on hyperparameters.
+\end{itemize}
 
-Overall, the project moves from classical difference subspaces and PCA--based
-change detection to supervised change segmentation, with DS and PCA--diff
-maps reused as priors and explanatory tools. The codebase and experimental
-design are ready to be extended to true damage mapping in future phases.
+When DS/PCA--diff change maps are added as extra channels:
+\begin{itemize}
+  \item Concatenating DS or PCA--diff individually does not improve IoU/F1 and
+  often slightly degrades them; combined DS+PCA priors show similar trends.
+  \item PriorsFusionUNet improves over naive concatenation in terms of F1 and
+  AUROC but still does not surpass the best raw--only models in IoU/F1.
+  \item In several configurations, AUROC increases modestly when priors are
+  included, suggesting that priors sharpen ranking but also introduce more
+  false positives at a fixed threshold.
+\end{itemize}
+
+Per--tile visualizations confirm this picture: DS and PCA--diff maps often
+highlight broader regions of spectral change than the binary OSCD masks,
+including radiometric artefacts and subtle vegetation changes. Networks that
+consume priors tend to be more sensitive to these regions, which can be
+beneficial for detecting weak changes but harmful for strict IoU/F1 against
+the OSCD labels.
+
+\section{Discussion and Future Directions}
+
+The two--phase pipeline provides a coherent story:
+
+\begin{enumerate}
+  \item Phase~1 shows that DS and PCA--diff are strong, interpretable
+  unsupervised change detectors on Sentinel--2. PCA--diff has the best AUROC
+  on OSCD among classical methods, while DS is competitive and often cleaner
+  than raw pixel diff.
+  \item Phase~2 demonstrates that, at least on OSCD, a well--trained
+  segmentation network on raw Sentinel--2 data is hard to beat in IoU/F1 when
+  evaluated strictly against the provided change masks.
+\end{enumerate}
+
+However, DS/PCA--diff priors remain valuable in two key ways:
+
+\begin{itemize}
+  \item \textbf{Explainability.} Combined figures with DS/PCA--diff maps,
+  segmentation probabilities, and ground truth help diagnose where the network
+  ``follows'' or ``ignores'' unsupervised spectral change signals. This is
+  important when moving to real disaster scenarios where labels may be noisy
+  or incomplete.
+  \item \textbf{Transferability.} The DS machinery is dataset--agnostic. It can
+  be recomputed on future damage datasets (e.g.\ xBD~\cite{Gupta2019xBD}) and
+  used as priors, pseudo--labels, or loss weighting factors in a Phase~3
+  damage--segmentation pipeline.
+\end{itemize}
+
+Several natural extensions are left for future work:
+
+\begin{itemize}
+  \item Longer training and multiple random seeds to assess variance.
+  \item ImageNet pretraining for the ResNet encoder and partial freezing of
+  early layers.
+  \item Self--supervised or pseudo--label pretraining on MultiSenGE using DS
+  or PCA--diff maps as targets.
+  \item Alternative uses of priors, such as loss weighting on DS--strong
+  regions, or injecting prior features at deeper encoder layers.
+  \item Extension from binary change masks (OSCD) to multi--class damage
+  levels on xBD or xBD--S12, via a dataset adapter and multi--class output
+  heads.
+\end{itemize}
+
+\section{Conclusion}
+
+We have described a two--phase Sentinel--2 pipeline that moves from classical
+difference subspaces and PCA--based change detection to supervised change
+segmentation on OSCD, with DS and PCA--diff maps reused as priors and
+explanatory tools. Phase~1 establishes that subspace--based change scores
+provide competitive unsupervised performance and interpretable change maps
+on both OSCD and MultiSenGE. Phase~2 builds robust U--Net and ResNet--U--Net
+segmentation baselines, showing that raw Sentinel--2 inputs are sufficient to
+achieve strong IoU/F1 on OSCD, while DS/PCA--diff priors mainly contribute to
+AUROC and interpretability.
+
+The codebase and experimental design are structured so that, in a future
+Phase~3, the same architecture and DS machinery can be applied to
+damage--labeled datasets such as xBD, ultimately targeting fast, interpretable,
+and label--efficient damage assessment in real disaster scenarios.
 
 \begin{thebibliography}{99}
 
 \bibitem{FukuiMaki2015}
-K.~Fukui and A.~Maki.
-\newblock Difference subspace and its generalization for subspace-based
-methods.
-\newblock {\em IEEE Transactions on Pattern Analysis and Machine
-Intelligence}, 37(11):2164--2177, 2015.
+K.~Fukui and A.~Maki, ``Difference subspace and its generalization for
+subspace-based methods,'' \emph{IEEE Transactions on Pattern Analysis and
+Machine Intelligence}, vol.~37, no.~11, pp.~2164--2177, 2015.
 
 \bibitem{FukuiSubspace}
-K.~Fukui.
-\newblock Subspace methods.
-\newblock Technical report, University of Tsukuba.
-\newblock Overview/tutorial document on mutual subspace methods and related
-approaches.
+K.~Fukui, ``Subspace methods,'' Tech.\ Rep., University of Tsukuba.
+(Overview/tutorial document on mutual subspace methods and related
+approaches.)
 
 \bibitem{SecondOrderDS}
-K.~Fukui and Y.~Kobayashi.
-\newblock Second-order difference subspace.
-\newblock In {\em Proc.\ of a computer vision / pattern recognition workshop}.
-\newblock Higher-order extension of difference subspace.
+K.~Fukui and Y.~Kobayashi, ``Second-order difference subspace,'' in
+\emph{Proc.\ of a computer vision / pattern recognition workshop},
+year omitted here. (Higher-order extension of difference subspace.)
 
 \bibitem{Celik2009}
-T.~Celik.
-\newblock Unsupervised change detection in satellite images using principal
-component analysis and $k$-means clustering.
-\newblock {\em IEEE Geoscience and Remote Sensing Letters}, 6(4):772--776,
-2009.
+T.~Celik, ``Unsupervised change detection in satellite images using principal
+component analysis and $k$-means clustering,'' \emph{IEEE Geoscience and
+Remote Sensing Letters}, vol.~6, no.~4, pp.~772--776, 2009.
 
 \bibitem{Daudt2018}
-A.~Daudt, B.~Le~Saux, and A.~Boulch.
-\newblock Fully convolutional siamese networks for change detection.
-\newblock In {\em Proc.\ ICIP}, 2018.
-\newblock Introduces CNN-based change detection and the OSCD dataset.
+A.~Daudt, B.~Le~Saux, and A.~Boulch, ``Fully convolutional siamese networks
+for change detection,'' in \emph{Proc.\ ICIP}, 2018. (Introduces CNN-based
+change detection and the OSCD Sentinel-2 dataset.)
 
 \bibitem{Ronneberger2015}
-O.~Ronneberger, P.~Fischer, and T.~Brox.
-\newblock U-Net: Convolutional networks for biomedical image segmentation.
-\newblock In {\em Proc.\ MICCAI}, 2015.
+O.~Ronneberger, P.~Fischer, and T.~Brox, ``U-Net: Convolutional networks for
+biomedical image segmentation,'' in \emph{Proc.\ MICCAI}, 2015.
 
 \bibitem{He2016ResNet}
-K.~He, X.~Zhang, S.~Ren, and J.~Sun.
-\newblock Deep residual learning for image recognition.
-\newblock In {\em Proc.\ CVPR}, 2016.
+K.~He, X.~Zhang, S.~Ren, and J.~Sun, ``Deep residual learning for image
+recognition,'' in \emph{Proc.\ CVPR}, 2016.
 
 \bibitem{Gupta2019xBD}
-R.~Gupta et~al.
-\newblock xBD: A dataset for assessing building damage from satellite imagery.
-\newblock In {\em Proc.\ CVPR Workshops}, 2019.
+R.~Gupta \emph{et al.}, ``xBD: A dataset for assessing building damage from
+satellite imagery,'' in \emph{Proc.\ CVPR Workshops}, 2019.
 
 \end{thebibliography}
 
