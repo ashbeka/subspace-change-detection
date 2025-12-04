@@ -74,20 +74,24 @@ Key documentation:
 
 ## 2. Installation
 
-Requirements: Python ≥3.9 and a recent PyTorch + CUDA stack.
+Use a single virtualenv at the repo root. Requirements: Python ≥3.9 and a recent PyTorch + CUDA stack.
 
 From the repo root:
 
 ```bash
-python -m venv .venv_phase2          # or conda create ...
-source .venv_phase2/bin/activate     # Windows: .venv_phase2\Scripts\activate
+# create once
+python -m venv .venv
 
+# activate
+source .venv/bin/activate          # bash
+# or on Windows PowerShell: .\.venv\Scripts\Activate.ps1
+
+# install both phase dependency sets into this env
 pip install -r phase1/requirements.txt
 pip install -r phase2/requirements.txt
 ```
 
-The `requirements.txt` files include `rasterio`, `torch`, `torchvision`,
-`numpy`, `matplotlib`, etc.
+If you had other venvs (e.g., `.venv_phase2`), you can remove them; only `.venv` is needed. The requirements files include `rasterio`, `torch`, `torchvision`, `numpy`, `matplotlib`, etc.
 
 Data:
 
