@@ -6,7 +6,8 @@ import numpy as np
 import rasterio
 
 
-PHASE1_ROOT = Path(__file__).resolve().parent
+# Script lives in phase1/scripts; PHASE1_ROOT is the repo's phase1 dir.
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
 MULTISENGE_ROOT = PHASE1_ROOT / "data" / "raw" / "MultiSenGE" / "s2"
 MULTISENGE_VIZ_ROOT = PHASE1_ROOT / "outputs" / "multisenge_viz"
 
@@ -92,4 +93,3 @@ if __name__ == "__main__":
     out = PHASE1_ROOT / "docs" / "figs" / "multisenge_overview_6x3.png"
     make_multisenge_overview_grid(6, out)
     print(f"Saved MultiSenGE overview grid to {out}")
-

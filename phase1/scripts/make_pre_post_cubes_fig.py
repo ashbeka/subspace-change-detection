@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Polygon
 
 
-PHASE1_ROOT = Path(__file__).resolve().parent
+# Script lives in phase1/scripts; PHASE1_ROOT should be phase1/.
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
 
 
 def draw_cube(ax, x, y, width, height, depth, face_color, edge_color, label):
@@ -108,4 +109,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

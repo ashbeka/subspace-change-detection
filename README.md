@@ -147,7 +147,8 @@ From `phase1/`:
 ```bash
 python -m eval.run_multisenge_viz \
   --config configs/multisenge_default.yaml \
-  --output_dir outputs/multisenge_ds_viz
+  --multisenge_root data/raw/MultiSenGE/s2 \
+  --output_dir outputs/multisenge_viz
 ```
 
 This produces DS projection maps (PNG + GeoTIFF) for many S2
@@ -277,7 +278,7 @@ python -m eval.evaluate_oscd_seg \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw/best.ckpt \
-  --output_dir outputs/oscd_seg_E0_raw_eval
+  --output_dir outputs/oscd_seg_E0_raw/eval
 ```
 
 Outputs:
@@ -300,14 +301,14 @@ python -m viz.viz_seg_predictions \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_seg_figs_E0_resnet \
+  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_seg \
   --cities test
 ```
 
 Produces per‑city PNGs such as:
 
 ```text
-phase2/outputs/oscd_seg_figs_E0_resnet/chongqing_seg_summary.png
+phase2/outputs/oscd_seg_E0_raw_resnet/figs_seg/chongqing_seg_summary.png
 ```
 
 Tracked preview:
@@ -327,7 +328,7 @@ python -m viz.viz_oscd_combined \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_combined_resnet \
+  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_combined \
   --cities test
 ```
 
@@ -340,12 +341,12 @@ python -m viz.viz_oscd_combined \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt \
-  --output_dir outputs/oscd_combined_fusion \
+  --output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined \
   --cities test
 ```
 
 Each combined figure (e.g.
-`phase2/outputs/oscd_combined_resnet/brasilia_combined_summary.png`)
+`phase2/outputs/oscd_seg_E0_raw_resnet/figs_combined/brasilia_combined_summary.png`)
 shows:
 
 - Row 1: Pre RGB, Post RGB, GT overlay.

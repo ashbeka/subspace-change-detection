@@ -148,7 +148,7 @@ python -m eval.evaluate_oscd_seg \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw/best.ckpt \
-  --output_dir outputs/oscd_seg_E0_raw_eval
+  --output_dir outputs/oscd_seg_E0_raw/eval
 ```
 
 Same pattern for other runs; just swap config, checkpoint, and output
@@ -157,11 +157,11 @@ dir:
 - ResNet raw‑only:
   - `--config configs/oscd_seg_baseline_resnet.yaml`
   - `--checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt`
-  - `--output_dir outputs/oscd_seg_E0_raw_resnet_eval`
+  - `--output_dir outputs/oscd_seg_E0_raw_resnet/eval`
 - PriorsFusionUNet:
   - `--config configs/oscd_seg_priors_fusion.yaml`
   - `--checkpoint outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt`
-  - `--output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion_eval`
+  - `--output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion/eval`
 
 Outputs include:
 
@@ -187,12 +187,12 @@ python -m viz.viz_seg_predictions \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_seg_figs_E0_resnet \
+  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_seg \
   --cities test
 ```
 
 This produces per‑city figures like
-`outputs/oscd_seg_figs_E0_resnet/chongqing_seg_summary.png` showing:
+`outputs/oscd_seg_E0_raw_resnet/figs_seg/chongqing_seg_summary.png` showing:
 
 - Pre RGB, Post RGB, GT overlay.
 - Segmentation probability map and binary mask.
@@ -211,7 +211,7 @@ python -m viz.viz_oscd_combined \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_combined_resnet \
+  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_combined \
   --cities test
 ```
 
@@ -223,12 +223,12 @@ python -m viz.viz_oscd_combined \
   --oscd_root ../phase1/data/raw/OSCD \
   --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
   --checkpoint outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt \
-  --output_dir outputs/oscd_combined_fusion \
+  --output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined \
   --cities test
 ```
 
 Each per‑city PNG (e.g.
-`outputs/oscd_combined_resnet/brasilia_combined_summary.png`) shows:
+`outputs/oscd_seg_E0_raw_resnet/figs_combined/brasilia_combined_summary.png`) shows:
 
 - Row 1: Pre RGB, Post RGB, GT overlay.
 - Row 2: DS projection, PCA‑diff, segmentation probability.

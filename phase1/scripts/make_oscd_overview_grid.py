@@ -6,11 +6,12 @@ import numpy as np
 import rasterio
 
 
-REPO_ROOT = Path(__file__).resolve().parent
+# Script lives in phase1/scripts; jump to phase1 root for data paths.
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
 
-OSCD_IMAGES_ROOT = REPO_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__images"
-OSCD_TRAIN_LABELS_ROOT = REPO_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__train_labels"
-OSCD_TEST_LABELS_ROOT = REPO_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__test_labels"
+OSCD_IMAGES_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__images"
+OSCD_TRAIN_LABELS_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__train_labels"
+OSCD_TEST_LABELS_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__test_labels"
 
 
 def _load_rgb(city: str, which: str):
@@ -134,12 +135,12 @@ if __name__ == "__main__":
     all_cities = _load_all_cities()
 
     # Full 24x3 grid
-    out_full = REPO_ROOT / "docs" / "figs" / "oscd_24x3_overview.png"
+    out_full = PHASE1_ROOT / "docs" / "figs" / "oscd_24x3_overview.png"
     make_oscd_overview_grid(all_cities, out_full)
     print(f"Saved OSCD overview grid to {out_full}")
 
     # Last 5 cities only
     last5 = all_cities[-5:]
-    out_last5 = REPO_ROOT / "docs" / "figs" / "oscd_last5_overview.png"
+    out_last5 = PHASE1_ROOT / "docs" / "figs" / "oscd_last5_overview.png"
     make_oscd_overview_grid(last5, out_last5)
     print(f"Saved OSCD last-5 overview grid to {out_last5}")

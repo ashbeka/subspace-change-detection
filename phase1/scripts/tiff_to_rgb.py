@@ -1,9 +1,13 @@
-import rasterio
-import numpy as np
-import matplotlib.pyplot as plt
+import argparse
+from pathlib import Path
 
-def show_rgb(path, title):
-    # MultiSenGE S2 band order: [B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]
+import matplotlib.pyplot as plt
+import numpy as np
+import rasterio
+
+
+def show_rgb(path: Path, title: str):
+    """Display a MultiSenGE S2 patch as RGB (B04,B03,B02) with simple contrast stretch."""
     with rasterio.open(path) as src:
         b2 = src.read(1)   # B02
         b3 = src.read(2)   # B03
@@ -14,11 +18,21 @@ def show_rgb(path, title):
     lo, hi = np.percentile(rgb[~np.isnan(rgb)], (2, 98))
     rgb = np.clip((rgb - lo) / (hi - lo + 1e-6), 0, 1)
 
-    plt.figure(figsize=(5,5))
+    plt.figure(figsize=(5, 5))
     plt.imshow(rgb)
     plt.axis("off")
     plt.title(title)
     plt.show()
 
-show_rgb("data/raw/MultiSenGE/s2/31TFN_20200731_S2_4626_514.tif", "Pre (2020‑07‑31)")
-show_rgb("data/raw/MultiSenGE/s2/31TFN_20201128_S2_4626_514.tif", "Post (2020‑11‑28)")
+
+def parse_args():
+    ap = argparse.ArgumentParser(description="Quick RGB preview of a MultiSenGE S2 TIFF (band order B02,B03,B04).")
+    ap.add_argument("tiff_path", type=Path, help="Path to a MultiSenGE S2 TIFF.")
+    ap.add_argument("title", nargs="?", default=None, help="Optional title for the preview window.")
+    return ap.parse_args()
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    title = args.title or args.tiff_path.name
+    show_rgb(args.tiff_path, title)

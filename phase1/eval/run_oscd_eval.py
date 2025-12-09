@@ -5,9 +5,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
+
+# Limit BLAS/OpenMP thread count to avoid oversubscribing CPU and freezing the machine.
+# Users can override these by setting the env vars before launching Python.
+os.environ.setdefault("OMP_NUM_THREADS", "4")
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "4")
+os.environ.setdefault("MKL_NUM_THREADS", "4")
+os.environ.setdefault("NUMEXPR_NUM_THREADS", "4")
 
 import numpy as np
 import yaml

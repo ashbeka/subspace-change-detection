@@ -461,15 +461,27 @@ From outputs/oscd_saved/oscd_eval_summary.csv (test split):
     - Serves mostly as an extra classical reference.
 
 ### 10.2 Eig vs residual DS (Option B vs Option A)
-Using configs/oscd_variant_eig.yaml and outputs/oscd_eig_nowindow:
+We evaluated the eigen‑based DS variant in two ways using
+`configs/oscd_variant_eig.yaml`:
 
-- With sliding window off and Celik disabled:
-    - ds_projection (eig):
-        - AUROC ≈ 0.75506 (nearly identical to residual).
-        - F1/IoU Otsu and global also differ only at 3rd decimal place.
-- Conclusion: on OSCD, the eig‑based DS and residual‑stacked DS behave
-numerically almost identically, confirming that both constructions are
-equivalent in practice for this dataset.
+- **Matched settings to residual DS** (sliding window on, Celik and IR‑MAD enabled;
+  outputs/oscd_eig_full):
+    - test ds_projection (eig):
+        - AUROC ≈ 0.62, F1(Otsu) ≈ 0.10, IoU(Otsu) ≈ 0.05.
+    - Compared to residual DS (Section 10.1, outputs/oscd_run):
+        - AUROC ≈ 0.75, F1(Otsu) ≈ 0.27, IoU(Otsu) ≈ 0.18.
+    - In this like‑for‑like setting, the residual‑stacked DS clearly
+      outperforms the eig‑based DS on OSCD.
+
+- **Light eig‑DS variant** (no sliding window and Celik disabled;
+  outputs/oscd_eig_nowindow):
+    - ds_projection (eig) remains weaker than residual DS, but with
+      lower runtime due to the simplified configuration.
+
+Overall, while the eig formulation is theoretically equivalent to
+residual DS in the idealized DS literature, our practical OSCD
+implementation favors the residual‑stacked construction: it is more
+stable and achieves higher AUROC/F1/IoU for this dataset.
 
 ## 11. “Naive pixel differencing vs DS” – Key Takeaways
 From the summary figures (outputs/oscd_figs_all/) and metrics:
@@ -516,7 +528,13 @@ python -m eval.run_oscd_eval \
   --output_dir outputs/oscd_saved \
   --save_change_maps
 
-OSCD eval with eig DS (Option B):
+OSCD eval with eig DS (Option B, matched settings):
+python -m eval.run_oscd_eval \
+  --config configs/oscd_variant_eig.yaml \
+  --oscd_root data/raw/OSCD \
+  --output_dir outputs/oscd_eig_full
+
+OSCD eval with eig DS (Option B, no window, no Celik):
 python -m eval.run_oscd_eval \
   --config configs/oscd_variant_eig.yaml \
   --oscd_root data/raw/OSCD \

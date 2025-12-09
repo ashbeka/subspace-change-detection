@@ -131,15 +131,16 @@ Output example:
 ### 3.2 Example command
 
 ```bash
-python -m phase1.eval.run_multisenge_viz \
-  --config phase1/configs/multisenge_default.yaml \
-  --output_dir phase1/outputs/multisenge_ds_viz
+python -m eval.run_multisenge_viz \
+  --config configs/multisenge_default.yaml \
+  --multisenge_root data/raw/MultiSenGE/s2 \
+  --output_dir outputs/multisenge_viz
 ```
 
 Outputs:
 
 - Per‑patch DS score PNGs and GeoTIFFs under
-  `phase1/outputs/multisenge_ds_viz/...`.
+  `phase1/outputs/multisenge_viz/...`.
 
 These are useful for visually understanding DS behavior on many unlabeled
 patches; Phase 2 and Phase 3 can re‑use them conceptually as priors or
