@@ -1,0 +1,17 @@
+% test yale
+clear;
+load('yaleface_64x64');
+
+imgs = imgs/255;
+s = size(imgs);
+
+flags = sum(reshape(imgs,s(1)*s(2),s(3),s(4)),1) == 0;
+flags = squeeze(flags);
+
+imshow(flags);
+
+
+reject_subset = find(flags==1),;
+reject_index = mod(find(flags==1),64)+1;
+;
+

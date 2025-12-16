@@ -53,8 +53,9 @@ From the repo root `DS_damage_segmentation/`:
   - `docs/` – Phase‑2 spec and report (+ run guide).
   - `outputs/` – Phase‑2 models, evals, and figures (git‑ignored).
 
-- `reference_code/` – DS/Subspace toolbox and lab reference code
-  (includes large `.mat` files; kept local and git‑ignored).
+- `references/` – reference materials
+  - `references/reference_papers/` – PDFs (DS/subspace, change detection, xBD, etc.)
+  - `references/reference_code/` – lab/senpai implementations (includes large `.mat` files; kept local and git‑ignored).
 
 - `research-notes/` – separate notes repo (not tracked here) with math
   appendices and planning.
@@ -95,11 +96,12 @@ If you had other venvs (e.g., `.venv_phase2`), you can remove them; only `.venv`
 
 Data:
 
-- OSCD root expected at `phase1/data/raw/OSCD` (see Phase‑1 spec for
+- OSCD root expected at `data/OSCD` (see Phase‑1 spec for
   exact structure).
 - MultiSenGE S2 root (optional for Phase‑1 viz) goes under
-  `phase1/data/raw/MultiSenGE/...` as configured in
+  `data/MultiSenGE/...` as configured in
   `phase1/configs/multisenge_default.yaml`.
+- Damage datasets (e.g., xBD) can live under `data/xbd` for Phase 3.
 
 ---
 
@@ -119,40 +121,72 @@ cross‑residual. PCA‑diff and other baselines give complementary views.
 
 ### 3.2 OSCD evaluation (DS + baselines)
 
-From `phase1/`:
+From the repo root:
 
 ```bash
-cd phase1
-python -m eval.run_oscd_eval \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_saved \
-  --save_change_maps \
-  --disable_celik        # optional speed-up
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_priors_fast.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_priors_fast \
+  --save_change_maps
 ```
 
-This runs DS and baselines on the official OSCD splits and writes:
+This runs a fast Phase‑1 setting (DS projection + DS cross‑residual + pixel diff + PCA‑diff),
+writes metrics, and saves change maps that are used as **Phase‑2 priors**.
 
-- `outputs/oscd_saved/oscd_eval_results.json`
-- `outputs/oscd_saved/oscd_eval_summary.csv`
-- `outputs/oscd_saved/oscd_change_maps/{split}/{method}/{city}_score.npy`
+Optional (slower): full baseline suite + sliding‑window DS
+
+```bash
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_full \
+  --save_change_maps
+```
+
+Outputs (for each run folder):
+
+- `oscd_eval_results.json`
+- `oscd_eval_summary.csv`
+- `oscd_change_maps/{split}/{method}/{city}_score.npy`
 
 These `*_score.npy` files are **Phase‑2 priors** (`ds_projection`,
 `pca_diff`, etc.).
 
 ### 3.3 MultiSenGE DS visualization
 
-From `phase1/`:
+From the repo root:
 
 ```bash
-python -m eval.run_multisenge_viz \
-  --config configs/multisenge_default.yaml \
-  --multisenge_root data/raw/MultiSenGE/s2 \
-  --output_dir outputs/multisenge_viz
+python -m phase1.eval.run_multisenge_viz \
+  --config phase1/configs/multisenge_default.yaml \
+  --multisenge_root data/MultiSenGE/s2 \
+  --output_dir phase1/outputs/multisenge_viz
 ```
 
 This produces DS projection maps (PNG + GeoTIFF) for many S2
 patches, useful for understanding what DS responds to beyond OSCD.
+
+### 3.3b MultiSenGE temporal geodesic / 2nd-order DS (Phase 1b)
+
+Build a small MultiSenGE time-series manifest (fast; reads `labels/*.json`, does not scan all TIFFs):
+
+```bash
+python -m phase1.scripts.build_multisenge_manifest \
+  --multisenge_root data/MultiSenGE \
+  --output_path phase1/outputs/multisenge_manifest_50p_5dates.json \
+  --min_s2_dates 5 --max_patches 50 --seed 1234
+```
+
+Run temporal analysis (geodesic velocity + 2nd-order DS acceleration):
+
+```bash
+python -m phase1.eval.run_multisenge_temporal_geodesic \
+  --config phase1/configs/multisenge_temporal_geodesic.yaml \
+  --multisenge_root data/MultiSenGE \
+  --manifest phase1/outputs/multisenge_manifest_50p_5dates.json \
+  --output_dir phase1/outputs/multisenge_temporal_geodesic
+```
 
 ### 3.4 Phase‑1 example figures
 
@@ -160,12 +194,12 @@ Typical OSCD per‑city figure (created by
 `phase1/eval/visualize_oscd_examples.py`):
 
 ```bash
-python -m eval.visualize_oscd_examples \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_figs_all \
+python -m phase1.eval.visualize_oscd_examples \
+  --config phase1/configs/oscd_priors_fast.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_figs_all \
   --cities chongqing \
-  --metrics_json outputs/oscd_saved/oscd_eval_results.json
+  --metrics_json phase1/outputs/oscd_saved_priors_fast/oscd_eval_results.json
 ```
 
 Example figure (tracked in this repo):
@@ -193,7 +227,7 @@ This 3×3 figure shows:
   - Raw S2 + DS + PCA‑diff.
   - Priors‑only sanity checks.
 - Analyze when DS/PCA priors help / hurt, and use them for
-  explainability even when raw‑only performs best.
+  explainability (and sometimes improve IoU/F1 depending on the prior and tile).
 
 ### 4.2 Core experiments and configs
 
@@ -213,50 +247,48 @@ Configs live in `phase2/configs/`:
 
 ### 4.3 Training examples
 
-From `phase2/`:
+From the repo root:
+
+Note: Phase 2 CLIs default to `--device cuda` (GPU). If you see `torch.cuda.is_available() == False`, reinstall a CUDA-enabled PyTorch build from https://pytorch.org/get-started/locally/ (or run with `--device cpu` for debugging).
 
 **U‑Net raw only (E0)**
 
 ```bash
-cd phase2
-python -m train.train_oscd_seg \
-  --config configs/oscd_seg_baseline.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --output_dir outputs/oscd_seg_E0_raw
+python -m phase2.train.train_oscd_seg \
+  --config phase2/configs/oscd_seg_baseline.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --output_dir phase2/outputs/oscd_seg_E0_raw
 ```
 
 **U‑Net raw + DS + PCA‑diff (E3)**
 
 ```bash
-cd phase2
-python -m train.train_oscd_seg \
-  --config configs/oscd_seg_priors.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --output_dir outputs/oscd_seg_E3_raw_ds_pca
+python -m phase2.train.train_oscd_seg \
+  --config phase2/configs/oscd_seg_priors.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca
 ```
 
 **ResNet‑U‑Net raw only**
 
 ```bash
-cd phase2
-python -m train.train_oscd_seg \
-  --config configs/oscd_seg_baseline_resnet.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --output_dir outputs/oscd_seg_E0_raw_resnet
+python -m phase2.train.train_oscd_seg \
+  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --output_dir phase2/outputs/oscd_seg_E0_raw_resnet
 ```
 
 **PriorsFusionUNet (raw + DS + PCA‑diff)**
 
 ```bash
-cd phase2
-python -m train.train_oscd_seg \
-  --config configs/oscd_seg_priors_fusion.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion
+python -m phase2.train.train_oscd_seg \
+  --config phase2/configs/oscd_seg_priors_fusion.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion
 ```
 
 You can set `--max_epochs` to a small number (e.g. 2) for quick sanity
@@ -272,13 +304,12 @@ Script: `phase2/eval/evaluate_oscd_seg.py`.
 Example (E0 U‑Net raw only):
 
 ```bash
-cd phase2
-python -m eval.evaluate_oscd_seg \
-  --config configs/oscd_seg_baseline.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --checkpoint outputs/oscd_seg_E0_raw/best.ckpt \
-  --output_dir outputs/oscd_seg_E0_raw/eval
+python -m phase2.eval.evaluate_oscd_seg \
+  --config phase2/configs/oscd_seg_baseline.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --checkpoint phase2/outputs/oscd_seg_E0_raw/best.ckpt \
+  --output_dir phase2/outputs/oscd_seg_E0_raw/eval
 ```
 
 Outputs:
@@ -295,13 +326,12 @@ raw+DS+PCA).
 **Per‑city segmentation summaries** (`viz_seg_predictions.py`):
 
 ```bash
-cd phase2
-python -m viz.viz_seg_predictions \
-  --config configs/oscd_seg_baseline_resnet.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_seg \
+python -m phase2.viz.viz_seg_predictions \
+  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
+  --output_dir phase2/outputs/oscd_seg_E0_raw_resnet/figs_seg \
   --cities test
 ```
 
@@ -322,26 +352,24 @@ Each shows Pre RGB, Post RGB, GT overlay, prob map, and mask.
 ResNet raw‑only:
 
 ```bash
-cd phase2
-python -m viz.viz_oscd_combined \
-  --config configs/oscd_seg_baseline_resnet.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_seg_E0_raw_resnet/figs_combined \
+python -m phase2.viz.viz_oscd_combined \
+  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
+  --output_dir phase2/outputs/oscd_seg_E0_raw_resnet/figs_combined \
   --cities test
 ```
 
 PriorsFusionUNet:
 
 ```bash
-cd phase2
-python -m viz.viz_oscd_combined \
-  --config configs/oscd_seg_priors_fusion.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --checkpoint outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt \
-  --output_dir outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined \
+python -m phase2.viz.viz_oscd_combined \
+  --config phase2/configs/oscd_seg_priors_fusion.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --checkpoint phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt \
+  --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined \
   --cities test
 ```
 
@@ -365,30 +393,23 @@ Tracked preview:
 
 ## 5. Results at a glance (OSCD)
 
-On the OSCD test split (numbers approx.; see
-`phase2/docs/phase2_report.md` and CSVs for exact values):
+Latest snapshots (see the linked CSVs for exact values):
 
-- **U‑Net (raw only)**:
-  - mean IoU ≈ 0.23, F1 ≈ 0.33, AUROC ≈ 0.86.
-- **U‑Net (raw + DS / PCA‑diff)**:
-  - Simple concatenation of priors does **not** improve IoU/F1; AUROC
-    may move slightly up or down depending on the path.
-- **ResNet‑U‑Net (raw only)**:
-  - Similar IoU/F1 to U‑Net but with stronger per‑city performance on
-    some tiles.
-- **ResNet / PriorsFusionUNet with priors**:
-  - PriorsFusionUNet can slightly improve AUROC over naive
-    concatenation, but still lags raw‑only in IoU/F1 due to extra
-    DS‑driven false positives.
+- **Phase 1 (unsupervised change detectors, test AUROC)** from `phase1/outputs/oscd_saved_full/oscd_eval_summary.csv`:
+  - `pca_diff` 0.813 (strongest AUROC baseline)
+  - `pixel_diff` / `cva` 0.756 and `ds_projection` 0.755 (very close)
+  - `ir_mad` 0.704, `celik` 0.649, `ds_cross_residual` 0.556 (weaker in AUROC here)
+- **Phase 2 (segmentation, test mean metrics over cities, threshold=0.5)** from `phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary_extended.csv`:
+  - `E0_raw` (U‑Net raw): mean IoU 0.223, mean F1 0.343, mean AUROC 0.869, PR‑AUC 0.431
+  - `E1_raw_ds` (U‑Net raw+DS projection): mean IoU 0.273, mean F1 0.401, mean AUROC 0.874 (best IoU/F1 in this run)
+  - `E5_raw_celik` (U‑Net raw+Celik): mean IoU 0.260, mean F1 0.382, mean AUROC 0.872, PR‑AUC 0.448 (best PR‑AUC in this run)
+  - Fusion raw+DS+PCA has the best AUROC in this run (AUROC 0.888, PR‑AUC 0.441; IoU/F1 ≈ 0.243/0.360)
 
-Overall:
+Interpretation (global scale):
 
-- **Raw S2 segmentation** is the strongest baseline on OSCD in IoU/F1.
-- **DS/PCA‑diff priors** are:
-  - Informative and interpretable as unsupervised spectral change
-    detectors.
-  - Useful for explainability and as a bridge toward damage datasets
-    (Phase 3).
+- The reported means are averaged over the 10 OSCD test cities (each city weighted equally).
+- Priors are not uniformly beneficial per‑tile; inspect per‑city examples and combined figures.
+- These are single‑seed results; confirm with multiple seeds and threshold tuning when time permits.
 
 ---
 
@@ -397,8 +418,10 @@ Overall:
 The Phase‑2 report (`phase2/docs/phase2_report.md`, Section 7) lists
 several next‑step ideas, including:
 
-- **Longer training and more seeds** for key configs (E0/E3, ResNet
-  baselines) with 100–150 epochs.
+- **More seeds + threshold tuning** for key configs (E0/E1/E3, ResNet/fusion baselines),
+  and a calibrated decision threshold on the val split (instead of always using 0.5).
+- **Additional baselines**: raw + `pixel_diff` prior (`phase2/configs/oscd_seg_E4_raw_pixel.yaml`),
+  raw + `ds_cross_residual` prior (E1b), and the Siamese baseline (`phase2/configs/oscd_seg_siamese.yaml`).
 - **ImageNet pretraining** for the ResNet encoder (`pretrained: true`)
   and comparison vs the current runs.
 - **MultiSenGE pseudo‑label pretraining** (regress DS/PCA‑diff maps on a
@@ -417,7 +440,7 @@ swap in a damage dataset via a small adapter class and new configs.
   pushing large checkpoints and change maps; all figures and metrics can
   be regenerated with the commands above.
 - Large reference `.mat` data for the Subspace toolbox lives under
-  `reference_code/` and is also git‑ignored; it is used only to
+  `references/reference_code/` and is also git‑ignored; it is used only to
   sanity‑check DS behavior against lab implementations.
 - If you want figures to appear directly on GitHub, you can copy a small
   curated subset of PNGs (e.g., OSCD and combined DS/PCA summaries)

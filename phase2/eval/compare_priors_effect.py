@@ -23,26 +23,33 @@ def load_mean_metrics(path: Path):
     with path.open("r", encoding="utf-8") as f:
       data = json.load(f)
     test_summary = data.get("test", {}).get("summary", {})
-    return test_summary.get("mean_iou"), test_summary.get("mean_f1"), test_summary.get("mean_auroc")
+    return (
+      test_summary.get("mean_iou"),
+      test_summary.get("mean_f1"),
+      test_summary.get("mean_auroc"),
+      test_summary.get("mean_pr_auc"),
+    )
   if path.suffix == ".csv":
     # expect columns: split,model_name,features_config,mean_iou,mean_f1,auroc,...
     with path.open("r", encoding="utf-8") as f:
       reader = csv.DictReader(f)
       for row in reader:
         if row.get("split") == "test":
-          return float(row["mean_iou"]), float(row["mean_f1"]), float(row["auroc"])
-  return None, None, None
+          pr = row.get("mean_pr_auc") or row.get("pr_auc") or row.get("mean_pr") or None
+          pr_val = float(pr) if pr not in (None, "") else None
+          return float(row["mean_iou"]), float(row["mean_f1"]), float(row.get("mean_auroc", row.get("auroc"))), pr_val
+  return None, None, None, None
 
 
 def main():
   args = parse_args()
   rows = []
   for tag, path in zip(args.tags, args.summaries):
-    miou, mf1, au = load_mean_metrics(path)
-    rows.append({"tag": tag, "mean_iou": miou, "mean_f1": mf1, "mean_auroc": au})
+    miou, mf1, au, pr = load_mean_metrics(path)
+    rows.append({"tag": tag, "mean_iou": miou, "mean_f1": mf1, "mean_auroc": au, "mean_pr_auc": pr})
   args.output.parent.mkdir(parents=True, exist_ok=True)
   with args.output.open("w", newline="", encoding="utf-8") as f:
-    writer = csv.DictWriter(f, fieldnames=["tag", "mean_iou", "mean_f1", "mean_auroc"])
+    writer = csv.DictWriter(f, fieldnames=["tag", "mean_iou", "mean_f1", "mean_auroc", "mean_pr_auc"])
     writer.writeheader()
     for r in rows:
       writer.writerow(r)
@@ -50,5 +57,4 @@ def main():
 
 if __name__ == "__main__":
   main()
-
 

@@ -1,0 +1,36 @@
+seed: 1234
+
+dataset:
+  name: oscd
+  # Match Phase 2 splits so the exported priors can be consumed directly by Phase 2.
+  val_cities: [abudhabi, aguasclaras, beihai]
+  val_from_train: 0
+  band_order: [B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B8A]
+  nodata_value: 0
+  min_valid_bands: 3
+
+normalization:
+  type: zscore
+  # path is resolved relative to repo root via phase1/ prefix in the script
+  stats_path: data/oscd_band_stats.json
+  stats_band_order: [B01, B02, B03, B04, B05, B06, B07, B08, B09, B10, B11, B12, B8A]
+  ignore_nodata: true
+  eps: 1.0e-6
+
+subspace:
+  rank_r: 6
+  variance_threshold: null
+  use_randomized_pca: true
+  random_state: 1234
+  pixel_sample: 1024  # speed knob; set 0 to use all valid pixels per window
+
+geodesic:
+  # folder name under oscd_change_maps/{split}/<method_name>/
+  method_name: geodesic_dist
+  metric: geodesic_dist  # geodesic_dist | magnitude
+  window:
+    size: 64
+    stride: 32
+    aggregator: mean
+  score_normalization: percentile_99
+  percentile: 99.0

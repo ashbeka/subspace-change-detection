@@ -53,7 +53,7 @@ Phase 2 does not yet tackle temporal SSC / progression seriously; that’s for P
 
   - Clear configs/, data/, models/, train/, eval/, viz/.
 
-  - CLI entry points like python -m train.train_oscd_seg.
+  - CLI entry points like python -m phase2.train.train_oscd_seg.
 ---
 
 ## 1. Repository Layout for Phase 2
@@ -153,11 +153,11 @@ File: `phase2/data/oscd_seg_dataset.py`
 
 - **Inputs from Phase 1:**
   - Use the **same OSCD root**:
-    - `phase1/data/raw/OSCD/…`
+    - `data/OSCD/…`
   - Reuse Phase 1 loader logic:
     - Call into `phase1/data/oscd_dataset.py` via import, or directly re-implement minimal loader in Phase 2.
   - Access **change maps** (priors) from saved Phase 1 runs:
-    - `phase1/outputs/oscd_saved/oscd_change_maps/{split}/{method}/{city}_score.npy`.
+    - `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps/{split}/{method}/{city}_score.npy`.
 
 - **Responsibilities:**
 
@@ -297,10 +297,10 @@ File: phase2/train/train_oscd_seg.py
 - CLI example:
 
 ```bash
-python -m train.train_oscd_seg \
-  --config configs/oscd_seg_priors.yaml \
-  --oscd_root phase1/data/raw/OSCD \
-  --phase1_change_maps_root phase1/outputs/oscd_saved/oscd_change_maps \
+python -m phase2.train.train_oscd_seg \
+  --config phase2/configs/oscd_seg_priors.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_run1
 ```
 - Responsibilities:
@@ -399,10 +399,10 @@ File: `phase2/eval/evaluate_oscd_seg.py`
 - CLI example:
 
 ```bash
-python -m eval.evaluate_oscd_seg \
-  --config configs/oscd_seg_priors.yaml \
-  --oscd_root phase1/data/raw/OSCD \
-  --phase1_change_maps_root phase1/outputs/oscd_saved/oscd_change_maps \
+python -m phase2.eval.evaluate_oscd_seg \
+  --config phase2/configs/oscd_seg_priors.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_run1/best.ckpt \
   --output_dir phase2/outputs/oscd_eval_run1
 ```
@@ -465,10 +465,10 @@ File: `phase2/viz/viz_seg_predictions.py`
 - **CLI example:**
 
 ```bash
-python -m viz.viz_seg_predictions \
-  --config configs/oscd_seg_priors.yaml \
-  --oscd_root phase1/data/raw/OSCD \
-  --phase1_change_maps_root phase1/outputs/oscd_saved/oscd_change_maps \
+python -m phase2.viz.viz_seg_predictions \
+  --config phase2/configs/oscd_seg_priors.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_run1/best.ckpt \
   --output_dir phase2/outputs/oscd_seg_figs \
   --cities all
@@ -493,7 +493,7 @@ Key fields:
 ```
 dataset:
   name: oscd
-  root: phase1/data/raw/OSCD
+  root: data/OSCD
   split:
     train: [beirut, bercy, bordeaux, cupertino, hongkong, mumbai, nantes, paris, pisa, rennes, saclay_e]
     val:   [beirut, cupertino, mumbai]     # example subset
@@ -551,7 +551,7 @@ features:
     pixel_diff: false
 
 phase1:
-  change_maps_root: phase1/outputs/oscd_saved/oscd_change_maps
+  change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
 experiment_tag: "oscd_seg_raw+ds+pca"
 ```

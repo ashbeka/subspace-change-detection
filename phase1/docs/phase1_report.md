@@ -122,8 +122,8 @@ pipeline.
 **Ground truth masks:**
 
 - Paths like:
-  - `phase1/data/raw/OSCD/onera_satellite_change_detection dataset__train_labels/<city>/cm/`
-  - `phase1/data/raw/OSCD/onera_satellite_change_detection dataset__test_labels/<city>/cm/`
+  - `data/OSCD/onera_satellite_change_detection dataset__train_labels/<city>/cm/`
+  - `data/OSCD/onera_satellite_change_detection dataset__test_labels/<city>/cm/`
 - Each directory usually contains:
   - `cm.png` – mask with 0 background and 255 change.
   - `<city>-cm.tif` – alternative TIFF mask.
@@ -410,12 +410,12 @@ Per city (train/val/test or selected subset), it generates a 3×3 panel:
 9. Metrics text (for DS) if an oscd_eval_results.json is provided.
 
 Command example:
-python -m eval.visualize_oscd_examples \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_figs_all \
+python -m phase1.eval.visualize_oscd_examples \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_figs_all \
   --cities all \
-  --metrics_json outputs/oscd_eval_results.json
+  --metrics_json phase1/outputs/oscd_run/oscd_eval_results.json
 
 These figures directly address the review request to “show the ground truth
 alongside difference images and DS maps” and to compare naive diff vs DS.
@@ -436,15 +436,15 @@ unlabeled S2 scenes.
 Numbers are from representative runs; exact values may differ slightly as
 config/flags change, but the relative ranking is stable.
 
-### 10.1 Residual DS + baselines (full run with Celik and IR‑MAD)
-From outputs/oscd_saved/oscd_eval_summary.csv (test split):
+### 10.1 Residual DS + baselines (fast priors run used for Phase 2)
+From `phase1/outputs/oscd_saved_priors_fast/oscd_eval_summary.csv` (test split):
 
 - ds_projection:
     - AUROC ≈ 0.755
     - F1 (Otsu) ≈ 0.275, IoU (Otsu) ≈ 0.178
     - F1 (global) ≈ 0.236, IoU (global) ≈ 0.142
 - ds_cross_residual:
-    - AUROC ≈ 0.527; F1/IoU much lower – weaker than projection.
+    - AUROC ≈ 0.556; F1/IoU much lower – weaker than projection.
 - pixel_diff / cva:
     - AUROC ≈ 0.756
     - F1 (Otsu) ≈ 0.258, IoU ≈ 0.172
@@ -453,12 +453,25 @@ From outputs/oscd_saved/oscd_eval_summary.csv (test split):
     - AUROC ≈ 0.813 (strongest baseline).
     - F1 (Otsu) ≈ 0.277, IoU ≈ 0.185.
     - Global F1 ≈ 0.235, IoU ≈ 0.144.
+Note: this fast config disables Celik and IR‑MAD for runtime. To run the full classical suite,
+use `phase1/configs/oscd_default.yaml` (much slower; includes sliding‑window DS and extra baselines).
+
+### 10.1b Full classical suite (Celik + IR‑MAD + CVA)
+From `phase1/outputs/oscd_saved_full/oscd_eval_summary.csv` (test split; `oscd_default.yaml` with `--no_window`):
+
 - celik:
-    - AUROC ≈ 0.65–0.66 depending on downsample.
-    - F1/IoU slightly below DS/PCA‑diff but still meaningful.
-- ir_mad (when enabled):
-    - AUROC ≈ 0.70; F1/IoU lower than DS/PCA‑diff.
-    - Serves mostly as an extra classical reference.
+    - AUROC ≁E0.649
+    - F1 (Otsu) ≁E0.226, IoU (Otsu) ≁E0.150
+    - F1 (global) ≁E0.237, IoU (global) ≁E0.156
+- ir_mad:
+    - AUROC ≁E0.704
+    - F1 (Otsu) ≁E0.113, IoU (Otsu) ≁E0.063
+    - F1 (global) ≁E0.108, IoU (global) ≁E0.060
+- cva:
+    - Identical to `pixel_diff` in this repo (same continuous scores and metrics).
+
+This expanded run also writes change maps to `phase1/outputs/oscd_saved_full/oscd_change_maps/...`,
+which enables Phase 2 experiments that use Celik/IR‑MAD priors (E5/E6).
 
 ### 10.2 Eig vs residual DS (Option B vs Option A)
 We evaluated the eigen‑based DS variant in two ways using
@@ -513,48 +526,47 @@ From the repo root:
 python -m venv .venv
 # activate .venv...
 pip install -r phase1/requirements.txt
-cd phase1
 
 OSCD eval (residual DS + baselines):
-python -m eval.run_oscd_eval \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_run
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_run
 
 Optional: save change maps:
-python -m eval.run_oscd_eval \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_saved \
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_priors_fast.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_priors_fast \
   --save_change_maps
 
 OSCD eval with eig DS (Option B, matched settings):
-python -m eval.run_oscd_eval \
-  --config configs/oscd_variant_eig.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_eig_full
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_variant_eig.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_eig_full
 
 OSCD eval with eig DS (Option B, no window, no Celik):
-python -m eval.run_oscd_eval \
-  --config configs/oscd_variant_eig.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_eig_nowindow \
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_variant_eig.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_eig_nowindow \
   --disable_celik \
   --no_window
 
 MultiSenGE DS visualization:
-python -m eval.run_multisenge_viz \
-  --config configs/multisenge_default.yaml \
-  --multisenge_root data/raw/MultiSenGE/s2 \
-  --output_dir outputs/multisenge_viz
+python -m phase1.eval.run_multisenge_viz \
+  --config phase1/configs/multisenge_default.yaml \
+  --multisenge_root data/MultiSenGE/s2 \
+  --output_dir phase1/outputs/multisenge_viz
 
 OSCD summary figures for all cities:
-python -m eval.visualize_oscd_examples \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_figs_all \
+python -m phase1.eval.visualize_oscd_examples \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_figs_all \
   --cities all \
-  --metrics_json outputs/oscd_run/oscd_eval_results.json
+  --metrics_json phase1/outputs/oscd_run/oscd_eval_results.json
 
 ## 13. Phase 1 Status & Phase 2 Handoff
 Status:

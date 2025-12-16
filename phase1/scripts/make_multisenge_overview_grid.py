@@ -8,7 +8,8 @@ import rasterio
 
 # Script lives in phase1/scripts; PHASE1_ROOT is the repo's phase1 dir.
 PHASE1_ROOT = Path(__file__).resolve().parents[1]
-MULTISENGE_ROOT = PHASE1_ROOT / "data" / "raw" / "MultiSenGE" / "s2"
+REPO_ROOT = PHASE1_ROOT.parent
+MULTISENGE_ROOT = REPO_ROOT / "data" / "MultiSenGE" / "s2"
 MULTISENGE_VIZ_ROOT = PHASE1_ROOT / "outputs" / "multisenge_viz"
 
 

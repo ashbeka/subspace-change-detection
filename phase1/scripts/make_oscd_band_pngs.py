@@ -8,10 +8,10 @@ import rasterio
 
 # Script lives in repo_root/phase1/phase1; PHASE1_ROOT is repo_root/phase1.
 PHASE1_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PHASE1_ROOT.parent
 OSCD_IMAGES_ROOT = (
-    PHASE1_ROOT
+    REPO_ROOT
     / "data"
-    / "raw"
     / "OSCD"
     / "onera_satellite_change_detection dataset__images"
 )

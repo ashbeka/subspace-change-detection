@@ -21,19 +21,25 @@ import numpy as np
 import yaml
 from PIL import Image
 
-from baselines.celik_pca_kmeans import celik_score
-from baselines.cva import cva_score
-from baselines.pca_diff import pca_diff_score
-from baselines.pixel_diff import pixel_l2_difference
-from baselines.ir_mad import ir_mad_score
-from data.oscd_dataset import OSCDEvaluatorDataset, fit_or_load_band_stats
-from data.preprocessing import BandStats, apply_normalization
-from ds.ds_scores import DSConfig, compute_ds_scores, sliding_window_ds
-from eval.metrics import auroc_score, binary_metrics
-from eval.thresholding import apply_threshold, grid_search_threshold, otsu_threshold
-from eval.utils import suppress_rasterio_warnings
+from phase1.baselines.celik_pca_kmeans import celik_score
+from phase1.baselines.cva import cva_score
+from phase1.baselines.pca_diff import pca_diff_score
+from phase1.baselines.pixel_diff import pixel_l2_difference
+from phase1.baselines.ir_mad import ir_mad_score
+from phase1.data.oscd_dataset import OSCDEvaluatorDataset, fit_or_load_band_stats
+from phase1.data.preprocessing import BandStats, apply_normalization
+from phase1.ds.ds_scores import DSConfig, compute_ds_scores, sliding_window_ds
+from phase1.eval.metrics import auroc_score, binary_metrics
+from phase1.eval.thresholding import apply_threshold, grid_search_threshold, otsu_threshold
+from phase1.eval.utils import suppress_rasterio_warnings
 
 suppress_rasterio_warnings()
+
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
+
+
+def resolve_phase1_path(p: Path) -> Path:
+    return p if p.is_absolute() else (PHASE1_ROOT / p)
 
 
 def git_hash() -> str:
@@ -144,6 +150,7 @@ def run_methods_on_tile(
             valid_mask,
             iters=ir.get("iters", 3),
             downsample_max_pixels=ir.get("downsample_max_pixels", 200000),
+            random_state=ir.get("random_state", 1234),
         )
     return scores
 
@@ -260,10 +267,11 @@ def main():
     cfg = load_config(args.config)
     ensure_dir(args.output_dir)
     save_change_maps_flag = args.save_change_maps or cfg.get("output", {}).get("save_change_maps", False)
+    stats_path = resolve_phase1_path(Path(cfg["normalization"]["stats_path"]))
     stats = fit_or_load_band_stats(
         args.oscd_root,
         cfg["dataset"]["band_order"],
-        Path(cfg["normalization"]["stats_path"]),
+        stats_path,
         nodata_value=cfg["dataset"].get("nodata_value", 0.0),
         min_valid_bands=cfg["dataset"].get("min_valid_bands", 3),
     )
@@ -275,7 +283,7 @@ def main():
             cfg["dataset"]["band_order"],
             nodata_value=cfg["dataset"].get("nodata_value", 0.0),
             min_valid_bands=cfg["dataset"].get("min_valid_bands", 3),
-            stats_path=cfg["normalization"]["stats_path"],
+            stats_path=stats_path,
             val_cities=cfg["dataset"].get("val_cities"),
             val_from_train=cfg["dataset"].get("val_from_train", 0),
         ),
@@ -285,7 +293,7 @@ def main():
             cfg["dataset"]["band_order"],
             nodata_value=cfg["dataset"].get("nodata_value", 0.0),
             min_valid_bands=cfg["dataset"].get("min_valid_bands", 3),
-            stats_path=cfg["normalization"]["stats_path"],
+            stats_path=stats_path,
             val_cities=cfg["dataset"].get("val_cities"),
             val_from_train=cfg["dataset"].get("val_from_train", 0),
         ),
@@ -295,7 +303,7 @@ def main():
             cfg["dataset"]["band_order"],
             nodata_value=cfg["dataset"].get("nodata_value", 0.0),
             min_valid_bands=cfg["dataset"].get("min_valid_bands", 3),
-            stats_path=cfg["normalization"]["stats_path"],
+            stats_path=stats_path,
             val_cities=cfg["dataset"].get("val_cities"),
             val_from_train=cfg["dataset"].get("val_from_train", 0),
         ),

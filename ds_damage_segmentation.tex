@@ -97,9 +97,10 @@ continuous change maps and quantitative OSCD results (AUROC, F1, IoU) that
 serve as interpretable priors. In Phase~2 we train U--Net and ResNet--U--Net
 models for pixel--wise change segmentation on OSCD, using Sentinel--2 pre/post
 bands alone and in combination with DS and PCA--diff change maps as additional
-channels and fusion branches. On OSCD, raw Sentinel--2 segmentation achieves
-the best IoU/F1, while DS/PCA--diff priors slightly improve AUROC and serve as
-valuable explanatory overlays. The code and design are structured so that the
+channels and fusion branches. On OSCD, raw Sentinel--2 segmentation is a
+strong baseline, and adding a DS projection prior improves mean IoU/F1 in our
+main 150--epoch run; fusion models can improve ranking metrics (AUROC) while
+priors serve as valuable explanatory overlays. The code and design are structured so that the
 same architecture and priors can be transferred to true damage--labeled
 datasets such as xBD, forming the basis of a future Phase~3 for building damage
 segmentation.
@@ -342,7 +343,8 @@ We extract overlapping 256\(\times\)256 patches from OSCD tiles with a
 configurable overlap (e.g.\ 64 pixels), and we apply random flips and 90°
 rotations to both images and masks. Training uses a combination of
 BCEWithLogits and soft Dice loss on valid pixels, with AdamW optimizer and a
-cosine learning rate schedule over 50 epochs.
+cosine learning rate schedule. In the main run set, we train for 150 epochs
+on GPU (single seed) and report mean metrics on the OSCD test split.
 
 We report mean IoU, mean F1, and AUROC over the OSCD test split, averaging
 over all test tiles. For qualitative analysis, Phase~2 includes visualization
@@ -353,22 +355,22 @@ probabilities, and binary segmentation masks in combined multi--panel figures.
 
 On OSCD, raw Sentinel--2 segmentation is a strong baseline:
 \begin{itemize}
-  \item A plain U--Net with raw pre/post bands achieves mean IoU
-  \(\approx 0.23\), mean F1 \(\approx 0.33\), and AUROC \(\approx 0.87\) on the
-  test split.
-  \item A ResNet--U--Net with raw bands yields similar IoU/F1 and slightly
-  different AUROC, depending on hyperparameters.
+  \item U--Net (raw pre+post): mean IoU \(0.223\), mean F1 \(0.343\),
+  AUROC \(0.869\) (PR--AUC \(0.431\)).
+  \item ResNet--U--Net (raw pre+post): mean IoU \(0.243\), mean F1 \(0.360\),
+  AUROC \(0.800\) (PR--AUC \(0.393\)).
 \end{itemize}
 
-When DS/PCA--diff change maps are added as extra channels:
+When change priors are added as extra channels:
 \begin{itemize}
-  \item Concatenating DS or PCA--diff individually does not improve IoU/F1 and
-  often slightly degrades them; combined DS+PCA priors show similar trends.
-  \item PriorsFusionUNet improves over naive concatenation in terms of F1 and
-  AUROC but still does not surpass the best raw--only models in IoU/F1.
-  \item In several configurations, AUROC increases modestly when priors are
-  included, suggesting that priors sharpen ranking but also introduce more
-  false positives at a fixed threshold.
+  \item DS projection prior improves the U--Net baseline:
+  mean IoU \(0.273\), mean F1 \(0.401\), AUROC \(0.874\).
+  \item Celik prior is also strong:
+  mean IoU \(0.260\), mean F1 \(0.382\), AUROC \(0.872\) (best PR--AUC \(0.448\)).
+  \item PriorsFusionUNet yields the highest AUROC in this run (\(0.888\)),
+  but does not surpass the best U--Net + DS prior in IoU/F1.
+  \item Several alternative priors hurt IoU/F1 in this run (pixel diff,
+  PCA--diff, DS cross--residual, IR--MAD).
 \end{itemize}
 
 Per--tile visualizations confirm this picture: DS and PCA--diff maps often
@@ -387,9 +389,10 @@ The two--phase pipeline provides a coherent story:
   unsupervised change detectors on Sentinel--2. PCA--diff has the best AUROC
   on OSCD among classical methods, while DS is competitive and often cleaner
   than raw pixel diff.
-  \item Phase~2 demonstrates that, at least on OSCD, a well--trained
-  segmentation network on raw Sentinel--2 data is hard to beat in IoU/F1 when
-  evaluated strictly against the provided change masks.
+  \item Phase~2 shows that supervised segmentation on raw Sentinel--2 is
+  strong, and that DS projection priors can improve mean IoU/F1 in the current
+  setup, while fusion can improve ranking metrics (AUROC/PR--AUC) even when it
+  is not best for IoU/F1 at a fixed threshold.
 \end{enumerate}
 
 However, DS/PCA--diff priors remain valuable in two key ways:

@@ -1,10 +1,19 @@
 experiments:
-  - config: configs/oscd_seg_baseline.yaml
+  - config: phase2/configs/oscd_seg_baseline.yaml
     tag: "raw_only"
-  - config: configs/oscd_seg_E1_raw_ds.yaml
+  - config: phase2/configs/oscd_seg_siamese.yaml
+    tag: "siamese_raw_only"
+  - config: phase2/configs/oscd_seg_E1_raw_ds.yaml
     tag: "raw+ds"
-  - config: configs/oscd_seg_E2_raw_pca.yaml
+  - config: phase2/configs/oscd_seg_E1b_raw_ds_cross.yaml
+    tag: "raw+ds_cross"
+  - config: phase2/configs/oscd_seg_E4_raw_pixel.yaml
+    tag: "raw+pixel"
+  - config: phase2/configs/oscd_seg_E5_raw_celik.yaml
+    tag: "raw+celik"
+  - config: phase2/configs/oscd_seg_E6_raw_irmad.yaml
+    tag: "raw+ir_mad"
+  - config: phase2/configs/oscd_seg_E2_raw_pca.yaml
     tag: "raw+pca"
-  - config: configs/oscd_seg_priors.yaml
+  - config: phase2/configs/oscd_seg_priors.yaml
     tag: "raw+ds+pca"
-

@@ -1,6 +1,13 @@
 dataset:
   name: damage_template
-  root: /path/to/damage_dataset_root
+  root: data/xbd  # example; point to your damage dataset root
+  # DamageDatasetAdapter expects an index CSV per split. By default it looks for:
+  #   {root}/train.csv, {root}/val.csv, {root}/test.csv
+  # Override via index_csv if you prefer different locations.
+  index_csv:
+    train: train.csv
+    val: val.csv
+    test: test.csv
   split:
     train: []
     val: []
@@ -37,4 +44,3 @@ training:
     dice_weight: 1.0
 
 experiment_tag: "damage_seg_template"
-

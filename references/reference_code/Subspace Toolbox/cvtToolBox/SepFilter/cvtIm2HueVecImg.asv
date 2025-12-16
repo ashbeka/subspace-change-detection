@@ -1,0 +1,9 @@
+function [Vimg] = cvtIm2HueVecImg(img)
+
+img = rgb2hsv(img);
+hue = img(:,:,1) * 2 * pi;
+Vimg = zeros([size(hue) 3]);
+V = [cos(hue(:)),  sin(hue(:))];
+V = cvtNormalize
+
+end

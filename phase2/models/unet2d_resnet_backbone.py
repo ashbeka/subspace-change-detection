@@ -6,6 +6,8 @@ with a simple decoder. It can be extended later if needed.
 """
 from __future__ import annotations
 
+import math
+
 import torch
 import torch.nn as nn
 from torchvision.models import resnet34, ResNet34_Weights
@@ -17,9 +19,22 @@ class ResNetEncoder(nn.Module):
     weights = ResNet34_Weights.IMAGENET1K_V1 if pretrained else None
     m = resnet34(weights=weights)
     if in_channels != 3:
-      # replace first conv to accept arbitrary channels
+      # Replace first conv to accept arbitrary channels.
+      # If pretrained, inflate ImageNet conv1 weights to the new channel count.
+      old_w = m.conv1.weight.detach()  # (64, 3, 7, 7) if pretrained
       conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
-      nn.init.kaiming_normal_(conv1.weight, mode="fan_out", nonlinearity="relu")
+      if weights is not None and old_w.shape[1] == 3:
+        with torch.no_grad():
+          if in_channels == 1:
+            new_w = old_w.mean(dim=1, keepdim=True)
+          elif in_channels < 3:
+            new_w = old_w[:, :in_channels, :, :] * (3.0 / float(in_channels))
+          else:
+            rep = int(math.ceil(in_channels / 3))
+            new_w = old_w.repeat(1, rep, 1, 1)[:, :in_channels, :, :] * (3.0 / float(in_channels))
+          conv1.weight.copy_(new_w)
+      else:
+        nn.init.kaiming_normal_(conv1.weight, mode="fan_out", nonlinearity="relu")
       m.conv1 = conv1
     self.layer0 = nn.Sequential(m.conv1, m.bn1, m.relu)
     self.pool = m.maxpool
@@ -78,4 +93,3 @@ class UNet2DResNetBackbone(nn.Module):
     x = self.up2(x, x1)
     x = self.up1(x, x0)
     return self.out_conv(x)
-

@@ -150,11 +150,17 @@ class OSCDEvaluatorDataset:
         post_dir = images_dir / "imgs_2_rect"
         x1 = _stack_bands(pre_dir, self.band_order)
         x2 = _stack_bands(post_dir, self.band_order)
-        valid_mask = build_valid_mask(
+        valid_pre = build_valid_mask(
             x1,
             nodata_value=self.nodata_value,
             min_valid_bands=self.min_valid_bands,
         )
+        valid_post = build_valid_mask(
+            x2,
+            nodata_value=self.nodata_value,
+            min_valid_bands=self.min_valid_bands,
+        )
+        valid_mask = valid_pre & valid_post
         label_dir = None
         if self.split == "test":
             label_dir = self.root / "onera_satellite_change_detection dataset__test_labels" / city / "cm"

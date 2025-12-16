@@ -8,6 +8,7 @@ Wraps the Phase 1 OSCD loader and adds:
 """
 from __future__ import annotations
 
+from collections import OrderedDict
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -15,11 +16,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-import sys
-
 ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-  sys.path.append(str(ROOT))
 
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
 from phase1.data.preprocessing import apply_normalization, load_band_stats
@@ -40,8 +37,12 @@ def _load_priors(
       continue
     method_name = {
       "ds_projection": "ds_projection",
+      "ds_cross_residual": "ds_cross_residual",
       "pca_diff": "pca_diff",
       "pixel_diff": "pixel_diff",
+      "celik": "celik",
+      "ir_mad": "ir_mad",
+      "geodesic_dist": "geodesic_dist",
     }.get(method_key)
     if method_name is None:
       continue
@@ -62,6 +63,15 @@ class OSCDSegmentationDataset(Dataset):
   """
   Patch-wise segmentation dataset built on top of the Phase 1 OSCD loader.
   """
+
+  @staticmethod
+  def _infer_raw_channels(band_order: List[str], feats_cfg: Dict) -> int:
+    n_bands = int(len(band_order))
+    if not feats_cfg.get("use_raw_s2", True):
+      return 0
+    if feats_cfg.get("use_pre_post_stack", True):
+      return 2 * n_bands
+    return n_bands
 
   def __init__(
     self,
@@ -98,6 +108,13 @@ class OSCDSegmentationDataset(Dataset):
 
     self.patch_size: int = int(cfg["dataset"].get("patch_size", 256))
     self.patch_overlap: int = int(cfg["dataset"].get("patch_overlap", 64))
+    self.is_train = split == "train"
+
+    cache_cfg = cfg.get("dataset", {}).get("cache", {}) or {}
+    self.cache_cities: bool = bool(cache_cfg.get("cities", cfg["dataset"].get("cache_cities", True)))
+    self.cache_max_cities: int = int(cache_cfg.get("max_cities", cfg["dataset"].get("cache_max_cities", 0)) or 0)
+    # City cache stores precomputed arrays to avoid re-reading and re-normalizing the full tile for each patch.
+    self._city_cache: "OrderedDict[str, tuple[Array, Array, Array]]" = OrderedDict()
 
     # Phase 1 dataset to get tiles
     self.oscd_ds = OSCDEvaluatorDataset(
@@ -120,8 +137,7 @@ class OSCDSegmentationDataset(Dataset):
     self.patches: List[Tuple[str, int, int]] = []
     cities_for_split = cfg["dataset"]["split"][split]
     for city in cities_for_split:
-      sample = self.oscd_ds.load_city(city)
-      h, w = sample.x_pre.shape[1:]
+      h, w = self._get_city_shape(city)
       stride = max(1, self.patch_size - self.patch_overlap)
 
       def _positions(length: int, window: int, stride_val: int) -> List[int]:
@@ -143,20 +159,36 @@ class OSCDSegmentationDataset(Dataset):
     # build transforms
     aug_cfg = cfg["dataset"].get("augmentations", {})
     tfs = []
-    if aug_cfg.get("flip", True):
-      tfs.append(RandomFlipRotate())
-    if aug_cfg.get("noise", False):
-      tfs.append(RandomGaussianNoise())
+    feats_cfg = self.cfg.get("features", {})
+    self.n_raw_channels = self._infer_raw_channels(self.band_order, feats_cfg)
+    if self.is_train:
+      enable_flip = bool(aug_cfg.get("flip", True))
+      enable_rotate90 = bool(aug_cfg.get("rotate90", True))
+      if enable_flip or enable_rotate90:
+        tfs.append(RandomFlipRotate(enable_flip=enable_flip, enable_rotate90=enable_rotate90))
+      if bool(aug_cfg.get("noise", False)):
+        sigma = float(aug_cfg.get("noise_sigma", 0.01))
+        tfs.append(RandomGaussianNoise(sigma=sigma, n_raw_channels=self.n_raw_channels))
     self.transforms = ComposeTransforms(tfs) if tfs else None
 
-  def __len__(self) -> int:
-    return len(self.patches)
+  def _get_city_shape(self, city: str) -> tuple[int, int]:
+    # Avoid loading all bands just to get H/W when possible.
+    try:
+      import rasterio  # type: ignore
+    except Exception:
+      sample = self.oscd_ds.load_city(city)
+      h, w = sample.x_pre.shape[1:]
+      return int(h), int(w)
 
-  def __getitem__(self, idx: int):
-    city, y0, x0 = self.patches[idx]
+    images_dir = self.oscd_root / "onera_satellite_change_detection dataset__images" / city / "imgs_1_rect"
+    fp = images_dir / f"{self.band_order[0]}.tif"
+    with rasterio.open(fp) as src:
+      return int(src.height), int(src.width)
+
+  def _load_city_arrays(self, city: str) -> tuple[Array, Array, Array]:
     sample = self.oscd_ds.load_city(city)
 
-    # normalize pre/post
+    # normalize pre/post once per city (tile-level); patches are just views/slices.
     x1_norm, vm = apply_normalization(sample.x_pre, self.stats, valid_mask=sample.valid_mask, nodata_value=0.0)
     x2_norm, _ = apply_normalization(sample.x_post, self.stats, valid_mask=sample.valid_mask, nodata_value=0.0)
 
@@ -176,8 +208,33 @@ class OSCDSegmentationDataset(Dataset):
         feats.extend(priors)
 
     x_full = np.concatenate(feats, axis=0).astype(np.float32)
-    y_full = (sample.y.astype(np.float32) if sample.y is not None else np.zeros((1, x_full.shape[1], x_full.shape[2]), dtype=np.float32))
+    if sample.y is not None:
+      y_full = sample.y.astype(np.float32)
+    else:
+      y_full = np.zeros((1, x_full.shape[1], x_full.shape[2]), dtype=np.float32)
     valid_full = vm.astype(np.float32)
+    return x_full, y_full, valid_full
+
+  def _get_city_arrays(self, city: str) -> tuple[Array, Array, Array]:
+    if not self.cache_cities:
+      return self._load_city_arrays(city)
+    cached = self._city_cache.get(city)
+    if cached is not None:
+      self._city_cache.move_to_end(city)
+      return cached
+    arrays = self._load_city_arrays(city)
+    self._city_cache[city] = arrays
+    if self.cache_max_cities > 0:
+      while len(self._city_cache) > self.cache_max_cities:
+        self._city_cache.popitem(last=False)
+    return arrays
+
+  def __len__(self) -> int:
+    return len(self.patches)
+
+  def __getitem__(self, idx: int):
+    city, y0, x0 = self.patches[idx]
+    x_full, y_full, valid_full = self._get_city_arrays(city)
 
     sl_y = slice(y0, y0 + self.patch_size)
     sl_x = slice(x0, x0 + self.patch_size)

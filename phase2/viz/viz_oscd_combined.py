@@ -25,19 +25,16 @@ import torch
 import yaml
 from torch.utils.data import DataLoader
 
-import sys
-
 ROOT = Path(__file__).resolve().parents[2]
-if str(ROOT) not in sys.path:
-  sys.path.append(str(ROOT))
 
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
 from phase1.data.preprocessing import apply_normalization, load_band_stats
-from models.unet2d import UNet2D
-from models.unet2d_resnet_backbone import UNet2DResNetBackbone
-from models.priors_fusion_heads import PriorsFusionUNet
-from data.oscd_seg_dataset import OSCDSegmentationDataset
-from viz.overlay_utils import overlay_mask_on_rgb, rgb_from_s2
+from phase2.models.unet2d import UNet2D
+from phase2.models.unet2d_resnet_backbone import UNet2DResNetBackbone
+from phase2.models.priors_fusion_heads import PriorsFusionUNet
+from phase2.models.siamese_unet import SiameseUNet2D
+from phase2.data.oscd_seg_dataset import OSCDSegmentationDataset
+from phase2.viz.overlay_utils import overlay_mask_on_rgb, rgb_from_s2
 
 
 def otsu_threshold(scores: np.ndarray, valid_mask: np.ndarray) -> float:
@@ -59,12 +56,12 @@ def otsu_threshold(scores: np.ndarray, valid_mask: np.ndarray) -> float:
 def parse_args():
   ap = argparse.ArgumentParser()
   ap.add_argument("--config", type=Path, required=True, help="Segmentation config YAML (Phase 2)")
-  ap.add_argument("--oscd_root", type=Path, required=True, help="Path to OSCD root (phase1/data/raw/OSCD)")
+  ap.add_argument("--oscd_root", type=Path, required=True, help="Path to OSCD root (e.g. data/OSCD)")
   ap.add_argument(
     "--phase1_change_maps_root",
     type=Path,
     required=True,
-    help="Root of Phase 1 change maps (e.g., phase1/outputs/oscd_saved/oscd_change_maps)",
+    help="Root of Phase 1 change maps (e.g., phase1/outputs/oscd_saved_priors_fast/oscd_change_maps)",
   )
   ap.add_argument("--checkpoint", type=Path, required=True, help="Segmentation checkpoint (best.ckpt)")
   ap.add_argument("--output_dir", type=Path, required=True, help="Where to save combined figures")
@@ -73,6 +70,12 @@ def parse_args():
     default="test",
     help="Comma-separated city list or one of: train|val|test|all (based on OSCD split)",
   )
+  ap.add_argument(
+    "--device",
+    type=str,
+    default="cuda",
+    help="Device to use: cuda, cuda:0, cpu, or auto (default: cuda).",
+  )
   return ap.parse_args()
 
 
@@ -80,15 +83,37 @@ def load_config(path: Path):
   with path.open("r", encoding="utf-8") as f:
     return yaml.safe_load(f)
 
+def resolve_device(device_str: str) -> torch.device:
+  s = str(device_str or "").strip().lower()
+  if s == "auto":
+    return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  return torch.device(device_str)
+
+def ensure_cuda_available(device: torch.device) -> None:
+  if device.type != "cuda":
+    return
+  if torch.cuda.is_available():
+    return
+  raise RuntimeError(
+    "CUDA device requested but torch.cuda.is_available() is False. "
+    "This usually means CPU-only PyTorch is installed (e.g., torch==...+cpu). "
+    "Reinstall a CUDA-enabled PyTorch build: https://pytorch.org/get-started/locally/"
+  )
+
 
 def infer_channel_counts(cfg: dict) -> dict:
   feats = cfg["features"]
+  band_order = cfg.get("dataset", {}).get(
+    "band_order",
+    ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10", "B11", "B12", "B8A"],
+  )
+  n_bands = int(len(band_order))
   n_raw = 0
   if feats.get("use_raw_s2", True):
     if feats.get("use_pre_post_stack", True):
-      n_raw += 26
+      n_raw += 2 * n_bands
     else:
-      n_raw += 13
+      n_raw += n_bands
   priors = feats.get("priors", {})
   n_priors = 0
   for _, enabled in priors.items():
@@ -114,6 +139,15 @@ def build_model(cfg: dict, in_channels: int) -> torch.nn.Module:
     base_ch = model_cfg.get("base_channels", 64)
     depth = model_cfg.get("depth", 4)
     return PriorsFusionUNet(n_raw=n_raw, n_priors=n_priors, base_channels=base_ch, depth=depth, num_classes=num_classes)
+  if model_type == "siamese_unet":
+    band_order = cfg.get("dataset", {}).get(
+      "band_order",
+      ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10", "B11", "B12", "B8A"],
+    )
+    n_bands = int(len(band_order))
+    base_ch = model_cfg.get("base_channels", 64)
+    depth = model_cfg.get("depth", 4)
+    return SiameseUNet2D(n_bands=n_bands, base_channels=base_ch, depth=depth, num_classes=num_classes)
   raise NotImplementedError(f"Unknown model type: {model_type}")
 
 
@@ -151,11 +185,12 @@ def compute_segmentation_probs(cfg: dict, oscd_root: Path, change_root: Path, ck
 
   # Build patch dataset for test split
   ds = OSCDSegmentationDataset(oscd_root, "test", cfg, change_root)
-  loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0)
+  use_cuda = device.type == "cuda"
+  loader = DataLoader(ds, batch_size=1, shuffle=False, num_workers=0, pin_memory=use_cuda)
 
   city_preds: dict[str, list[tuple[np.ndarray, int, int]]] = {}
   for batch, (city, y0, x0) in zip(loader, ds.patches):
-    x = batch["x"].to(device)
+    x = batch["x"].to(device, non_blocking=use_cuda)
     with torch.no_grad():
       logits = model(x)
       if logits.shape[-2:] != x.shape[-2:]:
@@ -176,7 +211,14 @@ def main():
   out_dir = args.output_dir
   out_dir.mkdir(parents=True, exist_ok=True)
 
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  device = resolve_device(args.device)
+  ensure_cuda_available(device)
+  if device.type == "cuda":
+    idx = device.index if device.index is not None else 0
+    name = torch.cuda.get_device_name(idx)
+    print(f"Using device: {device} ({name})")
+  else:
+    print(f"Using device: {device}")
 
   # stats and band order from Phase 1
   stats = load_band_stats(ROOT / "phase1" / "data" / "oscd_band_stats.json")

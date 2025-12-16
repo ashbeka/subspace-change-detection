@@ -1,0 +1,91 @@
+clear;
+load('face.mat');
+
+s = size(imgs);
+
+% training_label_vector = cvtLabel(s(3), s(4))';
+% training_instance_matrix = reshape(imgs, s(1)*s(2), s(3)*s(4))';
+% 
+% model = liblinear_train(training_label_vector, ...
+%               sparse(training_instance_matrix), ...
+%               ['-s 4', 'col']);
+%           
+% 
+% load('face2.mat');
+% 
+% s = size(imgs);
+% testing_label_vector = cvtLabel(s(3), s(4))';
+% testing_instance_matrix = reshape(imgs, s(1)*s(2), s(3)*s(4))';
+% 
+% 
+% [predicted_label, accuracy, a] = ...
+%     liblinear_predict(testing_label_vector, sparse(testing_instance_matrix), model);
+%%
+clear;
+num = 100;
+train_x = [rand(2,num)-0.8, rand(2,num)];
+train_l = cvtLabel(num, 2);
+
+model = cvtSVM_train(train_x, train_l);
+[result_l score] = cvtSVM_predict(model, train_x, train_l);
+
+
+cvtPlot3([[train_x;ones(1,size(train_x,2))] model.w'], [train_l 3], 1);
+
+
+%%
+clear;
+load('face.mat');
+s = size(imgs);
+train_l = cvtLabel(s(3), s(4));
+train_x = reshape(imgs, s(1)*s(2), s(3)*s(4));
+
+
+load('face2.mat');
+s = size(imgs);
+test_l = cvtLabel(s(3), s(4));
+test_x = reshape(imgs, s(1)*s(2), s(3)*s(4));
+
+[score map model] = cvtTestSVM(train_x, train_l, test_x, test_l);
+
+disp(score);
+
+%%
+% -training_label_vector:
+%     An m by 1 vector of training labels. (type must be double)
+% -training_instance_matrix:
+%     An m by n matrix of m training instances with n features.
+%     It must be a sparse matrix. (type must be double)
+% -liblinear_options:
+%     A string of training options in the same format as that of LIBLINEAR.
+% -col:
+%     if 'col' is set, each column of training_instance_matrix is a data instance. Otherwise each row is a data instance.          
+          
+% liblinear_options:
+% -s type : set type of solver (default 1)
+% 	0 -- L2-regularized logistic regression (primal)
+% 	1 -- L2-regularized L2-loss support vector classification (dual)
+% 	2 -- L2-regularized L2-loss support vector classification (primal)
+% 	3 -- L2-regularized L1-loss support vector classification (dual)
+% 	4 -- multi-class support vector classification by Crammer and Singer
+% 	5 -- L1-regularized L2-loss support vector classification
+% 	6 -- L1-regularized logistic regression
+% 	7 -- L2-regularized logistic regression (dual)
+% -c cost : set the parameter C (default 1)
+% -e epsilon : set tolerance of termination criterion
+% 	-s 0 and 2
+% 		|f'(w)|_2 <= eps*min(pos,neg)/l*|f'(w0)|_2,
+% 		where f is the primal function and pos/neg are # of
+% 		positive/negative data (default 0.01)
+% 	-s 1, 3, 4 and 7
+% 		Dual maximal violation <= eps; similar to libsvm (default 0.1)
+% 	-s 5 and 6
+% 		|f'(w)|_1 <= eps*min(pos,neg)/l*|f'(w0)|_1,
+% 		where f is the primal function (default 0.01)
+% -B bias : if bias >= 0, instance x becomes [x; bias]; if < 0, no bias term added (default -1)
+% -wi weight: weights adjust the parameter C of different classes (see README for details)
+% -v n: n-fold cross validation mode
+% -q : quiet mode (no outputs)
+% col:
+% 	if 'col' is setted, training_instance_matrix is parsed in column format, otherwise is in row format
+% 

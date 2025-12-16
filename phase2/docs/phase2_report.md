@@ -151,7 +151,7 @@ Thresholding & metrics:
 - OSCD eval:
   - `phase1/eval/run_oscd_eval.py`.
   - Outputs JSON + CSV and (optionally) per‑tile change maps:
-    `phase1/outputs/oscd_saved/oscd_change_maps/{split}/{method}/{city}_score.npy`.
+    `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps/{split}/{method}/{city}_score.npy`.
 
 - OSCD summary figures:
   - `phase1/eval/visualize_oscd_examples.py`.
@@ -180,16 +180,19 @@ File: `phase2/data/oscd_seg_dataset.py`.
 Per split (`train/val/test`), Phase 2 uses:
 
 - Same OSCD root as Phase 1:
-  - `phase1/data/raw/OSCD/…`
+  - `data/OSCD/…`
 - Phase 1 loader logic:
   - `OSCDEvaluatorDataset` from `phase1/data/oscd_dataset.py`.
   - `sample = (x_pre, x_post, y_change, valid_mask)`:
     - `x_pre, x_post ∈ R^{13×H×W}`.
     - `y_change ∈ {0,1}^{1×H×W}`.
     - `valid_mask ∈ {0,1}^{H×W}`.
-- Priors from saved Phase 1 runs:
+- Priors from saved Phase 1 runs (continuous score maps):
 
-  `phase1/outputs/oscd_saved/oscd_change_maps/{split}/{method}/{city}_score.npy`.
+  - Fast priors (DS/PCA/pixel; used by most Phase 2 configs):
+    `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps/{split}/{method}/{city}_score.npy`.
+  - Full classical suite (adds `celik`, `ir_mad`, `cva`; needed for E5/E6):
+    `phase1/outputs/oscd_saved_full/oscd_change_maps/{split}/{method}/{city}_score.npy`.
 
 Configuration controls which features to stack:
 
@@ -311,15 +314,14 @@ model:
 
 File: `phase2/train/train_oscd_seg.py`.
 
-- CLI (for OSCD):
+  - CLI (for OSCD):
 
   ```bash
-  cd phase2
-  python -m train.train_oscd_seg \
-    --config configs/oscd_seg_baseline.yaml \
-    --oscd_root ../phase1/data/raw/OSCD \
-    --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-    --output_dir outputs/oscd_seg_E0_raw
+  python -m phase2.train.train_oscd_seg \
+    --config phase2/configs/oscd_seg_baseline.yaml \
+    --oscd_root data/OSCD \
+    --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+    --output_dir phase2/outputs/oscd_seg_E0_raw
   ```
 
 - Loss: `BCEDiceLoss` (`phase2/train/losses.py`):
@@ -373,6 +375,11 @@ We ran several experiment families on OSCD:
   - Input: raw + DS + PCA‑diff (28 channels).
   - Model: `UNet2D`.
 
+- **Additional baseline priors (available; useful for ablations)**:
+  - `oscd_seg_E1b_raw_ds_cross.yaml` – raw + DS cross‑residual.
+  - `oscd_seg_E4_raw_pixel.yaml` – raw + pixel‑diff.
+  - `oscd_seg_siamese.yaml` – Siamese baseline (raw only).
+
 - **ResNet variants**:
   - `oscd_seg_baseline_resnet.yaml` – raw only, ResNet U‑Net.
   - `oscd_seg_priors_resnet.yaml` – raw + DS + PCA‑diff, ResNet U‑Net.
@@ -380,44 +387,53 @@ We ran several experiment families on OSCD:
 - **PriorsFusionUNet variant**:
   - `oscd_seg_priors_fusion.yaml` – raw + DS + PCA‑diff, PriorsFusionUNet.
 
-All experiments used 50 epochs unless otherwise noted.
+Update (latest GPU run): the core experiments below were rerun for **150 epochs**
+(single seed) under `phase2/outputs/runs_gpu_150ep_20251215_233309/`.
 
 ### 4.2 Test split summary (mean metrics)
 
-From `phase2/outputs/oscd_priors_ablation_summary.csv` and ResNet/fusion
-evals:
+From:
+
+- `phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary.csv` (core E0–E3)
+- `phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary_extended.csv` (extended priors)
+
+and the corresponding per-run eval JSONs in that folder (threshold = 0.5):
 
 **Plain U‑Net experiments (test split):**
 
-| Experiment        | Input                | mean IoU | mean F1 | mean AUROC |
-|-------------------|----------------------|---------:|--------:|-----------:|
-| E0 raw_only       | raw pre+post         | **0.229** | **0.334** | **0.865** |
-| E1 raw+ds         | raw + DS proj        | 0.228    | 0.329   | 0.843      |
-| E2 raw+pca        | raw + PCA‑diff       | 0.187    | 0.283   | 0.818      |
-| E3 raw+ds+pca     | raw + DS + PCA‑diff  | 0.205    | 0.300   | 0.828      |
+| Experiment        | Input                        | mean IoU | mean F1 | mean AUROC | mean PR‑AUC |
+|-------------------|------------------------------|---------:|--------:|-----------:|------------:|
+| E0 raw_only       | raw pre+post                 | 0.223 | 0.343 | 0.869 | 0.431 |
+| E1 raw+ds         | raw + DS projection          | **0.273** | **0.401** | 0.874 | 0.436 |
+| E5 raw+celik      | raw + Celik prior            | 0.260 | 0.382 | 0.872 | **0.448** |
+| E3 raw+ds+pca     | raw + DS + PCA‑diff          | 0.251 | 0.370 | 0.864 | 0.404 |
+| E4 raw+pixel      | raw + pixel‑diff prior       | 0.213 | 0.324 | 0.853 | 0.390 |
+| E6 raw+ir_mad     | raw + IR‑MAD prior           | 0.208 | 0.309 | 0.805 | 0.356 |
+| E1b raw+ds_cross  | raw + DS cross‑residual prior | 0.201 | 0.309 | 0.857 | 0.405 |
+| E2 raw+pca        | raw + PCA‑diff prior         | 0.202 | 0.299 | 0.755 | 0.339 |
 
 **ResNet U‑Net experiments (test split):**
 
-| Experiment             | Input               | mean IoU | mean F1 | mean AUROC |
-|------------------------|---------------------|---------:|--------:|-----------:|
-| ResNet raw_only        | raw pre+post        | **0.230** | **0.336** | 0.826      |
-| ResNet raw+ds+pca      | raw + DS + PCA‑diff | 0.206    | 0.305   | **0.845** |
+| Experiment             | Input               | mean IoU | mean F1 | mean AUROC | mean PR‑AUC |
+|------------------------|---------------------|---------:|--------:|-----------:|------------:|
+| ResNet raw_only        | raw pre+post        | 0.243 | 0.360 | 0.800 | 0.393 |
+| ResNet raw+ds+pca      | raw + DS + PCA‑diff | 0.230 | 0.345 | 0.819 | 0.377 |
 
 **PriorsFusionUNet (test split):**
 
-| Experiment           | Input               | mean IoU | mean F1 | mean AUROC |
-|----------------------|---------------------|---------:|--------:|-----------:|
-| Fusion raw+ds+pca    | raw + DS + PCA‑diff | 0.207    | 0.311   | 0.854      |
+| Experiment           | Input               | mean IoU | mean F1 | mean AUROC | mean PR‑AUC |
+|----------------------|---------------------|---------:|--------:|-----------:|------------:|
+| Fusion raw+ds+pca    | raw + DS + PCA‑diff | 0.243 | 0.360 | **0.888** | 0.441 |
 
 Interpretation:
 
-- Raw S2 only (U‑Net or ResNet) gives the best **IoU/F1** on OSCD.
-- Adding priors as simple extra channels (E1/E2/E3, ResNet+priors):
-  - Does **not** improve IoU/F1; sometimes slightly worse.
-  - Can slightly improve AUROC (ResNet+priors, Fusion).
-- PriorsFusionUNet:
-  - Improves over naive concatenation (E3) in F1 and AUROC.
-  - Still does not surpass raw‑only models in IoU/F1.
+- In this run, adding the **DS projection prior** (E1) improves mean IoU/F1 vs raw‑only.
+- Celik as a prior (E5) is also strong in IoU/F1 and has the best PR‑AUC in this run.
+- The reported means are averaged over the 10 OSCD test cities (each city weighted equally).
+- PCA‑diff as a prior (E2) hurts in this setting; DS+PCA (E3) helps, but less than DS alone.
+- Pixel‑diff, DS cross‑residual, and IR‑MAD priors do not help IoU/F1 in this run.
+- Fusion is strongest for AUROC, but is not the best for F1 at a fixed threshold (0.5).
+- These are **single‑seed** results at a fixed threshold (0.5). For stable conclusions, rerun with multiple seeds and tune the decision threshold on the val split.
 
 ### 4.3 Example per‑city behavior: chongqing
 
@@ -425,31 +441,32 @@ From various `oscd_seg_eval_results.json`:
 
 **Chongqing (test tile, IoU/F1/AUROC):**
 
-- U‑Net raw_only:
-  - `IoU ≈ 0.188`, `F1 ≈ 0.304`, `AUROC ≈ 0.890`.
-- U‑Net raw+ds+pca:
-  - `IoU ≈ 0.172`, `F1 ≈ 0.281`, `AUROC ≈ 0.879`.
+- U‑Net raw_only (E0):
+  - `IoU ≈ 0.130`, `F1 ≈ 0.230`, `AUROC ≈ 0.901`.
+- U‑Net raw+ds (E1):
+  - `IoU ≈ 0.126`, `F1 ≈ 0.223`, `AUROC ≈ 0.902`.
+- U‑Net raw+ds+pca (E3):
+  - `IoU ≈ 0.324`, `F1 ≈ 0.490`, `AUROC ≈ 0.919`.
 - ResNet raw_only:
-  - `IoU ≈ 0.238`, `F1 ≈ 0.368`, `AUROC ≈ 0.829`.
-- ResNet raw+ds+pca:
-  - `IoU ≈ 0.195`, `F1 ≈ 0.311`, `AUROC ≈ 0.873`.
+  - `IoU ≈ 0.216`, `F1 ≈ 0.355`, `AUROC ≈ 0.853`.
 - Fusion raw+ds+pca:
-  - `IoU ≈ 0.122`, `F1 ≈ 0.207`, `AUROC ≈ 0.839`.
+  - `IoU ≈ 0.290`, `F1 ≈ 0.449`, `AUROC ≈ 0.935`.
 
-Qualitatively:
+Qualitatively (and this is the key seminar message):
 
-- Best segmentation on chongqing comes from **ResNet raw‑only**.
-- PriorsFusionUNet on this tile tends to produce more false positives or
-  missed regions compared to the baseline, explaining the lower IoU/F1
-  despite decent AUROC.
+- Priors can help or hurt **depending on the tile**.
+- On chongqing, adding DS+PCA priors helps a lot (E3 and Fusion), while DS alone (E1) does not.
+  This is why the project reports both mean metrics and per‑city examples.
 
 ---
 
 ## 5. DS‑Centric Narrative and Novelty
 
-Even though raw S2 segmentation currently outperforms all priors‑based
-variants in IoU/F1, the DS/PCA‑diff machinery remains central and
-novel in the project:
+Raw S2 segmentation is a strong baseline on OSCD, but priors can help.
+In the latest 150‑epoch run, the DS projection prior improves mean IoU/F1 for the baseline U‑Net,
+and fusion improves ranking metrics (AUROC/PR‑AUC).
+
+Separately from final accuracy, the DS/PCA‑diff machinery remains central and novel in the project:
 
 1. **Principled spectral change modeling**:
    - DS constructs subspaces for pre/post S2 spectra and focuses on
@@ -560,13 +577,12 @@ To make the relationship between priors and segmentation clearer, Phase
 Example usage (ResNet raw‑only model):
 
 ```bash
-cd phase2
-python -m viz.viz_oscd_combined \
-  --config configs/oscd_seg_baseline_resnet.yaml \
-  --oscd_root ../phase1/data/raw/OSCD \
-  --phase1_change_maps_root ../phase1/outputs/oscd_saved/oscd_change_maps \
-  --checkpoint outputs/oscd_seg_E0_raw_resnet/best.ckpt \
-  --output_dir outputs/oscd_combined_resnet \
+python -m phase2.viz.viz_oscd_combined \
+  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --oscd_root data/OSCD \
+  --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
+  --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
+  --output_dir phase2/outputs/oscd_combined_resnet \
   --cities test
 ```
 
@@ -581,7 +597,7 @@ shown together, making it much easier to:
 
 In the current Phase‑2 runs we generated these combined figures for all
 OSCD **test** cities using the **ResNet raw‑only** baseline
-(`outputs/oscd_combined_resnet/*.png`). Qualitatively, these confirm
+(`phase2/outputs/oscd_combined_resnet/*.png`). Qualitatively, these confirm
 that:
 
 - DS/PCA‑diff maps often extend slightly beyond the binary GT mask,
@@ -595,9 +611,9 @@ unsupervised “change detectors”, while supervised segmentation learns a
 task‑specific subset of those changes driven by the annotated labels.
 
 We also generated combined figures for the **PriorsFusionUNet**
-(`outputs/oscd_combined_fusion/*.png`), using
-`configs/oscd_seg_priors_fusion.yaml` and the
-`outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt` checkpoint. Compared
+(`phase2/outputs/oscd_combined_fusion/*.png`), using
+`phase2/configs/oscd_seg_priors_fusion.yaml` and the
+`phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt` checkpoint. Compared
 to the ResNet raw‑only plots, the fusion model’s segmentation masks tend
 to:
 
@@ -657,8 +673,7 @@ pretraining:
 2. Train as before:
 
    ```bash
-   cd phase2
-   python -m train.train_oscd_seg --config configs/oscd_seg_baseline_resnet.yaml ...
+   python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_baseline_resnet.yaml ...
    ```
 
 3. Compare metrics:
@@ -723,9 +738,10 @@ infrastructure.
     - Raw S2 baselines (U‑Net and ResNet).
     - Raw + DS/PCA priors (concatenation, ResNet, fusion).
   - Found that:
-    - Raw S2 segmentation is strongest on OSCD.
-    - DS/PCA priors modestly improve AUROC and, with fusion, behave
-      coherently, but do not surpass raw‑only baselines in IoU/F1.
+    - On OSCD, raw S2 segmentation is a strong baseline.
+    - In the latest 150‑epoch GPU run, adding the DS projection prior improves mean IoU/F1 (E1),
+      while fusion improves ranking metrics (best AUROC/PR‑AUC).
+    - Priors are not uniformly beneficial per‑tile; report both mean and per‑city behavior.
   - Established DS/PCA‑diff as powerful **analysis and interpretability
     tools** that will be useful when moving to damage datasets.
 

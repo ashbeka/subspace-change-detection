@@ -7,7 +7,7 @@ from typing import Callable, Dict, List, Tuple
 
 import numpy as np
 
-from eval.metrics import binary_metrics
+from phase1.eval.metrics import binary_metrics
 
 
 def otsu_threshold(scores: np.ndarray, valid_mask: np.ndarray) -> float:

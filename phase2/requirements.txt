@@ -1,3 +1,5 @@
+# NOTE: Phase 2 training defaults to GPU (`--device cuda`). Install a CUDA-enabled
+# PyTorch build from https://pytorch.org/get-started/locally/ if `torch.cuda.is_available()` is False.
 torch
 torchvision
 numpy
@@ -5,4 +7,3 @@ scipy
 scikit-learn
 matplotlib
 pyyaml
-

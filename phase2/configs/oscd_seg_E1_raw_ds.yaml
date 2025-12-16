@@ -1,6 +1,6 @@
 dataset:
   name: oscd
-  root: phase1/data/raw/OSCD
+  root: data/OSCD
   split:
     train:
       - beirut
@@ -64,7 +64,6 @@ training:
     dice_weight: 1.0
 
 phase1:
-  change_maps_root: phase1/outputs/oscd_saved/oscd_change_maps
+  change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
 experiment_tag: "oscd_seg_raw+ds"
-

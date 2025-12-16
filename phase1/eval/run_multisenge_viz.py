@@ -11,14 +11,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 import rasterio
-from eval.utils import suppress_rasterio_warnings
-from data.preprocessing import reindex_stats
+from phase1.eval.utils import suppress_rasterio_warnings
+from phase1.data.preprocessing import reindex_stats
 
 suppress_rasterio_warnings()
 
-from data.multisenge_dataset import load_pair, scan_multisenge_s2, select_pairs
-from data.preprocessing import BandStats, apply_normalization, load_band_stats
-from ds.ds_scores import DSConfig, compute_ds_scores, sliding_window_ds
+from phase1.data.multisenge_dataset import load_pair, scan_multisenge_s2, select_pairs
+from phase1.data.preprocessing import BandStats, apply_normalization, load_band_stats
+from phase1.ds.ds_scores import DSConfig, compute_ds_scores, sliding_window_ds
+
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
+
+
+def resolve_phase1_path(p: Path) -> Path:
+    return p if p.is_absolute() else (PHASE1_ROOT / p)
 
 
 def parse_args():
@@ -64,7 +70,7 @@ def main():
     outdir = Path(args.output_dir)
     outdir.mkdir(parents=True, exist_ok=True)
 
-    stats = load_band_stats(Path(cfg["normalization"]["stats_path"]))
+    stats = load_band_stats(resolve_phase1_path(Path(cfg["normalization"]["stats_path"])))
     desired_order = cfg["dataset"].get("band_order")
     stats_order = cfg["normalization"].get("stats_band_order", desired_order)
     if desired_order is not None and stats_order is not None and stats_order != desired_order:

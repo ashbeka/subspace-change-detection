@@ -13,10 +13,10 @@ Optional:
 - Annotate per-city metrics if an eval results JSON is provided.
 
 Usage:
-    python -m eval.visualize_oscd_examples \
-        --config configs/oscd_default.yaml \
-        --oscd_root data/raw/OSCD \
-        --output_dir outputs/oscd_figs \
+    python -m phase1.eval.visualize_oscd_examples \
+        --config phase1/configs/oscd_default.yaml \
+        --oscd_root data/OSCD \
+        --output_dir phase1/outputs/oscd_figs \
         --cities beirut,valencia \
         [--metrics_json outputs/oscd_eval_results.json]
 """
@@ -31,15 +31,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 import yaml
 
-from baselines.pca_diff import pca_diff_score
-from baselines.pixel_diff import pixel_l2_difference
-from data.oscd_dataset import OSCDEvaluatorDataset
-from data.preprocessing import apply_normalization, load_band_stats
-from ds.ds_scores import DSConfig, compute_ds_scores
-from eval.thresholding import otsu_threshold
-from eval.utils import suppress_rasterio_warnings
+from phase1.baselines.pca_diff import pca_diff_score
+from phase1.baselines.pixel_diff import pixel_l2_difference
+from phase1.data.oscd_dataset import OSCDEvaluatorDataset
+from phase1.data.preprocessing import apply_normalization, load_band_stats
+from phase1.ds.ds_scores import DSConfig, compute_ds_scores
+from phase1.eval.thresholding import otsu_threshold
+from phase1.eval.utils import suppress_rasterio_warnings
 
 suppress_rasterio_warnings()
+
+PHASE1_ROOT = Path(__file__).resolve().parents[1]
+
+
+def resolve_phase1_path(p: Path) -> Path:
+    return p if p.is_absolute() else (PHASE1_ROOT / p)
 
 
 def parse_args():
@@ -117,7 +123,7 @@ def main():
     outdir.mkdir(parents=True, exist_ok=True)
 
     band_order = cfg["dataset"]["band_order"]
-    stats = load_band_stats(Path(cfg["normalization"]["stats_path"]))
+    stats = load_band_stats(resolve_phase1_path(Path(cfg["normalization"]["stats_path"])))
     ds_cfg = DSConfig(
         rank_r=cfg["ds"].get("rank_r", 6),
         variance_threshold=cfg["ds"].get("variance_threshold"),

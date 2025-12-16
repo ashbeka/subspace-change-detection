@@ -11,7 +11,7 @@ from typing import Dict, Iterable, List, Optional, Tuple
 import numpy as np
 import rasterio
 
-from data.preprocessing import build_valid_mask
+from phase1.data.preprocessing import build_valid_mask
 
 
 Array = np.ndarray

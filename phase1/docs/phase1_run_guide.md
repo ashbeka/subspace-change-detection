@@ -8,11 +8,7 @@ without re‑reading the full report/spec. It focuses on:
 - How to run MultiSenGE visualizations.
 - Where outputs go and how Phase 2 consumes them.
 
-All commands below assume you start from the **Phase 1 directory**:
-
-```bash
-cd DS_damage_segmentation/phase1
-```
+All commands below assume you start from the **repo root**:
 
 ---
 
@@ -22,6 +18,8 @@ cd DS_damage_segmentation/phase1
 
 - Script: `phase1/eval/run_oscd_eval.py`
 - Main configs:
+  - `phase1/configs/oscd_priors_fast.yaml`
+    - Fast run used to generate Phase‑2 priors (DS projection + DS cross‑residual + pixel diff + PCA‑diff; no sliding window).
   - `phase1/configs/oscd_default.yaml`
     - OSCD dataset paths and splits.
     - DS config (projection/cross‑residual, rank, variant).
@@ -31,13 +29,24 @@ cd DS_damage_segmentation/phase1
 
 ### 1.2 Typical OSCD evaluation command
 
-Run DS + baselines on OSCD with the default config:
+Recommended (fast priors for Phase 2):
 
 ```bash
-python -m eval.run_oscd_eval \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_saved
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_priors_fast.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_priors_fast \
+  --save_change_maps
+```
+
+Optional (slower): full baseline suite + sliding‑window DS
+
+```bash
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_full \
+  --save_change_maps
 ```
 
 Important flags:
@@ -50,20 +59,20 @@ Important flags:
   into `output_dir/oscd_change_maps/...` – this is what Phase 2 uses as
   priors.
 
-Example with change‑map saving and Celik disabled:
+Example (full baseline run) with change‑map saving and Celik disabled:
 
 ```bash
-python -m eval.run_oscd_eval \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_saved \
+python -m phase1.eval.run_oscd_eval \
+  --config phase1/configs/oscd_default.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_saved_full \
   --save_change_maps \
   --disable_celik
 ```
 
 ### 1.3 Outputs
 
-For an `--output_dir` like `phase1/outputs/oscd_saved`, the script
+For an `--output_dir` like `phase1/outputs/oscd_saved_priors_fast`, the script
 produces:
 
 - `oscd_eval_results.json`
@@ -94,10 +103,10 @@ These change‑map `.npy` files are consumed by Phase 2 as priors
 ### 2.2 Example command
 
 ```bash
-python -m eval.visualize_oscd_examples \
-  --config configs/oscd_default.yaml \
-  --oscd_root data/raw/OSCD \
-  --output_dir outputs/oscd_figs_all \
+python -m phase1.eval.visualize_oscd_examples \
+  --config phase1/configs/oscd_priors_fast.yaml \
+  --oscd_root data/OSCD \
+  --output_dir phase1/outputs/oscd_figs_all \
   --cities test
 ```
 
@@ -109,7 +118,7 @@ You can also pass a comma‑separated list of cities, e.g.:
 
 Optional:
 
-- `--metrics_json outputs/oscd_saved/oscd_eval_results.json`
+- `--metrics_json phase1/outputs/oscd_saved_priors_fast/oscd_eval_results.json`
   - Adds per‑city DS metrics text to the figure.
 
 Output example:
@@ -131,10 +140,10 @@ Output example:
 ### 3.2 Example command
 
 ```bash
-python -m eval.run_multisenge_viz \
-  --config configs/multisenge_default.yaml \
-  --multisenge_root data/raw/MultiSenGE/s2 \
-  --output_dir outputs/multisenge_viz
+python -m phase1.eval.run_multisenge_viz \
+  --config phase1/configs/multisenge_default.yaml \
+  --multisenge_root data/MultiSenGE/s2 \
+  --output_dir phase1/outputs/multisenge_viz
 ```
 
 Outputs:
@@ -152,7 +161,7 @@ pretraining targets.
 
 Phase 2 expects the OSCD change maps produced by Phase 1 to live at:
 
-- `phase1/outputs/oscd_saved/oscd_change_maps/{split}/{method}/{city}_score.npy`
+- `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps/{split}/{method}/{city}_score.npy`
 
 and uses them as priors:
 
@@ -163,7 +172,7 @@ and uses them as priors:
 The path is configured via:
 
 - In Phase 2 configs: `phase1.change_maps_root`
-  - e.g. `phase1/outputs/oscd_saved/oscd_change_maps`
+  - e.g. `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps`
 
 As long as you keep Phase 1 outputs in that location, Phase 2 training
 and visualization scripts will find them automatically.

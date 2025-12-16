@@ -7,22 +7,32 @@ from typing import Tuple
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class BCEDiceLoss(nn.Module):
-  def __init__(self, bce_weight: float = 1.0, dice_weight: float = 1.0, smooth: float = 1.0):
+  def __init__(
+    self,
+    bce_weight: float = 1.0,
+    dice_weight: float = 1.0,
+    smooth: float = 1.0,
+    pos_weight: float | None = None,
+  ):
     super().__init__()
     self.bce_weight = bce_weight
     self.dice_weight = dice_weight
-    self.bce = nn.BCEWithLogitsLoss(reduction="mean")
     self.smooth = smooth
+    self.pos_weight = pos_weight
 
   def forward(self, logits: torch.Tensor, targets: torch.Tensor, valid_mask: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
     # logits: (B,1,H,W), targets: (B,1,H,W), valid_mask: (B,1,H,W)
     probs = torch.sigmoid(logits)
     valid = valid_mask.bool()
     if valid.any():
-      bce = self.bce(logits[valid], targets[valid])
+      pw = None
+      if self.pos_weight is not None:
+        pw = torch.as_tensor(self.pos_weight, dtype=logits.dtype, device=logits.device)
+      bce = F.binary_cross_entropy_with_logits(logits[valid], targets[valid], reduction="mean", pos_weight=pw)
     else:
       bce = logits.new_tensor(0.0)
 
@@ -35,5 +45,4 @@ class BCEDiceLoss(nn.Module):
 
     loss = self.bce_weight * bce + self.dice_weight * dice
     return loss, bce.detach(), dice.detach()
-
 

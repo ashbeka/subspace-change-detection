@@ -1,0 +1,28 @@
+function [MAP] = cvtCyclicImgsSepFilter(Vimg1, Vimg2, window_w, indow_h)
+%
+% --w---  --w---
+% Å†Å†Å†Å†Å†Å†Å†  |
+% Å†Å†Å†Å†Å†Å†Å†  h
+% Å†Å†Å†Å†Å†Å†Å†  |Å@
+% Å†Å†Å†Å†Å†Å†Å†
+% Å†Å†Å†Å†Å†Å†Å†  |
+% Å†Å†Å†Å†Å†Å†Å†  h
+% Å†Å†Å†Å†Å†Å†Å†  |
+%
+
+imgH = size(Vimg1, 1);
+imgW = size(Vimg2, 2);
+MAP = zeros(imgH, imgW);
+
+for wi = (window_w+1):(imgW-window_w)
+    for hi = (window_h+1):(imgH-window_h)
+        V1cos = Vimg1((hi-window_h):(hi+window_h), (wi-window_w):(wi+window_w), 1);
+        V1sin = Vimg1((hi-window_h):(hi+window_h), (wi-window_w):(wi+window_w), 2);
+        V2cos = Vimg2((hi-window_h):(hi+window_h), (wi-window_w):(wi+window_w), 1);
+        V2sin = Vimg2((hi-window_h):(hi+window_h), (wi-window_w):(wi+window_w), 2);
+        
+        MAP(hi, wi) = cvtCyclicSepFilter([V1cos(:),V1sin(:)], [V1cos(:), V1sin(:); V2cos(:),V2sin(:)]);
+    end
+end
+
+end

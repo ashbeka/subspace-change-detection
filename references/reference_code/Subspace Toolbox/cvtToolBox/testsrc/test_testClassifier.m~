@@ -1,0 +1,3 @@
+% test TestClassifier
+load('yaleface_64x64.mat');
+

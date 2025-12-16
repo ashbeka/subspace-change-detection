@@ -8,10 +8,11 @@ import rasterio
 
 # Script lives in phase1/scripts; jump to phase1 root for data paths.
 PHASE1_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = PHASE1_ROOT.parent
 
-OSCD_IMAGES_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__images"
-OSCD_TRAIN_LABELS_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__train_labels"
-OSCD_TEST_LABELS_ROOT = PHASE1_ROOT / "data" / "raw" / "OSCD" / "onera_satellite_change_detection dataset__test_labels"
+OSCD_IMAGES_ROOT = REPO_ROOT / "data" / "OSCD" / "onera_satellite_change_detection dataset__images"
+OSCD_TRAIN_LABELS_ROOT = REPO_ROOT / "data" / "OSCD" / "onera_satellite_change_detection dataset__train_labels"
+OSCD_TEST_LABELS_ROOT = REPO_ROOT / "data" / "OSCD" / "onera_satellite_change_detection dataset__test_labels"
 
 
 def _load_rgb(city: str, which: str):

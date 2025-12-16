@@ -28,8 +28,10 @@ __pycache__/
 # Data + heavy artifacts
 ########################
 
+# Root data
+data/
+
 # Phase‑1 raw data and outputs
-phase1/data/raw/
 phase1/outputs/
 phase1/*.tif
 phase1/*.tiff
@@ -37,17 +39,18 @@ phase1/**/*.tif
 phase1/**/*.tiff
 
 # Phase‑2 raw data (future) and outputs
-phase2/data/raw/
 phase2/outputs/
 
 # Reference code and external papers/presentations
-reference_code/
-docs/presentations_refernces/
+reference/reference_code/
 
 # Model checkpoints
 *.ckpt
 *.pt
 *.pth
+
+# Generated context packs / archives
+prompt_stuff/
 
 ########
 # Logs

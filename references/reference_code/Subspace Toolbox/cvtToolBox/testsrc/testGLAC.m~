@@ -1,0 +1,96 @@
+%% GLAC test
+% 
+% img = imread('face.jpg');
+% imshow(img);
+% 
+% f = cvtGLAC(rgb2gray(img));
+% 
+% bar(f);
+
+%% GLAC
+clear;
+load('face.mat');
+[h w num class_num] = size(imgs);
+
+train_x = zeros(328, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    train_x(:,ni,ci) = cvtGLAC(imgs(:,:,ni,ci));
+end
+end
+train_l = cvtLabel(num, class_num);
+
+
+load('face2.mat');
+test_x = zeros(328, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    test_x(:,ni,ci) = cvtGLAC(imgs(:,:,ni,ci));
+end
+end
+
+test_l = cvtLabel(num, class_num);
+
+score = cvtTestMDA(train_x(:,:), train_l, test_x(:,:), test_l, 100);
+disp('GLAC score');
+disp(score);
+
+%% HLAC
+
+clear;
+hlac = @(img) [cvtHlac35(img,1); cvtHlac35(img,2); cvtHLAC35(img,3)];
+
+load('face.mat');
+[h w num class_num] = size(imgs);
+
+
+train_x = zeros(35*3, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    train_x(:,ni,ci) = hlac(imgs(:,:,ni,ci));
+end
+end
+train_l = cvtLabel(num, class_num);
+
+
+load('face2.mat');
+test_x = zeros(35*3, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    test_x(:,ni,ci) = hlac(imgs(:,:,ni,ci));
+end
+end
+test_l = cvtLabel(num, class_num);
+
+score = cvtTestMDA(train_x(:,:), train_l, test_x(:,:), test_l, 100);
+disp('HLAC score');
+disp(score);
+
+%% HOG
+clear;
+
+load('face.mat');
+[h w num class_num] = size(imgs);
+
+train_x = zeros(6*6*72, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    train_x(:,ni,ci) = cvtVec(cvtHOG(imgs(:,:,ni,ci)));
+end
+end
+train_l = cvtLabel(num, class_num);
+
+
+load('face2.mat');
+test_x = zeros(6*6*72, num, class_num);
+for ci = 1:class_num
+for ni = 1:num
+    test_x(:,ni,ci) = cvtVec(cvtHOG(imgs(:,:,ni,ci)));
+end
+end
+test_l = cvtLabel(num, class_num);
+
+score = cvtTestMDA(train_x(:,:), train_l, test_x(:,:), test_l, 50);
+disp('HOG score');
+disp(score);
+

@@ -13,8 +13,8 @@ from typing import Dict, Optional
 
 import numpy as np
 
-from data.preprocessing import build_valid_mask, devectorize_cube, vectorize_cube
-from ds import pca_utils
+from phase1.data.preprocessing import build_valid_mask, devectorize_cube, vectorize_cube
+from phase1.ds import pca_utils
 
 
 Array = np.ndarray
@@ -103,7 +103,9 @@ def compute_ds_scores(
     if x1.shape != x2.shape:
         raise ValueError(f"Shape mismatch: {x1.shape} vs {x2.shape}")
     if valid_mask is None:
-        valid_mask = build_valid_mask(x1, nodata_value=cfg.nodata_value)
+        vm1 = build_valid_mask(x1, nodata_value=cfg.nodata_value)
+        vm2 = build_valid_mask(x2, nodata_value=cfg.nodata_value)
+        valid_mask = vm1 & vm2
 
     mat1, idx = vectorize_cube(x1, valid_mask)
     mat2, _ = vectorize_cube(x2, valid_mask)
@@ -171,7 +173,9 @@ def sliding_window_ds(
             sl_x = slice(x, x + window_size)
             sub1 = x1[:, sl_y, sl_x]
             sub2 = x2[:, sl_y, sl_x]
-            valid_sub = build_valid_mask(sub1, nodata_value=cfg.nodata_value)
+            vm1 = build_valid_mask(sub1, nodata_value=cfg.nodata_value)
+            vm2 = build_valid_mask(sub2, nodata_value=cfg.nodata_value)
+            valid_sub = vm1 & vm2
             sub_scores = compute_ds_scores(sub1, sub2, valid_mask=valid_sub, cfg=cfg, normalize=False)
             if aggregator == "mean":
                 acc_proj[sl_y, sl_x] += sub_scores["projection"]

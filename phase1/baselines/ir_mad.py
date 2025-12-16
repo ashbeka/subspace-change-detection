@@ -22,6 +22,7 @@ def ir_mad_score(
     valid_mask: Array,
     iters: int = 3,
     downsample_max_pixels: int = 200000,
+    random_state: int = 1234,
     eps: float = 1e-6,
 ) -> Array:
     """
@@ -32,9 +33,10 @@ def ir_mad_score(
     mat1 = x1.reshape(x1.shape[0], -1)[:, v]
     mat2 = x2.reshape(x2.shape[0], -1)[:, v]
     n = mat1.shape[1]
+    rng = np.random.default_rng(int(random_state))
     # Optional subsample for coefficient estimation
     if n > downsample_max_pixels:
-        idx = np.random.choice(n, size=downsample_max_pixels, replace=False)
+        idx = rng.choice(n, size=downsample_max_pixels, replace=False)
         samp1 = mat1[:, idx]
         samp2 = mat2[:, idx]
     else:

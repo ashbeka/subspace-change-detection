@@ -6,7 +6,7 @@ from __future__ import annotations
 from typing import Dict, Tuple
 
 import numpy as np
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score, roc_auc_score
 
 
 def binary_stats(pred: np.ndarray, target: np.ndarray, valid_mask: np.ndarray) -> Dict[str, float]:
@@ -47,4 +47,17 @@ def auroc_score(probs: np.ndarray, target: np.ndarray, valid_mask: np.ndarray) -
   except Exception:
     return float("nan")
 
+
+def pr_auc_score(probs: np.ndarray, target: np.ndarray, valid_mask: np.ndarray) -> float:
+  vm = valid_mask.astype(bool)
+  if vm.sum() == 0:
+    return float("nan")
+  y_true = target[vm].astype(np.uint8)
+  y_score = probs[vm].astype(np.float32)
+  if len(np.unique(y_true)) < 2:
+    return float("nan")
+  try:
+    return float(average_precision_score(y_true, y_score))
+  except Exception:
+    return float("nan")
 

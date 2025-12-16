@@ -1,0 +1,30 @@
+function [score map model] = cvtTestSVM(train_x, train_l, test_x, test_l, option)
+
+if nargin < 5
+    option = [];
+end
+
+ % train
+model = cvtSVM_train(train_x, train_l, option);
+
+% test
+[result_l, score] = cvtSVM_predict(model, test_x, test_l);
+
+class_num1 = max(train_l);
+class_num2 = max(test_l);
+
+map = zeros(class_num2, class_num1);
+for I = 1:numel(test_l)
+   map(test_l(I), result_l(I)) =  map(test_l(I), result_l(I)) + 1;
+end
+
+for I = 1:class_num2
+   map(I,:) = map(I,:) / sum(map(I,:)); 
+end
+
+
+
+
+
+
+end
