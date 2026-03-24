@@ -41,6 +41,9 @@ phase1/**/*.tiff
 # Phase‑2 raw data (future) and outputs
 phase2/outputs/
 
+# research notes
+research-notes/
+
 # Reference code and external papers/presentations
 references/reference_code/
 
