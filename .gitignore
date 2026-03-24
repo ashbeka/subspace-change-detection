@@ -42,7 +42,7 @@ phase1/**/*.tiff
 phase2/outputs/
 
 # Reference code and external papers/presentations
-reference/reference_code/
+references/reference_code/
 
 # Model checkpoints
 *.ckpt
