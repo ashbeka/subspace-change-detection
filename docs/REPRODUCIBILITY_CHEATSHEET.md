@@ -400,7 +400,7 @@ Interactive version with live `tqdm` batch progress bars:
 powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
 ```
 
-`-ProgressBars` prints the familiar `tqdm` batch bars from the training loop. The bars are terminal UI; the durable evidence is still `train_log.json`, `run_metadata.json`, and eval CSV/JSON.
+`-ProgressBars` disables transcript/per-run console capture and lets Python render native `tqdm` bars directly in the terminal. The bars are terminal UI; the durable evidence is still `train_log.json`, `run_metadata.json`, and eval CSV/JSON.
 
 Core only includes:
 

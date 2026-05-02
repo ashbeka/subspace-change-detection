@@ -27,9 +27,11 @@ except Exception:  # pragma: no cover
 
 try:
   from tqdm import tqdm
+  _TQDM_AVAILABLE = True
 except Exception:  # pragma: no cover
   def tqdm(x, *args, **kwargs):
     return x
+  _TQDM_AVAILABLE = False
 
 from phase2.data.oscd_seg_dataset import OSCDSegmentationDataset
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
@@ -77,6 +79,12 @@ def parse_args():
     "--overwrite_output_dir",
     action="store_true",
     help="Allow writing into a non-empty output_dir without resuming (will overwrite logs/checkpoints).",
+  )
+  ap.add_argument(
+    "--progress_style",
+    choices=["tqdm", "none"],
+    default="tqdm",
+    help="Training progress display. Use 'tqdm' for animated batch progress bars or 'none' for quiet training.",
   )
   return ap.parse_args()
 
@@ -315,6 +323,13 @@ def main():
   seed = int(cfg.get("training", {}).get("seed", cfg.get("seed", 1234)))
   set_seed(seed)
 
+  progress_style = str(args.progress_style or "tqdm").lower()
+  if progress_style == "tqdm" and not _TQDM_AVAILABLE:
+    raise RuntimeError(
+      "Progress bars requested with --progress_style tqdm, but tqdm is not installed. "
+      "Install dependencies with: .\\.venv\\Scripts\\python.exe -m pip install -r phase2/requirements.txt"
+    )
+
   device = resolve_device(args.device)
   ensure_cuda_available(device)
   if device.type == "cuda":
@@ -477,15 +492,22 @@ def main():
     model.train()
     epoch_t0 = time.perf_counter()
     train_loss_vals = []
-    for batch in tqdm(
-      train_loader,
-      desc=f"Epoch {epoch}/{epochs}",
-      leave=True,
-      dynamic_ncols=True,
-      file=sys.stdout,
-      ascii=True,
-      mininterval=0.5,
-    ):
+    if progress_style == "tqdm":
+      batch_iter = enumerate(
+        tqdm(
+          train_loader,
+          desc=f"Epoch {epoch}/{epochs}",
+          leave=True,
+          dynamic_ncols=True,
+          ascii=True,
+          mininterval=0.5,
+        ),
+        start=1,
+      )
+    else:
+      batch_iter = enumerate(train_loader, start=1)
+
+    for batch_idx, batch in batch_iter:
       x = batch["x"].to(device, non_blocking=use_cuda)
       y = batch["y"].to(device, non_blocking=use_cuda)
       valid = batch["valid"].to(device, non_blocking=use_cuda)

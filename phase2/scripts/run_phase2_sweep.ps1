@@ -8,8 +8,8 @@
 # Notes:
 # - This script writes a per-run patched config `config_used.yaml` into each output dir.
 # - It avoids editing your tracked YAML configs.
-# - Use -ProgressBars for interactive tqdm batch bars. In that mode, per-run
-#   train/eval console logs are not written; use sweep_transcript.txt instead.
+# - Use -ProgressBars for native interactive tqdm batch bars. In that mode,
+#   transcript and per-run console logs are disabled so Python owns the terminal.
 
 param(
     [ValidateSet("core", "full", "full+eig")]
@@ -103,7 +103,7 @@ function Run-Step {
         if ($LogPath) {
             New-Item -ItemType Directory -Force -Path (Split-Path $LogPath -Parent) | Out-Null
             if ($ProgressBars) {
-                Write-Host "[$Name] ProgressBars mode: writing live terminal output; see sweep_transcript.txt instead of per-run console log." -ForegroundColor DarkGray
+                Write-Host "[$Name] ProgressBars mode: native Python/tqdm terminal output; no per-run console log." -ForegroundColor DarkGray
                 & $python -u @PythonArgs
             } else {
                 & $python -u @PythonArgs 2>&1 | Tee-Object -FilePath $LogPath
@@ -259,7 +259,13 @@ if (-not $seedList -or $seedList.Count -eq 0) {
 Write-Host "Preset: $Preset | Epochs: $Epochs | Seeds: $($seedList -join ',')" -ForegroundColor Cyan
 Write-Host "Outputs: $runRoot" -ForegroundColor Cyan
 
-Start-Transcript -Path (Join-Path $runRoot "sweep_transcript.txt") -Force | Out-Null
+$transcriptStarted = $false
+if ($ProgressBars) {
+    Write-Host "ProgressBars mode: transcript disabled so native tqdm can render in this terminal." -ForegroundColor Yellow
+} else {
+    Start-Transcript -Path (Join-Path $runRoot "sweep_transcript.txt") -Force | Out-Null
+    $transcriptStarted = $true
+}
 
 try {
     $totalScheduled = $seedList.Count * $experiments.Count
@@ -298,6 +304,9 @@ try {
                 "--output_dir", $outDir,
                 "--device", "cuda"
             )
+            if ($ProgressBars) {
+                $trainArgs += @("--progress_style", "tqdm")
+            }
             $evalArgs = @(
                 "-m", "phase2.eval.evaluate_oscd_seg",
                 "--config", $cfgUsed,
@@ -354,5 +363,7 @@ try {
     Write-Host "Sweep finished." -ForegroundColor Green
     Write-Host "Test summary: $summaryPath" -ForegroundColor Cyan
 } finally {
-    Stop-Transcript | Out-Null
+    if ($transcriptStarted) {
+        Stop-Transcript | Out-Null
+    }
 }
