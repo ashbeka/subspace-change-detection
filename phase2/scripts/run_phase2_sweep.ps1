@@ -8,6 +8,8 @@
 # Notes:
 # - This script writes a per-run patched config `config_used.yaml` into each output dir.
 # - It avoids editing your tracked YAML configs.
+# - Use -ProgressBars for interactive tqdm batch bars. In that mode, per-run
+#   train/eval console logs are not written; use sweep_transcript.txt instead.
 
 param(
     [ValidateSet("core", "full", "full+eig")]
@@ -35,6 +37,9 @@ param(
     # Retention policy to limit output growth.
     [ValidateSet("full", "compact", "metrics_only")]
     [string]$Retention = "full",
+
+    # Prefer live tqdm progress bars over per-run Tee-Object console logs.
+    [switch]$ProgressBars,
 
     # Dataset caching controls (recommended with NumWorkers=0).
     [switch]$NoCacheCities,
@@ -97,7 +102,12 @@ function Run-Step {
     try {
         if ($LogPath) {
             New-Item -ItemType Directory -Force -Path (Split-Path $LogPath -Parent) | Out-Null
-            & $python -u @PythonArgs 2>&1 | Tee-Object -FilePath $LogPath
+            if ($ProgressBars) {
+                Write-Host "[$Name] ProgressBars mode: writing live terminal output; see sweep_transcript.txt instead of per-run console log." -ForegroundColor DarkGray
+                & $python -u @PythonArgs
+            } else {
+                & $python -u @PythonArgs 2>&1 | Tee-Object -FilePath $LogPath
+            }
         } else {
             & $python -u @PythonArgs
         }

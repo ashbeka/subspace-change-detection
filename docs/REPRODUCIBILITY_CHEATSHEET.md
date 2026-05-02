@@ -394,6 +394,14 @@ Core 3-seed reproduction:
 powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full
 ```
 
+Interactive version with live `tqdm` batch progress bars:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
+```
+
+Tradeoff: `-ProgressBars` gives better terminal progress bars, but skips per-run `train_console.log.txt` / `eval_console.log.txt`. The whole session is still recorded in `sweep_transcript.txt`, and the structured files `train_log.json`, `run_metadata.json`, and eval CSV/JSON are still written.
+
 Core only includes:
 
 ```text
