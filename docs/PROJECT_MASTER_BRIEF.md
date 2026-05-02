@@ -116,10 +116,12 @@ How priors connect to segmentation:
 - CUDA is available through the local `.venv` PyTorch install at the time of the smoke check. [experiment-evidence]
 - Existing Phase 1 and Phase 2 output CSVs can be read and contain plausible method rows. [experiment-evidence]
 - The current code supports OSCD binary change segmentation more strongly than any other thesis storyline. [code-evidence]
+- A fresh 1-epoch E0/E1 smoke run completed on 2026-05-03 at `phase2/outputs/smoke_e0_e1_20260503_040723`: E0 raw-only and E1 raw+DS both trained, saved checkpoints, and ran the final val/test evaluator on CUDA from commit `b164dc6`. This is liveness evidence only. [experiment-evidence] [risk]
 
 ## 8. What is unverified
 
 - Whether the existing 150-epoch E0/E1 improvement reproduces from a clean command today. [unverified]
+- Whether DS improves after real training. The 2026-05-03 1-epoch smoke run is too undertrained to answer this: E1 was slightly higher on val IoU/F1 but lower on test IoU/F1/AUROC/PR-AUC. [experiment-evidence] [unverified] [risk]
 - Whether DS improvement is statistically stable across multiple seeds. [unverified]
 - Whether the gain survives a stronger hyperparameter-matched baseline. [unverified]
 - Whether raw+DS beats raw+PCA, raw+Celik, raw+IR-MAD, or fusion in a way that supports a DS-specific contribution. [unverified]
