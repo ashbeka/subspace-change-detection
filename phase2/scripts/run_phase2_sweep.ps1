@@ -43,6 +43,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 $env:PYTHONIOENCODING = "utf-8"
+$env:PYTHONUNBUFFERED = "1"
 
 $repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\\..")).Path
 Set-Location $repoRoot
@@ -87,7 +88,7 @@ function Run-Step {
         [string[]]$PythonArgs,
         [string]$LogPath
     )
-    Write-Host "[$Name] $python $($PythonArgs -join ' ')" -ForegroundColor Cyan
+    Write-Host "[$Name] $python -u $($PythonArgs -join ' ')" -ForegroundColor Cyan
 
     # Native executables that write to stderr can be treated as non-terminating errors
     # in Windows PowerShell; avoid breaking the sweep on warnings by forcing Continue.
@@ -96,9 +97,9 @@ function Run-Step {
     try {
         if ($LogPath) {
             New-Item -ItemType Directory -Force -Path (Split-Path $LogPath -Parent) | Out-Null
-            & $python @PythonArgs 2>&1 | Tee-Object -FilePath $LogPath
+            & $python -u @PythonArgs 2>&1 | Tee-Object -FilePath $LogPath
         } else {
-            & $python @PythonArgs
+            & $python -u @PythonArgs
         }
     } finally {
         $ErrorActionPreference = $oldEap
@@ -174,7 +175,7 @@ cfg["experiment_tag"] = str(exp_tag)
 Path(out_cfg_path).parent.mkdir(parents=True, exist_ok=True)
 Path(out_cfg_path).write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
 '@
-    $py | & $python - $BaseConfig $OutConfig "$EpochsValue" "$SeedValue" $ChangeRoot $ExperimentTag "$BatchSizeValue" "$EvalBatchSizeValue" "$NumWorkersValue" "$ValEveryValue" "$CacheCitiesValue" "$CacheMaxCitiesValue"
+$py | & $python -u - $BaseConfig $OutConfig "$EpochsValue" "$SeedValue" $ChangeRoot $ExperimentTag "$BatchSizeValue" "$EvalBatchSizeValue" "$NumWorkersValue" "$ValEveryValue" "$CacheCitiesValue" "$CacheMaxCitiesValue"
     if ($LASTEXITCODE -ne 0) {
         throw "Failed to write patched config: $OutConfig"
     }
@@ -251,8 +252,11 @@ Write-Host "Outputs: $runRoot" -ForegroundColor Cyan
 Start-Transcript -Path (Join-Path $runRoot "sweep_transcript.txt") -Force | Out-Null
 
 try {
+    $totalScheduled = $seedList.Count * $experiments.Count
+    $runIndex = 0
     foreach ($seed in $seedList) {
         foreach ($exp in $experiments) {
+            $runIndex += 1
             $tag = $exp.Tag
             $baseCfg = Join-Path $repoRoot $exp.Config
             $changeRoot = $exp.ChangeRoot
@@ -295,7 +299,7 @@ try {
             )
 
             try {
-                Write-Host ("==== {0} (seed {1}, priors {2}) ====" -f $tag, $seed, $priorsVariant) -ForegroundColor Green
+                Write-Host ("==== [{0}/{1}] {2} (seed {3}, priors {4}, epochs {5}) ====" -f $runIndex, $totalScheduled, $tag, $seed, $priorsVariant, $Epochs) -ForegroundColor Green
                 Run-Step -Name "$tag train" -PythonArgs $trainArgs -LogPath (Join-Path $outDir "train_console.log.txt")
                 Run-Step -Name "$tag eval" -PythonArgs $evalArgs -LogPath (Join-Path $outDir "eval_console.log.txt")
 

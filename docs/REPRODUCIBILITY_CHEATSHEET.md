@@ -386,6 +386,7 @@ eval/run_metadata.json
 ## 10. Phase 2: Recommended Controlled Sweep
 
 The sweep script writes patched `config_used.yaml` files into each output directory, avoiding tracked YAML edits.
+The script runs Python unbuffered so epoch output should stream into the terminal and each run's `train_console.log.txt`.
 
 Core 3-seed reproduction:
 
@@ -411,6 +412,31 @@ powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Pr
 ```
 
 Do not run `full+eig` until eig priors exist and have been smoke-checked.
+
+Watch a running sweep from another PowerShell window:
+
+```powershell
+cd E:\research_projects\DS_damage_segmentation
+powershell -ExecutionPolicy Bypass -File phase2/scripts/watch_phase2_sweep.ps1
+```
+
+Watch a specific sweep folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File phase2/scripts/watch_phase2_sweep.ps1 -RunRoot phase2/outputs/sweep_core_150ep_E0_E1_repro_20260503_042530 -RefreshSeconds 15
+```
+
+Print one status snapshot:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File phase2/scripts/watch_phase2_sweep.ps1 -RunRoot phase2/outputs/sweep_core_150ep_E0_E1_repro_20260503_042530 -Once
+```
+
+Tail the raw transcript:
+
+```powershell
+Get-Content phase2/outputs/sweep_core_150ep_E0_E1_repro_20260503_042530/sweep_transcript.txt -Tail 60 -Wait
+```
 
 ## 11. Compare Experiments
 
