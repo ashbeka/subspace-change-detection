@@ -477,7 +477,15 @@ def main():
     model.train()
     epoch_t0 = time.perf_counter()
     train_loss_vals = []
-    for batch in tqdm(train_loader, desc=f"Epoch {epoch}/{epochs}", leave=False):
+    for batch in tqdm(
+      train_loader,
+      desc=f"Epoch {epoch}/{epochs}",
+      leave=True,
+      dynamic_ncols=True,
+      file=sys.stdout,
+      ascii=True,
+      mininterval=0.5,
+    ):
       x = batch["x"].to(device, non_blocking=use_cuda)
       y = batch["y"].to(device, non_blocking=use_cuda)
       valid = batch["valid"].to(device, non_blocking=use_cuda)
