@@ -87,6 +87,8 @@ Phase 1:
 - Normalize bands according to config. [code-evidence]
 - Compute unsupervised change maps using DS, DS cross-residual, PCA-diff, pixel difference, CVA, Celik PCA-kmeans, IR-MAD, and geodesic variants. [code-evidence]
 - Optionally evaluate unsupervised maps against OSCD binary labels and save per-city maps/summary CSVs. [code-evidence]
+- Current core priors are loaded from `phase1/outputs/oscd_saved_priors_fast/oscd_change_maps/<split>/<method>/<city>_score.npy`. The word `fast` means the prior maps were generated with a faster Phase 1 config; it does not mean the Phase 2 model was trained quickly or incompletely. [code-evidence] [recommendation]
+- A clearer future name for this generated folder would be `phase1/outputs/priors_oscd_core/`. Keep the current name until configs and scripts are updated together. [recommendation]
 
 Phase 2:
 
@@ -230,11 +232,11 @@ Important active paths:
 - `phase2/configs/oscd_seg_baseline.yaml`: raw pre/post baseline config. [code-evidence]
 - `phase2/configs/oscd_seg_priors.yaml`: raw plus DS/PCA prior config. [code-evidence]
 - `phase2/configs/damage_dataset_template.yaml`: template for future damage data, not an active training path. [code-evidence]
-- `docs/`: current project orientation docs, reset docs, re-entry docs, and now this master brief. [doc-claim]
-- `docs/ROADMAP.md`: active experiment and decision roadmap. [recommendation]
+- `docs/`: active project docs plus archive. Active docs should stay few. [recommendation]
+- `docs/PROJECT_MASTER_BRIEF.md`: current project truth-status and pipeline explanation. [recommendation]
 - `docs/REPRODUCIBILITY_CHEATSHEET.md`: current command reference for reproducing the pipeline. [recommendation]
-- `docs/ARTIFACT_INDEX.md`: generated-output inventory and cleanup gate. [recommendation]
-- `docs/archive/`: historical reset, re-entry, audit, primer, and pipeline documents. These are context, not the first reading path. [doc-claim]
+- `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`: current v5 3-seed result note. [experiment-evidence]
+- `docs/archive/`: historical, redundant, or working cleanup documents. These are searchable context, not the first reading path. [doc-claim]
 - `research-notes/master/`: current scope and audit notes. This is ignored by git but important for reasoning. [doc-claim]
 - `research-notes/notes/`: advisor/senpai notes and supporting notes. Ignored by git, but high-value context. [doc-claim]
 - `data/`: local datasets, ignored by git. [code-evidence]
@@ -254,7 +256,7 @@ Main runnable entry points:
 
 ## 13. Proposed cleanup/restructure
 
-A first docs-only cleanup has been applied in the worktree: active understanding docs now live at the top of `docs/`, and superseded root/re-entry docs have been moved into `docs/archive/`. No code, data, or output folders were moved or deleted. [recommendation]
+A docs-only cleanup has been applied: the active docs are intentionally few, and superseded root/re-entry/working docs live under `docs/archive/`. No code, data, or output folders were moved or deleted. [recommendation]
 
 | current path | action | reason | risk | approval needed |
 |---|---|---|---|---|
@@ -265,9 +267,9 @@ A first docs-only cleanup has been applied in the worktree: active understanding
 | `phase2/configs/oscd_seg_priors.yaml` | keep | Canonical prior-channel experiment config. | Low. | No for keeping. |
 | `phase2/configs/damage_dataset_template.yaml` | keep but mark future | Useful template, but not active evidence. | Medium if presented as implemented damage support. | No for keeping; yes before expanding. |
 | `docs/PROJECT_MASTER_BRIEF.md` | keep | Current truth-status document. | Low. | No. |
-| `docs/ROADMAP.md` | keep | Active experiment and decision roadmap. | Low. | No. |
 | `docs/REPRODUCIBILITY_CHEATSHEET.md` | keep | Current command and reproducibility reference. | Low. | No. |
-| `docs/ARTIFACT_INDEX.md` | keep | Generated-output inventory and cleanup gate. | Low. | No. |
+| `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md` | keep | Current v5 3-seed result evidence. | Low. | No. |
+| `docs/archive/cleanup_pass/` | keep as archive | Holds redundant orientation/roadmap/cleanup docs from the cleanup pass. | Low: archived, not active. | No for keeping. |
 | `docs/archive/reentry/` | keep as archive | Historical reset, re-entry, implementation, and decision docs. | Low: can still be searched when needed. | No for keeping. |
 | `docs/archive/root_legacy/` | keep as archive | Historical root-level audit, primer, pipeline, and rerun log docs. | Low: can still be searched when needed. | No for keeping. |
 | `phase1/docs/` | merge selected content later | Phase-specific notes may belong in method docs. | Medium. | Yes. |
@@ -285,10 +287,8 @@ Cleaner proposed repo structure later:
 ```text
 docs/
   PROJECT_MASTER_BRIEF.md
-  ROADMAP.md
   REPRODUCIBILITY_CHEATSHEET.md
-  ARTIFACT_INDEX.md
-  CLEANUP_TRACKER.md
+  RESULTS_OSCD_CORE_SWEEP_20260503.md
   archive/
 phase1/
 phase2/
@@ -304,7 +304,7 @@ Future cleanup should stay incremental and evidence-preserving: archive stale gu
 
 ## 14. Next steps
 
-- next reading task: Read `docs/PIPELINE_EXPLAINED.md`, then `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`. [recommendation]
+- next reading task: Read sections 1-8 of this brief, then `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`. [recommendation]
 - next coding task: Add a small result-analysis helper for per-city and per-seed sweep summaries. [recommendation]
 - next experiment: Inspect per-city E0/E1/E3/S0 failures and test validation-threshold tuning before running more long sweeps. [recommendation]
 - next writing task: Rewrite the thesis contribution around prior-channel behavior and negative/qualified DS findings, not "DS improves segmentation." [recommendation]

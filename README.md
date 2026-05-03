@@ -12,13 +12,8 @@ The project does **not** currently implement end-to-end disaster damage segmenta
 ## Start Here
 
 - [Project Master Brief](docs/PROJECT_MASTER_BRIEF.md): current truth-status document for scope, novelty, risks, and next steps.
-- [Roadmap](docs/ROADMAP.md): active experiments, decision points, and next actions.
-- [Pipeline Explained](docs/PIPELINE_EXPLAINED.md): plain-language walkthrough of data, priors, training, and evaluation.
 - [Core Sweep Results](docs/RESULTS_OSCD_CORE_SWEEP_20260503.md): current 3-seed OSCD result audit.
 - [Reproducibility Cheat Sheet](docs/REPRODUCIBILITY_CHEATSHEET.md): commands for environment setup, data checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
-- [Artifact Index](docs/ARTIFACT_INDEX.md): generated-output inventory and cleanup gate.
-- [Project Structure Review](docs/PROJECT_STRUCTURE_REVIEW.md): cleanup and structure improvement proposal.
-- [Docs Index](docs/README.md): reading order and archive explanation.
 
 ## Repository Map
 
@@ -41,15 +36,9 @@ phase2/
   outputs/        ignored checkpoints/evals/figures
 
 docs/
-  README.md
   PROJECT_MASTER_BRIEF.md
-  ROADMAP.md
-  PIPELINE_EXPLAINED.md
   RESULTS_OSCD_CORE_SWEEP_20260503.md
   REPRODUCIBILITY_CHEATSHEET.md
-  ARTIFACT_INDEX.md
-  PROJECT_STRUCTURE_REVIEW.md
-  CLEANUP_TRACKER.md
   archive/
 ```
 
