@@ -388,19 +388,19 @@ eval/run_metadata.json
 The sweep script writes patched `config_used.yaml` files into each output directory, avoiding tracked YAML edits.
 The script runs Python unbuffered so epoch output should stream into the terminal and each run's `train_console.log.txt`.
 
-Core 3-seed reproduction:
+Core 3-seed reproduction with durable logs:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full
 ```
 
-Interactive version with live `tqdm` batch progress bars:
+Interactive one-command version with live `tqdm` batch progress bars. Prefer PowerShell 7 (`pwsh`) for clean terminal rendering:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
+cd E:\research_projects\DS_damage_segmentation; .\.venv\Scripts\Activate.ps1; pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
 ```
 
-`-ProgressBars` disables transcript/per-run console capture and lets Python render native `tqdm` bars directly in the terminal. The bars are terminal UI; the durable evidence is still `train_log.json`, `run_metadata.json`, and eval CSV/JSON.
+`-ProgressBars` disables transcript/per-run console capture and lets Python render native `tqdm` bars directly in the terminal. Current training bars are labeled with the run folder, for example `E1_raw_ds__seed1234 ep 27/150`, and completed bars are cleared by default to reduce terminal overflow. The durable evidence is still `train_log.json`, `run_metadata.json`, and eval CSV/JSON.
 
 Core only includes:
 

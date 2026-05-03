@@ -1,7 +1,7 @@
 # Cleanup Tracker
 
 Created: 2026-05-03
-Status: cleanup started, destructive actions not yet approved
+Status: active cleanup tracker; destructive actions not approved
 
 This tracker keeps cleanup deliberate. It separates low-risk documentation cleanup from repository restructuring and artifact deletion.
 
@@ -20,6 +20,13 @@ This tracker keeps cleanup deliberate. It separates low-risk documentation clean
 | `README.md` | rewritten as a concise current entry point | Old README contained stale/broad scope language and mojibake; new README points to current truth docs. | Low: historical details remain in other docs. |
 | `docs/REPRODUCIBILITY_CHEATSHEET.md` | added | Creates one operational command sheet for setup, liveness checks, Phase 1, Phase 2, sweeps, visualization, and cleanup. | Low. |
 | `docs/CLEANUP_TRACKER.md` | added | Gives cleanup a controlled, reviewable process. | Low. |
+| `docs/ROADMAP.md` | added | Creates one active project-management document. | Low. |
+| `docs/ARTIFACT_INDEX.md` | added | Documents generated outputs before any output cleanup. | Low. |
+| `docs/PIPELINE_EXPLAINED.md` | added | Explains the full implemented pipeline in a student-readable way. | Low. |
+| `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md` | added | Captures the completed 3-seed OSCD core sweep. | Low. |
+| `docs/PROJECT_STRUCTURE_REVIEW.md` | added | Reviews current structure and proposes future cleanup. | Low. |
+| `docs/archive/reentry/` | added | Holds superseded reset/re-entry/status docs. | Low: archived, not deleted. |
+| `docs/archive/root_legacy/` | added | Holds superseded root-level logs, primers, and old pipeline docs. | Low: archived, not deleted. |
 
 No files were deleted. No outputs were cleaned. No code was moved.
 
@@ -30,8 +37,9 @@ No files were deleted. No outputs were cleaned. No code was moved.
 | `phase1/` | Active prior-generation implementation. |
 | `phase2/` | Active supervised OSCD segmentation implementation. |
 | `docs/PROJECT_MASTER_BRIEF.md` | Current project truth-status document. |
+| `docs/ROADMAP.md` | Current experiment/decision roadmap. |
 | `docs/REPRODUCIBILITY_CHEATSHEET.md` | Current operational reproducibility guide. |
-| `RUN_PIPELINE.md` | Still useful legacy PowerShell pipeline; should be merged or shortened later. |
+| `docs/ARTIFACT_INDEX.md` | Current generated-artifact inventory and cleanup gate. |
 | `phase1/outputs/oscd_saved_priors_fast/` | Required prior maps for current Phase 2 configs. Ignored by git. |
 | `phase1/outputs/oscd_saved_full/` | Contains classical baseline priors and summaries. Ignored by git. |
 | `phase2/outputs/runs_gpu_150ep_20251215_233309/` | Important old artifact to audit/reproduce before deleting. Ignored by git. |
@@ -43,17 +51,19 @@ These should not be deleted yet. First decide whether each has unique content no
 
 | path | proposed action | reason | approval needed |
 |---|---|---|---|
-| `docs/ADVERSARIAL_REENTRY_AUDIT.md` | archive later | Valuable skeptical audit, now mostly superseded for orientation. | Yes |
-| `docs/IMPLEMENTATION_STATUS.md` | merge/archive later | Useful old status, but can conflict with current code. | Yes |
-| `docs/NEXT_STEP_DECISION_MEMO.md` | merge/archive later | Next-step content should become roadmap entries. | Yes |
-| `docs/PROJECT_REENTRY_SYNTHESIS.md` | archive later | Re-entry context, not canonical current truth. | Yes |
-| `docs/PROJECT_RESET_DECISION.md` | archive later | Historical reset marker. | Yes |
-| `docs/PROJECT_UNDERSTANDING_GUIDE.md` | merge/archive later | Likely overlaps with master brief. | Yes |
+| `docs/archive/reentry/ADVERSARIAL_REENTRY_AUDIT.md` | archived | Valuable skeptical audit, now mostly superseded for orientation. | Done |
+| `docs/archive/reentry/IMPLEMENTATION_STATUS.md` | archived | Useful old status, but can conflict with current code. | Done |
+| `docs/archive/reentry/NEXT_STEP_DECISION_MEMO.md` | archived | Next-step content is now represented in `ROADMAP.md`. | Done |
+| `docs/archive/reentry/PROJECT_REENTRY_SYNTHESIS.md` | archived | Re-entry context, not canonical current truth. | Done |
+| `docs/archive/reentry/PROJECT_RESET_DECISION.md` | archived | Historical reset marker. | Done |
+| `docs/archive/reentry/PROJECT_UNDERSTANDING_GUIDE.md` | archived | Superseded by master brief and roadmap. | Done |
 | `phase1/docs/phase1_run_guide.md` | merge useful commands into cheat sheet, then keep phase-local | Phase-local details may remain useful. | Yes |
 | `phase2/docs/phase2_run_guide.md` | merge useful commands into cheat sheet, then keep phase-local | Phase-local details may remain useful. | Yes |
-| `TEMP_DS_PRIMER.md` | merge/archive later | Temporary explanatory doc. | Yes |
-| `CODEBASE_AUDIT.md` | archive later | Some claims are stale relative to current code. | Yes |
-| `PIPELINE_RERUN_LOG.txt` | archive later | Historical log, not canonical instructions. | Yes |
+| `docs/archive/root_legacy/TEMP_DS_PRIMER.md` | archived | Temporary explanatory doc. | Done |
+| `docs/archive/root_legacy/CODEBASE_AUDIT.md` | archived | Some claims are stale relative to current code. | Done |
+| `docs/archive/root_legacy/PIPELINE_RERUN_LOG.txt` | archived | Historical log, not canonical instructions. | Done |
+| `docs/archive/root_legacy/RUN_PIPELINE.md` | archived | Superseded by reproducibility cheat sheet. | Done |
+| `docs/archive/root_legacy/REMEMBER_TO_ACTIVATE_ENV.txt` | archived | Superseded by README and cheat sheet setup commands. | Done |
 
 ## Output Cleanup Gate
 
@@ -82,12 +92,10 @@ powershell -ExecutionPolicy Bypass -File clean_house.ps1 -Aggressive -WhatIf
 
 ## Proposed Next Cleanup Commit
 
-Recommended next cleanup after review:
+Recommended next cleanup after the active sweep finishes:
 
-1. Create `docs/archive/`.
-2. Move superseded root and re-entry docs into `docs/archive/`.
-3. Leave `PROJECT_MASTER_BRIEF.md`, `REPRODUCIBILITY_CHEATSHEET.md`, and a future `ROADMAP.md` as the active docs.
-4. Update any links broken by archival moves.
-5. Do not touch code or outputs in that commit.
+1. Inspect per-city metrics and qualitative examples from the v5 sweep.
+2. Decide whether to run threshold tuning or E4/E5/E6 classical baselines.
+3. Do not delete outputs until `ARTIFACT_INDEX.md` is updated and deletion is explicitly approved.
 
-This is a restructure and should be approved before execution.
+The docs archive restructure is applied in the worktree and should be committed with the v5 result audit.

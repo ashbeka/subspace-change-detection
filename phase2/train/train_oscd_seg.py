@@ -86,6 +86,11 @@ def parse_args():
     default="tqdm",
     help="Training progress display. Use 'tqdm' for animated batch progress bars or 'none' for quiet training.",
   )
+  ap.add_argument(
+    "--progress_leave",
+    action="store_true",
+    help="Keep completed tqdm bars in the terminal. By default only the current bar is kept to reduce terminal overflow.",
+  )
   return ap.parse_args()
 
 
@@ -304,6 +309,7 @@ def main():
   cfg = load_config(args.config)
   out_dir = args.output_dir
   out_dir.mkdir(parents=True, exist_ok=True)
+  run_label = out_dir.name or str(cfg.get("experiment_tag", "run"))
 
   epochs = int(cfg.get("training", {}).get("epochs", 50))
   if args.epochs is not None:
@@ -338,6 +344,7 @@ def main():
     print(f"Using device: {device} ({name})")
   else:
     print(f"Using device: {device}", file=sys.stderr)
+  print(f"Run: {run_label} | seed: {seed} | epochs: {epochs}")
   use_cuda = device.type == "cuda"
 
   counts = infer_channel_counts(cfg)
@@ -496,8 +503,8 @@ def main():
       batch_iter = enumerate(
         tqdm(
           train_loader,
-          desc=f"Epoch {epoch}/{epochs}",
-          leave=True,
+          desc=f"{run_label} ep {epoch}/{epochs}",
+          leave=bool(args.progress_leave),
           dynamic_ncols=True,
           ascii=True,
           mininterval=0.5,
@@ -553,7 +560,7 @@ def main():
     ckpt_cb.step({"val_iou": val_metrics.get("iou", float("nan"))}, model, optimizer, epoch, scheduler=scheduler)
 
     print(
-      f"Epoch {epoch}/{epochs} "
+      f"{run_label} epoch {epoch}/{epochs} "
       f"- train_loss: {train_loss:.4f} "
       f"- val_iou: {val_metrics['iou']:.3f} "
       f"- val_f1: {val_metrics['f1']:.3f} "

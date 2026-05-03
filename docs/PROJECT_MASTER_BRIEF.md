@@ -1,7 +1,7 @@
 # Project Master Brief
 
 Generated: 2026-05-03  
-Branch: `audit/project-master-brief-20260503`  
+Active branch: `main`
 Status: current working brief, not ground truth
 
 This document is the current truth-status map for the project. It should supersede older reset, re-entry, and generated summary documents for orientation, but it does not delete or invalidate their historical value. Every claim below should stay tied to one of these evidence labels:
@@ -28,13 +28,14 @@ Implemented now:
 - Phase 2 can append Phase 1 prior maps as extra channels, for example raw plus two priors giving 28 channels in the checked config. [code-evidence] [experiment-evidence]
 - Phase 2 includes U-Net, ResNet-backbone U-Net, prior-fusion U-Net, and Siamese U-Net variants. [code-evidence]
 - Phase 2 includes OSCD training, stitched evaluation, visualization scripts, and binary metrics such as IoU, F1, AUROC, and PR-AUC. [code-evidence]
-- Existing output artifacts report a raw+DS improvement over raw-only in one 150-epoch run: `+0.0495` mean IoU and `+0.0580` mean F1 for E1 over E0. This is artifact evidence, not a fresh reproduction. [experiment-evidence] [risk]
+- An older output artifact reported a raw+DS improvement over raw-only in one 150-epoch run, but the fresh 2026-05-03 3-seed sweep did not reproduce that result. [experiment-evidence] [risk]
+- Fresh v5 core sweep result: `E1_raw_ds` underperformed `E0_raw_unet` across all three seeds; `E3_raw_ds_pca` slightly improved mean IoU/F1 but not AUROC/PR-AUC. [experiment-evidence]
 
 Not implemented now:
 
 - No integrated xBD or xBD-S12 damage segmentation training pipeline is alive in Phase 2. [code-evidence]
 - No multi-class building damage metrics, ordinal damage labels, building-instance evaluation, or disaster-event split protocol is implemented. [code-evidence]
-- No fresh multi-seed controlled reproduction has yet proven that DS priors reliably improve OSCD segmentation. [unverified]
+- A fresh multi-seed controlled reproduction now suggests DS projection alone does not reliably improve OSCD segmentation. [experiment-evidence]
 - No evidence yet shows that the current method transfers from OSCD urban change to disaster damage assessment. [unverified] [risk]
 - No current code proves state-of-the-art performance against modern unsupervised or supervised change detection methods. [unverified] [risk]
 
@@ -120,9 +121,9 @@ How priors connect to segmentation:
 
 ## 8. What is unverified
 
-- Whether the existing 150-epoch E0/E1 improvement reproduces from a clean command today. [unverified]
+- Whether the older 150-epoch E0/E1 improvement was caused by seed choice, config drift, output mix-up, or another reproducibility issue. The v5 sweep did not reproduce it. [experiment-evidence] [risk]
 - Whether DS improves after real training. The 2026-05-03 1-epoch smoke run is too undertrained to answer this: E1 was slightly higher on val IoU/F1 but lower on test IoU/F1/AUROC/PR-AUC. [experiment-evidence] [unverified] [risk]
-- Whether DS improvement is statistically stable across multiple seeds. [unverified]
+- Whether DS+PCA's small IoU/F1 gain is meaningful after per-city inspection and threshold tuning. [unverified]
 - Whether the gain survives a stronger hyperparameter-matched baseline. [unverified]
 - Whether raw+DS beats raw+PCA, raw+Celik, raw+IR-MAD, or fusion in a way that supports a DS-specific contribution. [unverified]
 - Whether validation city selection or threshold calibration creates optimistic metrics. [risk]
@@ -149,7 +150,7 @@ Pause or demote these ideas until the OSCD core is reproducible:
 Likely defensible contribution:
 
 - A focused empirical study of interpretable unsupervised multispectral change priors as additional channels for supervised OSCD Sentinel-2 binary change segmentation. [recommendation]
-- A DS-centered prior pipeline compared against classical unsupervised priors such as pixel difference, CVA, PCA-diff, Celik PCA-kmeans, and IR-MAD. [code-evidence]
+- A prior-channel ablation pipeline compared against raw-only and Siamese raw baselines. DS alone should not be claimed as the winning prior based on the v5 sweep. [experiment-evidence]
 - A reproducible codebase that separates prior generation from supervised segmentation and reports stitched city-level OSCD metrics. [code-evidence]
 - A thesis framing that values interpretability, ablation, and honest scope over claiming a new general damage segmentation system. [recommendation]
 
@@ -166,11 +167,11 @@ Too weak or unsafe:
 - "We solve damage segmentation." The code does not support this. [risk]
 - "We propose a new DS theory." The project applies/adapts DS; it does not invent DS. [risk]
 - "We are state of the art on OSCD." The repo lacks modern comparison and fresh reproduction. [risk]
-- "The artifact proves DS works." A single old artifact is evidence to investigate, not proof. [risk]
+- "The artifact proves DS works." A fresh 3-seed sweep contradicted the older E1-over-E0 artifact. [risk]
 
 Safest thesis phrasing:
 
-This thesis studies whether interpretable unsupervised subspace-based change priors can improve supervised Sentinel-2 binary change segmentation. Using OSCD as the main benchmark, it implements Difference Subspace and classical unsupervised priors, injects them as input channels into U-Net-style segmenters, and evaluates whether they improve raw pre/post baselines under controlled ablations. [recommendation]
+This thesis studies how interpretable unsupervised change priors affect supervised Sentinel-2 binary change segmentation. Using OSCD as the main benchmark, it implements Difference Subspace and related classical priors, injects them as input channels into U-Net-style segmenters, and evaluates when they help, hurt, or change metric behavior relative to raw pre/post baselines. [recommendation]
 
 ## 11. External research context
 
@@ -230,6 +231,10 @@ Important active paths:
 - `phase2/configs/oscd_seg_priors.yaml`: raw plus DS/PCA prior config. [code-evidence]
 - `phase2/configs/damage_dataset_template.yaml`: template for future damage data, not an active training path. [code-evidence]
 - `docs/`: current project orientation docs, reset docs, re-entry docs, and now this master brief. [doc-claim]
+- `docs/ROADMAP.md`: active experiment and decision roadmap. [recommendation]
+- `docs/REPRODUCIBILITY_CHEATSHEET.md`: current command reference for reproducing the pipeline. [recommendation]
+- `docs/ARTIFACT_INDEX.md`: generated-output inventory and cleanup gate. [recommendation]
+- `docs/archive/`: historical reset, re-entry, audit, primer, and pipeline documents. These are context, not the first reading path. [doc-claim]
 - `research-notes/master/`: current scope and audit notes. This is ignored by git but important for reasoning. [doc-claim]
 - `research-notes/notes/`: advisor/senpai notes and supporting notes. Ignored by git, but high-value context. [doc-claim]
 - `data/`: local datasets, ignored by git. [code-evidence]
@@ -249,7 +254,7 @@ Main runnable entry points:
 
 ## 13. Proposed cleanup/restructure
 
-Do not perform this restructure yet. This is a proposal only.
+A first docs-only cleanup has been applied in the worktree: active understanding docs now live at the top of `docs/`, and superseded root/re-entry docs have been moved into `docs/archive/`. No code, data, or output folders were moved or deleted. [recommendation]
 
 | current path | action | reason | risk | approval needed |
 |---|---|---|---|---|
@@ -260,12 +265,11 @@ Do not perform this restructure yet. This is a proposal only.
 | `phase2/configs/oscd_seg_priors.yaml` | keep | Canonical prior-channel experiment config. | Low. | No for keeping. |
 | `phase2/configs/damage_dataset_template.yaml` | keep but mark future | Useful template, but not active evidence. | Medium if presented as implemented damage support. | No for keeping; yes before expanding. |
 | `docs/PROJECT_MASTER_BRIEF.md` | keep | Current truth-status document. | Low. | No. |
-| `docs/ADVERSARIAL_REENTRY_AUDIT.md` | merge/archive later | Valuable skeptical audit but should not compete with this brief. | Medium: losing historical context if deleted. | Yes. |
-| `docs/IMPLEMENTATION_STATUS.md` | merge/archive later | Useful old status, partially superseded. | Medium: some details may still matter. | Yes. |
-| `docs/NEXT_STEP_DECISION_MEMO.md` | merge/archive later | Decision content should be folded into this brief or a new roadmap. | Medium. | Yes. |
-| `docs/PROJECT_REENTRY_SYNTHESIS.md` | archive later | Re-entry document, likely superseded. | Low to medium. | Yes. |
-| `docs/PROJECT_RESET_DECISION.md` | archive later | Historical reset marker, not day-to-day truth source. | Medium. | Yes. |
-| `docs/PROJECT_UNDERSTANDING_GUIDE.md` | merge/archive later | May duplicate this brief. | Medium. | Yes. |
+| `docs/ROADMAP.md` | keep | Active experiment and decision roadmap. | Low. | No. |
+| `docs/REPRODUCIBILITY_CHEATSHEET.md` | keep | Current command and reproducibility reference. | Low. | No. |
+| `docs/ARTIFACT_INDEX.md` | keep | Generated-output inventory and cleanup gate. | Low. | No. |
+| `docs/archive/reentry/` | keep as archive | Historical reset, re-entry, implementation, and decision docs. | Low: can still be searched when needed. | No for keeping. |
+| `docs/archive/root_legacy/` | keep as archive | Historical root-level audit, primer, pipeline, and rerun log docs. | Low: can still be searched when needed. | No for keeping. |
 | `phase1/docs/` | merge selected content later | Phase-specific notes may belong in method docs. | Medium. | Yes. |
 | `phase2/docs/` | merge selected content later | Contains old reports and experiment summaries. | Medium: old metrics may be misread as reproduced. | Yes. |
 | `research-notes/master/` | keep as ignored source notes | Contains current scope and audit reasoning. | Low, but ignored by git means not portable. | Yes before moving/copying into tracked docs. |
@@ -274,10 +278,6 @@ Do not perform this restructure yet. This is a proposal only.
 | `phase1/outputs/` | keep ignored; create artifact index later | Generated outputs should not be tracked, but key runs need documentation. | Medium: stale artifacts can mislead. | Yes before cleanup. |
 | `phase2/outputs/` | keep ignored; create artifact index later | Contains important old ablation artifact. | High if deleted before reproducing. | Yes. |
 | `references/reference_code/` | keep or move to `references/third_party/` later | Useful external reference material. | Medium: licensing/provenance needs clarity. | Yes. |
-| `TEMP_DS_PRIMER.md` | merge/archive later | Likely temporary explanatory doc. | Low. | Yes. |
-| `CODEBASE_AUDIT.md` | archive later | Some claims are stale relative to current code. | Medium. | Yes. |
-| `RUN_PIPELINE.md` | update later | Should become a current reproducibility guide after E0/E1 rerun. | Medium if outdated commands remain. | Yes before rewriting. |
-| `PIPELINE_RERUN_LOG.txt` | archive or replace later | Historical log, not canonical instructions. | Low. | Yes. |
 | `ds_damage_segmentation.tex` | keep but revise scope | Thesis draft likely overstates damage scope. | High if used unedited. | Yes before major rewrite. |
 
 Cleaner proposed repo structure later:
@@ -286,7 +286,9 @@ Cleaner proposed repo structure later:
 docs/
   PROJECT_MASTER_BRIEF.md
   ROADMAP.md
-  REPRODUCIBILITY.md
+  REPRODUCIBILITY_CHEATSHEET.md
+  ARTIFACT_INDEX.md
+  CLEANUP_TRACKER.md
   archive/
 phase1/
 phase2/
@@ -298,14 +300,14 @@ data/                  # ignored, documented layout only
 outputs/               # optional ignored umbrella, or keep phase outputs
 ```
 
-The cleanup should happen only after the first fresh E0/E1 reproduction, because restructuring before evidence can hide what is alive. [recommendation]
+Future cleanup should stay incremental and evidence-preserving: archive stale guidance, document generated artifacts, and avoid moving training/evaluation code until the v5 result has been diagnosed per city and per metric. [recommendation]
 
 ## 14. Next steps
 
-- next reading task: Build a one-page comparison table for Fukui and Maki 2015 DS, second-order DS, Daudt OSCD/FC-Siamese, Celik PCA-kmeans, IR-MAD, Metric-CD, prior-guided CD, xBD, xBD-S12, and ChangeOS. [recommendation]
-- next coding task: Add or verify one reproducible command path for E0 raw-only and E1 raw+DS that records config, seed, git commit, data split, checkpoint path, and evaluation output path. [recommendation]
-- next experiment: Run a fresh controlled OSCD E0 vs E1 rerun, first short smoke-scale and then full-scale if the smoke run is clean. [recommendation]
-- next writing task: Rewrite the thesis/project introduction around "interpretable unsupervised multispectral priors for supervised Sentinel-2 binary change segmentation" and explicitly move damage mapping to future work. [recommendation]
+- next reading task: Read `docs/PIPELINE_EXPLAINED.md`, then `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`. [recommendation]
+- next coding task: Add a small result-analysis helper for per-city and per-seed sweep summaries. [recommendation]
+- next experiment: Inspect per-city E0/E1/E3/S0 failures and test validation-threshold tuning before running more long sweeps. [recommendation]
+- next writing task: Rewrite the thesis contribution around prior-channel behavior and negative/qualified DS findings, not "DS improves segmentation." [recommendation]
 
 ## 15. Forbidden overclaims
 
@@ -324,4 +326,4 @@ Do not claim:
 
 ## Working verdict
 
-The project has a real, narrower core: DS and other interpretable unsupervised priors feeding supervised Sentinel-2 binary change segmentation. That is worth testing. The danger is narrative inflation: "damage segmentation", "new DS", "operational disaster response", or "state of the art" claims are not supported by the current implementation. The next decisive move is not more documentation or broader scope; it is a clean E0 raw-only versus E1 raw+DS reproduction with controlled seeds, saved configs, and a short written interpretation of whether the gain is real. [recommendation]
+The project has a real, narrower core: DS and other interpretable unsupervised priors feeding supervised Sentinel-2 binary change segmentation. That is worth testing, but the v5 reproduction weakens any simple "DS improves segmentation" story. The danger is narrative inflation: "damage segmentation", "new DS", "operational disaster response", or "state of the art" claims are not supported by the current implementation. The next decisive move is per-city/per-seed diagnosis of E0, E1, E3, and S0, including threshold behavior, so the thesis can explain when priors help, hurt, or merely change metric tradeoffs. [recommendation]
