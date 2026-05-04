@@ -43,4 +43,4 @@ training:
     bce_weight: 1.0
     dice_weight: 1.0
 
-experiment_tag: "damage_seg_template"
+experiment_tag: "future_xbd_template"

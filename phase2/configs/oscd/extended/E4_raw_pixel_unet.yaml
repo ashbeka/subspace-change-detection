@@ -66,5 +66,5 @@ training:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+pixel_diff"
+experiment_tag: "E4_raw_pixel_unet"
 

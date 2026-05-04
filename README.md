@@ -27,7 +27,7 @@ phase1/
   outputs/        ignored generated priors/results
 
 phase2/
-  configs/        OSCD segmentation configs and ablation configs
+  configs/        OSCD core/extended configs and future damage templates
   data/           OSCD segmentation dataset and future damage adapter
   models/         U-Net, ResNet U-Net, fusion U-Net, Siamese U-Net
   train/          training loop, losses, callbacks

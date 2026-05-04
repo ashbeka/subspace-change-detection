@@ -25,29 +25,29 @@ The priors folder above is produced by Phase 1 (recommended):
 
 Key configs in `phase2/configs/`:
 
-- `oscd_seg_baseline.yaml`
+- `E0_raw_unet.yaml`
   - U‑Net, raw S2 only (`E0`).
-- `oscd_seg_E1_raw_ds.yaml`
+- `E1_raw_ds_unet.yaml`
   - U‑Net, raw + DS prior (`E1`).
-- `oscd_seg_E1b_raw_ds_cross.yaml`
+- `E1b_raw_ds_cross_unet.yaml`
   - U‑Net, raw + DS cross‑residual prior (extra DS baseline).
-- `oscd_seg_E4_raw_pixel.yaml`
+- `E4_raw_pixel_unet.yaml`
   - U‑Net, raw + pixel‑diff prior (classical baseline prior).
-- `oscd_seg_E5_raw_celik.yaml`
+- `E5_raw_celik_unet.yaml`
   - U‑Net, raw + Celik prior (classical baseline; requires Phase‑1 full baseline run).
-- `oscd_seg_E6_raw_irmad.yaml`
+- `E6_raw_irmad_unet.yaml`
   - U‑Net, raw + IR‑MAD prior (classical baseline; requires Phase‑1 full baseline run).
-- `oscd_seg_E2_raw_pca.yaml`
+- `E2_raw_pca_unet.yaml`
   - U‑Net, raw + PCA‑diff prior (`E2`).
-- `oscd_seg_priors.yaml`
+- `E3_raw_ds_pca_unet.yaml`
   - U‑Net, raw + DS + PCA‑diff (`E3`).
-- `oscd_seg_siamese.yaml`
+- `S0_raw_siamese.yaml`
   - Siamese baseline (raw only).
-- `oscd_seg_baseline_resnet.yaml`
+- `E0_raw_resnet.yaml`
   - ResNet‑U‑Net, raw only (stronger baseline).
-- `oscd_seg_priors_resnet.yaml`
+- `E3_raw_ds_pca_resnet.yaml`
   - ResNet‑U‑Net, raw + DS + PCA‑diff.
-- `oscd_seg_priors_fusion.yaml`
+- `E3_raw_ds_pca_fusion.yaml`
   - PriorsFusionUNet, raw + DS + PCA‑diff (two‑branch fusion).
 
 All configs share:
@@ -66,7 +66,7 @@ All configs share:
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_baseline.yaml \
+  --config phase2/configs/oscd/core/E0_raw_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E0_raw
@@ -76,7 +76,7 @@ python -m phase2.train.train_oscd_seg \
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_E1_raw_ds.yaml \
+  --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E1_raw_ds
@@ -86,7 +86,7 @@ python -m phase2.train.train_oscd_seg \
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_E2_raw_pca.yaml \
+  --config phase2/configs/oscd/core/E2_raw_pca_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E2_raw_pca
@@ -96,7 +96,7 @@ python -m phase2.train.train_oscd_seg \
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_priors.yaml \
+  --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca
@@ -126,11 +126,11 @@ checkpoints).
 
 ### 3.1 ResNet‑U‑Net raw only
 
-Config: `phase2/configs/oscd_seg_baseline_resnet.yaml`
+Config: `phase2/configs/oscd/extended/E0_raw_resnet.yaml`
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --config phase2/configs/oscd/extended/E0_raw_resnet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E0_raw_resnet
@@ -138,11 +138,11 @@ python -m phase2.train.train_oscd_seg \
 
 ### 3.2 ResNet‑U‑Net raw + DS + PCA‑diff
 
-Config: `phase2/configs/oscd_seg_priors_resnet.yaml`
+Config: `phase2/configs/oscd/extended/E3_raw_ds_pca_resnet.yaml`
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_priors_resnet.yaml \
+  --config phase2/configs/oscd/extended/E3_raw_ds_pca_resnet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_resnet
@@ -150,11 +150,11 @@ python -m phase2.train.train_oscd_seg \
 
 ### 3.3 PriorsFusionUNet (raw + DS + PCA‑diff)
 
-Config: `phase2/configs/oscd_seg_priors_fusion.yaml`
+Config: `phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml`
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_priors_fusion.yaml \
+  --config phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion
@@ -170,7 +170,7 @@ Example: evaluate U‑Net raw‑only model (`E0`) and save metrics:
 
 ```bash
 python -m phase2.eval.evaluate_oscd_seg \
-  --config phase2/configs/oscd_seg_baseline.yaml \
+  --config phase2/configs/oscd/core/E0_raw_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_E0_raw/best.ckpt \
@@ -181,11 +181,11 @@ Same pattern for other runs; just swap config, checkpoint, and output
 dir:
 
 - ResNet raw‑only:
-  - `--config phase2/configs/oscd_seg_baseline_resnet.yaml`
+  - `--config phase2/configs/oscd/extended/E0_raw_resnet.yaml`
   - `--checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt`
   - `--output_dir phase2/outputs/oscd_seg_E0_raw_resnet/eval`
 - PriorsFusionUNet:
-  - `--config phase2/configs/oscd_seg_priors_fusion.yaml`
+  - `--config phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml`
   - `--checkpoint phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt`
   - `--output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/eval`
 
@@ -209,7 +209,7 @@ Example (ResNet raw‑only, test cities):
 
 ```bash
 python -m phase2.viz.viz_seg_predictions \
-  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --config phase2/configs/oscd/extended/E0_raw_resnet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
@@ -233,7 +233,7 @@ ResNet raw‑only combined figures (test split):
 
 ```bash
 python -m phase2.viz.viz_oscd_combined \
-  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --config phase2/configs/oscd/extended/E0_raw_resnet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
@@ -245,7 +245,7 @@ PriorsFusionUNet combined figures:
 
 ```bash
 python -m phase2.viz.viz_oscd_combined \
-  --config phase2/configs/oscd_seg_priors_fusion.yaml \
+  --config phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt \
@@ -275,8 +275,8 @@ High‑level ideas are described in detail in
   - Re‑run key experiments (E0/E3, ResNet baselines) with new
     `--output_dir` names (e.g. `..._long`, `..._seed1`).
 - **ImageNet pretraining (ResNet)**:
-  - In `oscd_seg_baseline_resnet.yaml` /
-    `oscd_seg_priors_resnet.yaml`, set:
+  - In `E0_raw_resnet.yaml` /
+    `E3_raw_ds_pca_resnet.yaml`, set:
     ```yaml
     model:
       type: unet2d_resnet

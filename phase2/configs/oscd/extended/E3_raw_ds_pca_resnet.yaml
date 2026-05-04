@@ -45,17 +45,18 @@ features:
     pixel_diff: false
 
 model:
-  type: priors_fusion_unet
+  type: unet2d_resnet
   base_channels: 64
   depth: 4
   num_classes: 1
+  pretrained: false
 
 training:
   epochs: 50
   batch_size: 8
   optimizer:
     name: adamw
-    lr: 0.001
+    lr: 0.0005
     weight_decay: 0.0001
   scheduler:
     name: cosine
@@ -67,4 +68,4 @@ training:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+ds+pca_fusion"
+experiment_tag: "E3_raw_ds_pca_resnet"

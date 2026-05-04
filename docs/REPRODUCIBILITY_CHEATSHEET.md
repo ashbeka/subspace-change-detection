@@ -178,7 +178,7 @@ def load_cfg(path):
     cfg["dataset"]["cache"] = {"cities": True, "max_cities": 1}
     return cfg
 
-raw_cfg = load_cfg(ROOT / "phase2/configs/oscd_seg_baseline.yaml")
+raw_cfg = load_cfg(ROOT / "phase2/configs/oscd/core/E0_raw_unet.yaml")
 raw_ds = OSCDSegmentationDataset(ROOT / raw_cfg["dataset"]["root"], "train", raw_cfg, phase1_change_maps_root=None)
 raw_item = raw_ds[0]
 print("raw:", len(raw_ds), tuple(raw_item["x"].shape), tuple(raw_item["y"].shape), tuple(raw_item["valid"].shape))
@@ -186,7 +186,7 @@ model = UNet2D(in_channels=raw_item["x"].shape[0], base_channels=8, depth=3, num
 with torch.no_grad():
     print("raw_forward:", tuple(model(raw_item["x"].unsqueeze(0)).shape))
 
-prior_cfg = load_cfg(ROOT / "phase2/configs/oscd_seg_E1_raw_ds.yaml")
+prior_cfg = load_cfg(ROOT / "phase2/configs/oscd/core/E1_raw_ds_unet.yaml")
 prior_root = ROOT / prior_cfg["phase1"]["change_maps_root"]
 prior_ds = OSCDSegmentationDataset(ROOT / prior_cfg["dataset"]["root"], "train", prior_cfg, phase1_change_maps_root=prior_root)
 prior_item = prior_ds[0]
@@ -215,7 +215,7 @@ raw+DS+PCA x = (28, 128, 128)
 forward logits = (1, 1, 128, 128)
 ```
 
-Note: `oscd_seg_priors.yaml` is raw+DS+PCA. `oscd_seg_E1_raw_ds.yaml` is raw+DS only.
+Note: `E3_raw_ds_pca_unet.yaml` is raw+DS+PCA. `E1_raw_ds_unet.yaml` is raw+DS only.
 
 ## 5. Phase 1: Generate Prior Maps
 
@@ -300,18 +300,18 @@ Core configs:
 
 | tag | config | input |
 |---|---|---|
-| E0_raw | `phase2/configs/oscd_seg_baseline.yaml` | raw pre/post S2, 26 channels |
-| E1_raw_ds | `phase2/configs/oscd_seg_E1_raw_ds.yaml` | raw + DS projection |
-| E1b_raw_ds_cross | `phase2/configs/oscd_seg_E1b_raw_ds_cross.yaml` | raw + DS cross-residual |
-| E2_raw_pca | `phase2/configs/oscd_seg_E2_raw_pca.yaml` | raw + PCA-diff |
-| E3_raw_ds_pca | `phase2/configs/oscd_seg_priors.yaml` | raw + DS projection + PCA-diff |
-| E4_raw_pixel | `phase2/configs/oscd_seg_E4_raw_pixel.yaml` | raw + pixel-diff |
-| E5_raw_celik | `phase2/configs/oscd_seg_E5_raw_celik.yaml` | raw + Celik prior; requires full Phase 1 maps |
-| E6_raw_irmad | `phase2/configs/oscd_seg_E6_raw_irmad.yaml` | raw + IR-MAD prior; requires full Phase 1 maps |
-| S0_siamese | `phase2/configs/oscd_seg_siamese.yaml` | Siamese raw baseline |
-| E0_raw_resnet | `phase2/configs/oscd_seg_baseline_resnet.yaml` | ResNet-backbone raw baseline |
-| E3_raw_ds_pca_resnet | `phase2/configs/oscd_seg_priors_resnet.yaml` | ResNet-backbone raw+priors |
-| E3_raw_ds_pca_fusion | `phase2/configs/oscd_seg_priors_fusion.yaml` | fusion model raw+priors |
+| E0_raw | `phase2/configs/oscd/core/E0_raw_unet.yaml` | raw pre/post S2, 26 channels |
+| E1_raw_ds | `phase2/configs/oscd/core/E1_raw_ds_unet.yaml` | raw + DS projection |
+| E1b_raw_ds_cross | `phase2/configs/oscd/core/E1b_raw_ds_cross_unet.yaml` | raw + DS cross-residual |
+| E2_raw_pca | `phase2/configs/oscd/core/E2_raw_pca_unet.yaml` | raw + PCA-diff |
+| E3_raw_ds_pca | `phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml` | raw + DS projection + PCA-diff |
+| E4_raw_pixel | `phase2/configs/oscd/extended/E4_raw_pixel_unet.yaml` | raw + pixel-diff |
+| E5_raw_celik | `phase2/configs/oscd/extended/E5_raw_celik_unet.yaml` | raw + Celik prior; requires full Phase 1 maps |
+| E6_raw_irmad | `phase2/configs/oscd/extended/E6_raw_irmad_unet.yaml` | raw + IR-MAD prior; requires full Phase 1 maps |
+| S0_siamese | `phase2/configs/oscd/core/S0_raw_siamese.yaml` | Siamese raw baseline |
+| E0_raw_resnet | `phase2/configs/oscd/extended/E0_raw_resnet.yaml` | ResNet-backbone raw baseline |
+| E3_raw_ds_pca_resnet | `phase2/configs/oscd/extended/E3_raw_ds_pca_resnet.yaml` | ResNet-backbone raw+priors |
+| E3_raw_ds_pca_fusion | `phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml` | fusion model raw+priors |
 
 Current active thesis-critical comparison:
 
@@ -329,12 +329,12 @@ $smokeRoot="phase2/outputs/smoke_e0_e1_$ts"
 New-Item -ItemType Directory -Force -Path $smokeRoot | Out-Null
 
 $run=Join-Path $smokeRoot "E0_raw"
-& $py -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_baseline.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run --device cuda --epochs 1
-& $py -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd_seg_baseline.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval_best") --device cuda
+& $py -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run --device cuda --epochs 1
+& $py -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval_best") --device cuda
 
 $run=Join-Path $smokeRoot "E1_raw_ds"
-& $py -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run --device cuda --epochs 1
-& $py -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval_best") --device cuda
+& $py -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run --device cuda --epochs 1
+& $py -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval_best") --device cuda
 ```
 
 The 2026-05-03 smoke run lives at:
@@ -359,16 +359,16 @@ E0 raw-only:
 
 ```powershell
 $run=Join-Path $outRoot "E0_raw_unet"
-& $py -m phase2.train.train_oscd_seg --device cuda --epochs $epochs --config phase2/configs/oscd_seg_baseline.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run
-& $py -m phase2.eval.evaluate_oscd_seg --device cuda --config phase2/configs/oscd_seg_baseline.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval")
+& $py -m phase2.train.train_oscd_seg --device cuda --epochs $epochs --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run
+& $py -m phase2.eval.evaluate_oscd_seg --device cuda --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval")
 ```
 
 E1 raw+DS:
 
 ```powershell
 $run=Join-Path $outRoot "E1_raw_ds_unet"
-& $py -m phase2.train.train_oscd_seg --device cuda --epochs $epochs --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run
-& $py -m phase2.eval.evaluate_oscd_seg --device cuda --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval")
+& $py -m phase2.train.train_oscd_seg --device cuda --epochs $epochs --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --output_dir $run
+& $py -m phase2.eval.evaluate_oscd_seg --device cuda --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "eval")
 ```
 
 Outputs per run:
@@ -468,14 +468,14 @@ Segmentation prediction figures:
 
 ```powershell
 $run=Join-Path $outRoot "E1_raw_ds_unet"
-& $py -m phase2.viz.viz_seg_predictions --device cuda --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "figs_seg") --cities test
+& $py -m phase2.viz.viz_seg_predictions --device cuda --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "figs_seg") --cities test
 ```
 
 Combined priors and segmentation figures:
 
 ```powershell
 $run=Join-Path $outRoot "E3_raw_ds_pca_unet"
-& $py -m phase2.viz.viz_oscd_combined --device cuda --config phase2/configs/oscd_seg_priors.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "figs_combined") --cities test
+& $py -m phase2.viz.viz_oscd_combined --device cuda --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml --oscd_root $oscd --phase1_change_maps_root $changeMaps --checkpoint (Join-Path $run "best.ckpt") --output_dir (Join-Path $run "figs_combined") --cities test
 ```
 
 Phase 1 OSCD method grid:

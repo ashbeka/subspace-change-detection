@@ -63,10 +63,10 @@ DS_damage_segmentation/
   phase1/
   phase2/
     configs/
-      oscd_seg_baseline.yaml
-      oscd_seg_priors.yaml
-      oscd_seg_ablation.yaml
-      damage_dataset_template.yaml      # placeholder for xBD/xBD-S12
+      E0_raw_unet.yaml
+      E3_raw_ds_pca_unet.yaml
+      ablation_full.yaml
+      xbd_template.yaml      # placeholder for xBD/xBD-S12
     data/
       oscd_seg_dataset.py
       damage_dataset_adapter.py         # stub/template
@@ -298,7 +298,7 @@ File: phase2/train/train_oscd_seg.py
 
 ```bash
 python -m phase2.train.train_oscd_seg \
-  --config phase2/configs/oscd_seg_priors.yaml \
+  --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --output_dir phase2/outputs/oscd_seg_run1
@@ -400,7 +400,7 @@ File: `phase2/eval/evaluate_oscd_seg.py`
 
 ```bash
 python -m phase2.eval.evaluate_oscd_seg \
-  --config phase2/configs/oscd_seg_priors.yaml \
+  --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_run1/best.ckpt \
@@ -466,7 +466,7 @@ File: `phase2/viz/viz_seg_predictions.py`
 
 ```bash
 python -m phase2.viz.viz_seg_predictions \
-  --config phase2/configs/oscd_seg_priors.yaml \
+  --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_run1/best.ckpt \
@@ -488,7 +488,7 @@ File: phase2/viz/overlay_utils.py
 
 ### 8.1 Baseline config (raw S2 only)
 
-File: phase2/configs/oscd_seg_baseline.yaml
+File: phase2/configs/oscd/core/E0_raw_unet.yaml
 Key fields:
 ```
 dataset:
@@ -533,12 +533,12 @@ training:
     bce_weight: 1.0
     dice_weight: 1.0
 
-experiment_tag: "oscd_seg_raw_only"
+experiment_tag: "E0_raw_unet"
 ```
 
 ### 8.2 Priors config (raw + DS + PCA-diff)
 
-File: phase2/configs/oscd_seg_priors.yaml
+File: phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml
 
 Differences:
 ```
@@ -553,11 +553,11 @@ features:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+ds+pca"
+experiment_tag: "E3_raw_ds_pca_unet"
 ```
 ### 8.3 Ablation config file
 
-File: phase2/configs/oscd_seg_ablation.yaml
+File: phase2/configs/oscd/ablation_full.yaml
 
 - Optional to define multiple experiments in one YAML and have a meta-script iterate them.
 
@@ -568,7 +568,7 @@ File: phase2/configs/oscd_seg_ablation.yaml
 ### 9.1 Core experiments on OSCD
 
 1. **E0 – Raw only baseline**
-   - Config: `oscd_seg_baseline.yaml`.
+   - Config: `E0_raw_unet.yaml`.
    - Input: [pre, post], 26 channels.
    - Output: baseline IoU/F1/AUROC.
 
@@ -630,7 +630,7 @@ class DamageDatasetAdapter(torch.utils.data.Dataset):
 ```
 - Document where this will be used:
   - Another training script: train/train_damage_seg.py.
-  - Config: configs/damage_dataset_template.yaml.
+  - Config: configs/future_damage/xbd_template.yaml.
 
 ## 10.2 Spec note for future
 

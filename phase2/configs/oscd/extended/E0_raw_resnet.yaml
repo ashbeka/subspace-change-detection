@@ -41,20 +41,22 @@ features:
   use_pre_post_stack: true
   priors:
     ds_projection: false
-    pca_diff: true
+    pca_diff: false
     pixel_diff: false
 
 model:
-  type: unet2d
-  base_channels: 64
-  depth: 4
+  type: unet2d_resnet
+  base_channels: 64  # unused, kept for consistency
+  depth: 4           # unused
+  num_classes: 1
+  pretrained: false
 
 training:
   epochs: 50
   batch_size: 8
   optimizer:
     name: adamw
-    lr: 0.001
+    lr: 0.0005
     weight_decay: 0.0001
   scheduler:
     name: cosine
@@ -66,4 +68,4 @@ training:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+pca"
+experiment_tag: "E0_raw_resnet"

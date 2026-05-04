@@ -40,7 +40,9 @@ features:
   use_raw_s2: true
   use_pre_post_stack: true
   priors:
+    geodesic_dist: true
     ds_projection: false
+    ds_cross_residual: false
     pca_diff: false
     pixel_diff: false
 
@@ -50,7 +52,7 @@ model:
   depth: 4
 
 training:
-  epochs: 50  # or 150
+  epochs: 50
   batch_size: 8
   optimizer:
     name: adamw
@@ -64,6 +66,7 @@ training:
     dice_weight: 1.0
 
 phase1:
-  change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
+  change_maps_root: phase1/outputs/oscd_geodesic_priors/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw_only"
+experiment_tag: "G0_raw_geodesic_unet"
+

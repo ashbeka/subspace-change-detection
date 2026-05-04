@@ -1,0 +1,19 @@
+experiments:
+  - config: phase2/configs/oscd/core/E0_raw_unet.yaml
+    tag: "raw_only"
+  - config: phase2/configs/oscd/core/S0_raw_siamese.yaml
+    tag: "siamese_raw_only"
+  - config: phase2/configs/oscd/core/E1_raw_ds_unet.yaml
+    tag: "raw+ds"
+  - config: phase2/configs/oscd/core/E1b_raw_ds_cross_unet.yaml
+    tag: "raw+ds_cross"
+  - config: phase2/configs/oscd/extended/E4_raw_pixel_unet.yaml
+    tag: "raw+pixel"
+  - config: phase2/configs/oscd/extended/E5_raw_celik_unet.yaml
+    tag: "raw+celik"
+  - config: phase2/configs/oscd/extended/E6_raw_irmad_unet.yaml
+    tag: "raw+ir_mad"
+  - config: phase2/configs/oscd/core/E2_raw_pca_unet.yaml
+    tag: "raw+pca"
+  - config: phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml
+    tag: "raw+ds+pca"

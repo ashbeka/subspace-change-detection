@@ -40,20 +40,18 @@ features:
   use_raw_s2: true
   use_pre_post_stack: true
   priors:
-    ds_projection: false
-    ds_cross_residual: false
-    pca_diff: false
+    ds_projection: true
+    pca_diff: true
     pixel_diff: false
-    celik: false
-    ir_mad: true
 
 model:
-  type: unet2d
+  type: priors_fusion_unet
   base_channels: 64
   depth: 4
+  num_classes: 1
 
 training:
-  epochs: 50  # or 150
+  epochs: 50
   batch_size: 8
   optimizer:
     name: adamw
@@ -69,5 +67,4 @@ training:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+ir_mad"
-
+experiment_tag: "E3_raw_ds_pca_fusion"

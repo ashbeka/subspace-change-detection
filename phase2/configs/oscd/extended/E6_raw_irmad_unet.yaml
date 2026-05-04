@@ -35,7 +35,6 @@ dataset:
     flip: true
     rotate90: true
     noise: true
-    noise_sigma: 0.01
 
 features:
   use_raw_s2: true
@@ -45,16 +44,16 @@ features:
     ds_cross_residual: false
     pca_diff: false
     pixel_diff: false
+    celik: false
+    ir_mad: true
 
 model:
-  type: siamese_unet
+  type: unet2d
   base_channels: 64
   depth: 4
-  num_classes: 1
 
 training:
-  seed: 1234
-  epochs: 50
+  epochs: 50  # or 150
   batch_size: 8
   optimizer:
     name: adamw
@@ -67,10 +66,8 @@ training:
     bce_weight: 1.0
     dice_weight: 1.0
 
-evaluation:
-  threshold: 0.5
-
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_siamese_raw_only"
+experiment_tag: "E6_raw_irmad_unet"
+

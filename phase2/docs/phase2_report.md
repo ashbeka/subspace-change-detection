@@ -318,7 +318,7 @@ File: `phase2/train/train_oscd_seg.py`.
 
   ```bash
   python -m phase2.train.train_oscd_seg \
-    --config phase2/configs/oscd_seg_baseline.yaml \
+    --config phase2/configs/oscd/core/E0_raw_unet.yaml \
     --oscd_root data/OSCD \
     --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
     --output_dir phase2/outputs/oscd_seg_E0_raw
@@ -356,36 +356,36 @@ We ran several experiment families on OSCD:
 (All use OSCD train/val/test split as in Phase 1.)
 
 - **E0 – Raw only (U‑Net)**:
-  - Config: `oscd_seg_baseline.yaml`.
+  - Config: `E0_raw_unet.yaml`.
   - Input: raw pre+post S2 (26 channels).
   - Model: `UNet2D`.
 
 - **E1 – Raw + DS prior**:
-  - Config: `oscd_seg_E1_raw_ds.yaml`.
+  - Config: `E1_raw_ds_unet.yaml`.
   - Input: raw + DS projection (27 channels).
   - Model: `UNet2D`.
 
 - **E2 – Raw + PCA‑diff prior**:
-  - Config: `oscd_seg_E2_raw_pca.yaml`.
+  - Config: `E2_raw_pca_unet.yaml`.
   - Input: raw + PCA‑diff (27 channels).
   - Model: `UNet2D`.
 
 - **E3 – Raw + DS + PCA‑diff (combined priors)**:
-  - Config: `oscd_seg_priors.yaml`.
+  - Config: `E3_raw_ds_pca_unet.yaml`.
   - Input: raw + DS + PCA‑diff (28 channels).
   - Model: `UNet2D`.
 
 - **Additional baseline priors (available; useful for ablations)**:
-  - `oscd_seg_E1b_raw_ds_cross.yaml` – raw + DS cross‑residual.
-  - `oscd_seg_E4_raw_pixel.yaml` – raw + pixel‑diff.
-  - `oscd_seg_siamese.yaml` – Siamese baseline (raw only).
+  - `E1b_raw_ds_cross_unet.yaml` – raw + DS cross‑residual.
+  - `E4_raw_pixel_unet.yaml` – raw + pixel‑diff.
+  - `S0_raw_siamese.yaml` – Siamese baseline (raw only).
 
 - **ResNet variants**:
-  - `oscd_seg_baseline_resnet.yaml` – raw only, ResNet U‑Net.
-  - `oscd_seg_priors_resnet.yaml` – raw + DS + PCA‑diff, ResNet U‑Net.
+  - `E0_raw_resnet.yaml` – raw only, ResNet U‑Net.
+  - `E3_raw_ds_pca_resnet.yaml` – raw + DS + PCA‑diff, ResNet U‑Net.
 
 - **PriorsFusionUNet variant**:
-  - `oscd_seg_priors_fusion.yaml` – raw + DS + PCA‑diff, PriorsFusionUNet.
+  - `E3_raw_ds_pca_fusion.yaml` – raw + DS + PCA‑diff, PriorsFusionUNet.
 
 Update (latest GPU run): the core experiments below were rerun for **150 epochs**
 (single seed) under `phase2/outputs/runs_gpu_150ep_20251215_233309/`.
@@ -578,7 +578,7 @@ Example usage (ResNet raw‑only model):
 
 ```bash
 python -m phase2.viz.viz_oscd_combined \
-  --config phase2/configs/oscd_seg_baseline_resnet.yaml \
+  --config phase2/configs/oscd/extended/E0_raw_resnet.yaml \
   --oscd_root data/OSCD \
   --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps \
   --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt \
@@ -612,7 +612,7 @@ task‑specific subset of those changes driven by the annotated labels.
 
 We also generated combined figures for the **PriorsFusionUNet**
 (`phase2/outputs/oscd_combined_fusion/*.png`), using
-`phase2/configs/oscd_seg_priors_fusion.yaml` and the
+`phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml` and the
 `phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt` checkpoint. Compared
 to the ResNet raw‑only plots, the fusion model’s segmentation masks tend
 to:
@@ -660,8 +660,8 @@ experiments.
 ResNet backbone currently uses `pretrained: false`. To test ImageNet
 pretraining:
 
-1. In `phase2/configs/oscd_seg_baseline_resnet.yaml` and
-   `oscd_seg_priors_resnet.yaml`, set:
+1. In `phase2/configs/oscd/extended/E0_raw_resnet.yaml` and
+   `E3_raw_ds_pca_resnet.yaml`, set:
 
    ```yaml
    model:
@@ -673,7 +673,7 @@ pretraining:
 2. Train as before:
 
    ```bash
-   python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_baseline_resnet.yaml ...
+   python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E0_raw_resnet.yaml ...
    ```
 
 3. Compare metrics:
@@ -752,7 +752,7 @@ The codebase and reports now provide:
 - A clear DS‑centric story and full context for Phase 1–2.
 - Well‑structured segmentation code that only requires:
   - A new dataset adapter (`phase2/data/damage_dataset_adapter.py`) and
-  - New configs (`configs/damage_dataset_template.yaml`)
+  - New configs (`configs/future_damage/xbd_template.yaml`)
   to switch to xBD/xBD‑S12 or other damage datasets.
 - Guidance for future experiments (longer training, ImageNet, more
   data, alternative priors usage).

@@ -229,9 +229,9 @@ Important active paths:
 - `phase1/`: unsupervised prior generation, OSCD/MultiSenGE loaders, DS/PCA/classical baselines, Phase 1 eval and visualization scripts. [code-evidence]
 - `phase1/configs/oscd_default.yaml`: main OSCD Phase 1 config. [code-evidence]
 - `phase2/`: supervised OSCD segmentation datasets, models, training, evaluation, and visualization. [code-evidence]
-- `phase2/configs/oscd_seg_baseline.yaml`: raw pre/post baseline config. [code-evidence]
-- `phase2/configs/oscd_seg_priors.yaml`: raw plus DS/PCA prior config. [code-evidence]
-- `phase2/configs/damage_dataset_template.yaml`: template for future damage data, not an active training path. [code-evidence]
+- `phase2/configs/oscd/core/E0_raw_unet.yaml`: raw pre/post baseline config. [code-evidence]
+- `phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml`: raw plus DS/PCA prior config. [code-evidence]
+- `phase2/configs/future_damage/xbd_template.yaml`: template for future damage data, not an active training path. [code-evidence]
 - `docs/`: active project docs plus archive. Active docs should stay few. [recommendation]
 - `docs/PROJECT_MASTER_BRIEF.md`: current project truth-status and pipeline explanation. [recommendation]
 - `docs/REPRODUCIBILITY_CHEATSHEET.md`: current command reference for reproducing the pipeline. [recommendation]
@@ -263,9 +263,9 @@ A docs-only cleanup has been applied: the active docs are intentionally few, and
 | `phase1/` | keep | Active prior-generation implementation. | Low. | No for keeping. |
 | `phase2/` | keep | Active supervised OSCD segmentation implementation. | Low. | No for keeping. |
 | `phase1/configs/` | keep | Needed to reproduce Phase 1 priors. | Low. | No for keeping. |
-| `phase2/configs/oscd_seg_baseline.yaml` | keep | Canonical E0 raw baseline. | Low. | No for keeping. |
-| `phase2/configs/oscd_seg_priors.yaml` | keep | Canonical prior-channel experiment config. | Low. | No for keeping. |
-| `phase2/configs/damage_dataset_template.yaml` | keep but mark future | Useful template, but not active evidence. | Medium if presented as implemented damage support. | No for keeping; yes before expanding. |
+| `phase2/configs/oscd/core/E0_raw_unet.yaml` | keep | Canonical E0 raw baseline. | Low. | No for keeping. |
+| `phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml` | keep | Canonical prior-channel experiment config. | Low. | No for keeping. |
+| `phase2/configs/future_damage/xbd_template.yaml` | keep but mark future | Useful template, but not active evidence. | Medium if presented as implemented damage support. | No for keeping; yes before expanding. |
 | `docs/PROJECT_MASTER_BRIEF.md` | keep | Current truth-status document. | Low. | No. |
 | `docs/REPRODUCIBILITY_CHEATSHEET.md` | keep | Current command and reproducibility reference. | Low. | No. |
 | `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md` | keep | Current v5 3-seed result evidence. | Low. | No. |

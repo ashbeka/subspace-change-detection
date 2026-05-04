@@ -24,28 +24,28 @@ Notes:
 ## 1. Training — U‑Net Experiments (E0–E6)
 
 - **E0 — U‑Net, raw pre/post only (baseline)**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_baseline.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E0_raw`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E0_raw`
 
 - **E1 — U‑Net, raw + DS projection prior**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E1_raw_ds.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E1_raw_ds`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E1_raw_ds_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E1_raw_ds`
 
 - **E1b — U‑Net, raw + DS cross‑residual prior**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E1b_raw_ds_cross.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E1b_raw_ds_cross`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E1b_raw_ds_cross_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E1b_raw_ds_cross`
 
 - **E2 — U‑Net, raw + PCA‑diff prior**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E2_raw_pca.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E2_raw_pca`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E2_raw_pca_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E2_raw_pca`
 
 - **E3 — U‑Net, raw + DS + PCA‑diff priors**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_priors.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca`
 
 - **E4 — U‑Net, raw + pixel‑diff prior**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E4_raw_pixel.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E4_raw_pixel`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E4_raw_pixel_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E4_raw_pixel`
 
 - **E5 — U‑Net, raw + Celik prior (requires full Phase 1 run)**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E5_raw_celik.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_full/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E5_raw_celik`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E5_raw_celik_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_full/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E5_raw_celik`
 
 - **E6 — U‑Net, raw + IR‑MAD prior (requires full Phase 1 run)**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_E6_raw_irmad.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_full/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E6_raw_irmad`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E6_raw_irmad_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_full/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E6_raw_irmad`
 
 Resume after a crash (continues from `last.ckpt` if present, else `best.ckpt`):
 
@@ -56,13 +56,13 @@ If you want to start a fresh run in the same output directory, add `--overwrite_
 ## 2. Training — ResNet‑U‑Net and PriorsFusionUNet
 
 - **ResNet‑U‑Net, raw only**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_baseline_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E0_raw_resnet`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E0_raw_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E0_raw_resnet`
 
 - **ResNet‑U‑Net, raw + DS + PCA‑diff priors**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_priors_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_resnet`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E3_raw_ds_pca_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_resnet`
 
 - **PriorsFusionUNet (raw + DS + PCA‑diff, separate priors branch)**  
-  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd_seg_priors_fusion.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion`
+  `python -m phase2.train.train_oscd_seg --config phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion`
 
 ## 3. Evaluation
 
@@ -70,7 +70,7 @@ Script: `phase2/eval/evaluate_oscd_seg.py`
 
 Example — evaluate U‑Net raw‑only (`E0`) and save metrics:
 
-- `python -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd_seg_baseline.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E0_raw/best.ckpt --output_dir phase2/outputs/oscd_seg_E0_raw/eval`
+- `python -m phase2.eval.evaluate_oscd_seg --config phase2/configs/oscd/core/E0_raw_unet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E0_raw/best.ckpt --output_dir phase2/outputs/oscd_seg_E0_raw/eval`
 
 Same pattern for other experiments (swap config, change‑maps root, checkpoint, output_dir).
 
@@ -85,12 +85,12 @@ Evaluation outputs:
 Script: `phase2/viz/viz_seg_predictions.py`
 
 - **ResNet raw‑only summaries (test cities)**  
-  `python -m phase2.viz.viz_seg_predictions --config phase2/configs/oscd_seg_baseline_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt --output_dir phase2/outputs/oscd_seg_E0_raw_resnet/figs_seg --cities test`
+  `python -m phase2.viz.viz_seg_predictions --config phase2/configs/oscd/extended/E0_raw_resnet.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E0_raw_resnet/best.ckpt --output_dir phase2/outputs/oscd_seg_E0_raw_resnet/figs_seg --cities test`
 
 ### 4.2 Combined priors + segmentation figures
 
 Script: `phase2/viz/viz_oscd_combined.py`
 
 - **PriorsFusionUNet combined figures (test)**  
-  `python -m phase2.viz.viz_oscd_combined --config phase2/configs/oscd_seg_priors_fusion.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined --cities test`
+  `python -m phase2.viz.viz_oscd_combined --config phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml --oscd_root data/OSCD --phase1_change_maps_root phase1/outputs/oscd_saved_priors_fast/oscd_change_maps --checkpoint phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/best.ckpt --output_dir phase2/outputs/oscd_seg_E3_raw_ds_pca_fusion/figs_combined --cities test`
 

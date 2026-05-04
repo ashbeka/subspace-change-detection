@@ -193,26 +193,26 @@ $py | & $python -u - $BaseConfig $OutConfig "$EpochsValue" "$SeedValue" $ChangeR
 
 # Build experiment list.
 $experiments = @(
-    @{ Tag = "E0_raw_unet"; Config = "phase2/configs/oscd_seg_baseline.yaml"; ChangeRoot = $changeRootResidual },
-    @{ Tag = "S0_siamese"; Config = "phase2/configs/oscd_seg_siamese.yaml"; ChangeRoot = $changeRootResidual },
-    @{ Tag = "E1_raw_ds"; Config = "phase2/configs/oscd_seg_E1_raw_ds.yaml"; ChangeRoot = $changeRootResidual },
-    @{ Tag = "E1b_raw_ds_cross"; Config = "phase2/configs/oscd_seg_E1b_raw_ds_cross.yaml"; ChangeRoot = $changeRootResidual },
-    @{ Tag = "E2_raw_pca"; Config = "phase2/configs/oscd_seg_E2_raw_pca.yaml"; ChangeRoot = $changeRootResidual },
-    @{ Tag = "E3_raw_ds_pca"; Config = "phase2/configs/oscd_seg_priors.yaml"; ChangeRoot = $changeRootResidual }
+    @{ Tag = "E0_raw_unet"; Config = "phase2/configs/oscd/core/E0_raw_unet.yaml"; ChangeRoot = $changeRootResidual },
+    @{ Tag = "S0_siamese"; Config = "phase2/configs/oscd/core/S0_raw_siamese.yaml"; ChangeRoot = $changeRootResidual },
+    @{ Tag = "E1_raw_ds"; Config = "phase2/configs/oscd/core/E1_raw_ds_unet.yaml"; ChangeRoot = $changeRootResidual },
+    @{ Tag = "E1b_raw_ds_cross"; Config = "phase2/configs/oscd/core/E1b_raw_ds_cross_unet.yaml"; ChangeRoot = $changeRootResidual },
+    @{ Tag = "E2_raw_pca"; Config = "phase2/configs/oscd/core/E2_raw_pca_unet.yaml"; ChangeRoot = $changeRootResidual },
+    @{ Tag = "E3_raw_ds_pca"; Config = "phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml"; ChangeRoot = $changeRootResidual }
 )
 
 if ($Preset -eq "full" -or $Preset -eq "full+eig") {
     $experiments += @(
-        @{ Tag = "E0_raw_resnet"; Config = "phase2/configs/oscd_seg_baseline_resnet.yaml"; ChangeRoot = $changeRootResidual },
-        @{ Tag = "E3_raw_ds_pca_resnet"; Config = "phase2/configs/oscd_seg_priors_resnet.yaml"; ChangeRoot = $changeRootResidual },
-        @{ Tag = "E3_raw_ds_pca_fusion"; Config = "phase2/configs/oscd_seg_priors_fusion.yaml"; ChangeRoot = $changeRootResidual }
+        @{ Tag = "E0_raw_resnet"; Config = "phase2/configs/oscd/extended/E0_raw_resnet.yaml"; ChangeRoot = $changeRootResidual },
+        @{ Tag = "E3_raw_ds_pca_resnet"; Config = "phase2/configs/oscd/extended/E3_raw_ds_pca_resnet.yaml"; ChangeRoot = $changeRootResidual },
+        @{ Tag = "E3_raw_ds_pca_fusion"; Config = "phase2/configs/oscd/extended/E3_raw_ds_pca_fusion.yaml"; ChangeRoot = $changeRootResidual }
     )
 }
 
 if ($Preset -eq "full+eig") {
     $experiments += @(
-        @{ Tag = "E1_raw_ds_eig"; Config = "phase2/configs/oscd_seg_E1_raw_ds.yaml"; ChangeRoot = $changeRootEig },
-        @{ Tag = "E3_raw_ds_pca_eig"; Config = "phase2/configs/oscd_seg_priors.yaml"; ChangeRoot = $changeRootEig }
+        @{ Tag = "E1_raw_ds_eig"; Config = "phase2/configs/oscd/core/E1_raw_ds_unet.yaml"; ChangeRoot = $changeRootEig },
+        @{ Tag = "E3_raw_ds_pca_eig"; Config = "phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml"; ChangeRoot = $changeRootEig }
     )
 }
 

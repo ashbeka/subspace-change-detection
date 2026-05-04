@@ -40,9 +40,12 @@ features:
   use_raw_s2: true
   use_pre_post_stack: true
   priors:
-    ds_projection: true
-    pca_diff: true
+    ds_projection: false
+    ds_cross_residual: false
+    pca_diff: false
     pixel_diff: false
+    celik: true
+    ir_mad: false
 
 model:
   type: unet2d
@@ -66,4 +69,5 @@ training:
 phase1:
   change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+ds+pca"
+experiment_tag: "E5_raw_celik_unet"
+

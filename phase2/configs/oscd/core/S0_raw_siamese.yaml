@@ -35,23 +35,25 @@ dataset:
     flip: true
     rotate90: true
     noise: true
+    noise_sigma: 0.01
 
 features:
   use_raw_s2: true
   use_pre_post_stack: true
   priors:
-    geodesic_dist: true
     ds_projection: false
     ds_cross_residual: false
     pca_diff: false
     pixel_diff: false
 
 model:
-  type: unet2d
+  type: siamese_unet
   base_channels: 64
   depth: 4
+  num_classes: 1
 
 training:
+  seed: 1234
   epochs: 50
   batch_size: 8
   optimizer:
@@ -65,8 +67,10 @@ training:
     bce_weight: 1.0
     dice_weight: 1.0
 
+evaluation:
+  threshold: 0.5
+
 phase1:
-  change_maps_root: phase1/outputs/oscd_geodesic_priors/oscd_change_maps
+  change_maps_root: phase1/outputs/oscd_saved_priors_fast/oscd_change_maps
 
-experiment_tag: "oscd_seg_raw+geodesic"
-
+experiment_tag: "S0_raw_siamese"

@@ -102,26 +102,26 @@ $phase2Out = Join-Path $repoRoot "phase2\\outputs"
 
 # E0: raw only (U-Net)
 $outE0 = Join-Path $phase2Out "oscd_seg_E0_raw_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_baseline.yaml") -OutputDir $outE0 -Tag "E0_raw_only"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\E0_raw_unet.yaml") -OutputDir $outE0 -Tag "E0_raw_only"
 
 # S0: Siamese baseline (raw only)
 $outS0 = Join-Path $phase2Out "oscd_seg_siamese_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_siamese.yaml") -OutputDir $outS0 -Tag "S0_siamese_raw_only"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\S0_raw_siamese.yaml") -OutputDir $outS0 -Tag "S0_siamese_raw_only"
 
 # E1: raw + DS projection
 $outE1 = Join-Path $phase2Out "oscd_seg_E1_raw_ds_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_E1_raw_ds.yaml") -OutputDir $outE1 -Tag "E1_raw+ds"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\E1_raw_ds_unet.yaml") -OutputDir $outE1 -Tag "E1_raw+ds"
 
 # E1b: raw + DS cross-residual
 $outE1b = Join-Path $phase2Out "oscd_seg_E1b_raw_ds_cross_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_E1b_raw_ds_cross.yaml") -OutputDir $outE1b -Tag "E1b_raw+ds_cross"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\E1b_raw_ds_cross_unet.yaml") -OutputDir $outE1b -Tag "E1b_raw+ds_cross"
 
 # E2: raw + PCA-diff
 $outE2 = Join-Path $phase2Out "oscd_seg_E2_raw_pca_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_E2_raw_pca.yaml") -OutputDir $outE2 -Tag "E2_raw+pca"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\E2_raw_pca_unet.yaml") -OutputDir $outE2 -Tag "E2_raw+pca"
 
 # E3: raw + DS projection + PCA-diff
 $outE3 = Join-Path $phase2Out "oscd_seg_E3_raw_ds_pca_v2"
-Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd_seg_priors.yaml") -OutputDir $outE3 -Tag "E3_raw+ds+pca"
+Run-Experiment -ConfigPath (Join-Path $repoRoot "phase2\\configs\\oscd\\core\\E3_raw_ds_pca_unet.yaml") -OutputDir $outE3 -Tag "E3_raw+ds+pca"
 
 Write-Host "All scheduled experiments attempted." -ForegroundColor Cyan
