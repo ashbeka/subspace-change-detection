@@ -619,8 +619,8 @@ Old full artifact to audit, not trust blindly:
 phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary_extended.csv
 ```
 
-Most important next experiment:
+Most important next analysis:
 
 ```text
-Fresh controlled E0_raw vs E1_raw_ds, ideally 3 seeds, 150 epochs, stitched city-level evaluation.
+Per-city/per-seed diagnosis of the completed v5 core sweep, including E0/E1/E3/S0 deltas and threshold behavior.
 ```
