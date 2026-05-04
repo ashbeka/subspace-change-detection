@@ -462,6 +462,14 @@ Core comparison:
 
 The comparison script uses the `test.summary` block from each eval JSON.
 
+Analyze a completed sweep per seed and per city:
+
+```powershell
+.\.venv\Scripts\python.exe -m phase2.eval.analyze_sweep_results --sweep_root phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422 --output_dir phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422/analysis_20260505
+```
+
+This writes `summary_by_tag.csv`, `pairwise_seed_deltas.csv`, `per_city_delta_summary.csv`, `threshold_proxy_candidates.csv`, and `analysis_report.md`. Threshold rows are proxy evidence only unless probability maps are saved or inference is rerun.
+
 ## 12. Visualize Predictions
 
 Segmentation prediction figures:
@@ -622,5 +630,5 @@ phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary_exten
 Most important next analysis:
 
 ```text
-Per-city/per-seed diagnosis of the completed v5 core sweep, including E0/E1/E3/S0 deltas and threshold behavior.
+Targeted visualization plus true threshold tuning for the completed v5 core sweep. Current per-city/per-seed CSV analysis is done; true threshold tuning still needs probability maps or an inference threshold-sweep.
 ```

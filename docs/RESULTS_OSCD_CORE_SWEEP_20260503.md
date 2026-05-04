@@ -89,10 +89,34 @@ Safer claim:
 In a controlled 3-seed OSCD sweep, DS projection alone did not improve over raw pre/post Sentinel-2 input. A combined DS+PCA prior configuration slightly improved threshold-dependent IoU/F1 but not ranking metrics, suggesting that unsupervised prior channels can alter segmentation behavior but require careful ablation and should not be overclaimed.
 ```
 
-## Next Analysis
+## Per-City Analysis
 
-1. Inspect per-city metrics for E0, E1, E3, and S0.
-2. Visualize a few cities where E1 is worse than E0.
-3. Test whether threshold tuning on validation changes the IoU/F1 conclusion.
-4. Decide whether the contribution is "DS-specific" or broader "prior-channel ablation."
-5. Consider running E4/E5/E6 classical-prior baselines in the same 3-seed controlled style if they were not included in this core sweep.
+Analysis command:
+
+```powershell
+.\.venv\Scripts\python.exe -m phase2.eval.analyze_sweep_results --sweep_root phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422 --output_dir phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422/analysis_20260505
+```
+
+Generated artifacts:
+
+```text
+phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422/analysis_20260505/
+```
+
+Main per-city findings:
+
+- `E1_raw_ds` was worst versus E0 on `dubai`, `chongqing`, and `rio`, and best on `lasvegas`.
+- `E3_raw_ds_pca` was best on `milano`, `lasvegas`, and `chongqing`, but still hurt `dubai`.
+- `S0_siamese` was best on `brasilia` and `lasvegas`, but much worse on `norcia` and `dubai`.
+- The city-level story is heterogeneous. The right thesis framing is not "DS works" but "prior channels change behavior by scene/city and metric."
+
+Threshold note:
+
+- The existing v5 eval artifacts do not save probability maps, so this analysis cannot perform true validation-threshold tuning.
+- The script flags proxy cases where fixed-threshold IoU/F1 and ranking metrics disagree. The next technical step, if we care about threshold calibration, is to add a probability-cache or threshold-sweep evaluator.
+
+Remaining analysis:
+
+1. Visualize a few high-value cities: `dubai`, `lasvegas`, `milano`, `brasilia`, and `norcia`.
+2. Add true validation-threshold tuning or cached probability maps.
+3. Decide whether to run E4/E5/E6 classical-prior baselines in the same 3-seed controlled style.

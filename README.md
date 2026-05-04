@@ -58,4 +58,4 @@ Then see [docs/REPRODUCIBILITY_CHEATSHEET.md](docs/REPRODUCIBILITY_CHEATSHEET.md
 
 How do interpretable unsupervised multispectral change priors, especially Difference Subspace and PCA-diff priors, affect supervised Sentinel-2 binary change segmentation on OSCD compared with raw pre/post and Siamese baselines under controlled training and stitched evaluation?
 
-The fresh 2026-05-03 v5 core sweep did not reproduce the older raw+DS-over-raw artifact: DS alone underperformed raw-only across three seeds, while raw+DS+PCA showed a small mean IoU/F1 gain that still needs per-city and threshold analysis.
+The fresh 2026-05-03 v5 core sweep did not reproduce the older raw+DS-over-raw artifact: DS alone underperformed raw-only across three seeds, while raw+DS+PCA showed a small mean IoU/F1 gain. Per-city analysis shows heterogeneous behavior, especially on `dubai`, `lasvegas`, `milano`, `brasilia`, and `norcia`; true threshold tuning still requires saved probabilities or a threshold-sweep evaluator.

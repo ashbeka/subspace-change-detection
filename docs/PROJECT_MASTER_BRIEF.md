@@ -125,7 +125,7 @@ How priors connect to segmentation:
 
 - Whether the older 150-epoch E0/E1 improvement was caused by seed choice, config drift, output mix-up, or another reproducibility issue. The v5 sweep did not reproduce it. [experiment-evidence] [risk]
 - Whether DS improves after real training. The 2026-05-03 1-epoch smoke run is too undertrained to answer this: E1 was slightly higher on val IoU/F1 but lower on test IoU/F1/AUROC/PR-AUC. [experiment-evidence] [unverified] [risk]
-- Whether DS+PCA's small IoU/F1 gain is meaningful after per-city inspection and threshold tuning. [unverified]
+- Whether DS+PCA's small IoU/F1 gain is meaningful after qualitative inspection and true threshold tuning. The first per-city analysis is complete, but probability maps were not saved for threshold tuning. [experiment-evidence] [unverified]
 - Whether the gain survives a stronger hyperparameter-matched baseline. [unverified]
 - Whether raw+DS beats raw+PCA, raw+Celik, raw+IR-MAD, or fusion in a way that supports a DS-specific contribution. [unverified]
 - Whether validation city selection or threshold calibration creates optimistic metrics. [risk]
@@ -305,8 +305,8 @@ Future cleanup should stay incremental and evidence-preserving: archive stale gu
 ## 14. Next steps
 
 - next reading task: Read sections 1-8 of this brief, then `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`. [recommendation]
-- next coding task: Add a small result-analysis helper for per-city and per-seed sweep summaries. [recommendation]
-- next experiment: Inspect per-city E0/E1/E3/S0 failures and test validation-threshold tuning before running more long sweeps. [recommendation]
+- next coding task: Add probability caching or a threshold-sweep evaluator so validation-selected thresholds can be tested without retraining. [recommendation]
+- next experiment: Visualize `dubai`, `lasvegas`, `milano`, `brasilia`, and `norcia` for E0/E1/E3/S0 before running more long sweeps. [recommendation]
 - next writing task: Rewrite the thesis contribution around prior-channel behavior and negative/qualified DS findings, not "DS improves segmentation." [recommendation]
 
 ## 15. Forbidden overclaims
@@ -326,4 +326,4 @@ Do not claim:
 
 ## Working verdict
 
-The project has a real, narrower core: DS and other interpretable unsupervised priors feeding supervised Sentinel-2 binary change segmentation. That is worth testing, but the v5 reproduction weakens any simple "DS improves segmentation" story. The danger is narrative inflation: "damage segmentation", "new DS", "operational disaster response", or "state of the art" claims are not supported by the current implementation. The next decisive move is per-city/per-seed diagnosis of E0, E1, E3, and S0, including threshold behavior, so the thesis can explain when priors help, hurt, or merely change metric tradeoffs. [recommendation]
+The project has a real, narrower core: DS and other interpretable unsupervised priors feeding supervised Sentinel-2 binary change segmentation. That is worth testing, but the v5 reproduction weakens any simple "DS improves segmentation" story. The danger is narrative inflation: "damage segmentation", "new DS", "operational disaster response", or "state of the art" claims are not supported by the current implementation. The current evidence says prior effects are city- and metric-dependent; the next decisive move is qualitative inspection plus true threshold tuning from cached probabilities or a threshold-sweep evaluator. [recommendation]
