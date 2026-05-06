@@ -184,3 +184,338 @@ The next defensible experiment is:
 4. Compare against pixel L2 and PCA-diff, because canonical DS may be weaker on OSCD but more faithful to the subspace paper.
 
 This is a better research story than pretending the old residual-stack behavior was correct DS.
+
+## 11. What Was Missing From The First Pass
+
+The first implementation pass fixed the code path and produced smoke evidence, but it did not fully answer the broader research request. The missing pieces were:
+
+- A clear DS / GDS / KDS / KGDS explanation.
+- A crosswalk between this repo, Sensei's TPAMI 2015 paper, the bundled reference code, and the three GitHub repos.
+- A better explanation of why Sensei mentioned KPCA and CCA.
+- A stronger statement of what we can and cannot tell Sensei now.
+- A reading pathway for understanding this part of the thesis.
+
+Those are filled in below.
+
+## 12. DS, GDS, KDS, KGDS In Plain Terms
+
+### DS: Difference Subspace
+
+DS is for two subspaces.
+
+If object/class/time condition A gives a subspace `Phi`, and object/class/time condition B gives a subspace `Psi`, DS is the subspace containing the directions that separate them. In the TPAMI paper, the definition is tied to canonical angles/principal vectors between the two subspaces.
+
+For this project's OSCD adaptation:
+
+```text
+pre image pixels  -> PCA -> Phi in R^(13 x r)
+post image pixels -> PCA -> Psi in R^(13 x r)
+DS(Phi, Psi)      -> D in R^(13 x k)
+pixel score       -> ||D^T (x_post - x_pre)||^2
+```
+
+The adaptation is reasonable as an experiment, but it is not the original TPAMI image-set setting. In TPAMI, one whole image view is usually one vector; in OSCD, one pixel spectrum is one vector.
+
+### GDS: Generalized Difference Subspace
+
+GDS is for more than two class subspaces. Instead of extracting difference directions between exactly two subspaces, it builds a constraint/difference space from several class subspaces so subspace methods such as SM/MSM can compare projected subspaces more discriminatively.
+
+Important: the current OSCD binary pre/post implementation is not really GDS. Calling the current OSCD method "GDS" would be unsafe unless we implement a multi-subspace formulation and show how the multiple subspaces are defined.
+
+### KDS: Kernel Difference Subspace
+
+KDS is the nonlinear version of DS. The paper maps samples into a high-dimensional feature space through a kernel, then constructs subspaces there using KPCA. This is why Sensei asked about the nonlinear difference subspace and the kernel trick.
+
+The active OSCD pipeline does not implement KDS. `phase1/scripts/venus_kds_demo.py` is a learning prototype only.
+
+### KGDS: Kernel Generalized Difference Subspace
+
+KGDS is the nonlinear version of GDS. It uses kernel subspaces and a generalized difference/constraint space for multiple classes. This is the likely end target if Sensei wants the TPAMI2015 nonlinear method reproduced faithfully.
+
+The current project does not implement KGDS.
+
+## 13. Exact Reference-Code Crosswalk
+
+### This repo: active implementation
+
+- `phase1/data/preprocessing.py`
+  - `vectorize_cube`: OSCD `(C,H,W)` to `(C,N)`.
+  - This answers Sensei's "how do you generate a subspace from multi-channel images?" question.
+
+- `phase1/ds/pca_utils.py`
+  - `fit_pca_basis`: PCA basis generation.
+  - `legacy_residual_stack_difference_subspace`: old unsafe default, preserved only for reproducibility.
+  - `difference_subspace_eig`: projector-eigen DS.
+  - `difference_subspace_canonical`: canonical/principal-vector DS.
+
+- `phase1/ds/ds_scores.py`
+  - Converts DS basis into per-pixel score maps.
+
+- `phase1/scripts/audit_oscd_subspace.py`
+  - The script to prove the above behavior from code and data.
+
+- `phase1/scripts/venus_kds_demo.py`
+  - The first Venus/KPCA learning demo.
+
+### Bundled reference code in this repo
+
+- `references/reference_code/DS/utils.py`
+  - `gen_shape_subspace`: builds a subspace from 3D motion/shape data.
+  - `gen_shape_difference_subspace`: projector-eigen style DS.
+  - This is close to our repaired `eig` path, not to the old residual-stack default.
+
+- `references/reference_code/MagTool-main/MagTool-main/magnitude.py`
+  - `calcDiffSubspace`: uses projector sums and selects the difference eigen-space.
+  - `calcKarcherSubspace`: related to mean/Karcher subspace.
+  - `calcMagnitude`: subspace magnitude from canonical cosines.
+  - This supports the conclusion that the old `(13,12)` residual-stack behavior should not be treated as the clean DS baseline.
+
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtPCA.m`
+  - MATLAB PCA on `X` where columns are samples.
+
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtKernelPCA.m`
+  - Kernel PCA support.
+
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtCCA.m`
+  - CCA support.
+
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtKernelCCA.m`
+  - Kernel CCA support.
+
+- `references/reference_code/Subspace Toolbox/cvtToolBox/SubspaceMethod/cvtBasisVector.m`
+  - Builds subspace basis vectors from data arrays.
+
+### External GitHub repos
+
+- `https://github.com/ComputerVisionLaboratory/SubspaceMethodsToolBox`
+  - Key files:
+    - `src/utils/cvlPCA.m`
+    - `src/utils/cvlKPCA.m`
+    - `src/functions/cvlBasisVector.m`
+    - `src/functions/cvlCanonicalAngles.m`
+    - `src/functions/cvlKernelBasisVector.m`
+    - `src/functions/cvlKernelCanonicalAngles.m`
+  - This is the closest modern MATLAB reference for PCA/KPCA/subspace basics.
+
+- `https://github.com/ComputerVisionLaboratory/SubspacesToolkit`
+  - Key files:
+    - `src/functions/computePCA.m`
+    - `src/functions/computeKernelPCA.m`
+    - `src/functions/computeBasisVectors.m`
+    - `src/functions/computeSubspacesSimilarities.m`
+    - `src/functions/computeKernelSubspacesSimilarities.m`
+  - This appears to be a cleaner newer educational toolkit.
+
+- `https://github.com/ma-ath/subspyces`
+  - Key files:
+    - `subspyces/transform/pca_transform.py`
+    - `subspyces/metrics/cosine_canonical_angles.py`
+    - `subspyces/core/vector_space.py`
+  - Useful for Python subspace concepts, but it is not a DS/KDS implementation.
+
+## 14. Why Sensei Mentioned KPCA
+
+The TPAMI paper explicitly extends DS/GDS to KDS/KGDS using nonlinear kernel mapping and KPCA. It does this because image sets from multi-view objects can have nonlinear structure: views rotating around a 3D object do not necessarily lie well in one simple linear subspace.
+
+The Venus files are exactly this kind of multi-view object data:
+
+```text
+venus_nothing:          300 views
+venus_er2:              300 views
+venus_er_neck:          300 views
+each raw view:          480 x 640 grayscale
+demo downsampled view:  63 x 48 = 3024-dimensional vector
+matrix per object:      R^(3024 x 300)
+```
+
+That is why KPCA matters more for the Venus reproduction than for the current OSCD pixel-spectral DS implementation.
+
+For OSCD, a kernel method is possible, but it is not straightforward:
+
+- Full-image pixel KPCA would require kernels over hundreds of thousands to millions of pixel samples, which is computationally expensive.
+- Sampling or local windows would be needed.
+- A kernel-space score map needs a clearly defined out-of-sample projection for each pixel.
+- We should not claim KDS/KGDS on OSCD until this is mathematically and computationally specified.
+
+## 15. Why Sensei Mentioned CCA
+
+CCA is the mathematical family behind canonical correlations/angles. Subspace similarity is often measured through canonical angles, and CCA-like methods compute directions that maximize correlation between two sets.
+
+The S3CCA paper is not DS, but it is relevant because it treats two matrices:
+
+```text
+X in R^(d x m)
+Y in R^(d x n)
+```
+
+where columns are local feature vectors and the column index can have spatial/temporal meaning. It learns map weights over the array dimension, with smoothness and structured sparsity. This directly connects to Sensei/senpai questions about whether we are losing pixel position information.
+
+Current OSCD global DS loses spatial position during PCA fitting, then restores only the score map positions after scoring. S3CCA-style thinking would preserve/regularize spatial structure in the matching itself. That is a possible future method, but it is not currently implemented.
+
+The temporally regularized CCA / KOTRCCA paper is relevant for temporal sequences, not directly for two-date OSCD. It matters more if the project returns to MultiSenGE multi-date temporal subspace modeling.
+
+## 16. Position Information: What Is Lost And What Is Preserved
+
+Current global OSCD DS:
+
+- Preserves spectral vector values.
+- Preserves pixel coordinates only for mapping scores back to `(H,W)`.
+- Does not use pixel coordinates in PCA/subspace fitting.
+- Does not enforce local spatial smoothness.
+- Does not model neighborhoods unless `sliding_window_ds` or geodesic priors are used.
+
+So the answer is:
+
+> We do not lose each pixel's spectral vector, but the global subspace construction ignores spatial position. Position is only used after scoring to reconstruct the image-shaped score map.
+
+This is an important limitation and should be stated honestly.
+
+## 17. Projection Back To Image Space
+
+There are two different "projection back" ideas:
+
+### OSCD score-map reconstruction
+
+The active OSCD code does not reconstruct a spectral image from the DS projection. It computes a scalar per pixel:
+
+```text
+score_i = ||D^T (x_post_i - x_pre_i)||^2
+```
+
+Then `devectorize_cube` puts those scalar scores back into the original `(H,W)` grid using saved row/column indices.
+
+So the output is not a reconstructed image in the original 13-band space. It is a scalar map.
+
+### TPAMI DS visualization
+
+In the TPAMI Venus/object setting, projecting an image vector onto DS/KDS can visualize difference components. For linear DS, the projected vector can be reshaped back to image size. For KDS, proper visualization requires handling nonlinear feature-space projection/preimage or related visualization machinery. Our Venus script does a linear DS basis visualization and a KPCA-coordinate diagnostic, but not a faithful KDS preimage visualization.
+
+## 18. What The Current Experiments Say
+
+### OSCD audit
+
+Command:
+
+```powershell
+.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_subspace.py --city beirut --rank 6
+```
+
+Observed:
+
+```text
+X_pre/X_post shape: (13, 1262600)
+Phi/Psi shape:      (13, 6)
+legacy D shape:     (13, 12), corr with raw L2 = 0.999990
+eig D shape:        (13, 6),  corr with raw L2 = 0.190370
+canonical D shape:  (13, 6),  corr with raw L2 = 0.190364
+```
+
+Interpretation: the old default was not a defensible clean DS implementation. The repaired canonical/eig paths are geometrically much closer to the paper.
+
+### Venus prototype
+
+Command:
+
+```powershell
+$tag = Get-Date -Format "yyyyMMdd_HHmmss"
+.\.venv\Scripts\python.exe phase1/scripts/venus_kds_demo.py --output_dir "phase1/outputs/venus_kds_audit_$tag"
+```
+
+Existing verified output:
+
+```text
+phase1/outputs/venus_kds_audit_20260507_044552/
+  run_summary.json
+  venus_montage.png
+  venus_linear_pca_basis.png
+  venus_linear_ds_basis.png
+  venus_kpca_kds_prototype.png
+```
+
+Interpretation: this is useful to show Sensei that we loaded and understood the Venus data and started nonlinear-subspace diagnostics. It should not be presented as a full KGDS reproduction.
+
+### Canonical OSCD prior generation
+
+Existing verified output:
+
+```text
+phase1/outputs/oscd_priors_canonical_20260507_044621/
+  oscd_change_maps/
+  oscd_eval_results.json
+  oscd_eval_summary.csv
+  run_metadata.json
+```
+
+Test split summary:
+
+```text
+canonical ds_projection AUROC: 0.6246
+pixel_diff AUROC:              0.7559
+pca_diff AUROC:                0.8134
+```
+
+Interpretation: paper-faithful canonical DS is weaker than simple baselines on OSCD in this run. This is not a failure; it is important research evidence. It means the paper-faithful DS idea may not transfer strongly to global pixel-spectral OSCD without local/spatial/kernel extensions.
+
+## 19. Reading Path For You
+
+Read in this order:
+
+1. `SUBSPACE_IMPLEMENTATION_AUDIT.md`
+   - This file. Read it first.
+
+2. `phase1/scripts/audit_oscd_subspace.py`
+   - Read only the data flow: load city, normalize, vectorize, PCA, compare DS variants.
+
+3. `phase1/data/preprocessing.py`
+   - Focus on `vectorize_cube` and `devectorize_cube`.
+
+4. `phase1/ds/pca_utils.py`
+   - Focus on `fit_pca_basis`, `difference_subspace_canonical`, `difference_subspace_eig`, and `legacy_residual_stack_difference_subspace`.
+
+5. `phase1/ds/ds_scores.py`
+   - Focus on `_compute_ds_matrix_scores`.
+
+6. TPAMI 2015 DS/GDS paper:
+   - Read abstract and introduction first.
+   - Then read canonical angles and DS sections.
+   - Then read KDS/KGDS sections only after linear DS is clear.
+
+7. `phase1/scripts/venus_kds_demo.py`
+   - Read this after the TPAMI intro. It maps Sensei's Venus files into code.
+
+8. S3CCA paper:
+   - Read only after you understand current DS, because it is a separate CCA-based idea.
+
+## 20. Updated Sensei Answer
+
+Short answer:
+
+> I audited the implementation. In OSCD, I currently generate one PCA subspace per time image by treating each valid pixel as a 13-D Sentinel-2 spectral vector, so `X_pre` and `X_post` are `13 x N`. This is not per-channel PCA and not whole-image-vector PCA. I found a problem: the old residual-stack DS variant produced a 12-D basis for rank-6 subspaces in 13-D and behaved almost exactly like raw spectral difference. I separated it as a legacy method and added canonical/projector-eigen DS, which gives a 6-D DS and matches the TPAMI linear DS formulation much better. Nonlinear KDS/KGDS is not yet fully implemented; I loaded the Venus data and made a first KPCA/KDS diagnostic prototype, but I should still reproduce the TPAMI nonlinear method more faithfully before claiming I understand it.
+
+More technical answer:
+
+> The current OSCD adaptation is a linear spectral-subspace method. It uses pixel spectra as samples, fits PCA subspaces in `R^13`, then scores each pixel by projecting `x_post - x_pre` onto the DS basis. Pixel positions are preserved only for reconstructing the score map, not for subspace fitting. This is different from the TPAMI Venus setting, where each whole image view is a high-dimensional vector and 300 views form the image-set subspace. I now need to continue with a faithful Venus KDS/KGDS reproduction and then decide whether an OSCD kernel/local version is mathematically justified.
+
+## 21. Immediate Next Research Tasks
+
+1. Faithfully reproduce linear DS on Venus:
+   - Use whole-image vectors.
+   - Match the TPAMI dimensions as closely as possible.
+   - Produce DS projection visualizations that can be shown to Sensei.
+
+2. Upgrade the Venus script from "KPCA-coordinate prototype" to paper-faithful KDS:
+   - Follow the TPAMI KDS/KGDS equations.
+   - Compare against Santos/SubspaceMethodsToolBox KPCA routines.
+   - Decide how to handle visualization/preimage honestly.
+
+3. Run a small Phase 2 segmentation comparison using canonical priors:
+   - E0 raw-only vs raw+canonical DS.
+   - This checks whether mathematically faithful DS helps supervised OSCD segmentation.
+
+4. Decide whether OSCD should use:
+   - global spectral DS,
+   - local/windowed spectral DS,
+   - spatially structured CCA-like matching,
+   - or kernel/local DS.
+
+The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
