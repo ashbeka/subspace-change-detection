@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -16,6 +17,10 @@ os.environ.setdefault("OMP_NUM_THREADS", "4")
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "4")
 os.environ.setdefault("MKL_NUM_THREADS", "4")
 os.environ.setdefault("NUMEXPR_NUM_THREADS", "4")
+
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import numpy as np
 import yaml
@@ -28,6 +33,7 @@ from phase1.baselines.pixel_diff import pixel_l2_difference
 from phase1.baselines.ir_mad import ir_mad_score
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset, fit_or_load_band_stats
 from phase1.data.preprocessing import BandStats, apply_normalization
+from phase1.ds import pca_utils
 from phase1.ds.ds_scores import DSConfig, compute_ds_scores, sliding_window_ds
 from phase1.eval.metrics import auroc_score, binary_metrics
 from phase1.eval.thresholding import apply_threshold, grid_search_threshold, otsu_threshold
@@ -266,6 +272,9 @@ def main():
     args = parse_args()
     cfg = load_config(args.config)
     ensure_dir(args.output_dir)
+    configured_ds_variant = cfg["ds"].get("subspace_variant", "residual")
+    resolved_ds_variant = pca_utils.resolve_subspace_variant(configured_ds_variant)
+    print(f"DS variant: configured={configured_ds_variant}, resolved={resolved_ds_variant}")
     save_change_maps_flag = args.save_change_maps or cfg.get("output", {}).get("save_change_maps", False)
     stats_path = resolve_phase1_path(Path(cfg["normalization"]["stats_path"]))
     stats = fit_or_load_band_stats(
@@ -403,6 +412,12 @@ def main():
         "oscd_root": str(args.oscd_root),
         "output_dir": str(args.output_dir),
         "git_hash": git_hash(),
+        "ds": {
+            "configured_subspace_variant": configured_ds_variant,
+            "resolved_subspace_variant": resolved_ds_variant,
+            "rank_r": cfg["ds"].get("rank_r", 6),
+            "variance_threshold": cfg["ds"].get("variance_threshold"),
+        },
         "args": {
             "no_window": args.no_window,
             "disable_celik": args.disable_celik,

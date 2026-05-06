@@ -7,7 +7,7 @@ and projector utilities used by DS scoring.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional, Tuple
+from typing import Optional
 
 import numpy as np
 from sklearn.decomposition import PCA
@@ -91,9 +91,46 @@ def cross_residual_energy(residual_proj: Array, x: Array) -> Array:
     return np.sum(rx * rx, axis=0)
 
 
-def difference_subspace(phi: Array, psi: Array) -> Array:
+def _empty_basis(dim: int, dtype=np.float32) -> Array:
+    return np.zeros((int(dim), 0), dtype=dtype)
+
+
+def resolve_subspace_variant(variant: str) -> str:
     """
-    Construct difference subspace D = orth([R_psi * phi, R_phi * psi]).
+    Normalize configured DS variant names.
+
+    `residual` is retained as a backwards-compatible alias for the original
+    residual-stack construction. New experiments should prefer `canonical`.
+    """
+    key = str(variant or "legacy_residual_stack").strip().lower().replace("-", "_")
+    aliases = {
+        "residual": "legacy_residual_stack",
+        "residual_stack": "legacy_residual_stack",
+        "legacy": "legacy_residual_stack",
+        "legacy_residual": "legacy_residual_stack",
+        "legacy_residual_stack": "legacy_residual_stack",
+        "eig": "eig",
+        "projector_eig": "eig",
+        "projector_eigen": "eig",
+        "projector_eigen_ds": "eig",
+        "canonical": "canonical",
+        "principal": "canonical",
+        "principal_vectors": "canonical",
+        "principal_vector": "canonical",
+    }
+    if key not in aliases:
+        valid = ", ".join(sorted(set(aliases.values())))
+        raise ValueError(f"Unknown subspace_variant={variant!r}. Valid normalized variants: {valid}")
+    return aliases[key]
+
+
+def legacy_residual_stack_difference_subspace(phi: Array, psi: Array) -> Array:
+    """
+    Original project construction: D = orth([R_psi * phi, R_phi * psi]).
+
+    This is retained for reproducibility. It is not the paper-faithful default
+    for new DS experiments because with equal-rank subspaces it can span up to
+    2r directions and behave almost like a raw spectral-difference projection.
     """
     if phi.shape[0] != psi.shape[0]:
         raise ValueError("Bases must have same dimensionality.")
@@ -101,6 +138,16 @@ def difference_subspace(phi: Array, psi: Array) -> Array:
     r_psi = residual_projector(psi)
     stacked = np.concatenate([r_psi @ phi, r_phi @ psi], axis=1)
     return orthonormalize(stacked)
+
+
+def difference_subspace(phi: Array, psi: Array) -> Array:
+    """
+    Backwards-compatible alias for the original residual-stack DS variant.
+
+    Prefer `difference_subspace_canonical` or `build_difference_subspace(...,
+    variant="canonical")` for paper-faithful first-order DS.
+    """
+    return legacy_residual_stack_difference_subspace(phi, psi)
 
 
 def difference_subspace_eig(phi: Array, psi: Array, eps: float = 1e-6) -> Array:
@@ -119,7 +166,58 @@ def difference_subspace_eig(phi: Array, psi: Array, eps: float = 1e-6) -> Array:
     eigvals, eigvecs = np.linalg.eigh(g)
     idx = np.where((eigvals > eps) & (eigvals < 1.0 - eps))[0]
     if idx.size == 0:
-        # fall back to residual-stacked if no eigenvectors satisfy the criteria
-        return difference_subspace(phi, psi)
+        return _empty_basis(phi.shape[0], dtype=phi.dtype)
     d_basis = eigvecs[:, idx]
     return orthonormalize(d_basis)
+
+
+def difference_subspace_canonical(phi: Array, psi: Array, eps: float = 1e-6) -> Array:
+    """
+    Paper-faithful first-order DS from principal vectors.
+
+    If Phi^T Psi = U Sigma V^T, the DS basis is formed as:
+      D = (Phi U - Psi V) {2(I - Sigma)}^{-1/2}
+
+    Near-shared directions with cos(theta) close to one are excluded. If the
+    two subspaces are equal, an empty basis `(d, 0)` is returned.
+    """
+    if phi.ndim != 2 or psi.ndim != 2:
+        raise ValueError("Expected 2D basis matrices.")
+    if phi.shape[0] != psi.shape[0]:
+        raise ValueError("Bases must have same dimensionality.")
+    if phi.shape[1] == 0 or psi.shape[1] == 0:
+        return _empty_basis(phi.shape[0], dtype=phi.dtype)
+
+    a = phi
+    b = psi
+    if a.shape[1] > b.shape[1]:
+        a, b = b, a
+
+    u, s, vt = np.linalg.svd(a.T @ b, full_matrices=False)
+    s = np.clip(s.astype(np.float64, copy=False), 0.0, 1.0)
+    idx = np.where((1.0 - s) > float(eps))[0]
+    if idx.size == 0:
+        return _empty_basis(a.shape[0], dtype=a.dtype)
+
+    au = a @ u[:, idx]
+    bv = b @ vt.T[:, idx]
+    scale = 1.0 / np.sqrt(2.0 * (1.0 - s[idx]))
+    d = (au - bv) * scale[None, :]
+    q, r = np.linalg.qr(d)
+    diag = np.abs(np.diag(r)) if r.size else np.array([], dtype=np.float32)
+    if diag.size:
+        keep = diag > max(float(eps), 1e-8)
+        q = q[:, keep] if np.any(keep) else q[:, :0]
+    return q.astype(np.float32, copy=False)
+
+
+def build_difference_subspace(phi: Array, psi: Array, variant: str = "canonical", eps: float = 1e-6) -> Array:
+    """Dispatch DS construction by normalized variant name."""
+    resolved = resolve_subspace_variant(variant)
+    if resolved == "legacy_residual_stack":
+        return legacy_residual_stack_difference_subspace(phi, psi)
+    if resolved == "eig":
+        return difference_subspace_eig(phi, psi, eps=eps)
+    if resolved == "canonical":
+        return difference_subspace_canonical(phi, psi, eps=eps)
+    raise AssertionError(f"Unhandled resolved subspace variant: {resolved}")

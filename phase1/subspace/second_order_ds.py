@@ -17,6 +17,7 @@ from typing import Optional
 
 import numpy as np
 
+from phase1.ds.pca_utils import difference_subspace_canonical as _difference_subspace_canonical
 from phase1.subspace.geodesic import geodesic_projection, subspace_magnitude, sum_subspace
 
 Array = np.ndarray
@@ -61,36 +62,7 @@ def difference_subspace_canonical(basis1: Array, basis2: Array, eps: float = 1e-
   Works for potentially different subspace dimensions by using k=min(d1,d2).
   Components with cos(θ)≈1 (intersection/shared directions) are excluded.
   """
-  if basis1.ndim != 2 or basis2.ndim != 2:
-    raise ValueError("Expected 2D basis matrices.")
-  if basis1.shape[0] != basis2.shape[0]:
-    raise ValueError(f"Ambient dimension mismatch: {basis1.shape} vs {basis2.shape}")
-  if basis1.shape[1] == 0 or basis2.shape[1] == 0:
-    return np.zeros((basis1.shape[0], 0), dtype=np.float32)
-
-  a = basis1
-  b = basis2
-  if a.shape[1] > b.shape[1]:
-    a, b = b, a
-
-  u, s, vt = np.linalg.svd(a.T @ b, full_matrices=False)
-  s = np.clip(s.astype(np.float32), 0.0, 1.0)
-
-  idx = np.where((1.0 - s) > float(eps))[0]
-  if idx.size == 0:
-    return np.zeros((a.shape[0], 0), dtype=np.float32)
-
-  au = a @ u[:, idx]
-  bv = b @ vt.T[:, idx]
-  scale = 1.0 / np.sqrt(2.0 * (1.0 - s[idx]))
-  d = (au - bv) * scale[None, :]
-
-  q, r = np.linalg.qr(d)
-  diag = np.abs(np.diag(r)) if r.size else np.array([], dtype=np.float32)
-  if diag.size:
-    keep = diag > 1e-8
-    q = q[:, keep] if np.any(keep) else q[:, :0]
-  return q.astype(np.float32, copy=False)
+  return _difference_subspace_canonical(basis1, basis2, eps=eps)
 
 
 @dataclass(frozen=True)
@@ -138,4 +110,3 @@ def second_order_difference_subspace(
     mag_along=mag_along,
     mag_orth=mag_orth,
   )
-
