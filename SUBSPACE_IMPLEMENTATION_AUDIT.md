@@ -662,4 +662,11 @@ More technical answer:
    - Compare visually with raw `x_post - x_pre`, canonical DS score, and PCA-diff.
    - Use this to explain what "projection onto DS" means in image space.
 
+10. Experiment with DS scalar change-map construction:
+   - Current DS map is one scalar per pixel: `||D^T (x_post - x_pre)||^2`.
+   - Compare squared projection norm, unsquared norm, normalized projection energy, residual energy, and ratios such as `||D^T delta||^2 / ||delta||^2`.
+   - Test per-city vs global normalization before thresholding or Phase 2 use.
+   - Compare Otsu thresholding, validation-selected thresholds, and no thresholding before supervised U-Net input.
+   - Check whether the scalar score map agrees with the reconstructed DS norm map from task 9.
+
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
