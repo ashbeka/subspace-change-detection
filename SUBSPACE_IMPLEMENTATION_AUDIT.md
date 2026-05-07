@@ -81,7 +81,8 @@ D = (Phi U - Psi V) {2(I - Sigma)}^(-1/2)
 - Fixed projector-eigen DS so it no longer falls back to residual-stack when no eig directions exist.
 - Added `phase1/configs/oscd_priors_canonical.yaml`.
 - Added `phase1/scripts/audit_oscd_subspace.py`.
-- Added `phase1/scripts/venus_kds_demo.py`.
+- Added `phase1/subspace/kernel_difference_subspace.py`.
+- Reworked `phase1/scripts/venus_kds_demo.py` from a shared-KPCA prototype into a paper-formula KDS/KGDS projection audit for the Venus data.
 - Added unit tests under `tests/`.
 
 ## 5. Venus Dataset Status
@@ -113,22 +114,22 @@ This is the representation Sensei is likely pointing toward when he asks about t
 
 The active OSCD pipeline does not implement nonlinear KDS/KGDS from TPAMI 2015.
 
-`phase1/scripts/venus_kds_demo.py` adds a diagnostic prototype:
+The Venus audit path now implements the paper-formula KDS/KGDS projection machinery outside OSCD:
 
 1. Load the Venus whole-image vectors.
-2. Build linear PCA subspaces.
-3. Build a linear canonical DS basis and visualize it in image space.
-4. Build a shared RBF-KPCA coordinate embedding.
-5. Fit subspaces in that KPCA coordinate space.
-6. Compute canonical DS in that nonlinear coordinate space.
+2. Build linear PCA subspaces and a linear canonical DS visualization in image space.
+3. Fit nonlinear kernel subspace bases as `e_i = sum_l a_li phi(x_l)`.
+4. Build the KDS/KGDS matrix `E^T E` from kernel inner products between nonlinear basis vectors.
+5. Select the smallest positive eigen-directions and normalize them as RKHS basis vectors.
+6. Project whole-image views with TPAMI Eq. 16/17 using only kernel evaluations.
 
-This is useful for understanding and showing progress, but it is not yet a complete paper-faithful KDS/KGDS implementation with exact kernel-space operators and preimage reconstruction.
+This is paper-faithful for the kernel coefficient/projection equations. It is still not a full reproduction of the TPAMI visualization figures, because preimage reconstruction/search is not implemented.
 
 ## 7. Answer To Sensei
 
 Use this as the concise current answer:
 
-> Currently I generate OSCD subspaces by treating each valid Sentinel-2 pixel as a 13-D spectral vector and fitting PCA separately to pre/post matrices. I found that our active old residual-stack DS implementation is not faithful enough: with rank 6 it produces a 12-D projection and behaves almost like raw spectral difference. I have now separated that as a legacy variant and added canonical/projector-eigen DS for the paper-faithful linear version. Nonlinear KDS/KGDS from TPAMI2015 is not yet integrated into OSCD; I am first reproducing it on the Venus multi-view data you gave me, where each whole image view is one sample vector.
+> Currently I generate OSCD subspaces by treating each valid Sentinel-2 pixel as a 13-D spectral vector and fitting PCA separately to pre/post matrices. I found that our old residual-stack DS implementation was not faithful enough: with rank 6 it produced a 12-D projection and behaved almost like raw spectral difference. I separated it as a legacy variant and added canonical/projector-eigen DS for the paper-faithful linear version. For the Venus data, I now implemented the TPAMI-style kernel coefficient/projection equations for KDS and KGDS using whole image views as samples; the remaining missing part is preimage reconstruction for visualization.
 
 ## 8. Commands
 
@@ -144,7 +145,7 @@ Audit one OSCD city:
 .\.venv\Scripts\python.exe phase1/scripts/audit_oscd_subspace.py --city beirut --rank 6
 ```
 
-Run the Venus prototype:
+Run the Venus KDS/KGDS audit:
 
 ```powershell
 $tag = Get-Date -Format "yyyyMMdd_HHmmss"
@@ -226,13 +227,13 @@ Important: the current OSCD binary pre/post implementation is not really GDS. Ca
 
 KDS is the nonlinear version of DS. The paper maps samples into a high-dimensional feature space through a kernel, then constructs subspaces there using KPCA. This is why Sensei asked about the nonlinear difference subspace and the kernel trick.
 
-The active OSCD pipeline does not implement KDS. `phase1/scripts/venus_kds_demo.py` is a learning prototype only.
+The active OSCD pipeline does not implement KDS. The Venus audit now implements KDS projection in the paper's coefficient form, but only for the Venus whole-image dataset.
 
 ### KGDS: Kernel Generalized Difference Subspace
 
 KGDS is the nonlinear version of GDS. It uses kernel subspaces and a generalized difference/constraint space for multiple classes. This is the likely end target if Sensei wants the TPAMI2015 nonlinear method reproduced faithfully.
 
-The current project does not implement KGDS.
+The Venus audit now implements KGDS projection for the three Venus sculpture sets. It still does not implement preimage reconstruction.
 
 ## 13. Exact Reference-Code Crosswalk
 
@@ -255,7 +256,15 @@ The current project does not implement KGDS.
   - The script to prove the above behavior from code and data.
 
 - `phase1/scripts/venus_kds_demo.py`
-  - The first Venus/KPCA learning demo.
+  - Venus linear DS plus paper-formula KDS/KGDS projection audit.
+
+- `phase1/subspace/kernel_difference_subspace.py`
+  - RKHS KDS/KGDS coefficient bookkeeping:
+    - RBF kernel matrix.
+    - kernel subspace basis coefficients.
+    - `E^T E` between nonlinear subspace bases.
+    - smallest-positive-eigenvalue KDS/KGDS basis.
+    - Eq. 16/17 projection coordinates.
 
 ### Bundled reference code in this repo
 
@@ -388,7 +397,7 @@ So the output is not a reconstructed image in the original 13-band space. It is 
 
 ### TPAMI DS visualization
 
-In the TPAMI Venus/object setting, projecting an image vector onto DS/KDS can visualize difference components. For linear DS, the projected vector can be reshaped back to image size. For KDS, proper visualization requires handling nonlinear feature-space projection/preimage or related visualization machinery. Our Venus script does a linear DS basis visualization and a KPCA-coordinate diagnostic, but not a faithful KDS preimage visualization.
+In the TPAMI Venus/object setting, projecting an image vector onto DS/KDS can visualize difference components. For linear DS, the projected vector can be reshaped back to image size. For KDS, proper visualization requires handling nonlinear feature-space projection/preimage or related visualization machinery. Our Venus script now computes paper-formula KDS/KGDS projection coordinates and energies, but it still does not reconstruct the preimage needed for TPAMI-style emphasized-image visualization.
 
 ## 18. What The Current Experiments Say
 
@@ -412,7 +421,7 @@ canonical D shape:  (13, 6),  corr with raw L2 = 0.190364
 
 Interpretation: the old default was not a defensible clean DS implementation. The repaired canonical/eig paths are geometrically much closer to the paper.
 
-### Venus prototype
+### Venus KDS/KGDS audit
 
 Command:
 
@@ -424,15 +433,30 @@ $tag = Get-Date -Format "yyyyMMdd_HHmmss"
 Existing verified output:
 
 ```text
-phase1/outputs/venus_kds_audit_20260507_044552/
+phase1/outputs/venus_kds_faithful_20260508_001732/
   run_summary.json
   venus_montage.png
   venus_linear_pca_basis.png
   venus_linear_ds_basis.png
-  venus_kpca_kds_prototype.png
+  venus_kernel_kds_pair_energy.png
+  venus_kernel_kds_pair_coordinates.png
+  venus_kernel_kgds_three_class_energy.png
+  venus_kernel_kgds_three_class_coordinates.png
+  venus_kernel_spectra.png
 ```
 
-Interpretation: this is useful to show Sensei that we loaded and understood the Venus data and started nonlinear-subspace diagnostics. It should not be presented as a full KGDS reproduction.
+Observed:
+
+```text
+Venus raw files:              (480, 640, 1, 300)
+Downsampled matrix per class: (3024, 300)
+KDS setup:                    2 classes, 100-D kernel subspace each, 100-D KDS
+KGDS setup:                   3 classes, 150-D kernel subspace each, 300-D KGDS
+KDS basis norm error:         5.402e-11
+KGDS basis norm error:        4.595e-11
+```
+
+Interpretation: this is now a paper-formula implementation of the kernel coefficient and projection parts of KDS/KGDS. It should still not be presented as a complete TPAMI figure reproduction because the preimage search step is missing.
 
 ### Canonical OSCD prior generation
 
@@ -481,32 +505,33 @@ Read in this order:
    - Then read KDS/KGDS sections only after linear DS is clear.
 
 7. `phase1/scripts/venus_kds_demo.py`
-   - Read this after the TPAMI intro. It maps Sensei's Venus files into code.
+    - Read this after the TPAMI intro. It maps Sensei's Venus files into code.
 
-8. S3CCA paper:
-   - Read only after you understand current DS, because it is a separate CCA-based idea.
+8. `phase1/subspace/kernel_difference_subspace.py`
+   - Read this beside TPAMI Sections 6.1-6.3. It is the code version of the kernel coefficient/projection equations.
+
+9. S3CCA paper:
+    - Read only after you understand current DS, because it is a separate CCA-based idea.
 
 ## 20. Updated Sensei Answer
 
 Short answer:
 
-> I audited the implementation. In OSCD, I currently generate one PCA subspace per time image by treating each valid pixel as a 13-D Sentinel-2 spectral vector, so `X_pre` and `X_post` are `13 x N`. This is not per-channel PCA and not whole-image-vector PCA. I found a problem: the old residual-stack DS variant produced a 12-D basis for rank-6 subspaces in 13-D and behaved almost exactly like raw spectral difference. I separated it as a legacy method and added canonical/projector-eigen DS, which gives a 6-D DS and matches the TPAMI linear DS formulation much better. Nonlinear KDS/KGDS is not yet fully implemented; I loaded the Venus data and made a first KPCA/KDS diagnostic prototype, but I should still reproduce the TPAMI nonlinear method more faithfully before claiming I understand it.
+> I audited the implementation. In OSCD, I currently generate one PCA subspace per time image by treating each valid pixel as a 13-D Sentinel-2 spectral vector, so `X_pre` and `X_post` are `13 x N`. This is not per-channel PCA and not whole-image-vector PCA. I found a problem: the old residual-stack DS variant produced a 12-D basis for rank-6 subspaces in 13-D and behaved almost exactly like raw spectral difference. I separated it as a legacy method and added canonical/projector-eigen DS, which gives a 6-D DS and matches the TPAMI linear DS formulation much better. I also implemented the TPAMI-style KDS/KGDS coefficient and projection equations for the Venus data: each whole image view is one 3024-D sample, KDS uses two 100-D kernel subspaces, and KGDS uses three 150-D kernel subspaces. The remaining missing part is preimage reconstruction, so I can show projection-energy/coordinate diagnostics now, but not yet the exact TPAMI emphasized-image visualizations.
 
 More technical answer:
 
-> The current OSCD adaptation is a linear spectral-subspace method. It uses pixel spectra as samples, fits PCA subspaces in `R^13`, then scores each pixel by projecting `x_post - x_pre` onto the DS basis. Pixel positions are preserved only for reconstructing the score map, not for subspace fitting. This is different from the TPAMI Venus setting, where each whole image view is a high-dimensional vector and 300 views form the image-set subspace. I now need to continue with a faithful Venus KDS/KGDS reproduction and then decide whether an OSCD kernel/local version is mathematically justified.
+> The current OSCD adaptation is a linear spectral-subspace method. It uses pixel spectra as samples, fits PCA subspaces in `R^13`, then scores each pixel by projecting `x_post - x_pre` onto the DS basis. Pixel positions are preserved only for reconstructing the score map, not for subspace fitting. This is different from the TPAMI Venus setting, where each whole image view is a high-dimensional vector and 300 views form the image-set subspace. For Venus, I now compute nonlinear basis vectors as kernel combinations, form `E^T E`, take the smallest positive eigen-directions for KDS/KGDS, and project inputs using kernels as in Eq. 16/17. Next I need either preimage visualization for Venus or a careful decision about whether a local/kernel OSCD version is mathematically justified.
 
 ## 21. Immediate Next Research Tasks
 
-1. Faithfully reproduce linear DS on Venus:
-   - Use whole-image vectors.
-   - Match the TPAMI dimensions as closely as possible.
-   - Produce DS projection visualizations that can be shown to Sensei.
+1. Review the Venus KDS/KGDS outputs with Sensei:
+   - Show the data shape, KDS/KGDS ranks, and projection-energy diagnostics.
+   - Say clearly that preimage reconstruction is not implemented yet.
 
-2. Upgrade the Venus script from "KPCA-coordinate prototype" to paper-faithful KDS:
-   - Follow the TPAMI KDS/KGDS equations.
-   - Compare against Santos/SubspaceMethodsToolBox KPCA routines.
-   - Decide how to handle visualization/preimage honestly.
+2. Decide whether to implement preimage search:
+   - Needed if we want images like TPAMI Fig. 12/13.
+   - Not needed if the immediate goal is just mathematical understanding and OSCD direction-setting.
 
 3. Run a small Phase 2 segmentation comparison using canonical priors:
    - E0 raw-only vs raw+canonical DS.

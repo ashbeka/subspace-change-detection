@@ -1,13 +1,21 @@
 """
-Venus subspace/KPCA audit demo for the TPAMI 2015-style data.
+Venus DS/KDS/KGDS audit demo for Fukui and Maki TPAMI 2015.
 
-This is a small, explicit prototype:
-- linear DS uses whole downsampled images as vectors;
-- the KPCA/KDS section uses a shared RBF-KPCA coordinate embedding and then
-  applies canonical DS in that nonlinear coordinate space.
+This script uses the representation Sensei's Venus files imply:
 
-It is not a paper-faithful preimage reconstruction implementation of KDS/KGDS.
-Outputs are labeled accordingly.
+  one downsampled whole image view = one sample vector
+  one sculpture set = matrix X in R^(3024 x 300) for 63x48 views
+
+Implemented here:
+- linear PCA subspaces and linear canonical DS visualization in image space;
+- paper-formula KDS/KGDS construction in RKHS:
+  1. fit kernel subspace bases e_i = sum_l a_li phi(x_l);
+  2. build E^T E from kernel inner products between nonlinear bases;
+  3. take smallest positive eigen-directions for KDS/KGDS;
+  4. project images with Eq. 16/17 using kernel evaluations.
+
+Not implemented here:
+- preimage reconstruction for visualizing RKHS basis/projection images.
 """
 from __future__ import annotations
 
@@ -16,7 +24,7 @@ import json
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Iterable, Tuple
 
 import matplotlib
 
@@ -31,6 +39,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from phase1.ds import pca_utils
+from phase1.subspace import kernel_difference_subspace as kds_math
 
 
 VENUS_FILES = {
@@ -41,15 +50,18 @@ VENUS_FILES = {
 
 
 def parse_args() -> argparse.Namespace:
-    ap = argparse.ArgumentParser(description="Run a small Venus linear-DS and KPCA/KDS prototype.")
+    ap = argparse.ArgumentParser(description="Run Venus linear DS plus paper-formula KDS/KGDS diagnostics.")
     ap.add_argument("--output_dir", type=Path, default=None)
     ap.add_argument("--width", type=int, default=63)
     ap.add_argument("--height", type=int, default=48)
     ap.add_argument("--linear_rank", type=int, default=10)
-    ap.add_argument("--kpca_components", type=int, default=150)
-    ap.add_argument("--kernel_subspace_rank", type=int, default=100)
+    ap.add_argument("--kds_subspace_rank", type=int, default=100)
+    ap.add_argument("--kds_rank", type=int, default=100)
+    ap.add_argument("--kgds_subspace_rank", type=int, default=150)
+    ap.add_argument("--kgds_rank", type=int, default=300)
     ap.add_argument("--sigma2", type=float, default=5.0)
-    ap.add_argument("--seed", type=int, default=1234)
+    ap.add_argument("--eig_eps", type=float, default=1e-9)
+    ap.add_argument("--no_l2_normalize", action="store_true")
     return ap.parse_args()
 
 
@@ -58,7 +70,13 @@ def _default_output_dir() -> Path:
     return Path("phase1/outputs") / f"venus_kds_audit_{tag}"
 
 
-def _load_venus_matrix(path: Path, key: str, width: int, height: int) -> Tuple[np.ndarray, np.ndarray, Tuple[int, int]]:
+def _load_venus_matrix(
+    path: Path,
+    key: str,
+    width: int,
+    height: int,
+    l2_normalize: bool,
+) -> Tuple[np.ndarray, np.ndarray, Tuple[int, int, int, int]]:
     data = sio.loadmat(path)
     if key not in data:
         keys = [k for k in data if not k.startswith("__")]
@@ -66,17 +84,19 @@ def _load_venus_matrix(path: Path, key: str, width: int, height: int) -> Tuple[n
     arr = data[key]
     if arr.ndim != 4:
         raise ValueError(f"Expected (H,W,1,N) array in {path}, got {arr.shape}")
+
     frames = []
     columns = []
     for i in range(arr.shape[3]):
         im = Image.fromarray(arr[:, :, 0, i])
         im = im.resize((width, height), Image.Resampling.BILINEAR)
         frame = np.asarray(im, dtype=np.float32) / 255.0
-        vec = frame.reshape(-1)
-        vec = vec / (np.linalg.norm(vec) + 1e-9)
+        vec = frame.reshape(-1).astype(np.float64)
+        if l2_normalize:
+            vec = vec / (np.linalg.norm(vec) + 1e-12)
         frames.append(frame)
         columns.append(vec)
-    return np.stack(columns, axis=1), np.stack(frames, axis=0), arr.shape
+    return np.stack(columns, axis=1), np.stack(frames, axis=0), tuple(int(v) for v in arr.shape)
 
 
 def _pca_basis(x: np.ndarray, rank: int) -> Tuple[np.ndarray, np.ndarray]:
@@ -98,7 +118,7 @@ def _signed_image(vec: np.ndarray, height: int, width: int) -> np.ndarray:
 
 def _save_montage(frames_by_label: Dict[str, np.ndarray], out_path: Path) -> None:
     cols = 10
-    fig, axes = plt.subplots(len(frames_by_label), cols, figsize=(15, 5))
+    fig, axes = plt.subplots(len(frames_by_label), cols, figsize=(15, 5), squeeze=False)
     for row, (label, frames) in enumerate(frames_by_label.items()):
         idx = np.linspace(0, frames.shape[0] - 1, cols, dtype=int)
         for col, frame_idx in enumerate(idx):
@@ -115,9 +135,16 @@ def _save_montage(frames_by_label: Dict[str, np.ndarray], out_path: Path) -> Non
     plt.close(fig)
 
 
-def _save_component_grid(title: str, components: Dict[str, np.ndarray], out_path: Path, height: int, width: int, max_cols: int = 8) -> None:
+def _save_component_grid(
+    title: str,
+    components: Dict[str, np.ndarray],
+    out_path: Path,
+    height: int,
+    width: int,
+    max_cols: int = 8,
+) -> None:
     rows = len(components)
-    cols = min(max_cols, max(v.shape[1] for v in components.values()))
+    cols = min(max_cols, max(max(1, v.shape[1]) for v in components.values()))
     fig, axes = plt.subplots(rows, cols, figsize=(2.0 * cols, 2.2 * rows), squeeze=False)
     for row, (label, basis) in enumerate(components.items()):
         for col in range(cols):
@@ -135,31 +162,17 @@ def _save_component_grid(title: str, components: Dict[str, np.ndarray], out_path
     plt.close(fig)
 
 
-def _rbf_kernel(x: np.ndarray, sigma2: float) -> np.ndarray:
-    sq_norm = np.sum(x * x, axis=0, keepdims=True)
-    d2 = sq_norm.T + sq_norm - 2.0 * (x.T @ x)
-    return np.exp(-np.maximum(d2, 0.0) / float(sigma2)).astype(np.float64)
+def _basis_norm_error(subspace: kds_math.KernelSubspace) -> float:
+    gram = kds_math.rbf_kernel(subspace.samples, sigma2=subspace.sigma2)
+    ident = subspace.coeffs.T @ gram @ subspace.coeffs
+    return float(np.max(np.abs(ident - np.eye(subspace.rank))))
 
 
-def _center_kernel(k: np.ndarray) -> np.ndarray:
-    n = k.shape[0]
-    one = np.ones((n, n), dtype=k.dtype) / float(n)
-    return k - one @ k - k @ one + one @ k @ one
-
-
-def _kpca_coordinates(x: np.ndarray, components: int, sigma2: float) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    k = _center_kernel(_rbf_kernel(x, sigma2))
-    eigvals, eigvecs = np.linalg.eigh(k)
-    order = np.argsort(eigvals)[::-1]
-    eigvals = eigvals[order]
-    eigvecs = eigvecs[:, order]
-    keep = eigvals > 1e-9
-    eigvals = eigvals[keep]
-    eigvecs = eigvecs[:, keep]
-    m = min(int(components), eigvecs.shape[1])
-    coords = eigvecs[:, :m] * np.sqrt(eigvals[:m])[None, :]
-    ratio = eigvals[:m] / max(float(np.sum(eigvals)), 1e-12)
-    return coords.astype(np.float32), eigvals[:m].astype(np.float32), ratio.astype(np.float32)
+def _kds_norm_error(kds: kds_math.KernelDifferenceSubspace) -> float:
+    if kds.rank == 0:
+        return 0.0
+    ident = kds_math.rkhs_basis_gram(kds)
+    return float(np.max(np.abs(ident - np.eye(kds.rank))))
 
 
 def _safe_cosines(a: np.ndarray, b: np.ndarray) -> np.ndarray:
@@ -168,19 +181,115 @@ def _safe_cosines(a: np.ndarray, b: np.ndarray) -> np.ndarray:
     return np.linalg.svd(a.T @ b, compute_uv=False).astype(np.float32)
 
 
+def _normalize_for_plot(values: np.ndarray) -> np.ndarray:
+    values = np.asarray(values, dtype=np.float64)
+    vmax = float(np.max(values)) if values.size else 0.0
+    if vmax <= 0:
+        return np.zeros_like(values)
+    return values / vmax
+
+
+def _save_projection_energy_plot(
+    title: str,
+    kds: kds_math.KernelDifferenceSubspace,
+    matrices: Dict[str, np.ndarray],
+    labels: Iterable[str],
+    out_path: Path,
+) -> Dict[str, Dict[str, float]]:
+    fig, ax = plt.subplots(figsize=(12, 4.5))
+    stats: Dict[str, Dict[str, float]] = {}
+    for label in labels:
+        energy = kds_math.projection_energy(kds, matrices[label])
+        ax.plot(_normalize_for_plot(energy), label=label, linewidth=1.4)
+        stats[label] = {
+            "min": float(np.min(energy)),
+            "max": float(np.max(energy)),
+            "mean": float(np.mean(energy)),
+            "std": float(np.std(energy)),
+        }
+    ax.set_title(title)
+    ax.set_xlabel("view index")
+    ax.set_ylabel("normalized squared projection")
+    ax.legend(loc="best")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=160)
+    plt.close(fig)
+    return stats
+
+
+def _save_projection_heatmap(
+    title: str,
+    kds: kds_math.KernelDifferenceSubspace,
+    matrix: np.ndarray,
+    out_path: Path,
+    max_components: int = 40,
+) -> None:
+    coords = kds_math.project_kernel_difference(kds, matrix)
+    shown = coords[: min(max_components, coords.shape[0]), :]
+    limit = float(np.percentile(np.abs(shown), 99.0)) if shown.size else 1.0
+    limit = max(limit, 1e-12)
+    fig, ax = plt.subplots(figsize=(12, 5))
+    ax.imshow(shown, aspect="auto", cmap="coolwarm", vmin=-limit, vmax=limit)
+    ax.set_title(title)
+    ax.set_xlabel("view index")
+    ax.set_ylabel("KDS/KGDS component")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=160)
+    plt.close(fig)
+
+
+def _save_spectrum_plot(
+    title: str,
+    values: Dict[str, np.ndarray],
+    out_path: Path,
+    max_points: int = 80,
+) -> None:
+    fig, ax = plt.subplots(figsize=(10, 4))
+    for label, eigvals in values.items():
+        y = np.asarray(eigvals, dtype=np.float64)[:max_points]
+        ax.plot(y, marker="o", markersize=2.5, linewidth=1.2, label=label)
+    ax.set_title(title)
+    ax.set_xlabel("component")
+    ax.set_ylabel("eigenvalue")
+    ax.legend(loc="best")
+    fig.tight_layout()
+    fig.savefig(out_path, dpi=160)
+    plt.close(fig)
+
+
+def _fit_kernel_subspaces(
+    matrices: Dict[str, np.ndarray],
+    labels: Iterable[str],
+    rank: int,
+    sigma2: float,
+    eig_eps: float,
+) -> Dict[str, kds_math.KernelSubspace]:
+    return {
+        label: kds_math.fit_kernel_subspace(
+            matrices[label],
+            rank=rank,
+            sigma2=sigma2,
+            label=label,
+            eig_eps=eig_eps,
+        )
+        for label in labels
+    }
+
+
 def main() -> None:
     args = parse_args()
     out_dir = args.output_dir or _default_output_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    l2_normalize = not args.no_l2_normalize
     matrices: Dict[str, np.ndarray] = {}
     frames: Dict[str, np.ndarray] = {}
-    raw_shapes: Dict[str, Tuple[int, ...]] = {}
+    raw_shapes: Dict[str, Tuple[int, int, int, int]] = {}
     for label, (file_name, key) in VENUS_FILES.items():
-        x, f, raw_shape = _load_venus_matrix(Path(file_name), key, args.width, args.height)
+        x, f, raw_shape = _load_venus_matrix(Path(file_name), key, args.width, args.height, l2_normalize)
         matrices[label] = x
         frames[label] = f
-        raw_shapes[label] = tuple(int(v) for v in raw_shape)
+        raw_shapes[label] = raw_shape
 
     _save_montage(frames, out_dir / "venus_montage.png")
 
@@ -190,77 +299,138 @@ def main() -> None:
         basis, ratio = _pca_basis(x, args.linear_rank)
         pca_bases[label] = basis
         pca_ratios[label] = ratio
-    _save_component_grid("Linear PCA basis images", pca_bases, out_dir / "venus_linear_pca_basis.png", args.height, args.width, max_cols=8)
-
-    pair_a = "earrings"
-    pair_b = "nothing"
-    d_linear = pca_utils.difference_subspace_canonical(pca_bases[pair_a], pca_bases[pair_b])
     _save_component_grid(
-        f"Linear canonical DS basis: {pair_a} vs {pair_b}",
-        {f"{pair_a}_vs_{pair_b}": d_linear},
+        "Linear PCA basis images",
+        pca_bases,
+        out_dir / "venus_linear_pca_basis.png",
+        args.height,
+        args.width,
+        max_cols=8,
+    )
+
+    pair_labels = ("earrings", "nothing")
+    d_linear = pca_utils.difference_subspace_canonical(pca_bases[pair_labels[0]], pca_bases[pair_labels[1]])
+    _save_component_grid(
+        f"Linear canonical DS basis: {pair_labels[0]} vs {pair_labels[1]}",
+        {f"{pair_labels[0]}_vs_{pair_labels[1]}": d_linear},
         out_dir / "venus_linear_ds_basis.png",
         args.height,
         args.width,
         max_cols=8,
     )
 
-    combined = np.concatenate([matrices[pair_a], matrices[pair_b]], axis=1)
-    coords, kpca_eigvals, kpca_ratio = _kpca_coordinates(combined, args.kpca_components, args.sigma2)
-    n_a = matrices[pair_a].shape[1]
-    coords_a = coords[:n_a].T
-    coords_b = coords[n_a:].T
-    kpca_rank = min(args.kernel_subspace_rank, coords_a.shape[0], coords_a.shape[1], coords_b.shape[1])
-    basis_a = pca_utils.fit_pca_basis(coords_a, rank=kpca_rank, variance_threshold=None, use_randomized=False).basis
-    basis_b = pca_utils.fit_pca_basis(coords_b, rank=kpca_rank, variance_threshold=None, use_randomized=False).basis
-    d_kpca = pca_utils.difference_subspace_canonical(basis_a, basis_b)
-    kpca_cosines = _safe_cosines(basis_a, basis_b)
+    pair_subspaces = _fit_kernel_subspaces(matrices, pair_labels, args.kds_subspace_rank, args.sigma2, args.eig_eps)
+    kds_pair = kds_math.kernel_difference_subspace(
+        [pair_subspaces[pair_labels[0]], pair_subspaces[pair_labels[1]]],
+        rank=args.kds_rank,
+        eig_eps=args.eig_eps,
+    )
+    kds_energy_stats = _save_projection_energy_plot(
+        f"Paper-formula KDS projection: {pair_labels[0]} vs {pair_labels[1]}",
+        kds_pair,
+        matrices,
+        pair_labels,
+        out_dir / "venus_kernel_kds_pair_energy.png",
+    )
+    _save_projection_heatmap(
+        f"KDS coordinates for {pair_labels[0]} views",
+        kds_pair,
+        matrices[pair_labels[0]],
+        out_dir / "venus_kernel_kds_pair_coordinates.png",
+    )
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
-    axes[0].plot(kpca_ratio[: min(50, kpca_ratio.shape[0])], marker="o", markersize=2)
-    axes[0].set_title("Shared RBF-KPCA variance ratio")
-    axes[0].set_xlabel("component")
-    axes[0].set_ylabel("ratio")
-    axes[1].imshow(d_kpca, aspect="auto", cmap="coolwarm", vmin=-float(np.max(np.abs(d_kpca)) or 1.0), vmax=float(np.max(np.abs(d_kpca)) or 1.0))
-    axes[1].set_title("Prototype KPCA-coordinate DS basis")
-    axes[1].set_xlabel("DS component")
-    axes[1].set_ylabel("KPCA coordinate")
-    fig.suptitle("KPCA/KDS prototype diagnostics")
-    fig.tight_layout()
-    fig.savefig(out_dir / "venus_kpca_kds_prototype.png", dpi=160)
-    plt.close(fig)
+    kgds_labels = ("earrings_necklace", "earrings", "nothing")
+    kgds_subspaces = _fit_kernel_subspaces(matrices, kgds_labels, args.kgds_subspace_rank, args.sigma2, args.eig_eps)
+    kgds = kds_math.kernel_difference_subspace(
+        [kgds_subspaces[label] for label in kgds_labels],
+        rank=args.kgds_rank,
+        eig_eps=args.eig_eps,
+    )
+    kgds_energy_stats = _save_projection_energy_plot(
+        "Paper-formula KGDS projection: three Venus classes",
+        kgds,
+        matrices,
+        kgds_labels,
+        out_dir / "venus_kernel_kgds_three_class_energy.png",
+    )
+    _save_projection_heatmap(
+        "KGDS coordinates for earrings_necklace views",
+        kgds,
+        matrices["earrings_necklace"],
+        out_dir / "venus_kernel_kgds_three_class_coordinates.png",
+    )
+
+    _save_spectrum_plot(
+        "Kernel subspace and KDS/KGDS eigen spectra",
+        {
+            "KDS selected small eigvals": kds_pair.eigvals,
+            "KGDS selected small eigvals": kgds.eigvals,
+            "earrings KPCA eigvals": pair_subspaces["earrings"].eigvals,
+            "nothing KPCA eigvals": pair_subspaces["nothing"].eigvals,
+        },
+        out_dir / "venus_kernel_spectra.png",
+    )
+
+    pair_basis_errors = {label: _basis_norm_error(subspace) for label, subspace in pair_subspaces.items()}
+    kgds_basis_errors = {label: _basis_norm_error(subspace) for label, subspace in kgds_subspaces.items()}
 
     summary = {
-        "status": "prototype_not_paper_faithful_preimage_kds",
+        "status": "paper_formula_kds_kgds_projection_no_preimage_reconstruction",
+        "paper_mapping": {
+            "sample_vector": "one downsampled whole grayscale Venus view",
+            "matrix_per_sculpture": "R^(height*width x 300)",
+            "kernel": "exp(-||x-y||^2 / sigma2)",
+            "kds_step": "basis vectors are kernel combinations; KDS/KGDS from smallest positive eigenvectors of E^T E; projection uses Eq. 16/17",
+            "not_implemented": "preimage reconstruction/search used for TPAMI visual emphasis figures",
+        },
         "raw_shapes": raw_shapes,
-        "downsampled_image_shape_hw": [args.height, args.width],
+        "downsampled_image_shape_hw": [int(args.height), int(args.width)],
         "whole_image_matrix_shape": {k: list(v.shape) for k, v in matrices.items()},
+        "l2_normalize_columns": bool(l2_normalize),
+        "sigma2": float(args.sigma2),
         "linear_rank": int(args.linear_rank),
         "linear_pca_explained_ratio": {k: v.tolist() for k, v in pca_ratios.items()},
-        "linear_pair": [pair_a, pair_b],
+        "linear_pair": list(pair_labels),
         "linear_ds_shape": list(d_linear.shape),
-        "linear_principal_cosines": _safe_cosines(pca_bases[pair_a], pca_bases[pair_b]).tolist(),
-        "kpca_pair": [pair_a, pair_b],
-        "kpca_sigma2": float(args.sigma2),
-        "kpca_components": int(coords.shape[1]),
-        "kpca_eigenvalues_first10": kpca_eigvals[:10].tolist(),
-        "kernel_subspace_rank": int(kpca_rank),
-        "kpca_coordinate_basis_shapes": [list(basis_a.shape), list(basis_b.shape)],
-        "kpca_coordinate_ds_shape": list(d_kpca.shape),
-        "kpca_principal_cosines_first20": kpca_cosines[:20].tolist(),
+        "linear_principal_cosines": _safe_cosines(pca_bases[pair_labels[0]], pca_bases[pair_labels[1]]).tolist(),
+        "kds_pair": list(pair_labels),
+        "kds_kernel_subspace_rank_requested": int(args.kds_subspace_rank),
+        "kds_kernel_subspace_rank_actual": {label: int(s.rank) for label, s in pair_subspaces.items()},
+        "kds_rank_requested": int(args.kds_rank),
+        "kds_rank_actual": int(kds_pair.rank),
+        "kds_selected_eigvals_first10": kds_pair.eigvals[:10].tolist(),
+        "kds_selected_eigvals_last10": kds_pair.eigvals[-10:].tolist(),
+        "kds_subspace_basis_norm_error_max": pair_basis_errors,
+        "kds_basis_norm_error_max": _kds_norm_error(kds_pair),
+        "kds_projection_energy_stats": kds_energy_stats,
+        "kgds_labels": list(kgds_labels),
+        "kgds_kernel_subspace_rank_requested": int(args.kgds_subspace_rank),
+        "kgds_kernel_subspace_rank_actual": {label: int(s.rank) for label, s in kgds_subspaces.items()},
+        "kgds_rank_requested": int(args.kgds_rank),
+        "kgds_rank_actual": int(kgds.rank),
+        "kgds_selected_eigvals_first10": kgds.eigvals[:10].tolist(),
+        "kgds_selected_eigvals_last10": kgds.eigvals[-10:].tolist(),
+        "kgds_subspace_basis_norm_error_max": kgds_basis_errors,
+        "kgds_basis_norm_error_max": _kds_norm_error(kgds),
+        "kgds_projection_energy_stats": kgds_energy_stats,
         "outputs": [
             "venus_montage.png",
             "venus_linear_pca_basis.png",
             "venus_linear_ds_basis.png",
-            "venus_kpca_kds_prototype.png",
+            "venus_kernel_kds_pair_energy.png",
+            "venus_kernel_kds_pair_coordinates.png",
+            "venus_kernel_kgds_three_class_energy.png",
+            "venus_kernel_kgds_three_class_coordinates.png",
+            "venus_kernel_spectra.png",
             "run_summary.json",
         ],
     }
     (out_dir / "run_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
 
-    print(f"Saved Venus audit outputs to {out_dir}")
-    print(f"Linear DS basis shape: {d_linear.shape}")
-    print(f"Prototype KPCA-coordinate DS basis shape: {d_kpca.shape}")
-    print("KPCA/KDS note: this is a diagnostic prototype, not a paper-faithful preimage reconstruction.")
+    print(f"Saved Venus DS/KDS/KGDS audit outputs to {out_dir}")
+    print(f"KDS rank: {kds_pair.rank}, KDS norm error: {_kds_norm_error(kds_pair):.3e}")
+    print(f"KGDS rank: {kgds.rank}, KGDS norm error: {_kds_norm_error(kgds):.3e}")
+    print("Preimage reconstruction is not implemented; outputs are RKHS projection diagnostics.")
 
 
 if __name__ == "__main__":

@@ -7,3 +7,4 @@ This package is intentionally separate from `phase1.ds`:
   (e.g., geodesic velocity/acceleration via 2nd-order DS).
 """
 
+from phase1.subspace import kernel_difference_subspace
