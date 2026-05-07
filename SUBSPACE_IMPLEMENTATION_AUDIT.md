@@ -632,4 +632,11 @@ More technical answer:
    - Report this per city and overall.
    - If non-trivial, inspect whether exclusions are nodata/registration artifacts or real changed areas.
 
+8. Run PCA-rank sensitivity experiments:
+   - Current fixed rank `6` is a practical hyperparameter, not a proven optimum.
+   - Compare ranks such as `2, 3, 4, 5, 6, 8, 10, 12`.
+   - Also compare variance-threshold selection, e.g. keep enough PCs for `95%`, `99%`, and `99.5%` variance.
+   - Report how rank affects DS map quality, baseline-prior metrics, and Phase 2 segmentation performance.
+   - Avoid treating rank `6` as theoretically special unless experiments justify it.
+
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
