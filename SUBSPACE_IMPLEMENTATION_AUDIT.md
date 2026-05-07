@@ -346,6 +346,15 @@ For OSCD, a kernel method is possible, but it is not straightforward:
 - A kernel-space score map needs a clearly defined out-of-sample projection for each pixel.
 - We should not claim KDS/KGDS on OSCD until this is mathematically and computationally specified.
 
+This is now a major research task, not a side idea. A defensible next version should test at least one computationally feasible OSCD KDS design, for example:
+
+- sampled global KDS: fit KPCA/KDS on a controlled sample of valid pre/post pixel vectors, then project all pixels out-of-sample;
+- local/windowed KDS: fit small KDS models per patch or per local region;
+- prototype/Nystrom KDS: approximate the kernel matrix with representative pixel prototypes;
+- patch-vector KDS: use small spatial patches as samples instead of individual pixels.
+
+The key question is whether nonlinear KDS captures useful pre/post differences that linear canonical DS and simple pixel/PCA differences miss.
+
 ## 15. Why Sensei Mentioned CCA
 
 CCA is the mathematical family behind canonical correlations/angles. Subspace similarity is often measured through canonical angles, and CCA-like methods compute directions that maximize correlation between two sets.
@@ -538,9 +547,16 @@ More technical answer:
    - This checks whether mathematically faithful DS helps supervised OSCD segmentation.
 
 4. Decide whether OSCD should use:
-   - global spectral DS,
-   - local/windowed spectral DS,
-   - spatially structured CCA-like matching,
-   - or kernel/local DS.
+    - global spectral DS,
+    - local/windowed spectral DS,
+    - spatially structured CCA-like matching,
+    - or kernel/local DS.
+
+5. Implement and test an OSCD KPCA/KDS prototype:
+   - Start with sampled global KDS because it is simplest.
+   - Fit kernel subspaces from sampled valid pre/post 13-band pixel vectors.
+   - Use out-of-sample kernel projection to score all pixels.
+   - Compare against canonical DS, raw spectral difference, and PCA-diff.
+   - Track memory/runtime carefully because full pixel KPCA is infeasible.
 
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
