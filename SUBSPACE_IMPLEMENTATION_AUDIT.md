@@ -449,6 +449,239 @@ For each OSCD city, count:
 
 This should be near zero or explicitly explained.
 
+## 17A. Critical Next Task: Spatially Aware Subspace Validation
+
+The largest open methodological risk is not whether the code can compute a DS score. It can. The risk is whether the current OSCD adaptation defines a meaningful subspace for a satellite image.
+
+Current global OSCD DS treats the valid pixels in one date image as an unordered sample set:
+
+```text
+sample i          = one valid pixel
+sample vector x_i = 13 Sentinel-2 band values at that pixel
+X_pre             = [x_1, x_2, ..., x_N] in R^(13 x N)
+```
+
+This means PCA sees the distribution of 13-band pixel values, but it does not know where each pixel came from in the image. A road pixel, sea pixel, vegetation pixel, and building pixel are all just columns in the same matrix. Position is restored only after scoring, when scalar scores are placed back onto the `(H,W)` image grid.
+
+This is not automatically wrong. It may be a valid spectral-distribution adaptation. But it must be tested against spatially aware alternatives before the thesis can claim that the subspace construction is appropriate.
+
+### Research Question
+
+```text
+Is a global pixel-spectral subspace enough for OSCD change detection, or do local/patch-based subspaces preserve important spatial structure that improves change maps and downstream segmentation?
+```
+
+### Variants To Compare
+
+#### A. Global Pixel DS: Current Baseline
+
+Definition:
+
+```text
+one sample = one valid pixel
+vector length = 13 bands
+one subspace = all valid pixels from one date image
+```
+
+This is the current method. It should remain as the reference baseline because it is simple, fast, and already implemented.
+
+Required checks:
+
+- Use corrected `canonical` or repaired `eig` DS, not legacy residual-stack DS.
+- Run on at least `beirut` first, then the full OSCD test split.
+- Compare against raw spectral L2, PCA-diff, CVA, Celik, and IR-MAD where available.
+- Record DS basis shape, PCA rank, explained variance, raw-L2 correlation, AUROC, PR-AUC, best F1, best IoU, Otsu F1/IoU, and runtime.
+
+Decision value:
+
+- If global pixel DS is weak but cleanly different from raw L2, it is a useful baseline but not enough as the main contribution.
+- If it performs competitively, it can be framed as a spectral-distribution DS adaptation, while still acknowledging that it ignores spatial position during subspace fitting.
+
+#### B. Patch-Vector DS: Preserve Neighborhood Texture
+
+Definition:
+
+```text
+one sample = one local patch centered at a valid pixel
+3x3 patch vector = 13 x 3 x 3 = 117 values
+5x5 patch vector = 13 x 5 x 5 = 325 values
+```
+
+Instead of giving PCA only the 13 band values at one pixel, this gives PCA the local neighborhood around that pixel. This preserves some spatial texture and context.
+
+Implementation tasks:
+
+- Add patch extraction for pre/post Sentinel-2 cubes.
+- Start with small patch sizes: `3x3` and `5x5`.
+- Use sampling if full-image patch extraction is too large.
+- Fit PCA subspaces for pre and post patch vectors.
+- Compute DS score for each center pixel using the pre/post patch difference vector.
+- Save scalar DS maps and optional projected-patch norm maps.
+
+Required checks:
+
+- Compare patch sizes `1x1`, `3x3`, and `5x5`.
+- Track memory and runtime because patch vectors quickly become high-dimensional.
+- Verify patch borders and valid masks are handled explicitly.
+- Compare maps visually against global pixel DS and ground truth.
+
+Decision value:
+
+- If patch-vector DS improves change-map metrics or produces cleaner spatial maps, it answers Sensei/senpai concerns directly: the project should move from pure pixel-spectral DS to spatial patch DS.
+- If it does not help, we can report that local patch context did not improve this OSCD setup and keep global pixel DS as a simpler baseline.
+
+#### C. Local-Window DS: One Subspace Per Image Region
+
+Definition:
+
+```text
+one local window = e.g. 128x128 or 256x256 pixels
+one sample       = one 13-D pixel inside that window
+one subspace     = one PCA subspace per date per window
+```
+
+This keeps the vector definition at 13 bands, but it prevents a single global subspace from mixing unrelated parts of the city. Roads, coast, dense urban areas, and vegetation can have local subspaces.
+
+Implementation tasks:
+
+- Audit the existing `sliding_window_ds` path and confirm whether it uses canonical/eig DS or still behaves like legacy residual-stack DS.
+- If needed, update local-window DS to use corrected `canonical` DS.
+- Test windows:
+
+```text
+window sizes: 64, 128, 256
+strides:      32, 64, 128
+aggregation: mean, max
+```
+
+Required checks:
+
+- Compare local-window DS against global pixel DS with the same rank.
+- Report runtime, because local PCA/DS can become expensive.
+- Save per-city maps and city-level metrics.
+- Inspect boundary artifacts caused by window aggregation.
+
+Decision value:
+
+- If local-window DS improves maps, the thesis can argue that the subspace idea is useful but must be localized for remote-sensing scenes.
+- If it is too slow, it can still become a prototype or ablation rather than the production prior generator.
+
+#### D. Coordinate-Augmented DS: Optional Sanity Check
+
+Definition:
+
+```text
+sample vector = [13 band values, alpha*x_coord, alpha*y_coord]
+```
+
+This is not paper-faithful DS and should be treated as a sanity check, not a main method. It tests whether adding position directly to the sample vector changes the learned subspace.
+
+Risks:
+
+- Coordinates and reflectance values have different units.
+- Results may depend heavily on coordinate scaling `alpha`.
+- This can artificially encode location instead of change structure.
+
+Decision value:
+
+- Use only as an exploratory diagnostic.
+- Do not build the main thesis around this unless Sensei explicitly encourages it.
+
+#### E. CCA/S3CCA-Inspired Spatial Matching: Later Research Track
+
+S3CCA and temporally regularized CCA matter because they preserve structure over sample indices rather than treating samples as fully exchangeable. This is probably too large for the immediate repair task, but it should remain a serious research track if Sensei says the pixel-sample DS definition is insufficient.
+
+Possible future question:
+
+```text
+Can a structured CCA/subspace method preserve spatial arrangement better than PCA subspaces built from unordered pixel samples?
+```
+
+### Minimum Script To Build
+
+Create a focused script, not a broad pipeline rewrite:
+
+```text
+phase1/scripts/audit_oscd_spatial_subspace.py
+```
+
+Proposed command:
+
+```powershell
+.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_spatial_subspace.py `
+  --city beirut `
+  --rank 6 `
+  --methods global_pixel,patch3,patch5,window128 `
+  --output_dir phase1/outputs/oscd_spatial_subspace_audit_$tag
+```
+
+The script should save:
+
+- `metrics.csv`
+- `run_metadata.json`
+- `global_pixel_ds.png`
+- `patch3_ds.png`
+- `patch5_ds.png`
+- `window128_ds.png`
+- `raw_l2.png`
+- `pca_diff.png`
+- side-by-side comparison figure with pre RGB, post RGB, ground truth, and all tested maps
+
+### Metrics To Report
+
+For each city/method:
+
+- AUROC
+- PR-AUC / average precision
+- best F1 over thresholds
+- best IoU over thresholds
+- Otsu-threshold F1/IoU
+- correlation with raw spectral L2
+- percentage of ground-truth change pixels excluded by valid mask
+- runtime
+- peak memory if easy to measure
+
+For Phase 2 follow-up:
+
+- raw-only U-Net
+- raw + global canonical DS
+- raw + patch DS
+- raw + window DS
+
+Only run Phase 2 after Phase 1 maps look meaningful. Do not spend long training time on a DS prior that is already weak as an unsupervised change map.
+
+### Acceptance Criteria
+
+The current global OSCD adaptation becomes defensible if:
+
+- canonical/eig DS maps are not near-identical to raw L2;
+- the method has stable behavior across several cities;
+- rank sensitivity does not show that rank 6 was arbitrary or unstable;
+- valid-mask exclusions are negligible or explained;
+- global pixel DS is competitive with patch/window variants, or its weakness is explicitly reported.
+
+The project should pivot toward spatially aware DS if:
+
+- patch-vector or local-window DS gives clearer maps and better AUROC/F1/IoU;
+- global pixel DS fails mainly in mixed land-cover scenes;
+- Sensei confirms that unordered pixel-sample subspaces are too weak for the intended subspace-method contribution.
+
+The project should pause DS-as-prior claims if:
+
+- corrected canonical DS remains consistently worse than simple raw spectral/PCA baselines;
+- patch/window variants do not improve it;
+- Phase 2 only benefits from priors that are effectively raw difference maps.
+
+### Short Explanation For The Thesis
+
+If the spatial audit is successful:
+
+> The initial global spectral subspace treats valid pixel spectra as unordered samples. To test whether spatial context matters, we compare it with patch-vector and local-window subspace constructions. This separates the effect of spectral-distribution modeling from the effect of local spatial structure.
+
+If the spatial audit is negative:
+
+> The experiments show that a direct global pixel-spectral adaptation of DS is not sufficient for OSCD. This negative result motivates either localized subspace construction, kernelized/local DS, or a narrower thesis claim focused on interpretable prior diagnostics rather than DS superiority.
+
 ## 18. Projection Back To Image Space
 
 There are two different "projection back" ideas:
@@ -620,49 +853,58 @@ More technical answer:
    - Needed if we want images like TPAMI Fig. 12/13.
    - Not needed if the immediate goal is just mathematical understanding and OSCD direction-setting.
 
-3. Run a small Phase 2 segmentation comparison using canonical priors:
-   - E0 raw-only vs raw+canonical DS.
-   - This checks whether mathematically faithful DS helps supervised OSCD segmentation.
+3. Run the spatially aware OSCD subspace audit from Section 17A before more long Phase 2 sweeps:
+   - Compare global pixel DS, patch-vector DS, and local-window DS.
+   - Start with `beirut`, then add at least one dense urban city and one difficult/low-change city.
+   - Report AUROC, PR-AUC, best F1, best IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusions, runtime, and qualitative maps.
+   - This is now the main answer to the concern that global PCA ignores pixel position during subspace fitting.
 
-4. Decide whether OSCD should use:
-    - global spectral DS,
-    - local/windowed spectral DS,
-    - spatially structured CCA-like matching,
+4. Use the spatial audit to decide whether OSCD should use:
+    - global spectral DS as a simple baseline,
+    - patch-vector DS as the main spatially aware adaptation,
+    - local/windowed spectral DS as the main spatially aware adaptation,
+    - spatially structured CCA-like matching as a larger future method,
     - or kernel/local DS.
 
-5. Implement and test an OSCD KPCA/KDS prototype:
+5. Only after the Phase 1 spatial audit, run a small Phase 2 segmentation comparison:
+   - E0 raw-only.
+   - raw + global canonical DS.
+   - raw + best spatially aware DS variant, if it produces meaningful Phase 1 maps.
+   - This checks whether a mathematically cleaner and spatially justified DS prior helps supervised OSCD segmentation.
+
+6. Implement and test an OSCD KPCA/KDS prototype:
    - Start with sampled global KDS because it is simplest.
    - Fit kernel subspaces from sampled valid pre/post 13-band pixel vectors.
    - Use out-of-sample kernel projection to score all pixels.
    - Compare against canonical DS, raw spectral difference, and PCA-diff.
    - Track memory/runtime carefully because full pixel KPCA is infeasible.
 
-6. Implement and test a MultiSenGE GDS/KGDS prototype:
+7. Implement and test a MultiSenGE GDS/KGDS prototype:
    - Start with one tile/patch and several dates.
    - Build one linear or kernel subspace per date.
    - Use GDS/KGDS to extract multi-date difference directions.
    - Test interpretation routes: clustering, temporal grouping, supervised labels if available, or weak labels from known events.
    - Be explicit that GDS/KGDS gives a difference space, not semantic change classes by itself.
 
-7. Audit OSCD valid-mask impact:
+8. Audit OSCD valid-mask impact:
    - Measure how many ground-truth changed pixels are excluded by `valid_mask`.
    - Report this per city and overall.
    - If non-trivial, inspect whether exclusions are nodata/registration artifacts or real changed areas.
 
-8. Run PCA-rank sensitivity experiments:
+9. Run PCA-rank sensitivity experiments:
    - Current fixed rank `6` is a practical hyperparameter, not a proven optimum.
    - Compare ranks such as `2, 3, 4, 5, 6, 8, 10, 12`.
    - Also compare variance-threshold selection, e.g. keep enough PCs for `95%`, `99%`, and `99.5%` variance.
    - Report how rank affects DS map quality, baseline-prior metrics, and Phase 2 segmentation performance.
    - Avoid treating rank `6` as theoretically special unless experiments justify it.
 
-9. Add DS projection-reconstruction visualizations:
+10. Add DS projection-reconstruction visualizations:
    - Compute `D D^T (x_post - x_pre)` per pixel.
    - Save band-wise maps, RGB-like composites, and norm maps.
    - Compare visually with raw `x_post - x_pre`, canonical DS score, and PCA-diff.
    - Use this to explain what "projection onto DS" means in image space.
 
-10. Experiment with DS scalar change-map construction:
+11. Experiment with DS scalar change-map construction:
    - Current DS map is one scalar per pixel: `||D^T (x_post - x_pre)||^2`.
    - Compare squared projection norm, unsquared norm, normalized projection energy, residual energy, and ratios such as `||D^T delta||^2 / ||delta||^2`.
    - Test per-city vs global normalization before thresholding or Phase 2 use.
