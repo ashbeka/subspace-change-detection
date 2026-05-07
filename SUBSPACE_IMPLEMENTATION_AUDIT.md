@@ -469,6 +469,23 @@ So the output is not a reconstructed image in the original 13-band space. It is 
 
 In the TPAMI Venus/object setting, projecting an image vector onto DS/KDS can visualize difference components. For linear DS, the projected vector can be reshaped back to image size. For KDS, proper visualization requires handling nonlinear feature-space projection/preimage or related visualization machinery. Our Venus script now computes paper-formula KDS/KGDS projection coordinates and energies, but it still does not reconstruct the preimage needed for TPAMI-style emphasized-image visualization.
 
+Future OSCD visualization task:
+
+```text
+For each pixel:
+delta_x      = x_post - x_pre
+delta_x_ds   = D D^T delta_x
+residual     = delta_x - delta_x_ds
+```
+
+This would reconstruct the part of each 13-band change vector that lies in the DS basis. Visualizing `delta_x_ds` as band-wise maps, RGB composites, or norm maps could help answer:
+
+- What spectral-band combinations does DS emphasize?
+- Is DS extracting meaningful changes or just noise/artifacts?
+- How does DS projection differ from raw spectral difference and PCA-diff?
+
+This is not needed for the scalar DS prior, but it is valuable for interpretation and for explaining "projection back" to Sensei/senpais.
+
 ## 19. What The Current Experiments Say
 
 ### OSCD audit
@@ -638,5 +655,11 @@ More technical answer:
    - Also compare variance-threshold selection, e.g. keep enough PCs for `95%`, `99%`, and `99.5%` variance.
    - Report how rank affects DS map quality, baseline-prior metrics, and Phase 2 segmentation performance.
    - Avoid treating rank `6` as theoretically special unless experiments justify it.
+
+9. Add DS projection-reconstruction visualizations:
+   - Compute `D D^T (x_post - x_pre)` per pixel.
+   - Save band-wise maps, RGB-like composites, and norm maps.
+   - Compare visually with raw `x_post - x_pre`, canonical DS score, and PCA-diff.
+   - Use this to explain what "projection onto DS" means in image space.
 
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
