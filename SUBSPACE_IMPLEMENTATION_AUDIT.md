@@ -372,7 +372,48 @@ Current OSCD global DS loses spatial position during PCA fitting, then restores 
 
 The temporally regularized CCA / KOTRCCA paper is relevant for temporal sequences, not directly for two-date OSCD. It matters more if the project returns to MultiSenGE multi-date temporal subspace modeling.
 
-## 16. Position Information: What Is Lost And What Is Preserved
+## 16. MultiSenGE GDS/KGDS Research Path
+
+MultiSenGE may be a more natural dataset for GDS/KGDS than OSCD because it can provide more than two temporal observations of the same area. The rough mapping is:
+
+```text
+OSCD binary change:
+pre date  -> subspace A
+post date -> subspace B
+DS/KDS compares two subspaces
+
+MultiSenGE temporal change:
+date 1 -> subspace A
+date 2 -> subspace B
+date 3 -> subspace C
+...
+GDS/KGDS compares multiple subspaces
+```
+
+This could become a profitable research path:
+
+1. Build one subspace per date/patch/tile from Sentinel-2 band vectors.
+2. Use GDS or KGDS to extract directions that capture differences across multiple dates.
+3. Project each date, patch, or pixel/patch sample into that difference space.
+4. Interpret the projected outputs through clustering, thresholding, supervised classification, or weakly supervised labeling.
+
+Important limitation: GDS/KGDS does not automatically produce semantic labels such as construction, vegetation change, flood, or disaster damage. It produces a difference/projection space. A separate interpretation step is required:
+
+- unsupervised clustering of projected features;
+- supervised classification if labels exist;
+- weak supervision using known event dates or masks;
+- temporal pattern grouping;
+- change-type discovery followed by manual/semantic interpretation.
+
+Research question:
+
+```text
+Can GDS/KGDS over multiple Sentinel-2 dates extract more interpretable temporal difference directions than pairwise DS/KDS, and can those directions support non-binary or semantic change interpretation?
+```
+
+This should be documented as a high-value future experiment. It is not implemented yet in the active pipeline.
+
+## 17. Position Information: What Is Lost And What Is Preserved
 
 Current global OSCD DS:
 
@@ -388,7 +429,7 @@ So the answer is:
 
 This is an important limitation and should be stated honestly.
 
-## 17. Projection Back To Image Space
+## 18. Projection Back To Image Space
 
 There are two different "projection back" ideas:
 
@@ -408,7 +449,7 @@ So the output is not a reconstructed image in the original 13-band space. It is 
 
 In the TPAMI Venus/object setting, projecting an image vector onto DS/KDS can visualize difference components. For linear DS, the projected vector can be reshaped back to image size. For KDS, proper visualization requires handling nonlinear feature-space projection/preimage or related visualization machinery. Our Venus script now computes paper-formula KDS/KGDS projection coordinates and energies, but it still does not reconstruct the preimage needed for TPAMI-style emphasized-image visualization.
 
-## 18. What The Current Experiments Say
+## 19. What The Current Experiments Say
 
 ### OSCD audit
 
@@ -489,7 +530,7 @@ pca_diff AUROC:                0.8134
 
 Interpretation: paper-faithful canonical DS is weaker than simple baselines on OSCD in this run. This is not a failure; it is important research evidence. It means the paper-faithful DS idea may not transfer strongly to global pixel-spectral OSCD without local/spatial/kernel extensions.
 
-## 19. Reading Path For You
+## 20. Reading Path For You
 
 Read in this order:
 
@@ -522,7 +563,7 @@ Read in this order:
 9. S3CCA paper:
     - Read only after you understand current DS, because it is a separate CCA-based idea.
 
-## 20. Updated Sensei Answer
+## 21. Updated Sensei Answer
 
 Short answer:
 
@@ -532,7 +573,7 @@ More technical answer:
 
 > The current OSCD adaptation is a linear spectral-subspace method. It uses pixel spectra as samples, fits PCA subspaces in `R^13`, then scores each pixel by projecting `x_post - x_pre` onto the DS basis. Pixel positions are preserved only for reconstructing the score map, not for subspace fitting. This is different from the TPAMI Venus setting, where each whole image view is a high-dimensional vector and 300 views form the image-set subspace. For Venus, I now compute nonlinear basis vectors as kernel combinations, form `E^T E`, take the smallest positive eigen-directions for KDS/KGDS, and project inputs using kernels as in Eq. 16/17. Next I need either preimage visualization for Venus or a careful decision about whether a local/kernel OSCD version is mathematically justified.
 
-## 21. Immediate Next Research Tasks
+## 22. Immediate Next Research Tasks
 
 1. Review the Venus KDS/KGDS outputs with Sensei:
    - Show the data shape, KDS/KGDS ranks, and projection-energy diagnostics.
@@ -558,5 +599,12 @@ More technical answer:
    - Use out-of-sample kernel projection to score all pixels.
    - Compare against canonical DS, raw spectral difference, and PCA-diff.
    - Track memory/runtime carefully because full pixel KPCA is infeasible.
+
+6. Implement and test a MultiSenGE GDS/KGDS prototype:
+   - Start with one tile/patch and several dates.
+   - Build one linear or kernel subspace per date.
+   - Use GDS/KGDS to extract multi-date difference directions.
+   - Test interpretation routes: clustering, temporal grouping, supervised labels if available, or weak labels from known events.
+   - Be explicit that GDS/KGDS gives a difference space, not semantic change classes by itself.
 
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
