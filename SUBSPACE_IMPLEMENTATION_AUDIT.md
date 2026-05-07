@@ -422,12 +422,32 @@ Current global OSCD DS:
 - Does not use pixel coordinates in PCA/subspace fitting.
 - Does not enforce local spatial smoothness.
 - Does not model neighborhoods unless `sliding_window_ds` or geodesic priors are used.
+- Excludes pixels marked invalid by the pre/post valid mask.
 
 So the answer is:
 
 > We do not lose each pixel's spectral vector, but the global subspace construction ignores spatial position. Position is only used after scoring to reconstruct the image-shaped score map.
 
 This is an important limitation and should be stated honestly.
+
+There is also a separate validity-mask risk:
+
+```text
+valid_mask = valid_pre AND valid_post
+```
+
+This is meant to avoid nodata, missing-band, and rectification-border artifacts. However, it should be verified against the ground-truth change mask. If the valid-mask rule excludes many labeled changed pixels, then the PCA/DS pipeline may be silently dropping real change evidence.
+
+Future check:
+
+```text
+For each OSCD city, count:
+- total labeled changed pixels
+- changed pixels excluded by valid_mask
+- percentage of changed pixels excluded
+```
+
+This should be near zero or explicitly explained.
 
 ## 18. Projection Back To Image Space
 
@@ -606,5 +626,10 @@ More technical answer:
    - Use GDS/KGDS to extract multi-date difference directions.
    - Test interpretation routes: clustering, temporal grouping, supervised labels if available, or weak labels from known events.
    - Be explicit that GDS/KGDS gives a difference space, not semantic change classes by itself.
+
+7. Audit OSCD valid-mask impact:
+   - Measure how many ground-truth changed pixels are excluded by `valid_mask`.
+   - Report this per city and overall.
+   - If non-trivial, inspect whether exclusions are nodata/registration artifacts or real changed areas.
 
 The current evidence suggests global canonical spectral DS alone is probably weak for OSCD, but it is the correct baseline to understand before trying more complex variants.
