@@ -1,4 +1,4 @@
-# Subspace Implementation Audit
+# Subspace Method Notes
 
 This file is the current working note for the subspace correctness issue raised by Sensei and senpais. It is intentionally skeptical: it separates what the code actually does from what the papers and old project notes might imply.
 
@@ -804,7 +804,7 @@ Interpretation: paper-faithful canonical DS is weaker than simple baselines on O
 
 Read in this order:
 
-1. `SUBSPACE_IMPLEMENTATION_AUDIT.md`
+1. `docs/SUBSPACE_METHOD_NOTES.md`
    - This file. Read it first.
 
 2. `phase1/scripts/audit_oscd_subspace.py`

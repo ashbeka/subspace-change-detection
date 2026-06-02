@@ -11,9 +11,11 @@ The project does **not** currently implement end-to-end disaster damage segmenta
 
 ## Start Here
 
-- [Project Master Brief](docs/PROJECT_MASTER_BRIEF.md): current truth-status document for scope, novelty, risks, and next steps.
-- [Core Sweep Results](docs/RESULTS_OSCD_CORE_SWEEP_20260503.md): current 3-seed OSCD result audit.
-- [Reproducibility Cheat Sheet](docs/REPRODUCIBILITY_CHEATSHEET.md): commands for environment setup, data checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
+- [Docs Index](docs/README.md): reading order and active-vs-archive rules.
+- [Project Status](docs/PROJECT_STATUS.md): current truth-status document for scope, novelty, risks, and trusted evidence.
+- [Research Plan](docs/RESEARCH_PLAN.md): current next research tasks and decision gates.
+- [Subspace Method Notes](docs/SUBSPACE_METHOD_NOTES.md): DS/KDS/KGDS correctness notes, Sensei feedback, and spatial-subspace roadmap.
+- [Run Commands](docs/RUN_COMMANDS.md): commands for setup, checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
 
 ## Repository Map
 
@@ -36,9 +38,12 @@ phase2/
   outputs/        ignored checkpoints/evals/figures
 
 docs/
-  PROJECT_MASTER_BRIEF.md
-  RESULTS_OSCD_CORE_SWEEP_20260503.md
-  REPRODUCIBILITY_CHEATSHEET.md
+  README.md
+  PROJECT_STATUS.md
+  RESEARCH_PLAN.md
+  SUBSPACE_METHOD_NOTES.md
+  RUN_COMMANDS.md
+  results/
   archive/
 ```
 
@@ -52,7 +57,7 @@ $py=".\.venv\Scripts\python.exe"
 & $py -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
-Then see [docs/REPRODUCIBILITY_CHEATSHEET.md](docs/REPRODUCIBILITY_CHEATSHEET.md) for the full liveness check and experiment commands.
+Then see [docs/RUN_COMMANDS.md](docs/RUN_COMMANDS.md) for the full liveness check and experiment commands.
 
 ## Main Research Question
 

@@ -1,4 +1,4 @@
-# Reproducibility Cheat Sheet
+# Run Commands
 
 Generated: 2026-05-03
 Branch used when written: `audit/project-master-brief-20260503`
@@ -612,7 +612,7 @@ Long command quoting on Windows:
 Master brief:
 
 ```text
-docs/PROJECT_MASTER_BRIEF.md
+docs/PROJECT_STATUS.md
 ```
 
 Fresh liveness smoke:

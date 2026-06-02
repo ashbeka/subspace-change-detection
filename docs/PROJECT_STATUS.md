@@ -1,4 +1,4 @@
-# Project Master Brief
+# Project Status
 
 Generated: 2026-05-03  
 Active branch: `main`
@@ -233,12 +233,13 @@ Important active paths:
 - `phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml`: raw plus DS/PCA prior config. [code-evidence]
 - `phase2/configs/future_damage/xbd_template.yaml`: template for future damage data, not an active training path. [code-evidence]
 - `docs/`: active project docs plus archive. Active docs should stay few. [recommendation]
-- `docs/PROJECT_MASTER_BRIEF.md`: current project truth-status and pipeline explanation. [recommendation]
-- `docs/REPRODUCIBILITY_CHEATSHEET.md`: current command reference for reproducing the pipeline. [recommendation]
-- `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`: current v5 3-seed result note. [experiment-evidence]
+- `docs/PROJECT_STATUS.md`: current project truth-status and pipeline explanation. [recommendation]
+- `docs/RESEARCH_PLAN.md`: current next research tasks and decision gates. [recommendation]
+- `docs/SUBSPACE_METHOD_NOTES.md`: current DS/KDS/KGDS correctness notes and spatial-subspace roadmap. [recommendation]
+- `docs/RUN_COMMANDS.md`: current command reference for reproducing the pipeline. [recommendation]
+- `docs/results/OSCD_CORE_SWEEP_2026-05-03.md`: current v5 3-seed result note. [experiment-evidence]
 - `docs/archive/`: historical, redundant, or working cleanup documents. These are searchable context, not the first reading path. [doc-claim]
-- `research-notes/master/`: current scope and audit notes. This is ignored by git but important for reasoning. [doc-claim]
-- `research-notes/notes/`: advisor/senpai notes and supporting notes. Ignored by git, but high-value context. [doc-claim]
+- `research-notes/`: nested external notes repo/archive. Useful for old context, advisor/senpai notes, and references, but not active truth. [doc-claim] [risk]
 - `data/`: local datasets, ignored by git. [code-evidence]
 - `phase1/outputs/` and `phase2/outputs/`: local generated artifacts, ignored by git. [experiment-evidence]
 - `references/reference_code/`: external/reference implementations and papers. Useful but should not be confused with active project code. [code-evidence]
@@ -266,16 +267,17 @@ A docs-only cleanup has been applied: the active docs are intentionally few, and
 | `phase2/configs/oscd/core/E0_raw_unet.yaml` | keep | Canonical E0 raw baseline. | Low. | No for keeping. |
 | `phase2/configs/oscd/core/E3_raw_ds_pca_unet.yaml` | keep | Canonical prior-channel experiment config. | Low. | No for keeping. |
 | `phase2/configs/future_damage/xbd_template.yaml` | keep but mark future | Useful template, but not active evidence. | Medium if presented as implemented damage support. | No for keeping; yes before expanding. |
-| `docs/PROJECT_MASTER_BRIEF.md` | keep | Current truth-status document. | Low. | No. |
-| `docs/REPRODUCIBILITY_CHEATSHEET.md` | keep | Current command and reproducibility reference. | Low. | No. |
-| `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md` | keep | Current v5 3-seed result evidence. | Low. | No. |
+| `docs/PROJECT_STATUS.md` | keep | Current truth-status document. | Low. | No. |
+| `docs/RESEARCH_PLAN.md` | keep | Current short next-task plan and decision gates. | Low. | No. |
+| `docs/SUBSPACE_METHOD_NOTES.md` | keep | Current DS/KDS/KGDS correctness and spatial-subspace roadmap. | Low. | No. |
+| `docs/RUN_COMMANDS.md` | keep | Current command and reproducibility reference. | Low. | No. |
+| `docs/results/OSCD_CORE_SWEEP_2026-05-03.md` | keep | Current v5 3-seed result evidence. | Low. | No. |
 | `docs/archive/cleanup_pass/` | keep as archive | Holds redundant orientation/roadmap/cleanup docs from the cleanup pass. | Low: archived, not active. | No for keeping. |
 | `docs/archive/reentry/` | keep as archive | Historical reset, re-entry, implementation, and decision docs. | Low: can still be searched when needed. | No for keeping. |
 | `docs/archive/root_legacy/` | keep as archive | Historical root-level audit, primer, pipeline, and rerun log docs. | Low: can still be searched when needed. | No for keeping. |
 | `phase1/docs/` | merge selected content later | Phase-specific notes may belong in method docs. | Medium. | Yes. |
 | `phase2/docs/` | merge selected content later | Contains old reports and experiment summaries. | Medium: old metrics may be misread as reproduced. | Yes. |
-| `research-notes/master/` | keep as ignored source notes | Contains current scope and audit reasoning. | Low, but ignored by git means not portable. | Yes before moving/copying into tracked docs. |
-| `research-notes/notes/` | keep as ignored archive | Advisor/senpai context is valuable but not polished docs. | Medium privacy/context risk if tracked. | Yes before tracking. |
+| `research-notes/` | keep temporarily as external archive; move outside repo later | Nested notes repo contains old context, advisor/senpai notes, and references, but duplicates active docs. | Medium: can confuse active truth and git boundaries. | Yes before moving/extracting. |
 | `data/` | keep ignored and document expected layout | Local datasets should not be versioned. | Low. | Yes before deleting/moving. |
 | `phase1/outputs/` | keep ignored; create artifact index later | Generated outputs should not be tracked, but key runs need documentation. | Medium: stale artifacts can mislead. | Yes before cleanup. |
 | `phase2/outputs/` | keep ignored; create artifact index later | Contains important old ablation artifact. | High if deleted before reproducing. | Yes. |
@@ -286,9 +288,12 @@ Cleaner proposed repo structure later:
 
 ```text
 docs/
-  PROJECT_MASTER_BRIEF.md
-  REPRODUCIBILITY_CHEATSHEET.md
-  RESULTS_OSCD_CORE_SWEEP_20260503.md
+  README.md
+  PROJECT_STATUS.md
+  RESEARCH_PLAN.md
+  SUBSPACE_METHOD_NOTES.md
+  RUN_COMMANDS.md
+  results/
   archive/
 phase1/
 phase2/
@@ -304,7 +309,7 @@ Future cleanup should stay incremental and evidence-preserving: archive stale gu
 
 ## 14. Next steps
 
-- next reading task: Read sections 1-8 of this brief, then `docs/RESULTS_OSCD_CORE_SWEEP_20260503.md`. [recommendation]
+- next reading task: Read sections 1-8 of this brief, then `docs/RESEARCH_PLAN.md`. [recommendation]
 - next coding task: Add probability caching or a threshold-sweep evaluator so validation-selected thresholds can be tested without retraining. [recommendation]
 - next experiment: Visualize `dubai`, `lasvegas`, `milano`, `brasilia`, and `norcia` for E0/E1/E3/S0 before running more long sweeps. [recommendation]
 - next writing task: Rewrite the thesis contribution around prior-channel behavior and negative/qualified DS findings, not "DS improves segmentation." [recommendation]
