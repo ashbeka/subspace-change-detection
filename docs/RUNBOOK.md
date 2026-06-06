@@ -1,4 +1,4 @@
-# Run Commands
+# Runbook
 
 Generated: 2026-05-03
 Branch used when written: `audit/project-master-brief-20260503`
@@ -609,10 +609,10 @@ Long command quoting on Windows:
 
 ## 17. Current Evidence Anchors
 
-Master brief:
+Project brief:
 
 ```text
-docs/PROJECT_STATUS.md
+docs/PROJECT_BRIEF.md
 ```
 
 Fresh liveness smoke:

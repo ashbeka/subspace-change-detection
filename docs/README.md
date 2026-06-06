@@ -1,32 +1,30 @@
 # Docs Index
 
-This folder is for project-facing documentation: reproducibility, accepted status summaries, commands, and result notes.
+`docs/` is for project-facing documentation: concise project status, exact commands, accepted results, and historical archive.
 
-The active research thinking notes now live in `../notes/`.
-
-Use this split:
-
-- `notes/`: feedback, method understanding, literature triage, experiment ideas.
-- `docs/`: run commands, polished status, accepted results, and historical archive.
+Use `../notes/` for active research thinking: feedback, method understanding, literature triage, and experiment ideas.
 
 ## Active Docs
 
 Read these first:
 
-1. `PROJECT_STATUS.md`  
-   Current truth-status summary: scope, implemented pipeline, trusted evidence, risks, and forbidden overclaims.
+1. `PROJECT_BRIEF.md`
+   - Short project truth: scope, pipeline, evidence, next decision, and forbidden overclaims.
 
-2. `RESEARCH_PLAN.md`  
-   Current next tasks and decision gates. This is the fastest place to answer "what should we do next?"
+2. `RUNBOOK.md`
+   - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
 
-3. `SUBSPACE_METHOD_NOTES.md`  
-   DS/KDS/KGDS implementation notes, Sensei feedback, Venus audit, corrected DS behavior, and spatial-subspace roadmap.
+3. `results/OSCD_CORE_SWEEP_2026-05-03.md`
+   - Accepted summary of the current major OSCD 3-seed sweep.
 
-4. `RUN_COMMANDS.md`  
-   Environment setup, smoke checks, Phase 1/Phase 2 commands, sweeps, visualization, and troubleshooting.
+## Active Notes
 
-5. `results/OSCD_CORE_SWEEP_2026-05-03.md`  
-   Current major OSCD sweep result note.
+The active thinking files are:
+
+- `../notes/feedback.md`
+- `../notes/methods.md`
+- `../notes/literature.md`
+- `../notes/experiments.md`
 
 ## Archive Rule
 

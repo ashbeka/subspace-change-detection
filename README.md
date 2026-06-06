@@ -12,10 +12,9 @@ The project does **not** currently implement end-to-end disaster damage segmenta
 ## Start Here
 
 - [Docs Index](docs/README.md): reading order and active-vs-archive rules.
-- [Project Status](docs/PROJECT_STATUS.md): current truth-status document for scope, novelty, risks, and trusted evidence.
-- [Research Plan](docs/RESEARCH_PLAN.md): current next research tasks and decision gates.
-- [Subspace Method Notes](docs/SUBSPACE_METHOD_NOTES.md): DS/KDS/KGDS correctness notes, Sensei feedback, and spatial-subspace roadmap.
-- [Run Commands](docs/RUN_COMMANDS.md): commands for setup, checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
+- [Project Brief](docs/PROJECT_BRIEF.md): short current truth-status for scope, pipeline, evidence, next decision, and forbidden overclaims.
+- [Runbook](docs/RUNBOOK.md): commands for setup, checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
+- [Research Notes](notes/README.md): feedback, method understanding, literature triage, and experiment planning.
 
 ## Repository Map
 
@@ -39,12 +38,17 @@ phase2/
 
 docs/
   README.md
-  PROJECT_STATUS.md
-  RESEARCH_PLAN.md
-  SUBSPACE_METHOD_NOTES.md
-  RUN_COMMANDS.md
+  PROJECT_BRIEF.md
+  RUNBOOK.md
   results/
   archive/
+
+notes/
+  README.md
+  feedback.md
+  methods.md
+  literature.md
+  experiments.md
 ```
 
 ## Minimal Smoke Check
@@ -57,7 +61,7 @@ $py=".\.venv\Scripts\python.exe"
 & $py -c "import torch; print(torch.__version__, torch.cuda.is_available())"
 ```
 
-Then see [docs/RUN_COMMANDS.md](docs/RUN_COMMANDS.md) for the full liveness check and experiment commands.
+Then see [docs/RUNBOOK.md](docs/RUNBOOK.md) for the full liveness check and experiment commands.
 
 ## Main Research Question
 

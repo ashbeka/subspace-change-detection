@@ -17,7 +17,7 @@ These notes are the active project brain. They are for understanding, planning, 
 - Method explanation or code understanding: add it to `methods.md`.
 - Paper, bookmark, reference code, or dataset: add it to `literature.md`.
 - Result, experiment idea, failed run, or next test: add it to `experiments.md`.
-- Exact command that should be reused: keep it in `docs/RUN_COMMANDS.md`, then reference it from `experiments.md` if needed.
+- Exact command that should be reused: keep it in `docs/RUNBOOK.md`, then reference it from `experiments.md` if needed.
 
 ## Rules
 
@@ -26,4 +26,3 @@ These notes are the active project brain. They are for understanding, planning, 
 - Do not preserve old wording just because it was written confidently.
 - Do not make a new note file unless the existing four categories cannot reasonably hold it.
 - Treat `research-notes/`, Apple Notes, Chrome bookmarks, and archived docs as input sources to ingest, not active truth.
-
