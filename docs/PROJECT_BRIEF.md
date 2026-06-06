@@ -14,6 +14,8 @@ The active pipeline is:
 pre/post Sentinel-2 images -> Phase 1 prior maps -> Phase 2 supervised segmentation
 ```
 
+`Phase 1` and `Phase 2` are current workflow labels and folder names. They should be read as "geometric/classical prior generation" and "neural segmentation/downstream learning," not as a fixed research structure.
+
 OSCD is the current concrete benchmark and evidence source, not a permanent boundary on the thesis. xBD, xBD-S12, MultiSenGE semantic change, Harmonized Sentinel-2 L2A, and abandoned-greenhouse mapping are future or candidate directions unless their own data pipeline, labels, and evaluation are implemented.
 
 ## Problem Statement

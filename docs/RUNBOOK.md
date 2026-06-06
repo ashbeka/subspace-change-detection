@@ -14,6 +14,7 @@ This is the operational cheat sheet for reproducing the current project. It is d
 - Commit code/docs/config changes, not datasets, checkpoints, or generated maps.
 - Treat old outputs as evidence to audit, not proof.
 - For thesis claims, do not use 1-epoch smoke results as performance evidence.
+- Treat "Phase 1" and "Phase 2" here as command/workflow labels matching current folders, not as a fixed research structure.
 
 ## 1. Git Workflow
 
@@ -587,6 +588,14 @@ Refusing to overwrite existing run artifacts
 ```
 
 Fix: choose a new timestamped output directory, use `--resume`, or use `--overwrite_output_dir` deliberately.
+
+State-dict mismatch:
+
+```text
+RuntimeError: Error(s) in loading state_dict
+```
+
+Fix: check that the evaluation config matches the training config, especially model type, raw/prior channel count, enabled priors, backbone, and checkpoint path.
 
 xBD CSVs missing:
 

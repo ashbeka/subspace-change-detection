@@ -45,6 +45,12 @@ OSCD: Sentinel-2 before/after image pairs with binary change labels
 
 OSCD is the current implemented benchmark, not a permanent boundary. Future datasets such as Harmonized Sentinel-2 L2A, MultiSenGE, xBD-S12, or domain-specific greenhouse data should be admitted only when the research question, data pipeline, labels or evaluation proxy, and baseline comparisons are clear.
 
+Likewise, `Phase 1` and `Phase 2` are current workflow names, not the paper's fixed conceptual structure. In the paper, describe them by function when possible:
+
+```text
+geometric/classical prior generation -> supervised neural segmentation/downstream learning
+```
+
 Current task boundary:
 
 - This is binary change detection.
@@ -257,18 +263,18 @@ Unsafe contribution claims:
    - current exclusion of damage-level claims
 
 4. Method
-   - Phase 1 prior generation
+   - geometric/classical prior generation
    - corrected DS variants
    - global pixel DS
    - spatial alternatives: patch-vector and local-window DS
-   - Phase 2 prior-channel segmentation
+   - prior-channel neural segmentation
 
 5. Experiments
    - datasets and splits
    - baselines
    - metrics
-   - Phase 1 prior-map audit
-   - Phase 2 segmentation ablations
+   - prior-map audit
+   - segmentation ablations
 
 6. Results
    - quantitative metrics

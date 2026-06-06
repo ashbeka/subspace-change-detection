@@ -2,10 +2,12 @@
 
 Current truthful scope: **Sentinel-2 OSCD binary change segmentation with unsupervised change priors**.
 
-This repository studies whether interpretable unsupervised change maps, especially Difference Subspace (DS) priors, can improve supervised OSCD Sentinel-2 binary change segmentation. The codebase has two active phases:
+This repository studies whether interpretable unsupervised change maps, especially Difference Subspace (DS) priors, can improve supervised OSCD Sentinel-2 binary change segmentation. The codebase currently uses two workflow folders:
 
 - `phase1/`: generate unsupervised change-score maps from pre/post Sentinel-2 imagery.
 - `phase2/`: train and evaluate supervised binary segmentation models using raw pre/post bands, optionally with Phase 1 prior channels.
+
+Those names are pragmatic code organization, not fixed thesis doctrine. The real conceptual split is geometric/classical prior generation versus neural segmentation or downstream learning.
 
 The project does **not** currently implement end-to-end disaster damage segmentation, xBD/xBD-S12 training, multi-class building-damage labels, or building-instance damage metrics. Those are future-work directions until implemented and evaluated.
 

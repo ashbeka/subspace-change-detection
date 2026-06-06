@@ -35,6 +35,12 @@ Temporally Regularized CCA / KOTRCCA:
 - Relevant for temporal sequences.
 - More relevant to MultiSenGE than two-date OSCD.
 
+KCCA / Kernel CCA:
+
+- Appears in the archived reference-code leads.
+- Keep it as a future structured/kernel matching route, not as current OSCD evidence.
+- Do not let KPCA/KCCA/S3CCA/TRCCA become the thesis core unless a specific experiment and comparison justify that pivot.
+
 ## Reference Code
 
 Bundled code in this repo:

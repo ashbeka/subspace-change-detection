@@ -30,6 +30,14 @@ Treat OSCD as the current concrete implementation and evidence source, not as a 
 
 Keep the project narrative independent of any single dataset, method variant, or old implementation path. It is acceptable for the main dataset, subspace construction, and thesis framing to change when evidence or advisor feedback demands it.
 
+Treat `phase1/` and `phase2/` as current workflow/code-folder labels, not as fixed research doctrine. The useful distinction today is:
+
+```text
+geometric/classical prior generation -> neural segmentation or downstream learning
+```
+
+That split is allowed to change. Future work might organize around DS/KDS/GDS/KGDS outputs, clustering, semantic interpretation, or a different dataset pipeline. Do not force new research into the old phase wording if a clearer structure emerges.
+
 Do not overclaim:
 
 - completed disaster damage segmentation;

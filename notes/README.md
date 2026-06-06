@@ -30,4 +30,5 @@ These notes are the active project brain. They are for understanding, planning, 
 - Do not make a new note file unless the existing four categories cannot reasonably hold it.
 - Treat `research-notes/`, Apple Notes, Chrome bookmarks, and archived docs as input sources to ingest, not active truth.
 - Treat every project story as a draft. The code, notes, paper plan, and folder structure may change when evidence improves.
+- Treat `phase1/` and `phase2/` as current workflow labels, not a fixed research ontology. The present split is prior generation versus neural/downstream learning, but future work can reorganize around clearer methods or datasets.
 - Codex should act as a skeptical co-researcher and co-developer: propose structure changes when they reduce confusion, but avoid creating new files unless they have a clear responsibility.

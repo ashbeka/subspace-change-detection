@@ -11,6 +11,15 @@ OSCD Sentinel-2 binary change detection
 pre image + post image -> Phase 1 unsupervised priors -> Phase 2 supervised segmentation
 ```
 
+Here `Phase 1` and `Phase 2` are workflow labels, not immutable theory. In current code they mean:
+
+```text
+phase1/ = geometric/classical change-prior generation
+phase2/ = neural segmentation or downstream learning using raw bands and optional priors
+```
+
+This split can be renamed or reorganized if the research pivots to KDS/GDS/KGDS, clustering, semantic interpretation, or another dataset pipeline.
+
 Current project is not yet:
 
 - disaster damage segmentation;
@@ -325,6 +334,7 @@ Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is 
 ### Split and evaluation caveats
 
 - OSCD has train/test labels. The project creates its own validation split by holding out train cities. Do not call the validation set "official" unless that split is externally verified.
+- If a document says "official split," check whether it means the OSCD train/test split or the project-defined train/val split.
 - Current final Phase 2 evaluation should use stitched city-level masks, not averaged patch metrics, for thesis claims.
 - Default Phase 2 evaluation threshold is often `0.5`; threshold tuning and probability-map analysis are separate tasks.
 
@@ -341,17 +351,24 @@ Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is 
 - Random augmentations/noise are train-only; validation/test should be deterministic.
 - `RandomGaussianNoise` applies only to raw channels and valid pixels, not to priors or nodata.
 - If a pretrained ResNet backbone is used with non-RGB inputs, the first convolution is inflated from RGB ImageNet weights to the configured channel count.
+- In code terms, that first convolution is the ResNet `conv1`; record this when comparing pretrained and non-pretrained runs.
+- Some model paths upsample logits to the ground-truth mask size during training/evaluation. This is acceptable, but record it if native model output resolution differs from target size.
+- Class-imbalance options beyond current `pos_weight`, such as focal loss or change-heavy patch sampling, remain possible future experiments, not current evidence.
 - Raw-only CLI paths can still require `--phase1_change_maps_root`; this is confusing but harmless if the config has no enabled priors.
 - Saved priors are assumed spatially aligned with OSCD tiles; smoke checks only prove shape/channel loading for limited patches, not full alignment.
 
 ### Loader and model caveats
 
 - `OSCDSegmentationDataset` uses the configured/default 13-band order. Future configs should make band order explicit to avoid silent assumptions.
+- Archive wording called this an explicit `band_order` risk: if configs omit `band_order`, the loader falls back to the default 13 Sentinel-2 bands.
 - `valid_mask = valid_pre AND valid_post` is meant to avoid nodata and border artifacts, but its impact on labeled changed pixels must be measured.
 - `PriorsFusionUNet` is a lightweight early-fusion/reweighting variant, not a full attention or sophisticated fusion architecture.
 - `PriorsFusionUNet` assumes positive raw and prior branch channel counts. A priors-only or raw-only fusion configuration is unsafe unless the model branch is audited.
 - A priors-only configuration is unsafe unless the dataset/model path is audited; current code paths were mainly exercised with raw channels present.
 - Dependency versions are not fully pinned. For old-result reproduction, record the active `.venv`, Torch build, CUDA availability, and package versions in run metadata.
+- `DamageDatasetAdapter` is a generic CSV adapter only. The OSCD trainer/evaluator currently constructs `OSCDSegmentationDataset`; it does not switch into xBD/xBD-S12 damage training.
+- There is no integrated `train_damage_seg.py`, xBD-S12 loader, multi-class damage loss, or damage-specific metric pipeline yet.
+- `phase1.eval.run_oscd_eval.aggregate_metrics()` was flagged in the archive as a stub risk. Do not rely on that function unless the current code path is audited.
 
 ### MultiSenGE caveat
 
@@ -367,4 +384,4 @@ OSCD KDS is possible but not yet specified enough to claim:
 - a Nyström/prototype KDS would need representative pixel prototypes;
 - a patch-vector KDS would need explicit patch extraction and border/mask handling.
 
-CCA/S3CCA is a separate future route. It matters because it can preserve structure over sample indices, while current global PCA treats pixels as exchangeable columns. Do not present CCA/S3CCA as implemented.
+CCA/S3CCA and KCCA are separate future routes. They matter because they can preserve or compare structured sample relationships, while current global PCA treats pixels as exchangeable columns. Do not present CCA, KCCA, or S3CCA as implemented in the active OSCD pipeline.
