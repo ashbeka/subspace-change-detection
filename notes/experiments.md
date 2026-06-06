@@ -203,6 +203,15 @@ Acceptance checks:
    - Compare Otsu thresholding, validation-selected thresholds, and no thresholding before supervised U-Net input.
    - Check whether the scalar score map agrees with the reconstructed DS norm map from the projection-visualization task.
 
+8. Phase 1 score-normalization audit:
+   - Compare raw scores, percentile-clipped scores, and min-max-normalized scores.
+   - Report whether normalization changes AUROC/PR-AUC, Otsu thresholds, best F1/IoU, and Phase 2 prior behavior.
+   - Keep the wording clear: score normalization is an engineering step, not DS theory.
+
+9. Saved-prior alignment audit:
+   - For a few cities, verify prior-map shape, city name, split, and spatial alignment against OSCD pre/post tiles and masks.
+   - This is needed because smoke checks only proved one patch/channel load, not full prior alignment.
+
 ## Paused Work
 
 Pause until OSCD subspace construction is settled:
@@ -277,7 +286,44 @@ phase2/outputs/smoke_e0_e1_20260503_040723
 phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422
 ```
 
+Also audit before deleting:
+
+```text
+phase1/outputs/reentry_fast_priors_20260502_020139
+phase1/outputs/_smoke_reentry_geodesic
+phase1/outputs/oscd_geodesic_priors_rerun
+phase1/outputs/oscd_saved_priors_fast_rerun
+phase2/outputs/oscd_seg_E0_raw_rerun
+phase2/outputs/oscd_seg_geodesic
+phase2/outputs/reentry_smoke_20260502_020139
+phase2/outputs/sweep_overnight_full_eig_3seeds_150ep_v2
+```
+
 Interrupted progress-bar or aborted sweep folders can be deleted later, but only after confirming they do not contain unique metrics, checkpoints, figures, or logs.
+
+Likely delete-later after audit:
+
+```text
+phase2/outputs/sweep_core_150ep_E0_E1_repro_20260503_042530
+phase2/outputs/sweep_core_150ep_repro_v3_20260503_044813
+phase2/outputs/sweep_core_150ep_repro_v4_*
+```
+
+Do not rename old output folders during active analysis. Document the mapping instead, because old configs, summaries, and notes may refer to those legacy paths.
+
+## Secondary Analysis Backlog
+
+These items came from the old cleanup roadmap and remain useful, but they should follow the spatial subspace audit unless needed for a paper figure:
+
+- Inspect per-city metrics and qualitative examples for `E0_raw_unet`, `E1_raw_ds`, `E3_raw_ds_pca`, and `S0_siamese`.
+- Stratify where priors help or hurt by city type, land cover, seasonality, shadows/clouds, and change density.
+- Add probability-map saving or rerun inference for true threshold tuning; current CSV-only summaries cannot do full threshold sweeps after the fact.
+- Decide whether to run `E4_raw_pixel`, `E5_raw_celik`, and `E6_raw_irmad` in the same 3-seed controlled style.
+- If manual PowerShell result comparison becomes repetitive, add a small result-analysis script rather than hand-copying tables.
+- Add a config validator for enabled prior names versus available prior-map folders before long sweeps.
+- Improve output/config naming only after result interpretation is stable.
+- Extract shared channel-count/model-building logic later if repeated config mistakes appear.
+- Treat dependency pinning as a reproducibility task before final paper runs.
 
 ### Reviewed archive sources
 

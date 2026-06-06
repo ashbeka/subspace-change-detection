@@ -224,6 +224,16 @@ Spatial alternatives to test:
 - Coordinate-augmented DS: diagnostic only, not a main method.
 - CCA/S3CCA-style structured matching: larger future research track.
 
+Implementation details to preserve:
+
+- `3x3` patch vectors have `13 x 3 x 3 = 117` values.
+- `5x5` patch vectors have `13 x 5 x 5 = 325` values.
+- The DS score for patch-vector DS should be assigned to the center pixel of each patch.
+- Patch borders and valid masks must be handled explicitly; do not silently drop border regions without reporting the count.
+- Full-image patch extraction can be large, so sampled fitting is acceptable if the sampling seed, sample count, and city list are recorded.
+- Local-window DS should save both per-city metrics and maps, and should inspect boundary artifacts from overlapping-window aggregation.
+- Audit whether any existing `sliding_window_ds` code path uses corrected `canonical`/`eig` DS or still behaves like legacy residual-stack DS before using it as evidence.
+
 ## Projection Back To Image Space
 
 Current OSCD DS does not reconstruct a 13-band image.
@@ -300,18 +310,48 @@ Phase 2: continuous score map -> extra neural-network input channel
 
 Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is useless for Phase 2, but it is a warning sign.
 
+### Phase 1 engineering details
+
+- OSCD normalization uses bandwise z-score statistics from `phase1/data/oscd_band_stats.json` through `fit_or_load_band_stats` / `load_band_stats`.
+- The stats path is configurable. If missing, the Phase 1 runner can create it, so record the generated stats file with any thesis-usable run.
+- Valid masks are built from pre and post images and paired operations use `valid_pre AND valid_post`.
+- Common configs use `min_valid_bands: 3`; this is a practical nodata/missing-band rule, not a mathematical DS requirement.
+- Cloud/SCL masking is not currently an obvious part of the OSCD pipeline; do not imply cloud-aware masking without adding it.
+- Phase 1 score normalization, such as percentile clipping or min-max scaling, is an engineering choice for comparable maps and neural-network inputs, not part of DS theory.
+- DS eigen thresholds such as `eps=1e-6` are numerical defaults. Expose or record them if a result depends on them.
+- IR-MAD subsampling is seeded in the current code, but still record the seed because old IR-MAD behavior and runtimes can otherwise be hard to reproduce.
+- `Celik` and `IR-MAD` maps usually require the fuller Phase 1 prior folder, not only the fast/core prior folder.
+
 ### Split and evaluation caveats
 
 - OSCD has train/test labels. The project creates its own validation split by holding out train cities. Do not call the validation set "official" unless that split is externally verified.
 - Current final Phase 2 evaluation should use stitched city-level masks, not averaged patch metrics, for thesis claims.
 - Default Phase 2 evaluation threshold is often `0.5`; threshold tuning and probability-map analysis are separate tasks.
 
+### Phase 2 training and evaluation details
+
+- Raw Phase 2 input is `[pre(13), post(13)] = 26` channels.
+- Prior maps are loaded from `phase1/outputs/.../oscd_change_maps/<split>/<method>/<city>_score.npy`.
+- Prior channels are min-max normalized per tile before being appended to the raw channels.
+- Patch lists are generated per city with configured `patch_size` and `patch_overlap`.
+- Training is patch-wise because full OSCD city images are large.
+- Final validation/evaluation should stitch overlapping patch probabilities back into one full-city probability map before computing city metrics.
+- `best.ckpt` should be monitored using the same stitched validation style that will be used for final evaluation.
+- `BCEDiceLoss` computes BCE plus soft Dice on valid pixels only, and supports `pos_weight`.
+- Random augmentations/noise are train-only; validation/test should be deterministic.
+- `RandomGaussianNoise` applies only to raw channels and valid pixels, not to priors or nodata.
+- If a pretrained ResNet backbone is used with non-RGB inputs, the first convolution is inflated from RGB ImageNet weights to the configured channel count.
+- Raw-only CLI paths can still require `--phase1_change_maps_root`; this is confusing but harmless if the config has no enabled priors.
+- Saved priors are assumed spatially aligned with OSCD tiles; smoke checks only prove shape/channel loading for limited patches, not full alignment.
+
 ### Loader and model caveats
 
 - `OSCDSegmentationDataset` uses the configured/default 13-band order. Future configs should make band order explicit to avoid silent assumptions.
 - `valid_mask = valid_pre AND valid_post` is meant to avoid nodata and border artifacts, but its impact on labeled changed pixels must be measured.
 - `PriorsFusionUNet` is a lightweight early-fusion/reweighting variant, not a full attention or sophisticated fusion architecture.
+- `PriorsFusionUNet` assumes positive raw and prior branch channel counts. A priors-only or raw-only fusion configuration is unsafe unless the model branch is audited.
 - A priors-only configuration is unsafe unless the dataset/model path is audited; current code paths were mainly exercised with raw channels present.
+- Dependency versions are not fully pinned. For old-result reproduction, record the active `.venv`, Torch build, CUDA availability, and package versions in run metadata.
 
 ### MultiSenGE caveat
 

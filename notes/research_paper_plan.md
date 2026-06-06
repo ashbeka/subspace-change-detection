@@ -65,6 +65,13 @@ Deep models can learn strong spatial filters when labels and training domains ar
 - help diagnose where simple spectral differences fail;
 - clarify whether satellite change detection needs spatially aware subspace construction.
 
+Working interpretation:
+
+- Raw spectral difference highlights any numerical band change: real construction, vegetation seasonality, shadow, cloud, registration shift, or sensor effect.
+- Global DS asks whether the pre/post images differ along learned subspace directions, but it currently treats pixels as unordered samples.
+- Patch-vector or local-window DS asks the same question while preserving local spatial context.
+- A DS prior can still hurt fixed-threshold F1 if it highlights real spectral changes that OSCD does not label as target changes. Therefore report both ranking metrics such as AUROC/PR-AUC and threshold metrics such as IoU/F1.
+
 ## 5. Research Gap
 
 Established facts:
