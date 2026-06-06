@@ -87,12 +87,12 @@ D = (Phi U - Psi V) {2(I - Sigma)}^(-1/2)
 
 ## 5. Venus Dataset Status
 
-Sensei's files at repo root are valid MATLAB arrays:
+Sensei's Venus files are dataset artifacts under `data/venus_tpami2015/`:
 
 ```text
-venus_nothing.mat  -> venus_nothing  shape (480,640,1,300)
-venus_er2.mat      -> venus_er2      shape (480,640,1,300)
-venus_er_ne.mat    -> venus_er_neck  shape (480,640,1,300)
+venus_tpami2015_no_accessories.mat        -> venus_nothing  shape (480,640,1,300)
+venus_tpami2015_earrings.mat              -> venus_er2      shape (480,640,1,300)
+venus_tpami2015_earrings_necklace.mat     -> venus_er_neck  shape (480,640,1,300)
 ```
 
 These are not like OSCD. The natural TPAMI-style representation is:
@@ -149,7 +149,7 @@ Run the Venus KDS/KGDS audit:
 
 ```powershell
 $tag = Get-Date -Format "yyyyMMdd_HHmmss"
-.\.venv\Scripts\python.exe phase1/scripts/venus_kds_demo.py --output_dir "phase1/outputs/venus_kds_audit_$tag"
+.\.venv\Scripts\python.exe phase1/scripts/venus_kds_demo.py --venus_root data/venus_tpami2015 --output_dir "phase1/outputs/venus_kds_audit_$tag"
 ```
 
 Generate corrected canonical DS OSCD priors:
@@ -329,9 +329,9 @@ The TPAMI paper explicitly extends DS/GDS to KDS/KGDS using nonlinear kernel map
 The Venus files are exactly this kind of multi-view object data:
 
 ```text
-venus_nothing:          300 views
-venus_er2:              300 views
-venus_er_neck:          300 views
+venus_tpami2015_no_accessories:         300 views
+venus_tpami2015_earrings:               300 views
+venus_tpami2015_earrings_necklace:      300 views
 each raw view:          480 x 640 grayscale
 demo downsampled view:  63 x 48 = 3024-dimensional vector
 matrix per object:      R^(3024 x 300)
@@ -747,7 +747,7 @@ Command:
 
 ```powershell
 $tag = Get-Date -Format "yyyyMMdd_HHmmss"
-.\.venv\Scripts\python.exe phase1/scripts/venus_kds_demo.py --output_dir "phase1/outputs/venus_kds_audit_$tag"
+.\.venv\Scripts\python.exe phase1/scripts/venus_kds_demo.py --venus_root data/venus_tpami2015 --output_dir "phase1/outputs/venus_kds_audit_$tag"
 ```
 
 Existing verified output:

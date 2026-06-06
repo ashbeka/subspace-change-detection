@@ -43,14 +43,15 @@ from phase1.subspace import kernel_difference_subspace as kds_math
 
 
 VENUS_FILES = {
-    "nothing": ("venus_nothing.mat", "venus_nothing"),
-    "earrings": ("venus_er2.mat", "venus_er2"),
-    "earrings_necklace": ("venus_er_ne.mat", "venus_er_neck"),
+    "nothing": ("venus_tpami2015_no_accessories.mat", "venus_nothing"),
+    "earrings": ("venus_tpami2015_earrings.mat", "venus_er2"),
+    "earrings_necklace": ("venus_tpami2015_earrings_necklace.mat", "venus_er_neck"),
 }
 
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description="Run Venus linear DS plus paper-formula KDS/KGDS diagnostics.")
+    ap.add_argument("--venus_root", type=Path, default=Path("data/venus_tpami2015"))
     ap.add_argument("--output_dir", type=Path, default=None)
     ap.add_argument("--width", type=int, default=63)
     ap.add_argument("--height", type=int, default=48)
@@ -280,13 +281,14 @@ def main() -> None:
     args = parse_args()
     out_dir = args.output_dir or _default_output_dir()
     out_dir.mkdir(parents=True, exist_ok=True)
+    venus_root = args.venus_root if args.venus_root.is_absolute() else ROOT / args.venus_root
 
     l2_normalize = not args.no_l2_normalize
     matrices: Dict[str, np.ndarray] = {}
     frames: Dict[str, np.ndarray] = {}
     raw_shapes: Dict[str, Tuple[int, int, int, int]] = {}
     for label, (file_name, key) in VENUS_FILES.items():
-        x, f, raw_shape = _load_venus_matrix(Path(file_name), key, args.width, args.height, l2_normalize)
+        x, f, raw_shape = _load_venus_matrix(venus_root / file_name, key, args.width, args.height, l2_normalize)
         matrices[label] = x
         frames[label] = f
         raw_shapes[label] = raw_shape
@@ -383,6 +385,8 @@ def main() -> None:
             "kds_step": "basis vectors are kernel combinations; KDS/KGDS from smallest positive eigenvectors of E^T E; projection uses Eq. 16/17",
             "not_implemented": "preimage reconstruction/search used for TPAMI visual emphasis figures",
         },
+        "venus_root": str(venus_root),
+        "venus_files": {label: {"file": file_name, "mat_key": key} for label, (file_name, key) in VENUS_FILES.items()},
         "raw_shapes": raw_shapes,
         "downsampled_image_shape_hw": [int(args.height), int(args.width)],
         "whole_image_matrix_shape": {k: list(v.shape) for k, v in matrices.items()},

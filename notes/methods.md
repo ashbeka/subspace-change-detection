@@ -187,9 +187,9 @@ KGDS:
 Sensei's Venus data:
 
 ```text
-venus_nothing.mat  -> (480, 640, 1, 300)
-venus_er2.mat      -> (480, 640, 1, 300)
-venus_er_ne.mat    -> (480, 640, 1, 300)
+data/venus_tpami2015/venus_tpami2015_no_accessories.mat        -> (480, 640, 1, 300)
+data/venus_tpami2015/venus_tpami2015_earrings.mat              -> (480, 640, 1, 300)
+data/venus_tpami2015/venus_tpami2015_earrings_necklace.mat     -> (480, 640, 1, 300)
 ```
 
 Demo representation:
@@ -239,4 +239,3 @@ residual     = delta_x - delta_x_ds
 ```
 
 This could show which band combinations DS emphasizes and may help explain projection to Sensei/senpais.
-
