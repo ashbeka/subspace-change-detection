@@ -43,7 +43,6 @@ docs/
   PROJECT_BRIEF.md
   RUNBOOK.md
   results/
-  archive/
 
 notes/
   README.md

@@ -1,6 +1,6 @@
 # Docs Index
 
-`docs/` is for project-facing documentation: concise project status, exact commands, accepted results, and historical archive.
+`docs/` is for project-facing documentation: concise project status, exact commands, and accepted results.
 
 Use `../notes/` for active research thinking: feedback, method understanding, literature triage, and experiment ideas.
 
@@ -27,9 +27,9 @@ The active thinking files are:
 - `../notes/experiments.md`
 - `../notes/research_paper_plan.md`
 
-## Archive Rule
+## Historical Archive
 
-`archive/` contains historical re-entry, cleanup, and old planning documents. Its useful knowledge has been consolidated into the active `../notes/` files. Keep it searchable until deletion is explicitly approved, but do not treat it as active truth. If an archive file conflicts with active docs or notes, trust the active files unless code or fresh experiments prove otherwise.
+`docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into the active `../notes/` files and project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
 
 ## Research Notes Rule
 

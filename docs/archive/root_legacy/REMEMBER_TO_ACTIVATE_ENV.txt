@@ -1,6 +1,0 @@
-REMINDER: ACTIVATE THE ROOT VENV
---------------------------------
-1) Open terminal in repo root.
-2) PowerShell:  .\.venv\Scripts\Activate.ps1
-   bash:       source .venv/bin/activate
-3) Then run your phase1/phase2 commands.

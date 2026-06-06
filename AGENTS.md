@@ -137,8 +137,9 @@ Active docs:
 - `docs/PROJECT_BRIEF.md`: short current truth-status.
 - `docs/RUNBOOK.md`: exact reproducibility and experiment commands.
 - `docs/results/`: accepted result summaries.
-- `docs/archive/`: historical material, searchable but not active truth.
 - `docs/others/`: non-Markdown imports kept for later review.
+
+The old `docs/archive/` folder was deleted after its useful knowledge was consolidated into active notes/docs. If historical wording is needed, use Git/GitHub history rather than recreating an archive folder by default.
 
 When ingesting old notes, Apple Notes exports, Chrome bookmarks, archive files, or `research-notes/`, compress useful information into the existing `notes/` files whenever possible. Do not make a new note file by default.
 

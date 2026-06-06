@@ -224,7 +224,9 @@ Pause until OSCD subspace construction is settled:
 
 ## Archive-Ingested Evidence Rules
 
-The old archive documents were reviewed in three passes: inventory, useful-claim extraction, and active-note gap check. The archive should now be treated as historical source material, not active truth. Do not delete it until the user explicitly approves.
+The old archive documents were reviewed in repeated passes: inventory, useful-claim extraction, active-note gap check, keyword/risk coverage, and final functional coverage across commands, artifacts, code references, risks, tasks, and results.
+
+The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result summaries under `docs/results/`.
 
 ### Thesis-usable run provenance
 
@@ -325,9 +327,9 @@ These items came from the old cleanup roadmap and remain useful, but they should
 - Extract shared channel-count/model-building logic later if repeated config mistakes appear.
 - Treat dependency pinning as a reproducibility task before final paper runs.
 
-### Reviewed archive sources
+### Deleted archive sources reviewed before removal
 
-The useful material from these archive files has been folded into active notes or docs:
+The useful material from these former archive files was folded into active notes or docs before deletion:
 
 ```text
 docs/archive/cleanup_pass/ARTIFACT_INDEX.md
