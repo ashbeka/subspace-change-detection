@@ -1,6 +1,13 @@
 # Docs Index
 
-This folder has a small active reading set and a historical archive.
+This folder is for project-facing documentation: reproducibility, accepted status summaries, commands, and result notes.
+
+The active research thinking notes now live in `../notes/`.
+
+Use this split:
+
+- `notes/`: feedback, method understanding, literature triage, experiment ideas.
+- `docs/`: run commands, polished status, accepted results, and historical archive.
 
 ## Active Docs
 
@@ -27,4 +34,6 @@ Read these first:
 
 ## Research Notes Rule
 
-`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into the active docs above.
+`../notes/` is the current active notes location.
+
+`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into `../notes/` or the active docs above.

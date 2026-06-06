@@ -1,0 +1,29 @@
+# Research Notes Index
+
+These notes are the active project brain. They are for understanding, planning, and deciding what to implement next.
+
+`docs/` is still for project-facing documentation such as commands, accepted result summaries, and polished project status. `notes/` is where research thinking should live.
+
+## Files
+
+- `feedback.md`: Sensei, senpai, seminar, and self-critique feedback translated into concrete research tasks.
+- `methods.md`: How the current pipeline and methods work, including DS, GDS, KDS, KGDS, OSCD, and Phase 2 segmentation.
+- `literature.md`: Papers, codebases, datasets, and why each matters.
+- `experiments.md`: Experiment evidence, open experiment ideas, decision gates, and next actions.
+
+## Where To Add A New Note
+
+- Advisor or seminar comment: add it to `feedback.md`.
+- Method explanation or code understanding: add it to `methods.md`.
+- Paper, bookmark, reference code, or dataset: add it to `literature.md`.
+- Result, experiment idea, failed run, or next test: add it to `experiments.md`.
+- Exact command that should be reused: keep it in `docs/RUN_COMMANDS.md`, then reference it from `experiments.md` if needed.
+
+## Rules
+
+- Keep notes short enough to reread.
+- Prefer claims tied to code, experiment output, advisor feedback, or paper references.
+- Do not preserve old wording just because it was written confidently.
+- Do not make a new note file unless the existing four categories cannot reasonably hold it.
+- Treat `research-notes/`, Apple Notes, Chrome bookmarks, and archived docs as input sources to ingest, not active truth.
+
