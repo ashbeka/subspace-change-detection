@@ -239,3 +239,61 @@ residual     = delta_x - delta_x_ds
 ```
 
 This could show which band combinations DS emphasizes and may help explain projection to Sensei/senpais.
+
+## Archive-Ingested Method Caveats
+
+These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
+
+### Prior folder naming
+
+`phase1/outputs/oscd_saved_priors_fast` is a saved Phase 1 prior-map folder. It is not a trained model and "fast" does not mean optimized or best. It means the prior maps were generated with a faster Phase 1 configuration.
+
+Because those DS maps came from the old residual-stack path, use this wording:
+
+```text
+legacy residual-stack DS priors
+```
+
+Do not call that folder clean paper-faithful DS evidence. Future output names should be more explicit, for example:
+
+```text
+priors_oscd_legacy_residual
+priors_oscd_canonical_ds
+priors_oscd_classical_full
+```
+
+### Baseline interpretation
+
+- `pixel_diff` and CVA are effectively the same spectral L2 magnitude in the current code. Do not present them as independent methods unless the implementation is changed or the duplication is explicitly stated.
+- Runtime claims from old Phase 1 summaries are unsafe unless timing is instrumented per method. Do not claim one prior is faster/slower from mixed old logs alone.
+- Geodesic-prior smoke logs contain `NotGeoreferencedWarning`; do not assume real geospatial coordinates from those rasters unless metadata is separately verified.
+
+### Phase 1 thresholding vs Phase 2 priors
+
+Phase 1 can evaluate score maps with Otsu or train-calibrated thresholds. Phase 2 does not train on those thresholded masks by default. It loads continuous min-max-normalized prior score maps as additional channels.
+
+This distinction matters:
+
+```text
+Phase 1: score map -> optional threshold -> unsupervised binary metric
+Phase 2: continuous score map -> extra neural-network input channel
+```
+
+Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is useless for Phase 2, but it is a warning sign.
+
+### Split and evaluation caveats
+
+- OSCD has train/test labels. The project creates its own validation split by holding out train cities. Do not call the validation set "official" unless that split is externally verified.
+- Current final Phase 2 evaluation should use stitched city-level masks, not averaged patch metrics, for thesis claims.
+- Default Phase 2 evaluation threshold is often `0.5`; threshold tuning and probability-map analysis are separate tasks.
+
+### Loader and model caveats
+
+- `OSCDSegmentationDataset` uses the configured/default 13-band order. Future configs should make band order explicit to avoid silent assumptions.
+- `valid_mask = valid_pre AND valid_post` is meant to avoid nodata and border artifacts, but its impact on labeled changed pixels must be measured.
+- `PriorsFusionUNet` is a lightweight early-fusion/reweighting variant, not a full attention or sophisticated fusion architecture.
+- A priors-only configuration is unsafe unless the dataset/model path is audited; current code paths were mainly exercised with raw channels present.
+
+### MultiSenGE caveat
+
+MultiSenGE remains exploratory. Before using it for GDS/KGDS, audit the manifest and path assumptions, especially Sentinel-1 paths. Old notes flagged a possible local-path mismatch around `s1/<name>.tif` versus nested `s1/s1/<name>.tif`.

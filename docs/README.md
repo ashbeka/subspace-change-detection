@@ -29,7 +29,7 @@ The active thinking files are:
 
 ## Archive Rule
 
-`archive/` contains historical re-entry, cleanup, and old planning documents. They are searchable context, not active truth. If an archive file conflicts with the active docs above, trust the active docs unless code or fresh experiments prove otherwise.
+`archive/` contains historical re-entry, cleanup, and old planning documents. Its useful knowledge has been consolidated into the active `../notes/` files. Keep it searchable until deletion is explicitly approved, but do not treat it as active truth. If an archive file conflicts with active docs or notes, trust the active files unless code or fresh experiments prove otherwise.
 
 ## Research Notes Rule
 

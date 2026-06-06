@@ -98,3 +98,7 @@ Do not currently claim:
 - `notes/research_paper_plan.md`: full paper-facing argument and thesis skeleton.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/results/OSCD_CORE_SWEEP_2026-05-03.md`: accepted sweep result summary.
+
+## Archive Status
+
+The useful knowledge from `docs/archive/` has been consolidated into the active `notes/` files and this project brief. The archive should remain in place until deletion is explicitly approved, but it is historical context, not the current source of truth.

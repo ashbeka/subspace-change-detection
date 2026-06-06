@@ -177,6 +177,14 @@ Phase 2 follow-up only after Phase 1 maps look meaningful:
 - raw + PCA-diff / classical prior comparisons
 - Siamese raw-only baseline
 
+Reporting constraints from the archive audit:
+
+- record git hash, config, seed, checkpoint, prior root, split, and eval files for every thesis-usable run;
+- do not use one-epoch smoke runs as performance evidence;
+- do not treat old single-seed artifacts as reproduced evidence;
+- do not use runtime claims unless per-method timing is measured cleanly;
+- state that CVA and pixel-diff are effectively duplicated L2 baselines in the current code unless corrected.
+
 ## 9. Current Evidence
 
 Current trusted evidence:
@@ -286,7 +294,28 @@ Low priority for now:
 - abandoned greenhouse benchmark.
 - foundation-model extensions.
 
-## 13. File Sources
+## 13. Archive-Derived Guardrails
+
+These are old ideas or risks that should not disappear, but they should not distract the main OSCD work.
+
+Main guardrails:
+
+- The strongest standalone Phase 1 prior is not necessarily the strongest Phase 2 prior, and the reverse is also possible.
+- OSCD validation is project-defined from training cities; document the split rather than implying it is official.
+- Phase 2 prior channels are continuous maps, not thresholded labels.
+- Threshold metrics and ranking metrics answer different questions; report both.
+- Probability-map saving or rerun-based threshold sweeps are needed for true threshold tuning.
+- `clean_house.ps1 -Aggressive` requires an explicit keep-list and user approval.
+
+Future hooks to keep out of the main claim for now:
+
+- xBD/xBD-S12 damage severity mapping.
+- abandoned-greenhouse mapping.
+- UAV/edge deployment.
+- MCDA/IoT/DMaaS/operational dashboard ideas.
+- graph decision layers and broad foundation-model extensions.
+
+## 14. File Sources
 
 Use these files when expanding this plan:
 
@@ -297,4 +326,3 @@ Use these files when expanding this plan:
 - `docs/PROJECT_BRIEF.md`: concise current truth.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/results/OSCD_CORE_SWEEP_2026-05-03.md`: accepted sweep summary.
-

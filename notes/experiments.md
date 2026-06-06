@@ -169,3 +169,94 @@ Pause until OSCD subspace construction is settled:
 - long U-Net sweeps using unverified DS priors.
 - broad claims about disaster response.
 
+## Archive-Ingested Evidence Rules
+
+The old archive documents were reviewed in three passes: inventory, useful-claim extraction, and active-note gap check. The archive should now be treated as historical source material, not active truth. Do not delete it until the user explicitly approves.
+
+### Thesis-usable run provenance
+
+For any result used in a thesis or paper, preserve:
+
+- config path and copied `config_used.yaml`;
+- git commit hash and dirty/clean state;
+- seed, epochs, device, and GPU/CPU;
+- Phase 1 prior-map root;
+- checkpoint path;
+- `train_log.json`;
+- `run_metadata.json`;
+- evaluation JSON/CSV;
+- exact split and city list;
+- notes on interruption, resume, or overwrite.
+
+One-epoch smoke runs prove liveness only. They are not performance evidence.
+
+### Old artifact evidence, not reproduction
+
+The old artifact:
+
+```text
+phase2/outputs/runs_gpu_150ep_20251215_233309/oscd_priors_ablation_summary_extended.csv
+```
+
+reported a single-seed E1 improvement over E0:
+
+| artifact row | IoU | F1 | AUROC | PR-AUC |
+|---|---:|---:|---:|---:|
+| E0 raw-only | 0.2230 | 0.3428 | 0.8687 | 0.4315 |
+| E1 raw+DS | 0.2725 | 0.4009 | 0.8743 | 0.4358 |
+| E1 - E0 | +0.0495 | +0.0580 | +0.0056 | +0.0043 |
+
+Metadata in the archive tied this old result to seed `1234`, CUDA Torch `2.9.1+cu126`, and git hash `735deac0caa1b9fe381c2ea98e09b93761534415`. The result is useful history, but the later 3-seed v5 sweep did not reproduce the E1 improvement. Treat the old artifact as an audit target, not proof.
+
+### Old liveness and prior-generation evidence
+
+Archive re-entry smoke evidence included:
+
+- fast Phase 1 prior generation under `phase1/outputs/reentry_fast_priors_20260502_020139`;
+- Phase 2 smoke output under `phase2/outputs/reentry_smoke_20260502_020139`;
+- CUDA availability on an RTX 4070 SUPER for that re-entry run;
+- fast Phase 1 test AUROC means: `pca_diff 0.8134`, `pixel_diff 0.7559`, `ds_projection 0.7551`, `ds_cross_residual 0.5563`;
+- geodesic smoke output under `phase1/outputs/_smoke_reentry_geodesic`, with finite maps for a few train/val/test cities.
+
+The old `PIPELINE_RERUN_LOG.txt` also showed one environment with CPU-only Torch (`2.9.1+cpu`, `cuda_available=False`). Any "GPU rerun" claim from that log is unsafe unless checked against metadata.
+
+### Cleanup retention rules
+
+Keep these until explicitly audited or intentionally retired:
+
+```text
+phase1/outputs/oscd_saved_priors_fast
+phase1/outputs/oscd_saved_priors_fast_eig
+phase1/outputs/oscd_saved_full
+phase2/outputs/runs_gpu_150ep_20251215_233309
+phase2/outputs/smoke_e0_e1_20260503_040723
+phase2/outputs/sweep_core_150ep_repro_v5_20260503_052422
+```
+
+Interrupted progress-bar or aborted sweep folders can be deleted later, but only after confirming they do not contain unique metrics, checkpoints, figures, or logs.
+
+### Reviewed archive sources
+
+The useful material from these archive files has been folded into active notes or docs:
+
+```text
+docs/archive/cleanup_pass/ARTIFACT_INDEX.md
+docs/archive/cleanup_pass/CLEANUP_TRACKER.md
+docs/archive/cleanup_pass/PIPELINE_EXPLAINED.md
+docs/archive/cleanup_pass/PROJECT_STRUCTURE_REVIEW.md
+docs/archive/cleanup_pass/README.md
+docs/archive/cleanup_pass/ROADMAP.md
+docs/archive/consolidated_into_notes_20260606/RESEARCH_PLAN.md
+docs/archive/consolidated_into_notes_20260606/SUBSPACE_METHOD_NOTES.md
+docs/archive/reentry/ADVERSARIAL_REENTRY_AUDIT.md
+docs/archive/reentry/IMPLEMENTATION_STATUS.md
+docs/archive/reentry/NEXT_STEP_DECISION_MEMO.md
+docs/archive/reentry/PROJECT_REENTRY_SYNTHESIS.md
+docs/archive/reentry/PROJECT_RESET_DECISION.md
+docs/archive/reentry/PROJECT_UNDERSTANDING_GUIDE.md
+docs/archive/root_legacy/CODEBASE_AUDIT.md
+docs/archive/root_legacy/PIPELINE_RERUN_LOG.txt
+docs/archive/root_legacy/REMEMBER_TO_ACTIVATE_ENV.txt
+docs/archive/root_legacy/RUN_PIPELINE.md
+docs/archive/root_legacy/TEMP_DS_PRIMER.md
+```

@@ -1,7 +1,7 @@
 # Runbook
 
 Generated: 2026-05-03
-Branch used when written: `audit/project-master-brief-20260503`
+Workflow updated: 2026-06-06
 Primary environment: Windows PowerShell, repo root `E:\research_projects\DS_damage_segmentation`
 
 This is the operational cheat sheet for reproducing the current project. It is deliberately practical: commands, expected paths, outputs, and failure checks. The project's truthful current scope is OSCD Sentinel-2 binary change segmentation with optional unsupervised prior channels. It is not yet an end-to-end xBD/xBD-S12 damage segmentation system.
@@ -24,13 +24,14 @@ git status --short --branch
 git log --oneline --decorate -5
 ```
 
-Create a feature or audit branch:
+Default project workflow:
 
 ```powershell
 git switch main
 git pull --ff-only
-git switch -c <branch-name>
 ```
+
+Work on `main` unless there is a deliberate reason to isolate a risky feature, restructuring pass, or long-running experiment branch.
 
 Commit one coherent change:
 
@@ -43,13 +44,7 @@ git commit -m "<type>: <short summary>"
 Push so it appears on GitHub:
 
 ```powershell
-git push -u origin <branch-name>
-```
-
-Current audit branch already pushed:
-
-```text
-origin/audit/project-master-brief-20260503
+git push origin main
 ```
 
 ## 2. Environment Setup

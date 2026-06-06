@@ -88,3 +88,18 @@ When Chrome bookmarks are imported later, classify each item as one of:
 - `future`: xBD, greenhouses, MultiSenGE, semantic change, or broader application.
 - `discard`: duplicate, weak, unrelated, or no longer useful.
 
+## Archive-Ingested Reference Leads
+
+Additional references and code leads from old archive notes:
+
+| Lead | Why keep it |
+|---|---|
+| Fukui et al., second-order Difference Subspace | Relevant if the project moves from pairwise DS to richer subspace relationships. |
+| Kanai et al. 2023, time-series anomaly detection based on DS between signal subspaces | Useful example that DS-like reasoning can support anomaly/change settings beyond classification. |
+| U-Net | Required background for Phase 2 segmentation model. |
+| ResNet | Required only if ResNet-backbone experiments are used. |
+| MagTool reference code | Useful for projector/eigen and subspace-magnitude cross-checking; not ground truth. |
+| DS shape/motion reference code | Useful because it uses projector-eigen style DS close to the repaired `eig` path. |
+| MATLAB Subspace Toolbox | Useful for PCA, KPCA, CCA, and Kernel CCA implementation cross-checks. |
+
+Keep these as citation or implementation-reference leads. Do not cite old archive prose itself as evidence.
