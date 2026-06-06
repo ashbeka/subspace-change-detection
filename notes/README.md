@@ -1,5 +1,11 @@
 # Research Notes Index
 
+## Table Of Contents
+
+- [Files](#files)
+- [Where To Add A New Note](#where-to-add-a-new-note)
+- [Rules](#rules)
+
 These notes are the active project brain. They are for understanding, planning, and deciding what to implement next.
 
 `docs/` is still for project-facing documentation such as commands, accepted result summaries, and polished project status. `notes/` is where research thinking should live.

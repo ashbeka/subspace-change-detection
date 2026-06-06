@@ -1,5 +1,16 @@
 # Feedback Notes
 
+## Table Of Contents
+
+- [Current Sensei Feedback](#current-sensei-feedback)
+- [Subspace Construction Feedback](#subspace-construction-feedback)
+- [Venus And TPAMI Feedback](#venus-and-tpami-feedback)
+- [Project Framing Feedback](#project-framing-feedback)
+- [Older Advisor And Senpai Feedback](#older-advisor-and-senpai-feedback)
+- [First Seminar Student Feedback](#first-seminar-student-feedback)
+- [First Seminar QA Report Follow-Up](#first-seminar-qa-report-follow-up)
+- [Paused Or Unsafe Claims](#paused-or-unsafe-claims)
+
 This file keeps advisor, senpai, seminar, and self-critique feedback in one place. Each item should end in a concrete action.
 
 ## Current Sensei Feedback
@@ -111,7 +122,7 @@ Action:
 - Treat negative results as valid evidence.
 - Focus on what subspace construction is appropriate for satellite imagery.
 
-## Research-Notes Archive Feedback
+## Older Advisor And Senpai Feedback
 
 Source: nested repo `research-notes/`, especially `notes/sensei_notes.md`, `notes/senpais_notes.md`, `notes/my_notes.md`, `notes/old_notes.md`, and `master/session_audit_2026-03-24.md`.
 

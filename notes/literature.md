@@ -1,5 +1,15 @@
 # Literature Notes
 
+## Table Of Contents
+
+- [Must-Cite Core Sources](#must-cite-core-sources)
+- [Subspace And Kernel References](#subspace-and-kernel-references)
+- [Reference Code](#reference-code)
+- [Dataset Context](#dataset-context)
+- [Bookmark Triage Rules](#bookmark-triage-rules)
+- [Literature Leads](#literature-leads)
+- [Reference Leads](#reference-leads)
+
 This file is the paper and reference-code matrix. Keep entries short and useful.
 
 ## Must-Cite Core Sources
@@ -135,7 +145,7 @@ When Chrome bookmarks are imported later, classify each item as one of:
 
 The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
 
-## Research-Notes Archive Literature Leads
+## Literature Leads
 
 Source: `research-notes/refs_links/`, `research-notes/notes/sensei_notes.md`, and `research-notes/coverage_matrix.csv`.
 
@@ -171,7 +181,7 @@ Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
 - U-Net and ResNet only when the corresponding models are discussed.
 - Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
 
-## Archive-Ingested Reference Leads
+## Reference Leads
 
 Additional references and code leads from old archive notes:
 

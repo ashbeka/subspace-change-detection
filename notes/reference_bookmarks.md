@@ -1,13 +1,25 @@
 # Reference Bookmarks
 
+## Table Of Contents
+
+- [Source And Preservation](#source-and-preservation)
+- [Category Counts](#category-counts)
+- [Zotero-First Reading Queue](#zotero-first-reading-queue)
+- [Manual Additions After Bookmark Import](#manual-additions-after-bookmark-import)
+- [Implementation References To Keep Visible](#implementation-references-to-keep-visible)
+- [How To Use This](#how-to-use-this)
+- [Import Back To Chrome](#import-back-to-chrome)
+- [Categorization Notes](#categorization-notes)
+
 This file summarizes the Chrome bookmark export for research reading and Zotero triage. The full raw and organized bookmark HTML files live in `docs/source_records/`.
 
 ## Source And Preservation
 
 - Raw export: `docs/source_records/chrome_bookmarks_raw_2026-06-07.html`
 - Organized Chrome import file: `docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html`
-- Total URLs preserved: `362`
-- Unique URLs: `362`
+- Raw export URLs preserved: `362`
+- Raw export unique URLs: `362`
+- Organized Chrome import URLs: `363` including `1` manual post-import addition.
 - Duplicate URLs found in export: `0`
 - Zotero context: use the high-priority paper list below to manually import the important papers first.
 
@@ -16,7 +28,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 | category | count | use |
 |---|---:|---|
 | 01 Must Read - Zotero First | 27 | read/import first; core thesis references |
-| 02 Subspace Temporal CCA KPCA Methods | 20 | method expansion and implementation references |
+| 02 Subspace Temporal CCA KPCA Methods | 21 | method expansion and implementation references |
 | 03 Remote Sensing Change Detection And Applications | 117 | related work and application context |
 | 04 Datasets Benchmarks And Data Portals | 23 | dataset/protocol references |
 | 05 Implementation Reference Code | 15 | codebases to inspect or reproduce |
@@ -61,7 +73,7 @@ Start here. Some papers appear as arXiv/PDF/IEEE duplicates; import one canonica
 
 ## Manual Additions After Bookmark Import
 
-These were added after the 2026-06-07 Chrome export, so they do not change the raw bookmark counts above.
+These were added after the 2026-06-07 Chrome export. They do not change the raw export counts, but they are included in the organized Chrome import file.
 
 | priority | item | why |
 |---|---|---|

@@ -1,5 +1,16 @@
 # Project Brief
 
+## Table Of Contents
+
+- [Current Scope](#current-scope)
+- [Problem Statement](#problem-statement)
+- [Implemented Pipeline](#implemented-pipeline)
+- [Current Evidence](#current-evidence)
+- [Immediate Next Decision](#immediate-next-decision)
+- [Forbidden Overclaims](#forbidden-overclaims)
+- [Active Reading Map](#active-reading-map)
+- [Historical Archive](#historical-archive)
+
 This is the current project-facing summary. It should stay short. For research thinking, use `notes/`. For commands, use `docs/RUNBOOK.md`.
 
 ## Current Scope

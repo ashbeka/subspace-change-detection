@@ -1,5 +1,13 @@
 # Docs Index
 
+## Table Of Contents
+
+- [Active Docs](#active-docs)
+- [Source Records](#source-records)
+- [Active Notes](#active-notes)
+- [Historical Archive](#historical-archive)
+- [Research Notes Rule](#research-notes-rule)
+
 `docs/` is for project-facing documentation: concise project status, exact commands, and accepted results.
 
 Use `../notes/` for active research thinking: feedback, method understanding, literature triage, and experiment ideas.

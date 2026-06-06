@@ -1,5 +1,26 @@
 # Experiment Notes
 
+## Table Of Contents
+
+- [Current Research Question](#current-research-question)
+- [Trusted Evidence](#trusted-evidence)
+- [Main Completed Sweep](#main-completed-sweep)
+- [Per-City Findings](#per-city-findings)
+- [Immediate Next Experiment](#immediate-next-experiment)
+- [Other Important Experiments To Queue](#other-important-experiments-to-queue)
+- [Paused Work](#paused-work)
+- [Evidence Rules](#evidence-rules)
+- [Research-Notes Ingestion Ledger](#research-notes-ingestion-ledger)
+  - [Ingestion ledger](#ingestion-ledger)
+  - [Second-pass ingestion audit](#second-pass-ingestion-audit)
+  - [Thesis-usable run provenance](#thesis-usable-run-provenance)
+  - [Old artifact evidence, not reproduction](#old-artifact-evidence-not-reproduction)
+  - [Old liveness and prior-generation evidence](#old-liveness-and-prior-generation-evidence)
+  - [Cleanup retention rules](#cleanup-retention-rules)
+- [Secondary Analysis Backlog](#secondary-analysis-backlog)
+  - [Deleted archive sources reviewed before removal](#deleted-archive-sources-reviewed-before-removal)
+  - [Where archive content lives now](#where-archive-content-lives-now)
+
 This file tracks experiment evidence, open experiment ideas, and decisions. It should stay practical.
 
 ## Current Research Question
@@ -261,13 +282,13 @@ Pause until OSCD subspace construction is settled:
 - long U-Net sweeps using unverified DS priors.
 - broad claims about disaster response.
 
-## Archive-Ingested Evidence Rules
+## Evidence Rules
 
 The old archive documents were reviewed in repeated passes: inventory, useful-claim extraction, active-note gap check, keyword/risk coverage, and final functional coverage across commands, artifacts, code references, risks, tasks, and results.
 
 The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result reports under `docs/experiment_reports/`.
 
-## Research-Notes Archive Ingestion
+## Research-Notes Ingestion Ledger
 
 Source repo: nested `research-notes/` at commit `44f2671`, clean against `origin/main` at ingestion time.
 

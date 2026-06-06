@@ -1,5 +1,23 @@
 # Research Paper Plan
 
+## Table Of Contents
+
+- [1. Working Title](#1-working-title)
+- [2. One-Sentence Thesis](#2-one-sentence-thesis)
+- [3. Problem Setting](#3-problem-setting)
+- [4. Motivation](#4-motivation)
+- [5. Research Gap](#5-research-gap)
+- [6. Current Method](#6-current-method)
+- [7. Proposed Research Path](#7-proposed-research-path)
+- [8. Experiment Plan](#8-experiment-plan)
+- [9. Current Evidence](#9-current-evidence)
+- [10. Contribution Framing](#10-contribution-framing)
+- [11. Paper Skeleton](#11-paper-skeleton)
+- [12. Open Decisions](#12-open-decisions)
+- [13. Guardrails](#13-guardrails)
+- [14. Research-Notes Ingestion Outcome](#14-research-notes-ingestion-outcome)
+- [15. File Sources](#15-file-sources)
+
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
 ## 1. Working Title
@@ -321,7 +339,7 @@ Low priority for now:
 - abandoned greenhouse benchmark.
 - foundation-model extensions.
 
-## 13. Archive-Derived Guardrails
+## 13. Guardrails
 
 These are old ideas or risks that should not disappear, but they should not distract the main OSCD work.
 
@@ -342,7 +360,7 @@ Future hooks to keep out of the main claim for now:
 - MCDA/IoT/DMaaS/operational dashboard ideas.
 - graph decision layers and broad foundation-model extensions.
 
-## 14. Research-Notes Archive Outcome
+## 14. Research-Notes Ingestion Outcome
 
 The nested `research-notes/` repo was ingested on 2026-06-07. It preserved a broader historical research program, but the current paper plan should not revive that full scope.
 

@@ -1,5 +1,33 @@
 # Method Notes
 
+## Table Of Contents
+
+- [Current Project Scope](#current-project-scope)
+- [Data](#data)
+- [Phase 1: Prior Maps](#phase-1-prior-maps)
+- [Spectral Change Versus Semantic Change](#spectral-change-versus-semantic-change)
+- [Phase 2: Supervised Segmentation](#phase-2-supervised-segmentation)
+- [DS In The Current OSCD Adaptation](#ds-in-the-current-oscd-adaptation)
+- [Corrected DS Implementation](#corrected-ds-implementation)
+- [PCA Rank 6](#pca-rank-6)
+- [DS, GDS, KDS, KGDS](#ds-gds-kds-kgds)
+- [Future Method Hooks](#future-method-hooks)
+- [Venus KDS/KGDS Audit](#venus-kdskgds-audit)
+- [Spatial Information Problem](#spatial-information-problem)
+- [Projection Back To Image Space](#projection-back-to-image-space)
+- [Method Caveats](#method-caveats)
+  - [Subspace code reading path](#subspace-code-reading-path)
+  - [Prior folder naming](#prior-folder-naming)
+  - [Baseline interpretation](#baseline-interpretation)
+  - [Phase 1 thresholding vs Phase 2 priors](#phase-1-thresholding-vs-phase-2-priors)
+  - [Phase 1 engineering details](#phase-1-engineering-details)
+  - [Split and evaluation caveats](#split-and-evaluation-caveats)
+  - [Phase 2 training and evaluation details](#phase-2-training-and-evaluation-details)
+  - [Loader and model caveats](#loader-and-model-caveats)
+  - [MultiSenGE caveat](#multisenge-caveat)
+  - [KDS and CCA implementation gaps](#kds-and-cca-implementation-gaps)
+  - [Deep-feature subspace gap](#deep-feature-subspace-gap)
+
 This file explains how the current project works and what each method means. It is intentionally direct and code-facing.
 
 ## Current Project Scope
@@ -220,7 +248,7 @@ Signal Latent Subspace:
 - For this project, the satellite analogue would be: extract features from a remote-sensing CNN/foundation model, build subspaces from patch/tile/date features, then compare raw-spectral DS against latent-feature DS.
 - Do not treat this as implemented or as remote-sensing evidence yet.
 
-## Research-Notes Archive Method Hooks
+## Future Method Hooks
 
 Source: `research-notes/` ingestion on 2026-06-07. These are preserved as method hooks, not active evidence.
 
@@ -336,7 +364,7 @@ residual     = delta_x - delta_x_ds
 
 This could show which band combinations DS emphasizes and may help explain projection to Sensei/senpais.
 
-## Archive-Ingested Method Caveats
+## Method Caveats
 
 These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
 

@@ -1,5 +1,26 @@
 # Runbook
 
+## Table Of Contents
+
+- [0. Golden Rules](#0-golden-rules)
+- [1. Git Workflow](#1-git-workflow)
+- [2. Environment Setup](#2-environment-setup)
+- [3. Data Layout](#3-data-layout)
+- [4. One-Command Liveness Check](#4-one-command-liveness-check)
+- [5. Phase 1: Generate Prior Maps](#5-phase-1-generate-prior-maps)
+- [6. Phase 1: MultiSenGE Optional Exploration](#6-phase-1-multisenge-optional-exploration)
+- [7. Phase 2 Config Matrix](#7-phase-2-config-matrix)
+- [8. Phase 2: Short E0/E1 Smoke Run](#8-phase-2-short-e0e1-smoke-run)
+- [9. Phase 2: Single Full Run](#9-phase-2-single-full-run)
+- [10. Phase 2: Recommended Controlled Sweep](#10-phase-2-recommended-controlled-sweep)
+- [11. Compare Experiments](#11-compare-experiments)
+- [12. Visualize Predictions](#12-visualize-predictions)
+- [13. Resume and Restart](#13-resume-and-restart)
+- [14. Metadata to Record for Every Real Experiment](#14-metadata-to-record-for-every-real-experiment)
+- [15. Cleanup and Retention](#15-cleanup-and-retention)
+- [16. Troubleshooting](#16-troubleshooting)
+- [17. Current Evidence Anchors](#17-current-evidence-anchors)
+
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
 Primary environment: Windows PowerShell, repo root `E:\research_projects\DS_damage_segmentation`

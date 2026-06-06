@@ -1,5 +1,15 @@
 # OSCD Core Sweep Results
 
+## Table Of Contents
+
+- [Question](#question)
+- [Mean Test Metrics](#mean-test-metrics)
+- [E1 Raw+DS Minus E0 Raw](#e1-rawds-minus-e0-raw)
+- [E3 Raw+DS+PCA Minus E0 Raw](#e3-rawdspca-minus-e0-raw)
+- [Siamese Baseline](#siamese-baseline)
+- [Thesis Consequences](#thesis-consequences)
+- [Per-City Analysis](#per-city-analysis)
+
 Run path:
 
 ```text
