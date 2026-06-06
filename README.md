@@ -43,6 +43,7 @@ docs/
   PROJECT_BRIEF.md
   RUNBOOK.md
   experiment_reports/
+  source_records/
 
 notes/
   README.md

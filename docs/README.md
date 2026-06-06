@@ -17,6 +17,19 @@ Read these first:
 3. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the current major OSCD 3-seed sweep.
 
+## Source Records
+
+`source_records/` preserves original human-facing project records:
+
+- `student_feedback_channel4_2025-11-20.xlsx`
+  - Student feedback received after the first seminar.
+- `qa_report_response_2025-11-20.pdf`
+  - Submitted QA response report after the first seminar.
+- `legacy_cs_seminar_report_ds_damage_segmentation_2025.tex`
+  - Earlier generated/submitted CS seminar report source.
+
+These files are preserved as provenance. They are not the active project truth. Useful knowledge from them should be reflected in `../notes/` or the active docs.
+
 ## Active Notes
 
 The active thinking files are:

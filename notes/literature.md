@@ -11,6 +11,7 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | FC-Siamese / Daudt et al. 2018 | Siamese CNN baseline for change detection. | Important Phase 2 baseline context. |
 | Celik 2009 PCA-kmeans | Classical unsupervised satellite change detection. | Baseline prior, not novelty. |
 | Nielsen 2007 IR-MAD | Strong classical multi/hyperspectral change detection. | Baseline prior, not novelty. |
+| Close et al. 2021 Sentinel-2 LULUCF change detection | Shows Sentinel-2 change analysis can be affected by rare true change and radiometric/seasonal variability. | Supports the pseudo-change and seasonality-risk discussion. |
 | Metric-CD, WACV 2025 | Modern unsupervised deep metric change detection. | Raises comparison pressure for unsupervised CD claims. |
 | xBD / Gupta et al. 2019 | Building damage dataset. | Future damage extension only. |
 | xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset. | Future extension only. |

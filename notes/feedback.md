@@ -113,7 +113,7 @@ Action:
 
 ## First Seminar Student Feedback
 
-Source: local Excel import `docs/others/Research_feedback_students_Channel4_ABDELRAHMAN_I._A._ABUSHBEKA_202520711.xlsx`.
+Source: local Excel import `docs/source_records/student_feedback_channel4_2025-11-20.xlsx`.
 
 Status:
 
@@ -186,6 +186,33 @@ Concrete research tasks from student feedback:
 - Consider alternative prior integration: gating/attention, loss weighting, curriculum, or early-epoch-only priors.
 - Clarify application scope: general change detection, disaster damage, construction monitoring, greenhouse mapping, or another specific target.
 - Add seasonal/pseudo-change robustness to the future experiment list.
+
+## First Seminar QA Report Follow-Up
+
+Source: submitted QA report `docs/source_records/qa_report_response_2025-11-20.pdf`.
+
+Status:
+
+- Preserved as a source record because it was submitted to humans.
+- Useful content is extracted below.
+- Wording in the report is historical; current claims should follow `docs/PROJECT_BRIEF.md` and `notes/research_paper_plan.md`.
+
+Durable takeaways:
+
+- DS/PCA-diff highlight spectral/radiometric change, while OSCD labels only selected semantic land-cover or land-use changes. This explains why priors can reveal real image differences that count as false positives against OSCD masks.
+- This mismatch can improve ranking metrics such as AUROC/PR-AUC while hurting fixed-threshold IoU/F1. The paper should discuss that distinction explicitly.
+- MultiSenGE was previously used by pairing earliest valid date versus latest valid date for each spatial patch. This maximizes temporal baseline, but it also creates seasonality risk because the time gap is uncontrolled.
+- A stronger MultiSenGE design would compare controlled within-season pairs, use several dates around an event/window, or move to first-/second-order DS for progression of change.
+- Snow and seasonal vegetation are not nuisances to ignore; they are expected failure modes for spectral priors and should become explicit robustness checks.
+- IR-MAD is a strong established multiband baseline. Weak old IR-MAD results should be treated as implementation/dataset-fit questions, not proof that IR-MAD is weak. A fair audit needs band selection, robust covariance/regularization, and calibrated thresholds.
+
+Actions:
+
+- Add a clear slide/paper paragraph distinguishing spectral change from semantic labeled change.
+- Report ranking metrics and threshold metrics separately.
+- Add a MultiSenGE pairing audit before making claims from earliest/latest visualizations.
+- Add snow/cloud/season-aware preprocessing to the future experimental design.
+- Audit IR-MAD before using it as a negative baseline in a paper.
 
 ## Paused Or Unsafe Claims
 

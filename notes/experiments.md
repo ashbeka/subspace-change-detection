@@ -212,6 +212,16 @@ Acceptance checks:
    - For a few cities, verify prior-map shape, city name, split, and spatial alignment against OSCD pre/post tiles and masks.
    - This is needed because smoke checks only proved one patch/channel load, not full prior alignment.
 
+10. MultiSenGE pairing and seasonality audit:
+   - Compare earliest/latest pairing against within-season pairings and date-windowed pairings.
+   - Add snow/cloud/invalid-scene checks before DS/PCA-diff map generation.
+   - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
+   - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
+
+11. IR-MAD fair-comparison audit:
+   - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
+   - Do not claim IR-MAD is weak from old runs unless this audit supports it.
+
 ## Paused Work
 
 Pause until OSCD subspace construction is settled:

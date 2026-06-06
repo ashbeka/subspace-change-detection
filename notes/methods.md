@@ -70,6 +70,26 @@ phase1/outputs/<run>/oscd_change_maps/<split>/<method>/<city>_score.npy
 
 Phase 2 can load those maps as extra input channels.
 
+## Spectral Change Versus Semantic Change
+
+DS, PCA-diff, pixel difference, CVA, Celik, and IR-MAD are unsupervised spectral/radiometric change methods.
+
+They answer:
+
+```text
+Did the measured Sentinel-2 band values change?
+```
+
+OSCD labels answer a narrower semantic question:
+
+```text
+Is this pixel part of the labeled changed area according to OSCD annotation policy?
+```
+
+Therefore a prior map can highlight vegetation seasonality, snow, haze, thin cloud, soil moisture, illumination shifts, or registration artifacts even when OSCD does not label them as target change. This is not automatically an implementation error, but it can hurt IoU/F1 against OSCD masks.
+
+For supervised segmentation, current Phase 2 uses continuous prior score maps as extra channels. It does not use thresholded DS/PCA masks as labels by default.
+
 ## Phase 2: Supervised Segmentation
 
 Phase 2 trains binary OSCD segmentation models.
@@ -373,6 +393,8 @@ Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is 
 ### MultiSenGE caveat
 
 MultiSenGE remains exploratory. Before using it for GDS/KGDS, audit the manifest and path assumptions, especially Sentinel-1 paths. Old notes flagged a possible local-path mismatch around `s1/<name>.tif` versus nested `s1/s1/<name>.tif`.
+
+Old MultiSenGE visual checks paired the earliest valid date with the latest valid date for each spatial patch. This is simple and maximizes the temporal baseline, but it makes seasonality and snow/cloud effects likely. For thesis-grade evidence, use controlled pair selection or multi-date sequence analysis rather than relying only on earliest/latest pairs.
 
 ### KDS and CCA implementation gaps
 
