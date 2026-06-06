@@ -14,11 +14,21 @@ The user wants autonomy from Codex, but not uncontrolled chaos. Make reasonable 
 
 ## Current Research Identity
 
-The current implemented core is:
+The broad research direction is:
+
+```text
+Interpretable subspace-based change detection for multispectral satellite imagery.
+```
+
+The current implemented benchmark is:
 
 ```text
 Sentinel-2 OSCD binary change detection with unsupervised subspace/classical prior maps.
 ```
+
+Treat OSCD as the current concrete implementation and evidence source, not as a permanent boundary on the thesis. Candidate or future datasets can include Harmonized Sentinel-2 L2A, MultiSenGE, xBD-S12, abandoned-greenhouse data, or other multispectral/remote-sensing datasets if the research question and evaluation protocol justify them.
+
+Keep the project narrative independent of any single dataset, method variant, or old implementation path. It is acceptable for the main dataset, subspace construction, and thesis framing to change when evidence or advisor feedback demands it.
 
 Do not overclaim:
 
@@ -34,6 +44,8 @@ The central research question is currently:
 ```text
 Can DS-based representations help detect changed areas in pre/post multispectral satellite images, and what subspace construction preserves the spatial information needed for that task?
 ```
+
+This question is also draft. If a better research gap is found, update the framing rather than forcing new work into the old OSCD story.
 
 ## Working Style
 
@@ -69,6 +81,30 @@ For large consolidation tasks, use a three-pass workflow:
 3. Gap check: compare against active `notes/` and `docs/` to make sure no useful item was missed.
 
 After consolidation, summarize what was ingested, where it went, what remains historical only, and what still needs user approval before deletion.
+
+## Research Gap Tracking
+
+Gap checking is a core project habit, not just a cleanup step. The purpose is to keep track of missing knowledge that could shape the thesis, reveal weak claims, or spawn future papers.
+
+Track gaps without letting notes explode. Prefer short, local gap entries inside the existing functional note where the gap belongs:
+
+- `notes/methods.md`: mathematical, algorithmic, and implementation gaps.
+- `notes/experiments.md`: missing evidence, ablations, metrics, and reproducibility gaps.
+- `notes/literature.md`: novelty, citation, baseline, and related-work gaps.
+- `notes/feedback.md`: advisor/senpai questions that are not fully answered.
+- `notes/research_paper_plan.md`: gaps that affect the paper argument, contribution, or thesis framing.
+
+Use lightweight labels instead of large templates:
+
+```text
+[gap] What is unknown?
+[why it matters] Why could this change the research direction?
+[next check] What concrete reading, code audit, experiment, or advisor question closes it?
+```
+
+Do not make a new "gap file" by default. Create one only if gap tracking across the project becomes too large for the functional notes.
+
+Research-gap tracking should be dataset-agnostic when possible. For example, state "Do subspace priors preserve spatial structure in multispectral change detection?" before narrowing to "Does this hold on OSCD?" This keeps the project flexible when Sensei suggests new datasets such as Harmonized Sentinel-2 L2A.
 
 ## Notes And Docs Structure
 
