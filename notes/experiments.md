@@ -298,6 +298,7 @@ Status:
 - The nested repo was not edited.
 - Deletion of `research-notes/` remains a later user-approved cleanup step.
 - Old claims that raw+DS was the best prior are historical because the newer 3-seed v5 sweep did not reproduce that simple claim.
+- Final comprehensive audit on 2026-06-07 checked all `30` tracked files against the ingestion ledger and found no missing source files. Two over-compressed details were restored explicitly: the Hiraoka/RTW Sensei lead and the OSCD_MSI/TorchGeo loader caveat.
 
 ### Ingestion ledger
 
@@ -351,6 +352,7 @@ Details recovered or made more explicit:
 - Cold-extension specifications: xView2 scale numbers to verify, xBD-S12 damage metrics, quadratic-weighted kappa, synchronized augmentations, and edge/server payload formulas.
 - Benchmark-watchlist specifics: Metric-CD protocol caveat, xBD-S12 paired-data claim, MapFormer prior-guided caution, emergency transfer-learning relevance, and comparison-protocol checklist.
 - Historical conflict note: old residual/eig equivalence claims must be overridden by the newer corrected-DS audit unless reproduced under the current code.
+- Final detail check: exact Hiraoka/RTW context and OSCD_MSI/TorchGeo loader alternatives were made visible in active notes so the old repo is not needed for those leads.
 
 Second-pass conclusion:
 

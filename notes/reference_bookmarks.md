@@ -70,6 +70,7 @@ Start here. Some papers appear as arXiv/PDF/IEEE duplicates; import one canonica
 | high | [[2511.05461] The Potential of Copernicus Satellites for Disaster Response: Retrieving Building Damage from Sentinel-1 and Sentinel-2](https://ar5iv.labs.arxiv.org/html/2511.05461) | damage dataset / warm extension |
 | high | [[2511.05461] The Potential of Copernicus Satellites for Disaster Response: Retrieving Building Damage from Sentinel-1 and Sentinel-2](https://ar5iv.labs.arxiv.org/html/2511.05461v1) | damage dataset / warm extension |
 | high | [[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection](https://arxiv.org/abs/2303.09536) | modern unsupervised CD pressure |
+| medium | [[2508.16366] Attention Mechanism in Randomized Time Warping](https://arxiv.org/abs/2508.16366) | Sensei/Hiraoka RTW lead; future temporal/subspace method reading |
 
 ## Manual Additions After Bookmark Import
 

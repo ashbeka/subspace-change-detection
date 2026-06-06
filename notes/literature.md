@@ -28,6 +28,7 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | ChangeOS | Object-based semantic change/damage framework. | Future damage comparison if xBD work resumes. |
 | Remote-sensing change-detection surveys | Needed to answer Sensei's request to understand the broader method landscape. | Read before novelty claims; use to place DS among classical and deep CD methods. |
 | Fukui et al. second-order DS / time-series DS | Supports multi-date subspace progression/recovery ideas. | Future MultiSenGE/GDS/second-order track, not current OSCD evidence. |
+| Hiraoka et al., Attention Mechanism in Randomized Time Warping, arXiv:2508.16366 | Concrete RTW lead from Sensei; accepted to the ICIP Learning Beyond Deep Learning workshop according to archived advisor notes. | Future temporal/subspace literature, not current implementation evidence. |
 | Mahyub et al. 2024, Signal Latent Subspace | Uses DNN latent features as subspaces, combines factor subspaces with product Grassmann manifold, and applies GDS for class separability. | Future deep-feature subspace bridge only; not remote-sensing evidence. |
 | SSA/SFA/RTW-related Sensei leads | Alternative temporal/subspace dynamics suggested by Sensei. | Future temporal literature, not current implementation. |
 
@@ -114,6 +115,7 @@ OSCD:
 - Binary change/no-change.
 - Sentinel-2 pre/post images.
 - Not disaster damage severity.
+- Loader/reference alternatives such as TorchGeo and Hugging Face `blanchon/OSCD_MSI` are preserved as implementation leads. Before switching loaders, verify band order, preprocessing, labels, and train/test/validation split semantics; do not assume defaults match the current project split policy.
 
 MultiSenGE:
 

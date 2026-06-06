@@ -139,6 +139,7 @@ Durable Sensei guidance:
 - First-order and second-order DS may be useful for multi-temporal satellite analysis when enough dates exist.
 - TPAMI 2015 DS/KDS/KGDS and the Venus experiment are reference material for correct subspace understanding.
 - Future directions can include deep features, DS+DNN, DS+LLM, RTW, SSA, and SFA, but only after the core problem is clear.
+- Sensei specifically pointed to Hiraoka-san's RTW paper, "Attention Mechanism in Randomized Time Warping" (`arXiv:2508.16366`), accepted to the ICIP Learning Beyond Deep Learning workshop according to the archived note, and asked whether comments had been sent. Keep this as a concrete future-reading/action lead, not current method evidence.
 
 Durable senpai guidance:
 
