@@ -42,7 +42,7 @@ docs/
   README.md
   PROJECT_BRIEF.md
   RUNBOOK.md
-  results/
+  experiment_reports/
 
 notes/
   README.md

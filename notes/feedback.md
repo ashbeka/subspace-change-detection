@@ -111,6 +111,82 @@ Action:
 - Treat negative results as valid evidence.
 - Focus on what subspace construction is appropriate for satellite imagery.
 
+## First Seminar Student Feedback
+
+Source: local Excel import `docs/others/Research_feedback_students_Channel4_ABDELRAHMAN_I._A._ABUSHBEKA_202520711.xlsx`.
+
+Status:
+
+- Extracted from the student feedback sheet.
+- Japanese comments are translated to English below.
+- Treat this as communication and research-framing feedback, not as proof that any method works.
+
+Main themes:
+
+- The presentation was generally clear, well organized, and visually helpful.
+- Several students were confused about the practical value of adding DS/PCA-diff when raw Sentinel-2 input performed better.
+- Several questions asked why specific baselines or architectures were chosen: ResNet34, PriorsFusionUNet, IR-MAD, DS, and PCA-diff.
+- The proposal boundary was unclear to at least one student: what is existing related work, and what is the proposed method?
+- Disaster framing created confusion. Students asked why Sentinel-2 is used for disaster damage assessment and whether non-disaster before/after settings such as construction imagery would also work.
+- Presentation pacing and metric explanations need improvement.
+
+Extracted feedback and actions:
+
+| row | feedback in English | action |
+|---:|---|---|
+| 2 | Presentation was very good. | Keep clear structure. |
+| 3 | The presentation was careful, easy to understand, and informative. | Keep careful explanation style. |
+| 4 | Why use ResNet34 in the supervised stage? | Explain architecture choice and whether it is baseline, ablation, or convenience. |
+| 5 | What feature differences do DS and PCA-diff capture? If adding them lowers IoU/F1, why might that happen, and how will they be used going forward? | Prepare a clear DS-vs-PCA-diff explanation and connect it to the negative v5 result. |
+| 6 | Looks good. | No specific action. |
+| 7 | No comment. | No action. |
+| 8 | Images on the slides helped understanding. | Keep visual examples. |
+| 9 | Why did raw Sentinel-2 pre/post bands alone achieve higher Phase 2 accuracy? | Add a slide/answer: priors may highlight unlabeled or noisy radiometric change; raw U-Net can learn task-specific filters. |
+| 10 | Learned useful applications/effects of subspace methods. | Keep subspace motivation, but avoid overclaiming. |
+| 11 | If the method can overcome seasonal change such as snow, it would be valuable. | Add seasonal/pseudo-change robustness as a future evaluation gap. |
+| 12 | Good presentation and strong understanding, but time was close to the limit. | Slow down and shorten dense sections. |
+| 13 | Rich images and explanation were good; explain AUROC and other metrics better. | Add a metric-definition slide. |
+| 14 | E0 raw-only seemed best despite minimal input features. What are possible reasons? | Prepare explanation for why extra priors can hurt. |
+| 15 | Why is PriorsFusionUNet less accurate than U-Net/ResNet-U-Net? | Treat fusion architecture as unproven; inspect whether simple fusion overfits or overweights priors. |
+| 16 | Why use multispectral satellite data such as Sentinel-2 for disaster damage assessment? | Clarify current scope: Sentinel-2 change detection first; disaster damage is future unless damage labels/pipeline exist. |
+| 17 | IR-MAD is generally strong for multiband data. Why was it weak here? Is it due to Sentinel-2 spectral characteristics? | Do not dismiss IR-MAD casually; audit implementation, thresholding, normalization, labels, and Sentinel-2/OSCD fit. |
+| 18 | Presentation was extremely clear and well organized. | Keep organization. |
+| 19 | Presentation was good, but speaking was sometimes too fast and hard to follow; summarize more for viewers. | Slow down and summarize transitions. |
+| 20 | How long does one experiment take? | Record runtime/compute cost for each serious experiment. |
+| 21 | What is the benefit of adding DS/PCA-diff for segmentation? | State the hypothesis clearly: interpretability/prior signal, not guaranteed accuracy gain. |
+| 22 | Combining classical methods with deep learning seems original and practical. | Useful positive framing, but keep claims evidence-based. |
+| 23 | Examples made the presentation easy to understand. | Keep concrete examples. |
+| 24 | Presentation was good, but technical material was hard to follow for someone without image-processing background. | Add simpler conceptual explanations before math/results. |
+| 25 | What other applications besides disaster damage assessment are possible? | Mention urban change, land-cover change, greenhouse monitoring, construction monitoring, and temporal anomaly detection as candidate applications. |
+| 26 | What characteristics does the dataset have? | Add a dataset slide: OSCD, Sentinel-2, 13 bands, binary labels, pre/post dates, limits. |
+| 27 | Methodology was clear, but practical applications should be explained more. | Strengthen motivation and application framing. |
+| 28 | Figures/tables and slide structure were good. | Keep visual structure. |
+| 29 | Clear voice, but content was difficult due to English and field unfamiliarity. The student understood satellite-image disaster assessment, subspace-based change detection/segmentation, and planned Phase 3, but asked where related work ends and the proposed method begins. | Add a "related work vs my contribution" slide. Avoid implying a fixed Phase 3 or completed damage pipeline unless implemented. |
+| 30 | What is the trade-off between computational cost and accuracy when moving from classical subspace methods to deep-learning change/damage segmentation? | Track runtime, data needs, interpretability, and accuracy in future comparisons. |
+| 31 | Presentation was well done. | No specific action. |
+| 32 | If DS/PCA-diff priors sometimes hurt IoU/F1, have alternatives been tried: loss weighting, curriculum, early-epoch-only priors, gating, or attention? | Add alternative prior-use experiments after spatial DS audit if priors remain relevant. |
+| 33 | Presenter self-entry. | Ignore as feedback. |
+| 34 | What is the objective of the prior-generation stage, and why does PCA-diff perform best among the listed methods? | Clarify objective: unsupervised change evidence/prior generation; explain PCA-diff baseline strength. |
+| 35 | If disaster damage labels are scarce, why not use before/after construction imagery instead of disaster pre/post imagery? | Good research-gap question: define whether the project targets general change detection, disaster damage, or broader before/after remote-sensing change. |
+
+Concrete presentation fixes:
+
+- Add a one-slide problem statement: "changed-area detection in multispectral satellite images," with disaster damage as future/application context unless using a damage-labeled dataset.
+- Add a one-slide contribution boundary: existing methods vs this project's adaptation/evaluation.
+- Add a one-slide metrics glossary: IoU, F1, AUROC, PR-AUC.
+- Add a one-slide "why priors can hurt" explanation.
+- Add runtime/compute-cost numbers for serious experiments.
+- Keep visual examples, but reduce dense text and slow down.
+
+Concrete research tasks from student feedback:
+
+- Explain and test why raw pre/post input can outperform DS/PCA priors.
+- Audit IR-MAD before making claims about it being weak.
+- Record runtime/compute trade-offs for classical priors versus neural segmentation.
+- Consider alternative prior integration: gating/attention, loss weighting, curriculum, or early-epoch-only priors.
+- Clarify application scope: general change detection, disaster damage, construction monitoring, greenhouse mapping, or another specific target.
+- Add seasonal/pseudo-change robustness to the future experiment list.
+
 ## Paused Or Unsafe Claims
 
 Do not currently claim:
@@ -122,4 +198,3 @@ Do not currently claim:
 - OSCD binary change proves disaster damage performance.
 - Old residual-stack priors prove paper-faithful DS works.
 - Current global pixel DS preserves spatial structure during fitting.
-

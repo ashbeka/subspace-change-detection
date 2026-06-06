@@ -136,7 +136,7 @@ Active docs:
 - `docs/README.md`: docs index and reading map.
 - `docs/PROJECT_BRIEF.md`: short current truth-status.
 - `docs/RUNBOOK.md`: exact reproducibility and experiment commands.
-- `docs/results/`: accepted result summaries.
+- `docs/experiment_reports/`: curated human-readable experiment reports, not raw generated outputs.
 - `docs/others/`: non-Markdown imports kept for later review.
 
 The old `docs/archive/` folder was deleted after its useful knowledge was consolidated into active notes/docs. If historical wording is needed, use Git/GitHub history rather than recreating an archive folder by default.

@@ -14,8 +14,8 @@ Read these first:
 2. `RUNBOOK.md`
    - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
 
-3. `results/OSCD_CORE_SWEEP_2026-05-03.md`
-   - Accepted summary of the current major OSCD 3-seed sweep.
+3. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+   - Curated report for the current major OSCD 3-seed sweep.
 
 ## Active Notes
 

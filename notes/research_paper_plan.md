@@ -346,4 +346,4 @@ Use these files when expanding this plan:
 - `notes/experiments.md`: current evidence and planned audits.
 - `docs/PROJECT_BRIEF.md`: concise current truth.
 - `docs/RUNBOOK.md`: exact commands.
-- `docs/results/OSCD_CORE_SWEEP_2026-05-03.md`: accepted sweep summary.
+- `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep summary.

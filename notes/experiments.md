@@ -226,7 +226,7 @@ Pause until OSCD subspace construction is settled:
 
 The old archive documents were reviewed in repeated passes: inventory, useful-claim extraction, active-note gap check, keyword/risk coverage, and final functional coverage across commands, artifacts, code references, risks, tasks, and results.
 
-The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result summaries under `docs/results/`.
+The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result reports under `docs/experiment_reports/`.
 
 ### Thesis-usable run provenance
 
@@ -361,7 +361,7 @@ docs/archive/root_legacy/TEMP_DS_PRIMER.md
 | Exact reproducibility commands and old pipeline commands | `docs/RUNBOOK.md` |
 | Subspace implementation, DS/KDS/KGDS, spatial-risk explanation | `notes/methods.md`, `notes/feedback.md` |
 | Sensei/senpai feedback and unanswered questions | `notes/feedback.md` |
-| Experiment evidence, old artifact metrics, cleanup retention | `notes/experiments.md`, `docs/results/OSCD_CORE_SWEEP_2026-05-03.md` |
+| Experiment evidence, old artifact metrics, cleanup retention | `notes/experiments.md`, `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md` |
 | Literature, baseline papers, and reference-code leads | `notes/literature.md` |
 | Paper/thesis framing, contribution, decision gates | `notes/research_paper_plan.md` |
 | Historical cleanup and structure policy | `docs/README.md`, `AGENTS.md` |
