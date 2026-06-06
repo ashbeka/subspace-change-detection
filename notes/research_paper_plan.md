@@ -18,6 +18,12 @@ This project tests whether Difference Subspace-based unsupervised representation
 
 ## 3. Problem Setting
 
+Broader research direction:
+
+```text
+interpretable subspace-based change detection for multispectral satellite imagery
+```
+
 Input:
 
 ```text
@@ -36,6 +42,8 @@ Current benchmark:
 ```text
 OSCD: Sentinel-2 before/after image pairs with binary change labels
 ```
+
+OSCD is the current implemented benchmark, not a permanent boundary. Future datasets such as Harmonized Sentinel-2 L2A, MultiSenGE, xBD-S12, or domain-specific greenhouse data should be admitted only when the research question, data pipeline, labels or evaluation proxy, and baseline comparisons are clear.
 
 Current task boundary:
 

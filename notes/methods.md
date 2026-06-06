@@ -244,6 +244,25 @@ This could show which band combinations DS emphasizes and may help explain proje
 
 These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
 
+### Subspace code reading path
+
+Use this order when re-checking the DS/KDS implementation:
+
+1. `phase1/scripts/audit_oscd_subspace.py`
+   - Load one city, normalize, vectorize, fit PCA, compare legacy/eig/canonical DS.
+2. `phase1/data/preprocessing.py`
+   - Focus on `vectorize_cube` and `devectorize_cube`.
+3. `phase1/ds/pca_utils.py`
+   - Focus on `fit_pca_basis`, `difference_subspace_canonical`, `difference_subspace_eig`, and `legacy_residual_stack_difference_subspace`.
+4. `phase1/ds/ds_scores.py`
+   - Focus on `_compute_ds_matrix_scores`.
+5. `phase1/scripts/venus_kds_demo.py`
+   - Maps Sensei's Venus files into the TPAMI-style KDS/KGDS audit.
+6. `phase1/subspace/kernel_difference_subspace.py`
+   - Code version of the kernel coefficient/projection equations.
+
+Read the TPAMI 2015 DS/GDS paper before interpreting the Venus KDS/KGDS code, and read S3CCA only after the current DS construction is clear.
+
 ### Prior folder naming
 
 `phase1/outputs/oscd_saved_priors_fast` is a saved Phase 1 prior-map folder. It is not a trained model and "fast" does not mean optimized or best. It means the prior maps were generated with a faster Phase 1 configuration.
@@ -297,3 +316,15 @@ Therefore, a weak Phase 1 thresholded F1 does not automatically mean a prior is 
 ### MultiSenGE caveat
 
 MultiSenGE remains exploratory. Before using it for GDS/KGDS, audit the manifest and path assumptions, especially Sentinel-1 paths. Old notes flagged a possible local-path mismatch around `s1/<name>.tif` versus nested `s1/s1/<name>.tif`.
+
+### KDS and CCA implementation gaps
+
+OSCD KDS is possible but not yet specified enough to claim:
+
+- full-image pixel KPCA is too expensive for hundreds of thousands to millions of pixels;
+- a sampled global KDS would need controlled pixel sampling and out-of-sample projection for every pixel;
+- a local/windowed KDS would need local model fitting and runtime control;
+- a Nyström/prototype KDS would need representative pixel prototypes;
+- a patch-vector KDS would need explicit patch extraction and border/mask handling.
+
+CCA/S3CCA is a separate future route. It matters because it can preserve structure over sample indices, while current global PCA treats pixels as exchangeable columns. Do not present CCA/S3CCA as implemented.

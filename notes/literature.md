@@ -43,11 +43,37 @@ Bundled code in this repo:
 - `references/reference_code/MagTool-main/.../magnitude.py`: subspace magnitude and difference-space style utilities.
 - `references/reference_code/Subspace Toolbox/...`: MATLAB PCA, KPCA, CCA, Kernel CCA utilities.
 
+Specific archived crosswalk:
+
+- `references/reference_code/DS/utils.py`
+  - `gen_shape_subspace`: builds a subspace from shape/motion data.
+  - `gen_shape_difference_subspace`: projector-eigen style DS.
+- `references/reference_code/MagTool-main/MagTool-main/magnitude.py`
+  - `calcDiffSubspace`: projector/eigen difference-space style reference.
+  - `calcKarcherSubspace`: mean/Karcher subspace reference.
+  - `calcMagnitude`: canonical-cosine based subspace magnitude.
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtPCA.m`
+  - PCA where columns are samples.
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtKernelPCA.m`
+  - Kernel PCA reference.
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtCCA.m`
+  - CCA reference.
+- `references/reference_code/Subspace Toolbox/cvtToolBox/analysis/cvtKernelCCA.m`
+  - Kernel CCA reference.
+- `references/reference_code/Subspace Toolbox/cvtToolBox/SubspaceMethod/cvtBasisVector.m`
+  - Builds basis vectors from data arrays.
+
 External repos:
 
 - `https://github.com/ComputerVisionLaboratory/SubspaceMethodsToolBox`
 - `https://github.com/ComputerVisionLaboratory/SubspacesToolkit`
 - `https://github.com/ma-ath/subspyces`
+
+Archived external-file leads:
+
+- SubspaceMethodsToolBox: `cvlPCA.m`, `cvlKPCA.m`, `cvlBasisVector.m`, `cvlCanonicalAngles.m`, `cvlKernelBasisVector.m`, `cvlKernelCanonicalAngles.m`.
+- SubspacesToolkit: `computePCA.m`, `computeKernelPCA.m`, `computeBasisVectors.m`, `computeSubspacesSimilarities.m`, `computeKernelSubspacesSimilarities.m`.
+- subspyces: `pca_transform.py`, `cosine_canonical_angles.py`, `vector_space.py`.
 
 Use these as reference points, not unquestioned ground truth.
 

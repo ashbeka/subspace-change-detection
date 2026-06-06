@@ -4,6 +4,8 @@ This is the current project-facing summary. It should stay short. For research t
 
 ## Current Scope
 
+The broader research direction is **interpretable subspace-based change detection for multispectral satellite imagery**.
+
 The implemented project is **Sentinel-2 OSCD binary change detection with unsupervised prior maps**.
 
 The active pipeline is:
@@ -12,7 +14,7 @@ The active pipeline is:
 pre/post Sentinel-2 images -> Phase 1 prior maps -> Phase 2 supervised segmentation
 ```
 
-This is not yet end-to-end disaster damage segmentation. xBD, xBD-S12, MultiSenGE semantic change, and abandoned-greenhouse mapping are future directions unless their own data pipeline, labels, and evaluation are implemented.
+OSCD is the current concrete benchmark and evidence source, not a permanent boundary on the thesis. xBD, xBD-S12, MultiSenGE semantic change, Harmonized Sentinel-2 L2A, and abandoned-greenhouse mapping are future or candidate directions unless their own data pipeline, labels, and evaluation are implemented.
 
 ## Problem Statement
 

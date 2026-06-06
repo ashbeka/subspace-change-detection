@@ -105,6 +105,13 @@ Compare:
 - patch-vector DS: one sample is a `3x3x13` or `5x5x13` patch.
 - local-window DS: one subspace per local image region such as `128x128`.
 
+Initial local-window grid:
+
+- window sizes: `64`, `128`, `256`.
+- strides: `32`, `64`, `128`.
+- aggregation: `mean`, `max`.
+- inspect boundary artifacts from overlapping-window aggregation.
+
 Start with:
 
 ```text
@@ -129,6 +136,36 @@ Decision:
 - If global pixel DS is stable and competitive, keep it as a spectral-distribution baseline.
 - If patch/window DS improves maps or metrics, pivot to spatially aware DS.
 - If corrected DS variants remain weaker than raw/PCA-diff, stop claiming DS superiority.
+
+Suggested first command shape:
+
+```powershell
+$tag = Get-Date -Format "yyyyMMdd_HHmmss"
+.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_spatial_subspace.py `
+  --city beirut `
+  --rank 6 `
+  --methods global_pixel,patch3,patch5,window128 `
+  --output_dir "phase1/outputs/oscd_spatial_subspace_audit_$tag"
+```
+
+Expected outputs:
+
+- `metrics.csv`
+- `run_metadata.json`
+- `global_pixel_ds.png`
+- `patch3_ds.png`
+- `patch5_ds.png`
+- `window128_ds.png`
+- `raw_l2.png`
+- `pca_diff.png`
+- side-by-side comparison figure with pre RGB, post RGB, ground truth, and all tested maps.
+
+Acceptance checks:
+
+- canonical/eig DS maps are not near-identical to raw L2;
+- rank sensitivity does not show rank 6 was arbitrary or unstable;
+- valid-mask exclusions are negligible or explained;
+- global pixel DS is either competitive with patch/window variants or its weakness is explicitly reported.
 
 ## Other Important Experiments To Queue
 
@@ -158,6 +195,13 @@ Decision:
    - E0 raw-only.
    - raw + global canonical DS.
    - raw + best spatially aware DS prior.
+
+7. DS scalar change-map construction:
+   - Current DS prior is `||D^T (x_post - x_pre)||^2`.
+   - Compare squared projection norm, unsquared norm, normalized projection energy, residual energy, and ratios such as `||D^T delta||^2 / ||delta||^2`.
+   - Compare per-city vs global normalization.
+   - Compare Otsu thresholding, validation-selected thresholds, and no thresholding before supervised U-Net input.
+   - Check whether the scalar score map agrees with the reconstructed DS norm map from the projection-visualization task.
 
 ## Paused Work
 
@@ -260,3 +304,16 @@ docs/archive/root_legacy/REMEMBER_TO_ACTIVATE_ENV.txt
 docs/archive/root_legacy/RUN_PIPELINE.md
 docs/archive/root_legacy/TEMP_DS_PRIMER.md
 ```
+
+### Where archive content lives now
+
+| Archive content type | Active location |
+|---|---|
+| Current project truth, scope, overclaim boundaries | `docs/PROJECT_BRIEF.md`, `notes/research_paper_plan.md` |
+| Exact reproducibility commands and old pipeline commands | `docs/RUNBOOK.md` |
+| Subspace implementation, DS/KDS/KGDS, spatial-risk explanation | `notes/methods.md`, `notes/feedback.md` |
+| Sensei/senpai feedback and unanswered questions | `notes/feedback.md` |
+| Experiment evidence, old artifact metrics, cleanup retention | `notes/experiments.md`, `docs/results/OSCD_CORE_SWEEP_2026-05-03.md` |
+| Literature, baseline papers, and reference-code leads | `notes/literature.md` |
+| Paper/thesis framing, contribution, decision gates | `notes/research_paper_plan.md` |
+| Historical cleanup and structure policy | `docs/README.md`, `AGENTS.md` |
