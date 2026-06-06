@@ -211,6 +211,15 @@ KGDS:
 - Nonlinear GDS for three or more subspaces.
 - Natural for Venus three-class audit or MultiSenGE multi-date exploration.
 
+Signal Latent Subspace:
+
+- Future bridge between subspace methods and deep models.
+- Mahyub et al. 2024 builds subspaces from neural-network latent features rather than raw input vectors.
+- Multiple latent-feature subspaces can be fused through a product Grassmann manifold.
+- GDS projection is used there to improve between-class separation.
+- For this project, the satellite analogue would be: extract features from a remote-sensing CNN/foundation model, build subspaces from patch/tile/date features, then compare raw-spectral DS against latent-feature DS.
+- Do not treat this as implemented or as remote-sensing evidence yet.
+
 ## Research-Notes Archive Method Hooks
 
 Source: `research-notes/` ingestion on 2026-06-07. These are preserved as method hooks, not active evidence.
@@ -239,6 +248,7 @@ Geometry and decision layers:
 
 - Grassmann geodesic and SPD covariance-geodesic change scores are future local change-map candidates.
 - GFK is a possible domain-shift bridge between pre/post subspaces, but it needs a clear experiment.
+- Product Grassmann manifold is a possible way to fuse several subspace factors, such as spectral, spatial, temporal, or deep-feature subspaces. It is inspired by the SLS paper, but it is not active in this repo.
 - MCDA, edge/server payload formulas, UAV deployment, DMaaS, and graph decision layers are application/decision-system ideas, not part of the current implemented method.
 
 Archive details recovered in the second pass:
@@ -454,3 +464,23 @@ OSCD KDS is possible but not yet specified enough to claim:
 - a patch-vector KDS would need explicit patch extraction and border/mask handling.
 
 CCA/S3CCA and KCCA are separate future routes. They matter because they can preserve or compare structured sample relationships, while current global PCA treats pixels as exchangeable columns. Do not present CCA, KCCA, or S3CCA as implemented in the active OSCD pipeline.
+
+### Deep-feature subspace gap
+
+The Signal Latent Subspace paper suggests a different adaptation: instead of fitting subspaces directly on raw Sentinel-2 band vectors, first extract latent features from a neural model and then build subspaces from those features.
+
+This could answer a different question:
+
+```text
+Do subspace methods become more useful when their samples are spatial/deep feature vectors rather than raw per-pixel spectra?
+```
+
+Possible satellite variants:
+
+- patch embeddings from a remote-sensing CNN or foundation model;
+- U-Net encoder features from raw pre/post images;
+- separate subspaces for spectral, spatial, temporal, and prior-map feature factors;
+- product-Grassmann fusion across several feature factors;
+- GDS projection to improve separation between known classes or pseudo-classes.
+
+This should wait until the raw/global/local DS audit is clear.

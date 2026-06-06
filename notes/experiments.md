@@ -239,7 +239,14 @@ Acceptance checks:
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
    - Must define cluster count selection and validation before implementation.
 
-15. xBD-S12 metric protocol audit:
+15. Deep-feature subspace pilot:
+   - Inspired by Mahyub et al. 2024 Signal Latent Subspace, not currently implemented.
+   - Extract latent features from a remote-sensing CNN, U-Net encoder, or foundation model.
+   - Build subspaces from patch/tile/date latent features instead of raw 13-band pixel vectors.
+   - Compare latent-feature DS/GDS against raw spectral DS, local/window DS, PCA-diff, and the neural baseline.
+   - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
+
+16. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.

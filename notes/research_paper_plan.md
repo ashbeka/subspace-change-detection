@@ -159,6 +159,11 @@ Variants to compare:
    - future multi-date extension
    - useful for temporal difference spaces, but semantic interpretation needs clustering, labels, or weak supervision
 
+6. Deep-feature latent subspaces
+   - future method bridge inspired by Mahyub et al. 2024 Signal Latent Subspace
+   - one sample could be a patch/tile/date embedding from a remote-sensing model rather than a raw 13-band pixel
+   - useful only if it answers the spatial-information problem better than raw pixel DS
+
 ## 8. Experiment Plan
 
 Phase 1 audit before more long Phase 2 sweeps:
@@ -307,6 +312,7 @@ Medium priority:
 
 - Should KDS be implemented on OSCD with sampled/global, local, or prototype approximations?
 - Should MultiSenGE become the GDS/KGDS experiment after OSCD?
+- Should a Signal Latent Subspace-style experiment be tested with remote-sensing latent features after the spatial DS audit?
 - Which modern unsupervised/supervised baselines are mandatory for a paper?
 
 Low priority for now:
@@ -353,7 +359,7 @@ What survives as warm/future:
 - MultiSenGE GDS/KGDS or second-order DS if multi-date evaluation becomes central.
 - SSC as a future unsupervised change-type clustering baseline or pseudo-label source.
 - Band-group attribution, PCA reconstruction, geodesic/SPD change scores, RTW/SSA/SFA/DMD, and period-subspace DS as future method hooks.
-- Local/patch DS, KPCA/KDS, and structured CCA/S3CCA/KCCA are method-development routes only after the spatial-information problem is measured.
+- Local/patch DS, KPCA/KDS, Signal Latent Subspace-style deep-feature DS, and structured CCA/S3CCA/KCCA are method-development routes only after the spatial-information problem is measured.
 - Cold implementation details such as synchronized augmentations, edge-payload formulas, MCDA criteria, and xBD/xView2/xBD-S12 metrics are preserved for future pivots, but they do not define the current paper.
 
 What remains cold/archive:

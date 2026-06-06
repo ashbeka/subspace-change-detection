@@ -18,6 +18,7 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | ChangeOS | Object-based semantic change/damage framework. | Future damage comparison if xBD work resumes. |
 | Remote-sensing change-detection surveys | Needed to answer Sensei's request to understand the broader method landscape. | Read before novelty claims; use to place DS among classical and deep CD methods. |
 | Fukui et al. second-order DS / time-series DS | Supports multi-date subspace progression/recovery ideas. | Future MultiSenGE/GDS/second-order track, not current OSCD evidence. |
+| Mahyub et al. 2024, Signal Latent Subspace | Uses DNN latent features as subspaces, combines factor subspaces with product Grassmann manifold, and applies GDS for class separability. | Future deep-feature subspace bridge only; not remote-sensing evidence. |
 | SSA/SFA/RTW-related Sensei leads | Alternative temporal/subspace dynamics suggested by Sensei. | Future temporal literature, not current implementation. |
 
 ## Subspace And Kernel References
@@ -44,6 +45,14 @@ KCCA / Kernel CCA:
 - Appears in the archived reference-code leads.
 - Keep it as a future structured/kernel matching route, not as current OSCD evidence.
 - Do not let KPCA/KCCA/S3CCA/TRCCA become the thesis core unless a specific experiment and comparison justify that pivot.
+
+Signal Latent Subspace:
+
+- Mahyub, Souza, Batalo, and Fukui, "Signal latent subspace: A new representation for environmental sound classification," Applied Acoustics 225, 110181, 2024.
+- DOI: `10.1016/j.apacoust.2024.110181`.
+- ScienceDirect PII: `S0003682X24003323`.
+- The paper proposes subspaces from neural-network latent features, combines multiple latent-feature subspaces using product Grassmann manifold, and uses GDS projection to improve between-class discrimination.
+- Use it as a method analogy for possible satellite experiments using pretrained/fine-tuned remote-sensing feature extractors, not as evidence that OSCD or greenhouse mapping is solved.
 
 ## Reference Code
 
@@ -141,6 +150,7 @@ Keep these as literature or implementation leads:
 - ChangeOS: future object-level damage/change comparison, not active implementation.
 - FC-Siam / Siamese FCN: supervised OSCD-style change-detection baseline family; use as comparison pressure for any DS-only or prior-assisted segmentation claim.
 - Second-order DS, time-series DS, RTW, SSA, SFA: future temporal/subspace line if MultiSenGE or another multi-date dataset becomes central.
+- Signal Latent Subspace: future route for deep-feature subspace priors or classifiers if raw spectral/local DS is insufficient.
 - Celik PCA-kmeans and IR-MAD: classical baselines that must be implemented/audited carefully before using as negative evidence.
 
 Second-pass details from `research-notes/refs_links/benchmark_watchlist.md`:
