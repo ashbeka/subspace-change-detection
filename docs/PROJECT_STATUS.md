@@ -43,10 +43,12 @@ Not implemented now:
 
 Best current research question:
 
-Can interpretable unsupervised multispectral change priors, especially Difference Subspace priors, improve supervised Sentinel-2 binary change segmentation on OSCD compared with a raw pre/post Sentinel-2 baseline under controlled training and stitched evaluation?
+Can interpretable subspace-based representations expose reliable, spatially meaningful change evidence in pre/post Sentinel-2 images, and what subspace construction preserves enough spatial information for OSCD binary change detection?
 
 Useful subquestions:
 
+- Is global pixel-spectral DS a meaningful baseline adaptation, or does it ignore too much spatial structure? [unverified] [risk]
+- Do patch-vector or local-window subspaces produce clearer and more reliable change maps than global pixel DS? [unverified]
 - Does DS add value beyond generic pixel/CVA/PCA/Celik/IR-MAD priors? [unverified]
 - Does DS help only threshold-dependent IoU/F1, or also ranking metrics such as AUROC and PR-AUC? [unverified]
 - Are any gains stable across seeds, validation choices, and train/test city splits? [unverified]
@@ -56,7 +58,7 @@ This is narrower than "damage segmentation" but defensible because it connects a
 
 ## 4. Motivation
 
-Remote sensing change detection often faces limited labels, strong class imbalance, sensor artifacts, seasonal variation, and ambiguity about what counts as meaningful change. OSCD is small enough that inductive bias and interpretable priors may matter. The project motivation is to test whether a human-understandable change cue can complement a supervised neural segmenter rather than asking the network to learn everything from raw pre/post bands. [code-evidence] [external-source] [recommendation]
+Remote sensing change detection often faces limited labels, strong class imbalance, sensor artifacts, seasonal variation, registration differences, and ambiguity about what counts as meaningful change. The project motivation is not "use DS because DS is available." The motivation is to test whether a geometric, human-inspectable change representation can expose useful pre/post evidence in multispectral Sentinel-2 images, and whether spatially aware subspace construction is needed for that evidence to be meaningful. [code-evidence] [external-source] [recommendation]
 
 The disaster response motivation should be written carefully. Sentinel-2 has broad coverage and free access, so a Sentinel-2 change-prior pipeline could eventually support wide-area screening. But the current repo does not yet localize damaged buildings, classify damage levels, or validate operational disaster response behavior. [risk]
 

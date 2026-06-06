@@ -6,6 +6,48 @@ Status: current as of 2026-06-02.
 
 The current project is about interpretable change detection in pre/post Sentinel-2 satellite images. The active benchmark is OSCD binary change detection. Disaster damage mapping and abandoned-greenhouse mapping are future applications unless their own datasets, labels, and evaluation pipelines are implemented.
 
+## Why This Research Is Worth Doing
+
+The project should not be framed as "I have DS, so I will force it onto OSCD." The defensible research motivation is that remote-sensing change detection still has practical weaknesses:
+
+- Deep models can work well, but they need labels and can be hard to interpret.
+- Pseudo-changes from shadows, seasonal effects, registration differences, and sensor artifacts can look like real change.
+- Classical unsupervised methods are interpretable, but often weaker than supervised models.
+- A useful change map should show not only that two images differ, but where the difference is spatially meaningful.
+
+The value of DS/subspace methods is therefore not assumed superiority. The value is to test whether a geometric, interpretable representation of pre/post change can expose useful change evidence in multispectral Sentinel-2 images.
+
+The current method is only the baseline adaptation:
+
+```text
+one valid pixel -> one 13-band vector
+pre image       -> one spectral subspace
+post image      -> one spectral subspace
+DS              -> compare the two subspaces
+```
+
+The real research question is whether this representation is enough, or whether satellite change detection needs spatially aware subspaces built from patches or local windows.
+
+## What "Interpretable Spatially Meaningful Change" Means
+
+An interpretable subspace representation should let us inspect what kind of change evidence the method is using. For example:
+
+```text
+Raw difference:
+  A bright shadow or seasonal vegetation shift may produce a high pixel difference.
+
+Global pixel DS:
+  The method may say that this pixel's 13-band change lies in a major pre/post spectral-difference direction.
+
+Patch/window DS:
+  The method can also consider whether the local neighborhood changed like a coherent object or region,
+  such as a new building block, removed greenhouse roof, expanded road, or changed vegetation patch.
+```
+
+So "spatially meaningful" means the change map should highlight coherent changed areas rather than isolated spectral noise. If a roof, road segment, field, or greenhouse changes, neighboring pixels should produce a consistent pattern that can be explained and visualized.
+
+This is the reason for testing patch-vector DS and local-window DS instead of stopping at global pixel DS.
+
 ## Immediate Priority
 
 The next important research task is a spatially aware subspace audit.
