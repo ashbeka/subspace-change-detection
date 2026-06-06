@@ -222,6 +222,28 @@ Acceptance checks:
    - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
    - Do not claim IR-MAD is weak from old runs unless this audit supports it.
 
+12. Multi-date / period-subspace DS feasibility audit:
+   - Check datasets with enough aligned dates per location.
+   - Compare earliest/latest, adjacent, same-season, and period-window pairings.
+   - Test first-order DS before second-order DS, GDS, or KGDS.
+   - Do not use unlabeled MultiSenGE visuals as performance evidence without an evaluation proxy.
+
+13. Band-group attribution audit:
+   - Compute DS basis energy by Sentinel-2 band or band group.
+   - Compare VIS, red-edge, NIR, SWIR, and atmospheric bands.
+   - Use this to explain whether maps are likely surface change, vegetation/soil moisture, or atmospheric artifact.
+
+14. SSC change-type clustering pilot:
+   - Only after the spatial DS audit.
+   - Input candidates: raw delta, DS projection coefficients, PCA-diff features, patch/deep features.
+   - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
+   - Must define cluster count selection and validation before implementation.
+
+15. xBD-S12 metric protocol audit:
+   - Only if xBD-S12 is promoted from warm extension.
+   - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
+   - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.
+
 ## Paused Work
 
 Pause until OSCD subspace construction is settled:
@@ -237,6 +259,52 @@ Pause until OSCD subspace construction is settled:
 The old archive documents were reviewed in repeated passes: inventory, useful-claim extraction, active-note gap check, keyword/risk coverage, and final functional coverage across commands, artifacts, code references, risks, tasks, and results.
 
 The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result reports under `docs/experiment_reports/`.
+
+## Research-Notes Archive Ingestion
+
+Source repo: nested `research-notes/` at commit `44f2671`, clean against `origin/main` at ingestion time.
+
+Status:
+
+- Ingested into active notes on 2026-06-07.
+- The nested repo was not edited.
+- Deletion of `research-notes/` remains a later user-approved cleanup step.
+- Old claims that raw+DS was the best prior are historical because the newer 3-seed v5 sweep did not reproduce that simple claim.
+
+### Ingestion ledger
+
+| source file | active destination | retained knowledge |
+|---|---|---|
+| `research-notes/.gitignore` | none | empty file; no research content |
+| `research-notes/README.md` | `notes/README.md`, `AGENTS.md` | notes workflow and source-of-truth caution |
+| `research-notes/paths_menu.md` | `notes/research_paper_plan.md`, `notes/experiments.md` | active/warm/cold scope model, now treated as flexible guardrail |
+| `research-notes/decisions_log.md` | `notes/research_paper_plan.md`, `notes/experiments.md` | ADR history, benchmark discipline, scope-lock cautions |
+| `research-notes/gaps_towatch.md` | `notes/methods.md`, `notes/experiments.md`, `notes/literature.md` | method, benchmark, temporal, and future-extension gaps |
+| `research-notes/coverage_matrix.csv` | `notes/methods.md`, `notes/experiments.md`, `notes/literature.md` | idea inventory compressed into method hooks and backlog |
+| `research-notes/glossary.md` | `notes/methods.md`, `notes/literature.md` | acronym/method definitions already covered or folded in |
+| `research-notes/drafts_digest.md` | `notes/research_paper_plan.md`, `notes/methods.md`, `notes/experiments.md` | broad proposal material bucketed into active/future tracks |
+| `research-notes/spec_snippets.md` | `notes/methods.md`, `notes/experiments.md` | delta, SSC, MCDA, and payload formulas as future hooks |
+| `research-notes/master/current_scope.md` | `notes/research_paper_plan.md`, `notes/experiments.md` | old active scope and warning that OSCD is not damage mapping |
+| `research-notes/master/master_outline.md` | `notes/research_paper_plan.md` | thesis skeleton, now corrected by newer evidence |
+| `research-notes/master/master_proposal.md` | `notes/research_paper_plan.md`, `notes/methods.md` | broad historical proposal, formulas, future system ideas |
+| `research-notes/master/master_skeleton.md` | `notes/research_paper_plan.md` | paper outline intent |
+| `research-notes/master/session_audit_2026-03-24.md` | `notes/research_paper_plan.md`, `notes/experiments.md`, `notes/feedback.md` | March 2026 reset reasoning and guardrails |
+| `research-notes/master/appendix_ds_math.tex` | `notes/methods.md` | DS notation, projection score, first/second temporal deltas |
+| `research-notes/master/slides_equations.tex` | `notes/methods.md` | reusable equations: deltas, SSC, Dice/CE, MCDA |
+| `research-notes/notes/sensei_notes.md` | `notes/feedback.md`, `notes/literature.md`, `notes/methods.md` | Sensei guidance on DS, surveys, second-order DS, TPAMI, RTW/SSA/SFA |
+| `research-notes/notes/senpais_notes.md` | `notes/feedback.md`, `notes/methods.md` | task clarity, post-map purpose, SSC justification, multi-image subspaces |
+| `research-notes/notes/my_notes.md` | `notes/feedback.md`, `notes/methods.md`, `notes/experiments.md` | safe vs risky paths, SSC hypotheses, MultiSenGE/xBD-S12 thoughts |
+| `research-notes/notes/old_notes.md` | `notes/feedback.md`, `notes/research_paper_plan.md` | broad old ideas moved to cold/future archive |
+| `research-notes/phases/phase1_report.md` | `notes/methods.md`, `notes/experiments.md`, `docs/RUNBOOK.md` | Phase 1 implementation details and old result caveats |
+| `research-notes/spec/spec_phase1_ds_oscd.md` | `notes/methods.md`, `notes/experiments.md` | Phase 1 spec, thresholding, baselines, and reproducibility requirements |
+| `research-notes/refs_links/benchmark_watchlist.md` | `notes/literature.md`, `notes/experiments.md` | OSCD, Metric-CD, xBD, xBD-S12, MapFormer, benchmark discipline |
+| `research-notes/refs_links/Links.md` | `notes/reference_bookmarks.md`, `notes/literature.md` | bookmark-style reference leads |
+| `research-notes/refs_links/initial_refs.bib` | `notes/literature.md` | citation seeds for OSCD, MultiSenGE, Celik, IR-MAD, U-Net, ResNet, xBD |
+| `research-notes/refs_links/fixed.html` | `notes/reference_bookmarks.md` | older bookmark/reference export style |
+| `research-notes/refs_links/full_eh_referenecs.xml` | `notes/reference_bookmarks.md`, `notes/literature.md` | broad reference leads, not active truth |
+| `research-notes/scripts/render_deltas.py` | `notes/methods.md`, `notes/experiments.md` | synthetic figure idea only; not migrated as code |
+| `research-notes/scripts/render_mcda_demo.py` | `notes/methods.md` | MCDA demo idea kept as future decision-layer hook |
+| `research-notes/scripts/render_payload_chart.py` | `notes/methods.md` | payload formula kept as future deployment hook |
 
 ### Thesis-usable run provenance
 

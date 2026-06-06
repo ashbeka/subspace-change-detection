@@ -211,6 +211,36 @@ KGDS:
 - Nonlinear GDS for three or more subspaces.
 - Natural for Venus three-class audit or MultiSenGE multi-date exploration.
 
+## Research-Notes Archive Method Hooks
+
+Source: `research-notes/` ingestion on 2026-06-07. These are preserved as method hooks, not active evidence.
+
+Multi-date subspace methods:
+
+- First-order DS is the pairwise before/after setting.
+- Second-order DS is the natural next subspace idea for progression/recovery, but it requires at least three meaningful time points or period subspaces.
+- Period-subspace DS should use multiple images per side when available, for example early-month versus late-month, first half-year versus second half-year, or pre-event window versus post-event window.
+- SSA, SFA, DMD, RTW, and Fourier time-series analysis are future temporal tools. They need enough temporal depth and a clear target before implementation.
+
+Spatial and interpretability variants:
+
+- Sliding/local-window DS was already proposed in old specs and now directly matches Sensei's spatial-information critique.
+- Band-group DS and per-band attribution can help explain whether DS is driven by visible, red-edge, NIR, SWIR, or atmospheric bands.
+- PCA reconstruction error can be a baseline or diagnostic: fit a pre/no-change PCA model and use post reconstruction residuals as change/anomaly evidence.
+- Coordinate- or patch-aware variants are method candidates only if they improve spatial meaning without turning into arbitrary feature engineering.
+
+SSC and sparse modeling:
+
+- Sparse Subspace Clustering is a future baseline or pseudo-label source, not current core evidence.
+- A defensible SSC role would be: cluster change-feature vectors into change types, compare against DS/PCA-diff, or provide auxiliary targets/channels for a neural model.
+- Dictionary learning and LASSO are future sparse-modeling tools for feature extraction or band/feature selection.
+
+Geometry and decision layers:
+
+- Grassmann geodesic and SPD covariance-geodesic change scores are future local change-map candidates.
+- GFK is a possible domain-shift bridge between pre/post subspaces, but it needs a clear experiment.
+- MCDA, edge/server payload formulas, UAV deployment, DMaaS, and graph decision layers are application/decision-system ideas, not part of the current implemented method.
+
 ## Venus KDS/KGDS Audit
 
 Sensei's Venus data:

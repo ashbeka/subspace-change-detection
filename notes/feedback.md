@@ -111,6 +111,38 @@ Action:
 - Treat negative results as valid evidence.
 - Focus on what subspace construction is appropriate for satellite imagery.
 
+## Research-Notes Archive Feedback
+
+Source: nested repo `research-notes/`, especially `notes/sensei_notes.md`, `notes/senpais_notes.md`, `notes/my_notes.md`, `notes/old_notes.md`, and `master/session_audit_2026-03-24.md`.
+
+Status:
+
+- Ingested as historical feedback on 2026-06-07.
+- Several old scope decisions are superseded by current evidence, especially the later 3-seed OSCD result and Sensei's spatial-information concern.
+
+Durable Sensei guidance:
+
+- Use subspace representation and DS as an initial tool because it may create an original research point, but do not stick to DS if better methods solve the problem more clearly.
+- Read change-detection survey papers and the DS/second-order DS papers to understand the method family, not only this codebase.
+- Run simple dataset evaluations first to understand whether DS is valid for the chosen remote-sensing task.
+- First-order and second-order DS may be useful for multi-temporal satellite analysis when enough dates exist.
+- TPAMI 2015 DS/KDS/KGDS and the Venus experiment are reference material for correct subspace understanding.
+- Future directions can include deep features, DS+DNN, DS+LLM, RTW, SSA, and SFA, but only after the core problem is clear.
+
+Durable senpai guidance:
+
+- Define the task before defending the method: binary changed-area detection, damage-level classification, land-use mapping, or decision support are different projects.
+- Explain what happens after producing maps; vague "reconstruction support" is not enough.
+- Do not combine land-use, damage assessment, SSC, U-Net, MCDA, UAV, and LLMs unless the method and purpose are concrete.
+- If using subspaces, consider whether multiple images/dates/views should form one subspace instead of one global subspace per date image.
+- SSC is only useful if its role is explicit: baseline, pseudo-label source, change-type clustering, compression, or interpretability.
+
+Actions:
+
+- Keep the current problem statement centered on interpretable subspace-based multispectral change detection unless a stronger dataset/task justifies a pivot.
+- Treat xBD-S12, MultiSenGE GDS/KGDS, SSC change-type clustering, and operational decision layers as future or warm-extension tracks, not active claims.
+- Before adding new methods, write the problem they solve and the evaluation that would prove they help.
+
 ## First Seminar Student Feedback
 
 Source: local Excel import `docs/source_records/student_feedback_channel4_2025-11-20.xlsx`.

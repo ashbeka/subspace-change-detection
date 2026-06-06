@@ -336,7 +336,35 @@ Future hooks to keep out of the main claim for now:
 - MCDA/IoT/DMaaS/operational dashboard ideas.
 - graph decision layers and broad foundation-model extensions.
 
-## 14. File Sources
+## 14. Research-Notes Archive Outcome
+
+The nested `research-notes/` repo was ingested on 2026-06-07. It preserved a broader historical research program, but the current paper plan should not revive that full scope.
+
+What survives as active:
+
+- Interpretable subspace-based change detection for multispectral satellite images.
+- OSCD as the current implemented binary change benchmark.
+- The immediate need to test spatially aware subspace construction.
+- Careful comparison against raw pre/post, PCA-diff, Siamese, and modern CD baselines.
+
+What survives as warm/future:
+
+- xBD-S12 or another Sentinel-scale damage dataset as the cleanest future damage bridge.
+- MultiSenGE GDS/KGDS or second-order DS if multi-date evaluation becomes central.
+- SSC as a future unsupervised change-type clustering baseline or pseudo-label source.
+- Band-group attribution, PCA reconstruction, geodesic/SPD change scores, RTW/SSA/SFA/DMD, and period-subspace DS as future method hooks.
+
+What remains cold/archive:
+
+- Full disaster-damage/land-use/MCDA/UAV/IoT/DMaaS platform framing.
+- Infrastructure-placement, evacuation-routing, LLM decision-support, graph decision layers, and broad urban-planning systems.
+- Claims that the project already performs damage-level prediction.
+
+Important correction:
+
+- Older `research-notes/` files treated raw+DS improvement as a strong active claim. The newer controlled 3-seed v5 sweep weakened that claim. The current thesis argument must be conditional: DS-style priors are interpretable and sometimes useful, but their benefit depends on subspace construction, spatial context, dataset, city, and metric.
+
+## 15. File Sources
 
 Use these files when expanding this plan:
 
@@ -344,6 +372,7 @@ Use these files when expanding this plan:
 - `notes/methods.md`: method understanding.
 - `notes/literature.md`: citation and baseline matrix.
 - `notes/experiments.md`: current evidence and planned audits.
+- `notes/reference_bookmarks.md`: Zotero-first reading queue and organized bookmark map.
 - `docs/PROJECT_BRIEF.md`: concise current truth.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep summary.

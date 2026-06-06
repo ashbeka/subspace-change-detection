@@ -129,6 +129,7 @@ Active notes:
 - `notes/methods.md`: method and pipeline understanding.
 - `notes/literature.md`: papers, datasets, code references, and why they matter.
 - `notes/experiments.md`: experiment evidence, open tests, decision gates, and next actions.
+- `notes/reference_bookmarks.md`: bookmark triage, Zotero-first queue, and organized Chrome import pointer.
 - `notes/research_paper_plan.md`: paper/thesis-facing argument, contribution framing, and section skeleton.
 
 Active docs:
@@ -137,7 +138,7 @@ Active docs:
 - `docs/PROJECT_BRIEF.md`: short current truth-status.
 - `docs/RUNBOOK.md`: exact reproducibility and experiment commands.
 - `docs/experiment_reports/`: curated human-readable experiment reports, not raw generated outputs.
-- `docs/source_records/`: original human-facing records received or submitted during the project. Preserve these, but do not treat them as current truth without checking active notes.
+- `docs/source_records/`: original human-facing records received/submitted during the project, raw imports, and importable organized source records. Preserve these, but do not treat them as current truth without checking active notes.
 
 The old `docs/archive/` folder was deleted after its useful knowledge was consolidated into active notes/docs. If historical wording is needed, use Git/GitHub history rather than recreating an archive folder by default.
 

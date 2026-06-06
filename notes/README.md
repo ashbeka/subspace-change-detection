@@ -10,6 +10,7 @@ These notes are the active project brain. They are for understanding, planning, 
 - `methods.md`: How the current pipeline and methods work, including DS, GDS, KDS, KGDS, OSCD, and Phase 2 segmentation.
 - `literature.md`: Papers, codebases, datasets, and why each matters.
 - `experiments.md`: Experiment evidence, open experiment ideas, decision gates, and next actions.
+- `reference_bookmarks.md`: Chrome bookmark triage, Zotero-first reading queue, and organized import-file pointer.
 - `research_paper_plan.md`: Paper-facing synthesis: problem, gap, method, experiments, evidence, contribution framing, and paper skeleton.
 
 ## Where To Add A New Note
@@ -17,6 +18,7 @@ These notes are the active project brain. They are for understanding, planning, 
 - Advisor or seminar comment: add it to `feedback.md`.
 - Method explanation or code understanding: add it to `methods.md`.
 - Paper, bookmark, reference code, or dataset: add it to `literature.md`.
+- Large bookmark batches or Zotero triage: add the summary to `reference_bookmarks.md`, then promote must-cite items into `literature.md`.
 - Result, experiment idea, failed run, or next test: add it to `experiments.md`.
 - Paper/thesis argument, contribution framing, or section outline: add it to `research_paper_plan.md`.
 - Exact command that should be reused: keep it in `docs/RUNBOOK.md`, then reference it from `experiments.md` if needed.

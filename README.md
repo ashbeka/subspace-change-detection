@@ -51,6 +51,7 @@ notes/
   methods.md
   literature.md
   experiments.md
+  reference_bookmarks.md
 ```
 
 ## Minimal Smoke Check

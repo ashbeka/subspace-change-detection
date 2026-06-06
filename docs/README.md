@@ -27,6 +27,10 @@ Read these first:
   - Submitted QA response report after the first seminar.
 - `legacy_cs_seminar_report_ds_damage_segmentation_2025.tex`
   - Earlier generated/submitted CS seminar report source.
+- `chrome_bookmarks_raw_2026-06-07.html`
+  - Raw Chrome bookmark export preserved before organization.
+- `chrome_bookmarks_organized_research_2026-06-07.html`
+  - Importable organized Chrome bookmark file preserving every URL once.
 
 These files are preserved as provenance. They are not the active project truth. Useful knowledge from them should be reflected in `../notes/` or the active docs.
 
@@ -38,6 +42,7 @@ The active thinking files are:
 - `../notes/methods.md`
 - `../notes/literature.md`
 - `../notes/experiments.md`
+- `../notes/reference_bookmarks.md`
 - `../notes/research_paper_plan.md`
 
 ## Historical Archive
@@ -48,4 +53,4 @@ The active thinking files are:
 
 `../notes/` is the current active notes location.
 
-`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into `../notes/` or the active docs above.
+`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into `../notes/` or the active docs above. Its current useful content was ingested into active notes on 2026-06-07; delete the folder only after the user confirms the ingestion is sufficient.

@@ -16,6 +16,9 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | xBD / Gupta et al. 2019 | Building damage dataset. | Future damage extension only. |
 | xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset. | Future extension only. |
 | ChangeOS | Object-based semantic change/damage framework. | Future damage comparison if xBD work resumes. |
+| Remote-sensing change-detection surveys | Needed to answer Sensei's request to understand the broader method landscape. | Read before novelty claims; use to place DS among classical and deep CD methods. |
+| Fukui et al. second-order DS / time-series DS | Supports multi-date subspace progression/recovery ideas. | Future MultiSenGE/GDS/second-order track, not current OSCD evidence. |
+| SSA/SFA/RTW-related Sensei leads | Alternative temporal/subspace dynamics suggested by Sensei. | Future temporal literature, not current implementation. |
 
 ## Subspace And Kernel References
 
@@ -120,6 +123,25 @@ When Chrome bookmarks are imported later, classify each item as one of:
 - `background`: useful context, not urgent.
 - `future`: xBD, greenhouses, MultiSenGE, semantic change, or broader application.
 - `discard`: duplicate, weak, unrelated, or no longer useful.
+
+The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
+
+## Research-Notes Archive Literature Leads
+
+Source: `research-notes/refs_links/`, `research-notes/notes/sensei_notes.md`, and `research-notes/coverage_matrix.csv`.
+
+Keep these as literature or implementation leads:
+
+- Change detection surveys: required for broad overview and to avoid method-forcing.
+- OSCD / FC-Siamese: current benchmark family and supervised baseline context.
+- Metric-CD: modern unsupervised remote-sensing CD pressure; compare protocols carefully.
+- MapFormer and other prior-/semantic-guided CD work: evidence that adding priors is not automatically novel.
+- xBD and xBD-S12: future damage-dataset bridge; do not claim active damage evaluation until implemented.
+- Transfer learning for emergency building-damage assessment: useful disaster-evaluation realism.
+- ChangeOS: future object-level damage/change comparison, not active implementation.
+- FC-Siam / Siamese FCN: supervised OSCD-style change-detection baseline family; use as comparison pressure for any DS-only or prior-assisted segmentation claim.
+- Second-order DS, time-series DS, RTW, SSA, SFA: future temporal/subspace line if MultiSenGE or another multi-date dataset becomes central.
+- Celik PCA-kmeans and IR-MAD: classical baselines that must be implemented/audited carefully before using as negative evidence.
 
 ## Archive-Ingested Reference Leads
 
