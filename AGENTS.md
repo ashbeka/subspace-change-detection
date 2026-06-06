@@ -48,6 +48,28 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 - Do not run long training, large sweeps, large cleanup, or major restructuring without explicit approval.
 - Lightweight smoke tests, inspections, and audits are allowed when useful.
 
+## Knowledge Preservation And Consolidation
+
+The user has strong research-note FOMO: do not casually discard ideas, advisor feedback, old decisions, failed experiments, or possible future research directions. At the same time, do not preserve them by creating many scattered files.
+
+When ingesting archives, old docs, pasted notes, Apple Notes exports, bookmarks, or `research-notes/`:
+
+- Read broadly enough to understand each file's purpose before moving information.
+- Extract useful knowledge, not wording.
+- Consolidate into the existing functional files whenever possible.
+- Keep notes readable and digestible, but retain important technical detail for later thesis/paper writing.
+- Do not leave behind useful information merely because it is messy, old, AI-generated, or contradicted by newer evidence; instead mark it as historical, unverified, contradicted, paused, or future work.
+- Do not create a new file unless it has a specific responsibility that existing files cannot serve.
+- Do not delete the source archive until useful knowledge has been ingested and the user explicitly approves deletion.
+
+For large consolidation tasks, use a three-pass workflow:
+
+1. Inventory: list every file/source and identify its role.
+2. Extraction: pull out claims, evidence, decisions, risks, commands, results, and future-task ideas.
+3. Gap check: compare against active `notes/` and `docs/` to make sure no useful item was missed.
+
+After consolidation, summarize what was ingested, where it went, what remains historical only, and what still needs user approval before deletion.
+
 ## Notes And Docs Structure
 
 Use this split:
@@ -110,4 +132,3 @@ global pixel DS vs patch-vector DS vs local-window DS
 This directly answers Sensei's concern that the current global pixel-based subspace may break spatial information.
 
 The audit should compare metrics and maps against OSCD labels and simple baselines such as raw spectral L2 and PCA-diff.
-
