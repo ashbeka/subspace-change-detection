@@ -143,6 +143,24 @@ Keep these as literature or implementation leads:
 - Second-order DS, time-series DS, RTW, SSA, SFA: future temporal/subspace line if MultiSenGE or another multi-date dataset becomes central.
 - Celik PCA-kmeans and IR-MAD: classical baselines that must be implemented/audited carefully before using as negative evidence.
 
+Second-pass details from `research-notes/refs_links/benchmark_watchlist.md`:
+
+- Metric-CD is useful comparison pressure because it optimizes per image and thresholds its saved map at `0.5`; do not compare its F1/IoU directly to this repo without aligning thresholding, masking, averaging, bands, normalization, and compute.
+- xBD-S12 was logged as a warm extension because it reportedly provides `10,315` aligned Sentinel-1/Sentinel-2 pre/post pairs connected to xBD-style damage labels; capture the official release repo before implementation.
+- Emergency-context transfer-learning work should be used to discuss disaster generalization and emergency-realistic evaluation, not as evidence that this repo already solves damage mapping.
+- MapFormer and other prior-guided / semantic-guided change-detection papers are important because they weaken any novelty claim based only on "adding prior information."
+- External benchmark tables should start with a protocol-alignment note before score comparison.
+
+Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
+
+- Daudt et al. OSCD / FC-Siamese.
+- MultiSenGE dataset paper.
+- Remote-sensing change-detection survey material.
+- Celik 2009 PCA-kmeans.
+- Nielsen MAD / IR-MAD family.
+- U-Net and ResNet only when the corresponding models are discussed.
+- Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
+
 ## Archive-Ingested Reference Leads
 
 Additional references and code leads from old archive notes:

@@ -282,7 +282,7 @@ Status:
 | `research-notes/gaps_towatch.md` | `notes/methods.md`, `notes/experiments.md`, `notes/literature.md` | method, benchmark, temporal, and future-extension gaps |
 | `research-notes/coverage_matrix.csv` | `notes/methods.md`, `notes/experiments.md`, `notes/literature.md` | idea inventory compressed into method hooks and backlog |
 | `research-notes/glossary.md` | `notes/methods.md`, `notes/literature.md` | acronym/method definitions already covered or folded in |
-| `research-notes/drafts_digest.md` | `notes/research_paper_plan.md`, `notes/methods.md`, `notes/experiments.md` | broad proposal material bucketed into active/future tracks |
+| `research-notes/Drafts_digest.md` | `notes/research_paper_plan.md`, `notes/methods.md`, `notes/experiments.md` | broad proposal material bucketed into active/future tracks |
 | `research-notes/spec_snippets.md` | `notes/methods.md`, `notes/experiments.md` | delta, SSC, MCDA, and payload formulas as future hooks |
 | `research-notes/master/current_scope.md` | `notes/research_paper_plan.md`, `notes/experiments.md` | old active scope and warning that OSCD is not damage mapping |
 | `research-notes/master/master_outline.md` | `notes/research_paper_plan.md` | thesis skeleton, now corrected by newer evidence |
@@ -305,6 +305,29 @@ Status:
 | `research-notes/scripts/render_deltas.py` | `notes/methods.md`, `notes/experiments.md` | synthetic figure idea only; not migrated as code |
 | `research-notes/scripts/render_mcda_demo.py` | `notes/methods.md` | MCDA demo idea kept as future decision-layer hook |
 | `research-notes/scripts/render_payload_chart.py` | `notes/methods.md` | payload formula kept as future deployment hook |
+
+### Second-pass ingestion audit
+
+User-triggered second pass on 2026-06-07:
+
+- Re-read all `30` tracked files from the nested `research-notes/` repo at commit `44f2671`, including the empty `.gitignore`.
+- Compared high-density archive files against `notes/methods.md`, `notes/experiments.md`, `notes/literature.md`, `notes/feedback.md`, and `notes/research_paper_plan.md`.
+- Strengthened the active notes where the first pass was too compressed.
+- Did not edit the nested `research-notes/` repo.
+
+Details recovered or made more explicit:
+
+- Phase 1 baseline and threshold details: PCA-diff rank/energy choices, Celik window/PCA/k-means defaults, per-tile Otsu, and train-calibrated global threshold grid.
+- MultiSenGE pairing details: `earliest_latest`, `adjacent`, and `first_mid_last`, with seasonality/cloud caution.
+- Quick-figure hooks: Delta1/Delta2 synthetic grids, MCDA toy heatmaps, and payload-vs-embedding curves.
+- Cold-extension specifications: xView2 scale numbers to verify, xBD-S12 damage metrics, quadratic-weighted kappa, synchronized augmentations, and edge/server payload formulas.
+- Benchmark-watchlist specifics: Metric-CD protocol caveat, xBD-S12 paired-data claim, MapFormer prior-guided caution, emergency transfer-learning relevance, and comparison-protocol checklist.
+- Historical conflict note: old residual/eig equivalence claims must be overridden by the newer corrected-DS audit unless reproduced under the current code.
+
+Second-pass conclusion:
+
+- The active notes now retain the old repo's technical hooks without reviving the old broad thesis narrative.
+- Remaining deletion of `research-notes/` is still a separate cleanup decision, not performed here.
 
 ### Thesis-usable run provenance
 

@@ -353,6 +353,8 @@ What survives as warm/future:
 - MultiSenGE GDS/KGDS or second-order DS if multi-date evaluation becomes central.
 - SSC as a future unsupervised change-type clustering baseline or pseudo-label source.
 - Band-group attribution, PCA reconstruction, geodesic/SPD change scores, RTW/SSA/SFA/DMD, and period-subspace DS as future method hooks.
+- Local/patch DS, KPCA/KDS, and structured CCA/S3CCA/KCCA are method-development routes only after the spatial-information problem is measured.
+- Cold implementation details such as synchronized augmentations, edge-payload formulas, MCDA criteria, and xBD/xView2/xBD-S12 metrics are preserved for future pivots, but they do not define the current paper.
 
 What remains cold/archive:
 
@@ -363,6 +365,7 @@ What remains cold/archive:
 Important correction:
 
 - Older `research-notes/` files treated raw+DS improvement as a strong active claim. The newer controlled 3-seed v5 sweep weakened that claim. The current thesis argument must be conditional: DS-style priors are interpretable and sometimes useful, but their benefit depends on subspace construction, spatial context, dataset, city, and metric.
+- Older `research-notes/` files also treated residual and eig DS as nearly equivalent in a Phase 1 report. The later corrected-subspace audit found the residual-stack route should be treated as legacy unless the result is reproduced under the repaired implementation.
 
 ## 15. File Sources
 

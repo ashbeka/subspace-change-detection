@@ -241,6 +241,23 @@ Geometry and decision layers:
 - GFK is a possible domain-shift bridge between pre/post subspaces, but it needs a clear experiment.
 - MCDA, edge/server payload formulas, UAV deployment, DMaaS, and graph decision layers are application/decision-system ideas, not part of the current implemented method.
 
+Archive details recovered in the second pass:
+
+- The old Phase 1 spec used `rank_r: 6`, local DS windows such as `64` or `96`, and strides such as `32` or `48`. Current experiments should broaden that grid rather than treating the old defaults as final.
+- Old PCA-diff design used PCA on `X_post - X_pre`, with `S` chosen either by an energy threshold around `95%` or by a small rank such as `3` to `5`.
+- Old Celik baseline defaults were local windows `h in {7, 9, 11}`, PCA energy at least `90%`, `k=2`, `k-means++`, and runtime controls such as `downsample_max_side`.
+- Old OSCD thresholding had two modes: per-tile Otsu with no labels, and train-calibrated global thresholds over `0.05..0.95` with step `0.05`, optimized by F1 or IoU. This thresholding is for Phase 1 binary maps, not for Phase 2 prior channels.
+- Old MultiSenGE pair strategies included `earliest_latest`, `adjacent`, and `first_mid_last`; do not use earliest/latest as the only evidence because it maximizes seasonality and cloud/snow risk.
+- Old quick-figure scripts preserved three paper/slide hooks: Delta1/Delta2 grids, toy MCDA heatmaps, and uplink payload curves. These are explanatory figure ideas, not active experiment code.
+- The old edge payload equation was `embedded ~= T*H*W*m*4` bytes/s versus raw 16-bit imagery roughly `T*H*W*d*2` bytes/s. A deployment claim would need a measured target such as `5-10x` reduction, not only this formula.
+- Old augmentation defaults were synchronized pre/post transforms: rotations, flips, scale `0.9-1.1`, translation up to `5%`, brightness/contrast about `+/-10-15%`, gamma `0.9-1.1`, Gaussian noise up to about `0.01`, and blur sigma `0.5-1.0`. These are historical training defaults, not current evidence.
+- Old xView2 notes claimed about `22,068` images, `11,034` pre/post pairs, about `850,736` building polygons, and about `45,000 km^2`; verify from primary sources before citing.
+- Old damage-extension metrics included quadratic-weighted kappa for ordinal damage and xBD-S12-style `F1loc`, `F1dmg`, `F1comp`. These belong only to a promoted damage task, not OSCD.
+
+Historical conflict to preserve:
+
+- Some old `research-notes/` files said residual/eig DS behaved almost identically on OSCD. The later subspace audit found the active residual-stack path was not paper-faithful enough and behaved almost like raw L2 on Beirut. Treat the old equivalence statement as historical conflict, not current truth.
+
 ## Venus KDS/KGDS Audit
 
 Sensei's Venus data:
