@@ -25,6 +25,7 @@ The active thinking files are:
 - `../notes/methods.md`
 - `../notes/literature.md`
 - `../notes/experiments.md`
+- `../notes/research_paper_plan.md`
 
 ## Archive Rule
 

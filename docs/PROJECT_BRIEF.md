@@ -95,5 +95,6 @@ Do not currently claim:
 - `notes/methods.md`: DS, GDS, KDS, KGDS, OSCD, and Phase 2 method understanding.
 - `notes/literature.md`: papers, datasets, and code references.
 - `notes/experiments.md`: experiment evidence and next tests.
+- `notes/research_paper_plan.md`: full paper-facing argument and thesis skeleton.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/results/OSCD_CORE_SWEEP_2026-05-03.md`: accepted sweep result summary.
