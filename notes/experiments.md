@@ -510,3 +510,24 @@ docs/archive/root_legacy/TEMP_DS_PRIMER.md
 | Literature, baseline papers, and reference-code leads | `notes/literature.md` |
 | Paper/thesis framing, contribution, decision gates | `notes/research_paper_plan.md` |
 | Historical cleanup and structure policy | `docs/README.md`, `AGENTS.md` |
+
+## Phase Docs Consolidation Ledger
+
+The old `phase1/docs/` and `phase2/docs/` folders were reviewed and removed on 2026-06-07 to keep the project reading path centralized.
+
+| source | active destination | retained knowledge |
+|---|---|---|
+| `phase1/docs/spec_phase1_ds_oscd.md` | `notes/methods.md`, `notes/experiments.md`, `docs/RUNBOOK.md`, `project_cli.py` | old Phase 1 scope, OSCD/MultiSenGE distinction, 13-band preprocessing, valid-mask/z-score rules, DS/PCA-diff/Celik/IR-MAD baseline definitions, thresholding protocol, metrics, and reproducibility requirements |
+| `phase1/docs/phase1_report.md` | `notes/methods.md`, `notes/experiments.md` | Phase 1 implementation map, score-map output paths, baseline caveats, old test AUROC/F1/IoU summaries, and the conflict that old residual/eig DS claims predate the corrected DS audit |
+| `phase1/docs/phase1_run_guide.md` | `docs/RUNBOOK.md`, `project_cli.py` | OSCD prior-generation commands, saved-map layout, MultiSenGE visualization commands, and how Phase 2 loads Phase 1 priors |
+| `phase1/docs/phase1_scripts_cli.md` | `project_cli.py`, `docs/RUNBOOK.md` | old script cheat sheet; replaced by central CLI wrappers and raw command fallbacks |
+| `phase1/docs/spec_summary_notes.txt` | `notes/methods.md`, `notes/experiments.md` | short summary of Phase 1 assumptions; retained as caveats rather than current truth |
+| `phase2/docs/spec_phase2_oscd_seg.md` | `notes/methods.md`, `notes/experiments.md`, `docs/RUNBOOK.md`, `project_cli.py` | OSCD segmentation data flow, raw/prior channel definitions, model families, losses, metrics, config matrix, and future damage-adapter boundary |
+| `phase2/docs/phase2_report.md` | `notes/experiments.md`, `notes/research_paper_plan.md`, `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md` | old single-seed Phase 2 table, per-city example logic, visualization strategy, and warning that old raw+DS improvement is superseded by the newer 3-seed sweep |
+| `phase2/docs/phase2_run_guide.md` | `docs/RUNBOOK.md`, `project_cli.py` | training/evaluation/visualization commands and future knobs such as longer training, ImageNet pretraining, and pseudo-label pretraining |
+| `phase2/docs/phase2_scripts_cli.md` | `project_cli.py`, `docs/RUNBOOK.md` | old command cheat sheet; replaced by `project_cli.py` wrappers and runbook commands |
+| `phase1/docs/figs/`, `phase2/docs/figs/` | none active | generated figures only; removed from active docs to reduce clutter. Recover from Git history or regenerate from outputs/scripts if needed |
+
+Important retained caveat:
+
+- Old phase docs say residual-stack DS outperformed eig/canonical DS and that single-seed raw+DS improved OSCD segmentation. Those statements are historical. Current active evidence is the corrected DS audit plus the 3-seed v5 sweep; do not cite the old phase docs as current truth.

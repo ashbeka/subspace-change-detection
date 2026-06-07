@@ -1,6 +1,5 @@
 """
 DS core utilities for Phase 1 change detection.
 
-See docs/spec_phase1_ds_oscd.md for full requirements.
+See notes/methods.md for the current DS interpretation and paper-to-code caveats.
 """
-

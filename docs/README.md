@@ -59,6 +59,8 @@ The active thinking files are:
 
 `docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into the active `../notes/` files and project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
 
+The old `phase1/docs/` and `phase2/docs/` folders were also removed after consolidation. Their useful commands, method details, historical result caveats, and experiment plans now live in `../notes/methods.md`, `../notes/experiments.md`, and `RUNBOOK.md`. Their generated figures were not kept as active docs; regenerate or recover from Git history only if a specific figure is needed.
+
 ## Research Notes Rule
 
 `../notes/` is the current active notes location.
