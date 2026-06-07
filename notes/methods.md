@@ -17,6 +17,7 @@
 - [Projection Back To Image Space](#projection-back-to-image-space)
 - [Method Caveats](#method-caveats)
   - [Subspace code reading path](#subspace-code-reading-path)
+  - [Paper-to-code verification](#paper-to-code-verification)
   - [Prior folder naming](#prior-folder-naming)
   - [Baseline interpretation](#baseline-interpretation)
   - [Phase 1 thresholding vs Phase 2 priors](#phase-1-thresholding-vs-phase-2-priors)
@@ -392,6 +393,20 @@ Use this order when re-checking the DS/KDS implementation:
    - Code version of the kernel coefficient/projection equations.
 
 Read the TPAMI 2015 DS/GDS paper before interpreting the Venus KDS/KGDS code, and read S3CCA only after the current DS construction is clear.
+
+### Paper-to-code verification
+
+Current tests should be treated as method-verification guards, not as a claim that the codebase is final.
+
+For each paper-derived method, keep a small verification path:
+
+- restate the mathematical input/output object and dimensions;
+- test toy cases from the paper logic, such as equal subspaces producing zero/empty DS;
+- compare against trusted reference code when available;
+- check map semantics, for example whether a DS score is a projection energy, residual energy, normalized ratio, or thresholded mask;
+- record where implementation choices depart from the paper, such as global pixel samples versus image-set samples.
+
+This applies first to DS/KDS and then to PCA-diff, Celik PCA-kmeans, IR-MAD, CVA, GDS/KGDS, CCA/KCCA/S3CCA, and future spatial/temporal variants.
 
 ### Prior folder naming
 

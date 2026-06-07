@@ -22,6 +22,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 - Organized Chrome import URLs: `369` including `7` manual post-import additions.
 - Duplicate URLs found in export: `0`
 - Zotero context: use the high-priority paper list below to manually import the important papers first.
+- Local PDF copies in `references/reference_papers/` were removed after their ideas and public links were represented here and in `notes/literature.md`; the only retained PDF is the human-motion MVA paper without a reliable public URL.
 
 ## Category Counts
 
@@ -92,7 +93,7 @@ These were added after the 2026-06-07 Chrome export. They do not change the raw 
 | medium | [Image-set based Classification using Multiple Pseudo-whitened Mutual Subspace Method](https://www.scitepress.org/Papers/2022/108365/108365.pdf) | local PDF source was missing from organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
 | low | [Efficient Skeleton-Based Action Recognition using Superposed Shape Subspace](https://cir.nii.ac.jp/crid/1390869390127946880) | local PDF source was missing from organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
 
-No reliable public URL was found for `MVA_2025_human_motion_analysis.pdf` during this pass. Its idea is ingested in `notes/literature.md`, `notes/methods.md`, and `notes/experiments.md`, but the source itself is not safe in Chrome/Zotero unless a public record is found or the PDF is preserved elsewhere.
+No reliable public URL was found for `MVA_2025_human_motion_analysis.pdf` during this pass. Its idea is ingested in `notes/literature.md`, `notes/methods.md`, and `notes/experiments.md`, but the source itself is not safe in Chrome/Zotero unless a public record is found or the PDF is preserved elsewhere. Keep that local PDF until the user either finds a public source or imports it into Zotero manually.
 
 ## Implementation References To Keep Visible
 

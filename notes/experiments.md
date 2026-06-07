@@ -296,6 +296,12 @@ The old archive documents were reviewed in repeated passes: inventory, useful-cl
 
 The `docs/archive/` folder was removed after the final review. The tracked files remain recoverable through Git/GitHub history. Active truth now lives in `notes/`, `docs/PROJECT_BRIEF.md`, `docs/RUNBOOK.md`, and accepted result reports under `docs/experiment_reports/`.
 
+Testing policy:
+
+- Keep narrow formula-verification tests for paper-derived methods, especially DS/KDS dimensionality, equal-subspace behavior, RKHS normalization, and projection-energy semantics.
+- Do not overbuild broad application/regression tests around old code paths while the research problem and dataset choice are still being reframed.
+- When adding a new baseline or method, pair it with a small toy test or reference-code comparison before using its outputs as research evidence.
+
 ## Research-Notes Ingestion Ledger
 
 Source repo: nested `research-notes/` at commit `44f2671`, clean against `origin/main` at ingestion time.

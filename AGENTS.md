@@ -167,6 +167,19 @@ Negative results are valuable. If DS, KDS, or priors do not help, report that ho
 
 For external novelty or literature claims, use online research and cite sources. Do not search only for confirmation.
 
+## Paper-To-Code Verification
+
+The project is still being reframed, so do not build a large brittle test suite around every old code path. However, keep and prioritize small formula-verification tests for methods translated from papers.
+
+Use tests and audits to answer:
+
+- Does the implementation match the paper's mathematical object, dimensions, and edge cases?
+- Does a reference implementation or toy example produce the same behavior?
+- Does the code fail gracefully for equal/shared subspaces, invalid ranks, masks, and degenerate inputs?
+- Does the produced score map mean what the method claims it means?
+
+This is especially important for DS, GDS, KDS, KGDS, PCA-diff, Celik PCA-kmeans, IR-MAD, CVA, CCA/KCCA/S3CCA, and any future spatial or temporal subspace variant. Formula-verification tests are not proof that the research problem is solved; they are guards against hallucinated or paper-inaccurate implementations.
+
 ## Current Priority
 
 Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace audit:

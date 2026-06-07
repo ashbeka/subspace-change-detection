@@ -46,6 +46,8 @@ research-notes/
 
 # Reference code and external papers/presentations
 references/reference_code/
+references/reference_papers/*.pdf
+!references/reference_papers/MVA_2025_human_motion_analysis.pdf
 
 # Model checkpoints
 *.ckpt

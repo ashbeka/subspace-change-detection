@@ -203,8 +203,11 @@ Additional references and code leads from old archive notes:
 |---|---|
 | Fukui et al., second-order Difference Subspace | Relevant if the project moves from pairwise DS to richer subspace relationships. |
 | Kanai et al. 2023, time-series anomaly detection based on DS between signal subspaces | Useful example that DS-like reasoning can support anomaly/change settings beyond classification. |
+| Elhamifar and Vidal 2013, Sparse Subspace Clustering | Future clustering or pseudo-label baseline; useful only if a clear change-feature clustering experiment is defined. |
 | U-Net | Required background for Phase 2 segmentation model. |
 | ResNet | Required only if ResNet-backbone experiments are used. |
+| MVA 2025 hand-shape SSS paper | Superposed shape subspace and key-frame selection analogy for patch-stack or key-date satellite subspaces. |
+| MVA 2025 human-motion shape-subspace paper | Uses DS between shape subspaces to measure whole-motion variation, landmark contribution, and coordination; future analogy for band/patch/date contribution analysis. No reliable public URL is currently available. |
 | MagTool reference code | Useful for projector/eigen and subspace-magnitude cross-checking; not ground truth. |
 | DS shape/motion reference code | Useful because it uses projector-eigen style DS close to the repaired `eig` path. |
 | MATLAB Subspace Toolbox | Useful for PCA, KPCA, CCA, and Kernel CCA implementation cross-checks. |
