@@ -23,10 +23,12 @@ The project does **not** currently implement end-to-end disaster damage segmenta
 Use `project_cli.py` as the main command surface for checks, listings, common runs, formula tests, and cleanup previews:
 
 ```powershell
+.\.venv\Scripts\python.exe project_cli.py
 .\.venv\Scripts\python.exe project_cli.py doctor
 .\.venv\Scripts\python.exe project_cli.py list all
-.\.venv\Scripts\python.exe project_cli.py interactive
 ```
+
+Running it with no subcommand opens the interactive command center. Use `list commands` and `list configs` when you want the full command/config inventory without entering the menu.
 
 ## Repository Map
 

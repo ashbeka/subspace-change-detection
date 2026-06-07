@@ -116,12 +116,14 @@ $device="cuda"
 Central CLI:
 
 ```powershell
+.\.venv\Scripts\python.exe project_cli.py
 .\.venv\Scripts\python.exe project_cli.py doctor
 .\.venv\Scripts\python.exe project_cli.py list all
-.\.venv\Scripts\python.exe project_cli.py interactive
+.\.venv\Scripts\python.exe project_cli.py list commands
+.\.venv\Scripts\python.exe project_cli.py list configs
 ```
 
-Use the CLI for common checks and wrapped runs. The explicit commands below remain documented for reproducibility and debugging.
+Use the CLI as the main command surface for checks, inventories, prior generation, training, evaluation, sweeps, visualization, and cleanup previews. Running it with no subcommand opens the interactive command center; every menu action prints the exact command before execution. The explicit commands below remain documented for reproducibility and debugging.
 
 ## 3. Data Layout
 
