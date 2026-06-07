@@ -65,6 +65,18 @@ Signal Latent Subspace:
 - The paper proposes subspaces from neural-network latent features, combines multiple latent-feature subspaces using product Grassmann manifold, and uses GDS projection to improve between-class discrimination.
 - Use it as a method analogy for possible satellite experiments using pretrained/fine-tuned remote-sensing feature extractors, not as evidence that OSCD or greenhouse mapping is solved.
 
+Temporal and image-set subspace ideas:
+
+- Suryanto, Xue, and Fukui's Randomized Time Warping turns one ordered sequence into many randomly sampled time-elastic feature vectors, preserving temporal order but allowing speed variation; those vectors form a sequence-hypothesis subspace compared by canonical angles. Use this as a future MultiSenGE idea for comparing ordered date sequences, not two-date OSCD.
+- Hiraoka and Fukui's Deep RTW keeps the RTW idea but replaces raw time-elastic vectors with CNN features from 2D/3D networks. Use this as a bridge toward remote-sensing encoder features plus temporal subspace matching.
+- Kobayashi's PCA-SFA uses slow feature analysis to describe frame-feature sequences while handling small sample size through PCA subspaces. Use it as a candidate way to distinguish slowly varying seasonal/background components from abrupt change when a dataset has enough dates.
+- Beleza et al.'s Slow Feature Subspace builds a subspace from the slowest SFA weight vectors, explicitly targeting the temporal-information loss of ordinary PCA video subspaces. Use it as a warning that unordered PCA over time can erase the temporal structure Sensei is worried about.
+- Batalo et al.'s temporal tensor/Product Grassmann work represents tensor modes as subspaces and adds Hankel-like temporal embedding, then uses geodesic distances for visualization and clustering. Use it as a future route for spatial-spectral-temporal satellite tensors, especially when labels are absent.
+- Souza et al.'s Grassmannian Learning Mutual Subspace Method embeds a learnable subspace-matching layer on top of CNN features and learns dictionary subspaces on the Grassmann manifold. Use it as a possible neural/subspace hybrid if hand-designed DS priors are too weak.
+- Yamaguchi and Fukui's Multiple Pseudo-Whitened Mutual Subspace Method uses multiple pseudo-whitening transformations and canonical-angle similarities to improve robustness and discrimination in image-set classification. Use it as a discriminative-subspace reference, not as a direct change-map method.
+- The superposed shape-subspace MVA hand-action paper stacks multiple skeleton frames into one high-dimensional subspace and selects informative frames for efficient CPU classification. Use it as an analogy for key-date or patch-stack selection in satellite sequences.
+- The MVA human-motion shape-subspace paper uses DS between shape subspaces to measure whole-motion variation, landmark contribution, and coordination between body parts. Use it as an analogy for future attribution: which bands, patches, or regions contribute to a change subspace and how different regions move together.
+
 ## Reference Code
 
 Bundled code in this repo:

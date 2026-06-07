@@ -267,7 +267,15 @@ Acceptance checks:
    - Compare latent-feature DS/GDS against raw spectral DS, local/window DS, PCA-diff, and the neural baseline.
    - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
 
-16. xBD-S12 metric protocol audit:
+16. Temporal subspace literature pilots:
+   - RTW/Deep RTW pilot: for MultiSenGE or Harmonized Sentinel-2 L2A sequences, randomly sample ordered date subsequences, build sequence-hypothesis subspaces, and compare them to same-season or event-window references.
+   - SFA/SFS pilot: learn slowly varying temporal components from aligned date sequences, then test whether residuals or slow-feature subspaces separate seasonal drift from abrupt land-cover change.
+   - Product-Grassmann/Hankel pilot: represent one patch as multiple subspace factors, such as spectral, spatial, and temporal/Hankel factors, then use geodesic distances for clustering or anomaly ranking.
+   - G-LMSM/SLS pilot: use remote-sensing encoder features to build patch/date latent subspaces, then compare hand-built DS maps against learned Grassmann subspace matching.
+   - Shape-subspace attribution pilot: adapt the human-motion DS idea by reporting which bands, patch regions, or date windows contribute most to the difference subspace.
+   - Do not start these before the spatial OSCD audit; these are method-expansion tracks, not current evidence.
+
+17. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.

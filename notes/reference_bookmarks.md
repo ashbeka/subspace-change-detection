@@ -19,7 +19,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 - Organized Chrome import file: `docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html`
 - Raw export URLs preserved: `362`
 - Raw export unique URLs: `362`
-- Organized Chrome import URLs: `363` including `1` manual post-import addition.
+- Organized Chrome import URLs: `369` including `7` manual post-import additions.
 - Duplicate URLs found in export: `0`
 - Zotero context: use the high-priority paper list below to manually import the important papers first.
 
@@ -28,7 +28,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 | category | count | use |
 |---|---:|---|
 | 01 Must Read - Zotero First | 27 | read/import first; core thesis references |
-| 02 Subspace Temporal CCA KPCA Methods | 21 | method expansion and implementation references |
+| 02 Subspace Temporal CCA KPCA Methods | 27 | method expansion and implementation references |
 | 03 Remote Sensing Change Detection And Applications | 117 | related work and application context |
 | 04 Datasets Benchmarks And Data Portals | 23 | dataset/protocol references |
 | 05 Implementation Reference Code | 15 | codebases to inspect or reproduce |
@@ -71,6 +71,12 @@ Start here. Some papers appear as arXiv/PDF/IEEE duplicates; import one canonica
 | high | [[2511.05461] The Potential of Copernicus Satellites for Disaster Response: Retrieving Building Damage from Sentinel-1 and Sentinel-2](https://ar5iv.labs.arxiv.org/html/2511.05461v1) | damage dataset / warm extension |
 | high | [[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection](https://arxiv.org/abs/2303.09536) | modern unsupervised CD pressure |
 | medium | [[2508.16366] Attention Mechanism in Randomized Time Warping](https://arxiv.org/abs/2508.16366) | Sensei/Hiraoka RTW lead; future temporal/subspace method reading |
+| medium | [Randomized Time Warping for Motion Recognition](https://discovery.ucl.ac.uk/id/eprint/1508467/) | RTW source paper; future multi-date sequence-subspace idea |
+| medium | [Deep Randomized Time Warping for Action Recognition](https://cir.nii.ac.jp/crid/1390016892186211456) | CNN-feature RTW; future deep temporal subspace idea |
+| medium | [Feature Sequence Representation Via Slow Feature Analysis For Action Classification](https://staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf) | PCA-SFA; future slow/seasonal-vs-abrupt temporal analysis |
+| medium | [Analysis of Temporal Tensor Datasets on Product Grassmann Manifold](https://openaccess.thecvf.com/content/CVPR2022W/VDU/html/Batalo_Analysis_of_Temporal_Tensor_Datasets_on_Product_Grassmann_Manifold_CVPRW_2022_paper.html) | Product Grassmann + Hankel-like temporal embedding; future multi-factor satellite tensor idea |
+| medium | [Image-set based Classification using Multiple Pseudo-whitened Mutual Subspace Method](https://www.scitepress.org/Papers/2022/108365/108365.pdf) | discriminative/pseudo-whitened mutual subspace reference |
+| low | [Efficient Skeleton-Based Action Recognition using Superposed Shape Subspace](https://cir.nii.ac.jp/crid/1390869390127946880) | shape-subspace/key-frame selection analogy; future patch/key-date idea |
 
 ## Manual Additions After Bookmark Import
 
@@ -79,6 +85,14 @@ These were added after the 2026-06-07 Chrome export. They do not change the raw 
 | priority | item | why |
 |---|---|---|
 | medium | [Signal latent subspace: A new representation for environmental sound classification](https://www.sciencedirect.com/science/article/abs/pii/S0003682X24003323) | Fukui co-authored subspace + DNN latent-feature method; useful future bridge for deep-feature DS/GDS, product Grassmann fusion, and small-sample subspace thinking |
+| medium | [Randomized Time Warping for Motion Recognition](https://discovery.ucl.ac.uk/id/eprint/1508467/) | local PDF source was not cleanly represented in active bookmark triage; added to `02 Subspace Temporal CCA KPCA Methods` |
+| medium | [Deep Randomized Time Warping for Action Recognition](https://cir.nii.ac.jp/crid/1390016892186211456) | local PDF source was missing from organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
+| medium | [Feature Sequence Representation Via Slow Feature Analysis For Action Classification](https://staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf) | local PDF source was not cleanly represented in organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
+| medium | [Analysis of Temporal Tensor Datasets on Product Grassmann Manifold](https://openaccess.thecvf.com/content/CVPR2022W/VDU/html/Batalo_Analysis_of_Temporal_Tensor_Datasets_on_Product_Grassmann_Manifold_CVPRW_2022_paper.html) | local PDF source was not cleanly represented in organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
+| medium | [Image-set based Classification using Multiple Pseudo-whitened Mutual Subspace Method](https://www.scitepress.org/Papers/2022/108365/108365.pdf) | local PDF source was missing from organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
+| low | [Efficient Skeleton-Based Action Recognition using Superposed Shape Subspace](https://cir.nii.ac.jp/crid/1390869390127946880) | local PDF source was missing from organized bookmarks; added to `02 Subspace Temporal CCA KPCA Methods` |
+
+No reliable public URL was found for `MVA_2025_human_motion_analysis.pdf` during this pass. Its idea is ingested in `notes/literature.md`, `notes/methods.md`, and `notes/experiments.md`, but the source itself is not safe in Chrome/Zotero unless a public record is found or the PDF is preserved elsewhere.
 
 ## Implementation References To Keep Visible
 

@@ -258,6 +258,12 @@ Multi-date subspace methods:
 - Second-order DS is the natural next subspace idea for progression/recovery, but it requires at least three meaningful time points or period subspaces.
 - Period-subspace DS should use multiple images per side when available, for example early-month versus late-month, first half-year versus second half-year, or pre-event window versus post-event window.
 - SSA, SFA, DMD, RTW, and Fourier time-series analysis are future temporal tools. They need enough temporal depth and a clear target before implementation.
+- RTW/Deep RTW suggests a way to compare date sequences without assuming events happen at the same temporal speed: randomly sample ordered date subsequences, build a sequence subspace, and compare subspaces by canonical angles or DS/GDS. This is only meaningful for multi-date data, not OSCD's two dates.
+- PCA-SFA and Slow Feature Subspace suggest a way to separate slow/background temporal variation from faster anomalous change. A satellite version would need same-season or dense time series so "slow" does not simply mean seasonal drift.
+- Product Grassmann and Hankel-like temporal embeddings suggest treating satellite data as factors, for example spectral subspace, local spatial/patch subspace, and temporal/date subspace, instead of flattening everything into one unordered pixel matrix.
+- G-LMSM and Signal Latent Subspace suggest a neural-subspace hybrid: extract CNN/foundation-model features, build subspaces from patch/date features, and either compare them geometrically or learn dictionary subspaces on the Grassmann manifold.
+- Pseudo-whitened mutual subspace methods suggest a discriminative projection step before subspace comparison. For this project, that would require labels or reliable pseudo-labels and should not be mixed into unsupervised DS claims.
+- Shape-subspace and superposed-shape-subspace papers are useful because they turn spatial structure into subspace geometry. The satellite analogy is patch-stack or key-date subspaces that preserve local geometry better than global unordered pixel PCA.
 
 Spatial and interpretability variants:
 
