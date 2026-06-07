@@ -39,6 +39,8 @@ Read these first:
   - Raw Chrome bookmark export preserved before organization.
 - `chrome_bookmarks_organized_research_2026-06-07.html`
   - Importable organized Chrome bookmark file preserving every URL once.
+- `presentations/legacy_2025_oscd_ds_seminar/`
+  - Historical seminar slide PNGs and talk notes. These are provenance, not current evidence; some result claims were superseded by later controlled sweeps.
 
 These files are preserved as provenance. They are not the active project truth. Useful knowledge from them should be reflected in `../notes/` or the active docs.
 

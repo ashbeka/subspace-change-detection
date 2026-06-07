@@ -18,6 +18,16 @@ The project does **not** currently implement end-to-end disaster damage segmenta
 - [Runbook](docs/RUNBOOK.md): commands for setup, checks, Phase 1 prior generation, Phase 2 training/evaluation, sweeps, visualization, and cleanup.
 - [Research Notes](notes/README.md): feedback, method understanding, literature triage, and experiment planning.
 
+## Central CLI
+
+Use `project_cli.py` as the main command surface for checks, listings, common runs, formula tests, and cleanup previews:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py doctor
+.\.venv\Scripts\python.exe project_cli.py list all
+.\.venv\Scripts\python.exe project_cli.py interactive
+```
+
 ## Repository Map
 
 ```text
@@ -52,6 +62,8 @@ notes/
   literature.md
   experiments.md
   reference_bookmarks.md
+
+project_cli.py  central command wrapper for checks, runs, sweeps, and cleanup
 ```
 
 ## Minimal Smoke Check

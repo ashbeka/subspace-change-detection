@@ -64,6 +64,7 @@ This question is also draft. If a better research gap is found, update the frami
 - Do not create new files unless the file has a clear responsibility and cannot fit into the existing structure.
 - Avoid "AI slop": redundant documents, vague names, repeated summaries, or inflated claims.
 - When a terminal command is useful for the user, provide the exact command.
+- Prefer `project_cli.py` for common project checks, run listings, formula tests, wrapped sweeps, and cleanup previews. Use raw script commands when debugging or when the CLI does not expose the needed option.
 - If an action is destructive, broad, or expensive, propose the plan first and wait.
 - Do not run long training, large sweeps, large cleanup, or major restructuring without explicit approval.
 - Lightweight smoke tests, inspections, and audits are allowed when useful.

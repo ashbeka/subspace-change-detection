@@ -1,6 +1,6 @@
 # References (short list for slides)
 
-Use these as a "References" backup slide. All PDFs below exist under `references/reference_papers/` unless noted.
+Historical slide reference list. This folder is preserved as a legacy seminar source record, not current truth. Most local PDF copies were removed after their ideas and public links were ingested into `notes/literature.md` and `notes/reference_bookmarks.md`.
 
 ## Difference Subspace (DS)
 - Fukui, K. and Maki, A. (2015). Difference Subspace and Its Generalization for Subspace-Based Methods.
@@ -27,4 +27,3 @@ Use these as a "References" backup slide. All PDFs below exist under `references
 ## Dataset (OSCD benchmark used here)
 - OSCD / Onera Satellite Change Detection dataset (Daudt et al.).
   - Note: the OSCD dataset paper/PDF is not included in `references/` in this repo; cite the official OSCD release/webpage or the original Daudt et al. paper used with OSCD.
-

@@ -64,10 +64,9 @@ Add one limitation bullet:
 If your audience is not already familiar with your project, adding a dedicated slide helps.
 
 ### Add a References slide (near the end or as backup)
-Use `presentation/REFERENCES.md` as your source list.
+Use `REFERENCES.md` in this same legacy presentation folder as the historical source list. For current references, use `notes/literature.md` and `notes/reference_bookmarks.md`.
 
 ### Add one "method in one equation" backup slide
 Just show:
 - delta = x_post - x_pre
 - score = || D^T delta ||^2 where D is a DS basis
-

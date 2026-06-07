@@ -113,6 +113,16 @@ GPU default:
 $device="cuda"
 ```
 
+Central CLI:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py doctor
+.\.venv\Scripts\python.exe project_cli.py list all
+.\.venv\Scripts\python.exe project_cli.py interactive
+```
+
+Use the CLI for common checks and wrapped runs. The explicit commands below remain documented for reproducibility and debugging.
+
 ## 3. Data Layout
 
 OSCD must exist at:
@@ -565,13 +575,19 @@ prompt_stuff/
 Safe cleanup preview:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File clean_house.ps1 -WhatIf
+.\.venv\Scripts\python.exe project_cli.py cleanup
 ```
 
 Aggressive cleanup preview:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File clean_house.ps1 -Aggressive -WhatIf
+.\.venv\Scripts\python.exe project_cli.py cleanup --aggressive
+```
+
+Apply cleanup only after reading the preview:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py cleanup --apply
 ```
 
 Actual aggressive cleanup requires an explicit keep-list decision first. Do not delete:

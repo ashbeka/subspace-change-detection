@@ -350,7 +350,7 @@ Main guardrails:
 - Phase 2 prior channels are continuous maps, not thresholded labels.
 - Threshold metrics and ranking metrics answer different questions; report both.
 - Probability-map saving or rerun-based threshold sweeps are needed for true threshold tuning.
-- `clean_house.ps1 -Aggressive` requires an explicit keep-list and user approval.
+- `project_cli.py cleanup --aggressive --apply` requires an explicit keep-list decision and user approval.
 
 Future hooks to keep out of the main claim for now:
 
