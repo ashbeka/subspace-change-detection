@@ -207,54 +207,61 @@ Acceptance checks:
    - Then test local/windowed or patch-vector KDS.
    - Track memory and runtime carefully.
 
-5. MultiSenGE GDS/KGDS prototype:
+5. Reference-code method family screen:
+   - Review the bundled DS, MagTool, and MATLAB Subspace Toolbox code as an implementation menu, not as runtime dependencies.
+   - Candidate families: KPCA/KDS, CCA/KCCA, S3CCA/TRCCA/KOTRCCA, MSM/KMSM/CMSM/KCMSM, RTW/SFA/temporal tensor methods, and Grassmann magnitude/decomposition tools.
+   - For each family, define which satellite object it operates on: global 13-band pixels, `k x k x 13` patches, local windows, date subspaces, or deep-feature embeddings.
+   - Produce a one-city smoke result before promoting any family to the main research path.
+   - Required comparison floor: raw L2, PCA-diff, corrected canonical/eig DS, and the current best supervised baseline when applicable.
+
+6. MultiSenGE GDS/KGDS prototype:
    - Build one subspace per date.
    - Use GDS/KGDS to extract multi-date difference directions.
    - Interpret through clustering, temporal grouping, or weak labels.
 
-6. Phase 2 follow-up after spatial audit:
+7. Phase 2 follow-up after spatial audit:
    - E0 raw-only.
    - raw + global canonical DS.
    - raw + best spatially aware DS prior.
 
-7. DS scalar change-map construction:
+8. DS scalar change-map construction:
    - Current DS prior is `||D^T (x_post - x_pre)||^2`.
    - Compare squared projection norm, unsquared norm, normalized projection energy, residual energy, and ratios such as `||D^T delta||^2 / ||delta||^2`.
    - Compare per-city vs global normalization.
    - Compare Otsu thresholding, validation-selected thresholds, and no thresholding before supervised U-Net input.
    - Check whether the scalar score map agrees with the reconstructed DS norm map from the projection-visualization task.
 
-8. Phase 1 score-normalization audit:
+9. Phase 1 score-normalization audit:
    - Compare raw scores, percentile-clipped scores, and min-max-normalized scores.
    - Report whether normalization changes AUROC/PR-AUC, Otsu thresholds, best F1/IoU, and Phase 2 prior behavior.
    - Keep the wording clear: score normalization is an engineering step, not DS theory.
 
-9. Saved-prior alignment audit:
+10. Saved-prior alignment audit:
    - For a few cities, verify prior-map shape, city name, split, and spatial alignment against OSCD pre/post tiles and masks.
    - This is needed because smoke checks only proved one patch/channel load, not full prior alignment.
 
-10. MultiSenGE pairing and seasonality audit:
+11. MultiSenGE pairing and seasonality audit:
    - Compare earliest/latest pairing against within-season pairings and date-windowed pairings.
    - Add snow/cloud/invalid-scene checks before DS/PCA-diff map generation.
    - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
-11. IR-MAD fair-comparison audit:
+12. IR-MAD fair-comparison audit:
    - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
    - Do not claim IR-MAD is weak from old runs unless this audit supports it.
 
-12. Multi-date / period-subspace DS feasibility audit:
+13. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.
    - Compare earliest/latest, adjacent, same-season, and period-window pairings.
    - Test first-order DS before second-order DS, GDS, or KGDS.
    - Do not use unlabeled MultiSenGE visuals as performance evidence without an evaluation proxy.
 
-13. Band-group attribution audit:
+14. Band-group attribution audit:
    - Compute DS basis energy by Sentinel-2 band or band group.
    - Compare VIS, red-edge, NIR, SWIR, and atmospheric bands.
    - Use this to explain whether maps are likely surface change, vegetation/soil moisture, or atmospheric artifact.
 
-14. SSC change-type clustering pilot:
+15. SSC change-type clustering pilot:
    - Only after the spatial DS audit.
    - Input candidates: raw delta, DS projection coefficients, PCA-diff features, patch/deep features.
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.

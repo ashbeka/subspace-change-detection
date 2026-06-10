@@ -514,6 +514,30 @@ OSCD KDS is possible but not yet specified enough to claim:
 
 CCA/S3CCA and KCCA are separate future routes. They matter because they can preserve or compare structured sample relationships, while current global PCA treats pixels as exchangeable columns. Do not present CCA, KCCA, or S3CCA as implemented in the active OSCD pipeline.
 
+Reference-code method expansion backlog:
+
+- The bundled reference code contains more than DS/KDS. It includes PCA, KPCA, CCA, Kernel CCA, kernel basis construction, canonical-angle similarity, mutual-subspace variants, RTW-style temporal matching, Grassmann utilities, and subspace-magnitude/decomposition utilities.
+- Treat these implementations as reliable starting points and cross-check material, not ground truth. Each candidate method still needs a paper-to-code verification note, toy tests, dimensional checks, and an OSCD/MultiSenGE-specific adaptation plan.
+- Candidate data objects for our satellite setting:
+  - global pixel samples: one column is one 13-band pixel;
+  - patch samples: one column is one flattened `k x k x 13` patch;
+  - local-window subspaces: one subspace is built per image region;
+  - date subspaces: one subspace is built per Sentinel-2 date in a multi-temporal sequence;
+  - deep-feature samples: one column is an encoder feature, patch embedding, or tile/date embedding.
+- Candidate method families to screen:
+  - KPCA/KDS: nonlinear version of the current PCA/DS idea, likely requiring sampling, Nyström prototypes, or local windows;
+  - CCA/KCCA: compare two views of the data, such as pre/post, spectral/spatial features, raw/deep features, or date-pair representations;
+  - S3CCA/TRCCA/KOTRCCA: structured or temporal CCA routes if the project shifts toward patch sequences or multi-date Sentinel-2;
+  - MSM/KMSM/CMSM/KCMSM: image-set/subspace classifiers that may become useful if we define pseudo-classes, change types, or labeled object/date groups;
+  - RTW/SFA/temporal tensor/Product-Grassmann methods: future multi-date routes for preserving time ordering rather than treating dates as unordered samples;
+  - Grassmann magnitude/decomposition tools: useful for attribution, region comparison, and first/second-order change analysis.
+- Minimum evidence gate before any family becomes a real project method:
+  - identify the exact reference files and paper equations;
+  - define samples, features, labels/evaluation proxy, and output map semantics;
+  - show a small city-level smoke result with runtime and memory;
+  - compare against raw L2, PCA-diff, canonical/eig DS, and a modern neural baseline when relevant;
+  - record whether the method preserves spatial position, temporal order, both, or neither.
+
 ### Deep-feature subspace gap
 
 The Signal Latent Subspace paper suggests a different adaptation: instead of fitting subspaces directly on raw Sentinel-2 band vectors, first extract latent features from a neural model and then build subspaces from those features.

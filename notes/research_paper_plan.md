@@ -173,11 +173,17 @@ Variants to compare:
    - future nonlinear extension
    - should use sampling, Nyström/prototypes, or local windows because full pixel KPCA is too expensive
 
-5. MultiSenGE GDS/KGDS
+5. Reference-code method family screen
+   - use bundled DS, MagTool, and MATLAB Subspace Toolbox code as a menu of possible method families
+   - candidates include KPCA/KDS, CCA/KCCA, structured/temporal CCA, mutual-subspace methods, RTW/SFA/temporal tensor methods, and Grassmann magnitude/decomposition tools
+   - each candidate must first be adapted to a specific satellite sample type: pixel, patch, local window, date subspace, or deep-feature embedding
+   - do not promote any candidate into the thesis argument without a one-city smoke result and a comparison against simple baselines
+
+6. MultiSenGE GDS/KGDS
    - future multi-date extension
    - useful for temporal difference spaces, but semantic interpretation needs clustering, labels, or weak supervision
 
-6. Deep-feature latent subspaces
+7. Deep-feature latent subspaces
    - future method bridge inspired by Mahyub et al. 2024 Signal Latent Subspace
    - one sample could be a patch/tile/date embedding from a remote-sensing model rather than a raw 13-band pixel
    - useful only if it answers the spatial-information problem better than raw pixel DS
