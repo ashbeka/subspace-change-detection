@@ -115,6 +115,26 @@ Do not make a new "gap file" by default. Create one only if gap tracking across 
 
 Research-gap tracking should be dataset-agnostic when possible. For example, state "Do subspace priors preserve spatial structure in multispectral change detection?" before narrowing to "Does this hold on OSCD?" This keeps the project flexible when Sensei suggests new datasets such as Harmonized Sentinel-2 L2A.
 
+## Reference Code Discovery
+
+Reference code added by the user, senpais, advisors, old projects, or external repos should be treated as research material before it is treated as clutter.
+
+When new reference code appears:
+
+- Inventory it by folder, language, entry points, dependencies, and implemented method families.
+- Check whether active project code imports it. If not, label it as reference-only rather than useless.
+- Identify what concepts it implements, such as PCA, KPCA, DS, GDS, KDS, KGDS, CCA/KCCA, S3CCA/TRCCA, MSM/KMSM, RTW, SFA, Grassmann geometry, attribution, or metric/decomposition utilities.
+- Map each useful concept to a possible project role: paper-to-code verification, baseline implementation, future experiment, advisor explanation, visualization, or thesis related work.
+- Record where the useful knowledge belongs in the active structure:
+  - `notes/methods.md` for algorithm details and adaptation ideas;
+  - `notes/experiments.md` for candidate experiments and evidence gates;
+  - `notes/literature.md` for paper/code provenance and citation context;
+  - `notes/research_paper_plan.md` only if it affects the paper-facing research path.
+- Do not assume reference code is ground truth. Compare it with papers, toy tests, dimensions, and active code behavior.
+- Do not delete or archive reference code just because it is unused by runtime. First explain what it can teach us, what is irrelevant, what is duplicated, and what would be required to adapt it.
+
+The goal is project self-scanning: when files or folders are added, Codex should ask "what can this teach or enable?" before deciding "what can be removed?"
+
 ## Notes And Docs Structure
 
 Use this split:
