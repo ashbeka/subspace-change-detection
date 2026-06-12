@@ -101,6 +101,7 @@ These notes are distilled from Apple Notes, Slack notes, Sensei messages, the up
   - decompose an image into different levels or bands;
   - preserve informative local structure;
   - maybe compare pre/post decomposed components rather than only global pixels.
+- Another remembered senpai idea: take the whole image and build one subspace, then divide the image into `2x2` parts and build four subspaces, then `4x4` parts and build 16 subspaces, and continue finer. Then combine the subspace responses across scales. This feels related to wavelets/JPEG/multiresolution representation because it keeps coarse/global and fine/local spatial information.
 - These ideas should not become the main thesis automatically, but they are important candidates for spatially aware features before DS/KDS/SSC.
 
 ### 3.5 CCA, KCCA, And Structured Matching Ideas

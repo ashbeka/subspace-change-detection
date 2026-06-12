@@ -8,6 +8,7 @@
 - [3. Data Layout](#3-data-layout)
 - [4. One-Command Liveness Check](#4-one-command-liveness-check)
 - [5. Phase 1: Generate Prior Maps](#5-phase-1-generate-prior-maps)
+- [5A. Phase 1: Spatial Subspace Audit Workflow](#5a-phase-1-spatial-subspace-audit-workflow)
 - [6. Phase 1: MultiSenGE Optional Exploration](#6-phase-1-multisenge-optional-exploration)
 - [7. Phase 2 Config Matrix](#7-phase-2-config-matrix)
 - [8. Phase 2: Short E0/E1 Smoke Run](#8-phase-2-short-e0e1-smoke-run)
@@ -300,6 +301,94 @@ geodesic_dist
 ```
 
 Phase 2 prior loading expects exactly this structure.
+
+## 5A. Phase 1: Spatial Subspace Audit Workflow
+
+Current research priority:
+
+```text
+global pixel DS vs patch-vector DS vs local-window DS
+```
+
+Source-linked implementation rule:
+
+```text
+source material -> math object -> satellite adaptation -> code path -> toy check -> one-city map -> thesis claim
+```
+
+Existing command for current global subspace correctness audit:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-subspace-audit --city beirut --rank 6 --split auto
+```
+
+Equivalent raw command:
+
+```powershell
+.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_subspace.py --city beirut --rank 6 --split auto
+```
+
+What this existing audit proves:
+
+- OSCD loads correctly for one city.
+- The data matrix is `X_pre, X_post in R^(13 x N)`.
+- PCA rank and explained variance can be inspected.
+- Legacy residual-stack DS, repaired eig DS, and canonical DS can be compared against raw spectral L2.
+
+What it does not yet prove:
+
+- patch-vector DS;
+- local-window DS as a controlled comparison;
+- multiscale subspace pyramid;
+- city-level metric maps and visual outputs for the spatial variants.
+
+Next code task:
+
+```text
+implement phase1/scripts/audit_oscd_spatial_subspace.py
+```
+
+Planned first command after that script exists:
+
+```powershell
+$tag = Get-Date -Format "yyyyMMdd_HHmmss"
+.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_spatial_subspace.py `
+  --city beirut `
+  --rank 6 `
+  --methods global_pixel,window128,patch3,patch5 `
+  --output_dir "phase1/outputs/oscd_spatial_subspace_audit_$tag"
+```
+
+Planned outputs:
+
+```text
+metrics.csv
+run_metadata.json
+global_pixel_ds.png
+window128_ds.png
+patch3_ds.png
+patch5_ds.png
+raw_l2.png
+pca_diff.png
+comparison_grid.png
+```
+
+Queued later variant:
+
+```text
+multiscale_subspace_pyramid
+```
+
+This is the wavelet/JPEG/Green-Learning-inspired idea:
+
+```text
+1x1 whole image -> 1 subspace
+2x2 grid       -> 4 subspaces
+4x4 grid       -> 16 subspaces
+8x8 grid       -> 64 subspaces
+```
+
+Do not call this "Green Learning" in results until the exact Green Learning / PixelHop / wavelet source is matched to the implementation.
 
 ## 6. Phase 1: MultiSenGE Optional Exploration
 

@@ -222,6 +222,7 @@ Variants to compare:
    - future route using Green Learning, PixelHop/PixelHop++, wavelet components, or compression-style multiscale features
    - useful only if it preserves spatial information better than global pixel samples
    - should be tested as feature construction before DS/KDS/SSC, not presented as a solved method
+   - specific queued variant: `multiscale_subspace_pyramid`, where the image is represented by subspaces at whole-image, `2x2`, `4x4`, and optionally `8x8` spatial scales, then the scale responses are combined
 
 6. Reference-code method family screen
    - use bundled DS, MagTool, and MATLAB Subspace Toolbox code as a menu of possible method families

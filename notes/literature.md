@@ -75,6 +75,7 @@ Green Learning / PixelHop / wavelets:
 - Apple Notes and senpai feedback suggest Green Learning, PixelHop/PixelHop++, wavelet transforms, and image-compression intuition as spatial-preservation leads.
 - Their possible value is not "another method to add" but a way to build local/multiscale features before subspace comparison.
 - Treat them as literature to read only if the spatial DS audit shows raw global pixel subspaces are insufficient.
+- The remembered pyramid idea, whole image -> `2x2` -> `4x4` -> finer subspaces, should be tracked as `multiscale_subspace_pyramid` until the exact Green Learning / PixelHop / wavelet source is verified.
 
 Signal Latent Subspace:
 

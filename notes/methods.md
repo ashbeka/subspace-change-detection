@@ -16,6 +16,7 @@
 - [12. Spatial Information Problem](#12-spatial-information-problem)
   - [Spatial-subspace novelty boundary](#spatial-subspace-novelty-boundary)
   - [Tensor / n-mode GDS idea](#tensor--n-mode-gds-idea)
+  - [Multiscale subspace pyramid / Green Learning lead](#multiscale-subspace-pyramid--green-learning-lead)
 - [13. Projection Back To Image Space](#13-projection-back-to-image-space)
 - [14. Method Caveats](#14-method-caveats)
   - [Source-linked implementation workflow](#source-linked-implementation-workflow)
@@ -280,6 +281,7 @@ Green Learning / PixelHop / wavelet route:
 - A satellite version would treat local patch responses or multiscale components as the samples/features for DS, KDS, CCA, or SSC rather than using unordered raw pixels.
 - Wavelet and image-compression intuition is relevant because it decomposes image content into scale/frequency components. This may help separate local structure from broad radiometric change.
 - This is a future feature-construction route, not implemented evidence. It should be tested only after the global-vs-spatial DS audit defines what spatial information is missing.
+- Senpai's specific pyramid idea: build one subspace for the whole image, then subspaces for a `2x2` split, then `4x4`, then finer grids; combine or compare subspace responses across scales. This is better called a multiscale subspace pyramid until the exact Green Learning / PixelHop / wavelet reference is confirmed.
 
 Fukui subspace-set overview:
 
@@ -412,6 +414,48 @@ Project role:
 - future method-development track, not immediate OSCD evidence;
 - potentially strong if the thesis shifts from "better prior channel" to "subspace construction for spatial-spectral-temporal satellite tensors";
 - should only be implemented after the simpler global/window/patch audit identifies what structure is actually missing.
+
+### Multiscale subspace pyramid / Green Learning lead
+
+Senpai's wavelet/JPEG-inspired idea can be written as a spatial hierarchy:
+
+```text
+level 0: whole image                         -> 1 subspace
+level 1: split image into 2 x 2 cells        -> 4 subspaces
+level 2: split image into 4 x 4 cells        -> 16 subspaces
+level 3: split image into 8 x 8 cells        -> 64 subspaces
+...
+```
+
+For each spatial cell, build a pre-date subspace and a post-date subspace from the valid 13-band pixels or patch vectors inside that cell, then compute a DS-style score for that cell or for pixels inside it.
+
+Why this matters:
+
+- coarse levels preserve global scene context;
+- fine levels preserve local spatial context;
+- this directly targets Sensei's concern that global pixel DS breaks spatial information;
+- it resembles wavelet/multiresolution thinking because information is represented at several spatial scales;
+- it also resembles Green Learning / PixelHop intuition because local transforms can be stacked from coarse-to-fine or low-to-high detail.
+
+Important caveat:
+
+- Do not call this exact method "Green Learning" until the source paper/notes are matched to the implementation.
+- Safer working name: `multiscale_subspace_pyramid`.
+- First implement it as an audit after global/window/patch DS, not as the first experiment.
+
+Possible score aggregation:
+
+```text
+score_pixel = weighted_sum(level_0_score, level_1_cell_score, level_2_cell_score, ...)
+```
+
+Open implementation questions:
+
+- Should each cell score be constant over the cell, or should each cell fit a local DS basis and then score each pixel inside the cell?
+- What weights should be used across scales: equal, inverse level, validation-selected, or learned?
+- Should cells overlap to reduce block artifacts?
+- Should the pyramid operate on raw 13-band pixels or patch vectors?
+- Should it compare DS projection energy, residual energy, or normalized projection ratio?
 
 Implementation details to preserve:
 

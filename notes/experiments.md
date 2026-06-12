@@ -225,6 +225,14 @@ Acceptance checks:
    - Test whether Green Learning / PixelHop-style local transforms, wavelet components, or patch-compression features preserve spatial information better than raw global pixel samples.
    - Do not implement a full new framework at first. Start with a small feature extraction audit on one OSCD city and compare maps against raw L2, PCA-diff, and corrected DS.
    - Record whether the feature construction improves pseudo-change behavior, spatial continuity, or interpretability.
+   - Include a `multiscale_subspace_pyramid` candidate inspired by Senpai's image-compression/wavelet idea:
+     - whole image: `1` subspace;
+     - `2x2` grid: `4` subspaces;
+     - `4x4` grid: `16` subspaces;
+     - optional `8x8` grid: `64` subspaces.
+   - For each cell, fit pre/post subspaces and either assign a cell-level DS score or score pixels inside the cell using that cell's basis.
+   - Compare pyramid aggregation against local-window DS to see whether explicit multiscale structure helps or just creates block artifacts.
+   - Do not call it Green Learning in results until the exact Green Learning / PixelHop source is matched to the implementation.
 
 6. Reference-code method family screen:
    - Review the bundled DS, MagTool, and MATLAB Subspace Toolbox code as an implementation menu, not as runtime dependencies.
@@ -328,7 +336,15 @@ Acceptance checks:
    - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
    - This is the more explicit hybrid route: geometrical representation over learned features instead of only raw bands.
 
-23. Temporal subspace literature pilots:
+23. Multiscale subspace pyramid pilot:
+   - Run only after global/window/patch DS gives a baseline.
+   - Source status: Senpai idea inspired by wavelets/JPEG/Green Learning; exact formal source still needs verification.
+   - Initial levels: `1x1`, `2x2`, `4x4`; add `8x8` only if runtime is manageable.
+   - Initial scale weights: equal average, then compare coarse-heavy and fine-heavy weights.
+   - Output: per-level maps, weighted map, runtime, block-artifact inspection, and metrics against OSCD.
+   - Baselines: global canonical DS, local-window DS, raw L2/CVA, PCA-diff.
+
+24. Temporal subspace literature pilots:
    - RTW/Deep RTW pilot: for MultiSenGE or Harmonized Sentinel-2 L2A sequences, randomly sample ordered date subsequences, build sequence-hypothesis subspaces, and compare them to same-season or event-window references.
    - SFA/SFS pilot: learn slowly varying temporal components from aligned date sequences, then test whether residuals or slow-feature subspaces separate seasonal drift from abrupt land-cover change.
    - Product-Grassmann/Hankel pilot: represent one patch as multiple subspace factors, such as spectral, spatial, and temporal/Hankel factors, then use geodesic distances for clustering or anomaly ranking.
@@ -336,7 +352,7 @@ Acceptance checks:
    - Shape-subspace attribution pilot: adapt the human-motion DS idea by reporting which bands, patch regions, or date windows contribute most to the difference subspace.
    - Do not start these before the spatial OSCD audit; these are method-expansion tracks, not current evidence.
 
-24. xBD-S12 metric protocol audit:
+25. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.
