@@ -63,13 +63,13 @@ Counts:
 | Chrome input bookmarks | 1060 |
 | Safari input links | 491 |
 | Combined input bookmark/link entries | 1551 |
-| Exact duplicate entries removed by URL | 19 |
+| Exact duplicate URL entries preserved in duplicate review folder | 19 |
+| Organized output bookmark entries | 1551 |
 | Unique URLs in organized output | 1532 |
-| Parsed output URLs | 1532 |
-| Missing input URLs after organization | 0 |
-| Extra output URLs after organization | 0 |
-| Zotero candidate links | 259 |
-| Manual review URLs | 325 |
+| Missing bookmark/link entries after organization | 0 |
+| Extra bookmark/link entries after organization | 0 |
+| Zotero candidate links | 264 |
+| Manual review entries | 164 |
 
 Safari links were merged into the functional Chrome hierarchy. There is no separate Safari folder.
 
@@ -83,3 +83,48 @@ Safari links were merged into the functional Chrome hierarchy. There is no separ
 ## 6. Conclusion
 
 The batch is preserved, its useful research knowledge has been consolidated into active notes/docs, and the Chrome/Safari URL set has been reorganized without URL loss. It is safe to review the organized notes and importable bookmark file; deletion of the original source folder should still wait for explicit user approval.
+
+
+## 7. Refined Bookmark Categorization Pass
+
+A second categorization pass was run on 2026-06-12 after inspecting the remaining `To Review - Uncategorized` links. The refined pass used original Chrome folder paths and Google query text in addition to title/URL matching. It preserved `1551` bookmark/link entries and `1532` unique output URLs with zero missing entries. The remaining review area is `145` uncategorized entries plus `19` exact duplicate URL entries.
+
+
+## 8. Re-Verification After User Review Request
+
+A second verification was run after the user asked whether bookmarks and source knowledge were truly preserved and ingested.
+
+Bookmark verification:
+
+| check | result |
+|---|---:|
+| Chrome input bookmarks | 1060 |
+| Safari input links | 491 |
+| Combined input entries | 1551 |
+| Organized output bookmark entries | 1551 |
+| Unique URLs in organized output | 1532 |
+| Parsed unique URLs from organized HTML | 1532 |
+| Missing bookmark/link entries after organization | 0 |
+| Extra bookmark/link entries after organization | 0 |
+| Manual review entries after refined categorization | 164 |
+
+Knowledge coverage scan:
+
+| theme | present in source batch | represented in active notes/docs | active evidence terms |
+|---|---:|---:|---|
+| problem-driven thesis, not method forcing | yes | yes | problem-driven, method-forcing, do not solve a problem, research gap |
+| Sensei spatial-information warning | yes | yes | spatial information, pixel position, local patch, sliding window, patch-vector |
+| global pixel DS vs local/window DS | yes | yes | global pixel, patch-vector, local-window, local window, sliding window |
+| DS/GDS/KDS/KGDS family | yes | yes | difference subspace, gds, kds, kgds, second-order, geodesic |
+| CCA/KCCA/S3CCA/TRCCA | yes | yes | cca, kcca, s3cca, trcca |
+| green learning / PixelHop / wavelets | yes | yes | green learning, pixelhop, wavelet, compression |
+| pseudo-change vs real change | yes | yes | pseudo-change, seasonal, shadow, registration |
+| datasets and applications | yes | yes | oscd, multisenge, harmonized sentinel, xbd, xbd-s12, greenhouse |
+| projection/rank/Otsu/normalization | yes | yes | projection, pca rank, otsu, normalization |
+| paper-to-code verification | no | yes | paper-to-code, formula-verification, hallucinated, reference implementation |
+| personal notes workflow | no | yes | my_notes, rough notes |
+
+This scan is not a substitute for reading every source manually, but it checks the high-risk themes from the user's instructions against the active notes/docs after ingestion.
+
+
+Duplicate-entry preservation: Every combined Chrome/Safari bookmark entry is represented in the organized import file. Exact duplicate URLs are placed in `To Review - Duplicates Or Ambiguous` instead of being silently dropped.

@@ -1,5 +1,6 @@
 {
   "generated_at": "2026-06-12",
+  "refined_at": "2026-06-12 duplicate-preserving refinement",
   "chrome_input_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/all_bookmarks_6_12_26.html",
   "safari_input_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/Safari links.md",
   "organized_output_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-12.html",
@@ -7,68 +8,68 @@
   "safari_input_urls": 491,
   "combined_input_urls": 1551,
   "unique_output_urls": 1532,
-  "exact_duplicate_bookmarks_removed": 19,
+  "exact_duplicate_bookmarks_removed": 0,
   "category_counts": {
-    "Research - Must Read": 30,
-    "Research - Change Detection": 49,
+    "Research - Must Read": 33,
+    "Research - Change Detection": 52,
     "Research - Subspace Methods": 37,
-    "Research - Remote Sensing Datasets": 114,
-    "Research - Green Learning PixelHop Wavelets": 4,
-    "Research - CCA KCCA Temporal Methods": 26,
-    "Research - Greenhouses Urban Infrastructure": 35,
-    "Research - Code And Tooling": 25,
-    "Research - Conferences Journals Zotero": 99,
-    "Learning - Math CS ML": 145,
-    "Learning - Programming Tools": 92,
-    "University Tsukuba Admin": 54,
-    "Japanese Language": 52,
-    "Jobs Scholarships Career": 79,
+    "Research - Remote Sensing Datasets": 116,
+    "Research - Green Learning PixelHop Wavelets": 5,
+    "Research - CCA KCCA Temporal Methods": 24,
+    "Research - Greenhouses Urban Infrastructure": 37,
+    "Research - Code And Tooling": 36,
+    "Research - Conferences Journals Zotero": 114,
+    "Learning - Math CS ML": 214,
+    "Learning - Programming Tools": 132,
+    "University Tsukuba Admin": 62,
+    "Japanese Language": 57,
+    "Jobs Scholarships Career": 77,
     "Projects - Bird Project": 73,
     "Projects - Old Work": 252,
-    "Life Admin Shopping Travel": 41,
-    "To Review - Uncategorized": 325,
-    "To Review - Duplicates Or Ambiguous": 0
+    "Life Admin Shopping Travel": 66,
+    "To Review - Uncategorized": 145,
+    "To Review - Duplicates Or Ambiguous": 19
   },
   "safari_merged_counts": {
-    "Research - Conferences Journals Zotero": 22,
+    "Research - Conferences Journals Zotero": 24,
     "Research - Change Detection": 6,
-    "University Tsukuba Admin": 21,
-    "Learning - Math CS ML": 50,
+    "University Tsukuba Admin": 28,
+    "Learning - Math CS ML": 65,
     "Projects - Old Work": 1,
-    "Learning - Programming Tools": 39,
+    "Learning - Programming Tools": 57,
     "Research - Greenhouses Urban Infrastructure": 3,
-    "Jobs Scholarships Career": 33,
-    "Japanese Language": 20,
-    "Life Admin Shopping Travel": 33,
-    "Research - Subspace Methods": 7,
-    "To Review - Uncategorized": 215,
-    "Research - Remote Sensing Datasets": 20,
+    "Jobs Scholarships Career": 32,
+    "Japanese Language": 24,
+    "Life Admin Shopping Travel": 54,
+    "Research - Subspace Methods": 8,
+    "Research - Remote Sensing Datasets": 23,
     "Research - CCA KCCA Temporal Methods": 6,
+    "To Review - Uncategorized": 140,
     "Research - Must Read": 3,
-    "Research - Code And Tooling": 1,
+    "Research - Code And Tooling": 6,
     "Research - Green Learning PixelHop Wavelets": 1
   },
   "chrome_category_counts": {
-    "Research - Conferences Journals Zotero": 78,
-    "Research - Green Learning PixelHop Wavelets": 3,
-    "Research - Subspace Methods": 30,
-    "Research - Greenhouses Urban Infrastructure": 32,
-    "Jobs Scholarships Career": 46,
-    "Research - Must Read": 27,
-    "Research - CCA KCCA Temporal Methods": 20,
-    "To Review - Uncategorized": 110,
-    "Research - Change Detection": 45,
-    "Learning - Programming Tools": 54,
-    "Research - Code And Tooling": 24,
-    "Life Admin Shopping Travel": 8,
-    "Research - Remote Sensing Datasets": 94,
-    "Learning - Math CS ML": 97,
-    "University Tsukuba Admin": 35,
+    "Research - Conferences Journals Zotero": 91,
+    "Research - Green Learning PixelHop Wavelets": 4,
+    "Research - Subspace Methods": 29,
+    "Research - Greenhouses Urban Infrastructure": 34,
+    "Jobs Scholarships Career": 45,
+    "Research - Must Read": 30,
+    "Research - CCA KCCA Temporal Methods": 18,
+    "Research - Change Detection": 48,
+    "Learning - Programming Tools": 76,
+    "Research - Code And Tooling": 30,
+    "Life Admin Shopping Travel": 12,
+    "Research - Remote Sensing Datasets": 93,
+    "Learning - Math CS ML": 151,
+    "To Review - Uncategorized": 5,
+    "University Tsukuba Admin": 36,
     "Projects - Bird Project": 73,
-    "Japanese Language": 32,
+    "Japanese Language": 33,
     "Projects - Old Work": 252
   },
-  "zotero_candidate_count": 259,
+  "zotero_candidate_count": 264,
   "top_zotero_candidates": [
     {
       "title": "[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection",
@@ -93,6 +94,11 @@
     {
       "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
       "url": "https://arxiv.org/abs/2303.17802",
+      "category": "Research - Must Read"
+    },
+    {
+      "title": "ACCV2012.pdf",
+      "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://staff.aist.go.jp/takumi.kobayashi/publication/2012/ACCV2012.pdf",
       "category": "Research - Must Read"
     },
     {
@@ -141,6 +147,16 @@
       "category": "Research - Must Read"
     },
     {
+      "title": "staff.aist.go.jp/takumi.kobayashi/publication/2014/ICPR2014.pdf",
+      "url": "https://staff.aist.go.jp/takumi.kobayashi/publication/2014/ICPR2014.pdf",
+      "category": "Research - Must Read"
+    },
+    {
+      "title": "staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf",
+      "url": "https://staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf",
+      "category": "Research - Must Read"
+    },
+    {
       "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
       "url": "https://web3.arxiv.org/abs/2303.17802",
       "category": "Research - Must Read"
@@ -163,6 +179,11 @@
     {
       "title": "Signal latent subspace: A new representation for environmental sound classification - ScienceDirect",
       "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003682X24003323",
+      "category": "Research - Must Read"
+    },
+    {
+      "title": "Multitemporal and multimodal cross-region fine-tuning: MultiSenGE and MultiSenNA applications: Remote Sensing Letters: Vol 17 , No 1 - Get Access",
+      "url": "https://www.tandfonline.com/doi/full/10.1080/2150704X.2025.2586169",
       "category": "Research - Must Read"
     },
     {
@@ -198,11 +219,6 @@
     {
       "title": "2303.17802v2.pdf",
       "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://arxiv.org/pdf/2303.17802",
-      "category": "Research - Subspace Methods"
-    },
-    {
-      "title": "ACCV2012.pdf",
-      "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://staff.aist.go.jp/takumi.kobayashi/publication/2012/ACCV2012.pdf",
       "category": "Research - Subspace Methods"
     },
     {
@@ -356,6 +372,11 @@
       "category": "Research - Change Detection"
     },
     {
+      "title": "A Review of Various Categories of Satellite Image Processing in Remote Sensing | SpringerLink",
+      "url": "https://link.springer.com/chapter/10.1007/978-981-10-5903-2_34",
+      "category": "Research - Change Detection"
+    },
+    {
       "title": "Change Detection Techniques: A Review | Springer Nature Link",
       "url": "https://link.springer.com/chapter/10.1007/978-3-319-47037-5_2",
       "category": "Research - Change Detection"
@@ -469,6 +490,86 @@
       "title": "Building damage assessment for rapid disaster response with a deep object-based semantic change detection framework: From natural disasters to man-made disasters - ScienceDirect",
       "url": "https://www.sciencedirect.com/science/article/pii/S0034425721003564?via%3Dihub#fig0040",
       "category": "Research - Change Detection"
+    },
+    {
+      "title": "Change Detection Method - an overview | ScienceDirect Topics",
+      "url": "https://www.sciencedirect.com/topics/computer-science/change-detection-method",
+      "category": "Research - Change Detection"
+    },
+    {
+      "title": "Deep artificial intelligence applications for natural disaster management systems: A methodological review - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1470160X24005247",
+      "category": "Research - Change Detection"
+    },
+    {
+      "title": "Enhancing urban flood resilience: a LightGBM-NSGA2 hybrid model for impervious surface optimization - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0197397525001912",
+      "category": "Research - Change Detection"
+    },
+    {
+      "title": "[2508.16366] Attention Mechanism in Randomized Time Warping",
+      "url": "https://arxiv.org/abs/2508.16366",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Subspace Analysis for Multi-temporal Disaster Mapping Using Satellite Imagery | Advances in Visual Computing",
+      "url": "https://dl.acm.org/doi/abs/10.1007/978-3-031-20713-6_12",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "2017Land_D3T1a-P_Bruzzone_Multitemporal.pdf",
+      "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://eo4society.esa.int/wp-content/uploads/2021/04/2017Land_D3T1a-P_Bruzzone_Multitemporal.pdf",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "ChangeMamba: Remote Sensing Change Detection With Spatiotemporal State Space Model | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/10565926",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Unsupervised learning of probabilistic subspaces for multi-spectral and multi-temporal image-based disaster mapping | Machine Vision and Applications",
+      "url": "https://link.springer.com/article/10.1007/s00138-023-01451-w",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Attention Mechanism in Randomized Time Warping",
+      "url": "https://www.arxiv.org/pdf/2508.16366",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "escape rx disc - Google Search",
+      "url": "https://www.google.com/search?client=safari&hs=qcjp&sca_esv=d4ac044e1a229858&hl=en-jp&sxsrf=ANbL-n4iog7WCmVEIWLDmDae-rrP62BFAA:1776572102375&udm=2&fbs=ADc_l-aHJKCxetkbp8HihrVlWP2E1iNtw1c6Bqm2EL8gFYaWSYxrIPO0Uw9d1XjTJ7RJppIrcSq3O4OmMCO1wDrsISkdbZZBW7a5qZLd-KxIZGMkXKe_z-oPGzYKvLE9YUiVtyTR9KzWWedhQ1h8qwXWPpDFo6RaY6-As8ZiKPjECRGWoAq-cERmi1ZqnjnMe9cZXaR8KhHbzn-33pcca8Ts_Zzpj7WlILoSMS0Hu-auoj8DpfzM4Ks&q=escape+rx+disc&sa=X&ved=2ahUKEwjVu9HohvmTAxUQr1YBHY00J28QtKgLegQIHhAB&biw=440&bih=796&dpr=3#sv=CAMSVxoyKhBlLW9jLTFBTExKSmZxQ19NMg5vYy0xQUxMSkpmcUNfTToOYlJLUnBwQ0E5a3FiZk0gBCoXCgFzEhBlLW9jLTFBTExKSmZxQ19NGAEwAUoECAEQAhgHILGSyYsHSggQAhgBIAIoAQ",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Prior Semantic Information Guided Change Detection Method for Bi-temporal High-Resolution Remote Sensing Images",
+      "url": "https://www.mdpi.com/2072-4292/15/6/1655",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "TTNet: A Temporal-Transform Network for Semantic Change Detection Based on Bi-Temporal Remote Sensing Images",
+      "url": "https://www.mdpi.com/2072-4292/15/18/4555",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Hands-On Time Series Analysis with R | Data | Paperback",
+      "url": "https://www.packtpub.com/en-us/product/hands-on-time-series-analysis-with-r-9781788629157",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "researchgate.net/profile/Kazuhiro-Fukui/publication/303563203_Spotting_fingerspelled_words_from_sign_language_video_by_temporally_regularized_canonical_component_analysis/links/5a8a413faca272017e621f5d/Spotting-fingerspelled-words-from-sign-language-video-by-temporally-regularized-canonical-component-analysis.pdf",
+      "url": "https://www.researchgate.net/profile/Kazuhiro-Fukui/publication/303563203_Spotting_fingerspelled_words_from_sign_language_video_by_temporally_regularized_canonical_component_analysis/links/5a8a413faca272017e621f5d/Spotting-fingerspelled-words-from-sign-language-video-by-temporally-regularized-canonical-component-analysis.pdf",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Fusing Landsat 8 and Sentinel-2 data for 10-m dense time-series imagery using a degradation-term constrained deep network - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0303243422000642",
+      "category": "Research - CCA KCCA Temporal Methods"
+    },
+    {
+      "title": "Multi-Temporal Image - an overview | ScienceDirect Topics",
+      "url": "https://www.sciencedirect.com/topics/earth-and-planetary-sciences/multi-temporal-image",
+      "category": "Research - CCA KCCA Temporal Methods"
     }
   ],
   "duplicates_sample": [
@@ -850,14 +951,14 @@
     {
       "title": "staff.aist.go.jp/takumi.kobayashi/publication/2014/ICPR2014.pdf",
       "url": "https://staff.aist.go.jp/takumi.kobayashi/publication/2014/ICPR2014.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Must Read",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research/senseis paper from semi to look at and try to implement"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "www2.umbc.edu/rssipl/people/aplaza/Papers/Journals/2017.GRSL.Clustering.pdf",
@@ -1102,7 +1203,7 @@
     {
       "title": "Khan Academy | Free Online Courses, Lessons & Practice",
       "url": "https://www.khanacademy.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -1126,7 +1227,7 @@
     {
       "title": "LaTeX - A document preparation system",
       "url": "https://www.latex-project.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -1138,7 +1239,7 @@
     {
       "title": "Overleaf, Online LaTeX Editor",
       "url": "https://www.overleaf.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -1282,7 +1383,7 @@
     {
       "title": "A Review of Various Categories of Satellite Image Processing in Remote Sensing | SpringerLink",
       "url": "https://link.springer.com/chapter/10.1007/978-981-10-5903-2_34",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Change Detection",
       "sources": [
         "chrome"
       ],
@@ -1378,14 +1479,14 @@
     {
       "title": "HAI-Policy-Brief-Using-AI-Map-Urban-Change.pdf",
       "url": "https://hai.stanford.edu/sites/default/files/2024-07/HAI-Policy-Brief-Using-AI-Map-Urban-Change.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Greenhouses Urban Infrastructure",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Deep Transfer Learning for Land Use and Land Cover Classification: A Comparative Study",
@@ -1457,7 +1558,7 @@
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "A hybrid learning model for efficient classification of Land Use and land change from satellite images - ScienceDirect",
@@ -1582,7 +1683,7 @@
     {
       "title": "Land Use and Land Cover Mapping Using Sentinel-2, Landsat-8 Satellite Images, and Google Earth Engine: A Comparison of Two Composition Methods",
       "url": "https://www.mdpi.com/2072-4292/14/9/1977",
-      "category": "Research - Greenhouses Urban Infrastructure",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -2172,7 +2273,7 @@
     {
       "title": "scopus ai - Google Search",
       "url": "https://www.google.com/search?q=scopus+ai&oq=scopus+ai&gs_lcrp=EgZjaHJvbWUqDAgAEAAYQxiABBiKBTIMCAAQABhDGIAEGIoFMgwIARAAGEMYgAQYigUyDAgCEAAYQxiABBiKBTIMCAMQABhDGIAEGIoFMgwIBBAAGEMYgAQYigUyDQgFEAAYkQIYgAQYigUyDAgGEAAYQxiABBiKBTIMCAcQABhDGIAEGIoFMgcICBAAGIAEMgcICRAAGIAE0gEIMTMwN2owajeoAgCwAgA&sourceid=chrome&ie=UTF-8",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -2208,19 +2309,19 @@
     {
       "title": "Guidelines_FullPaper",
       "url": "https://www.iitk.ac.in/nicee/wcee/article/WCEE2012_0526.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "CCNC/CES2025 - Google Search",
       "url": "https://www.google.com/search?q=CCNC%2FCES2025&oq=CCNC%2FCES2025&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIHCAEQABjvBTIHCAIQABjvBTIKCAMQABiABBiiBDIHCAQQABjvBTIHCAUQABjvBTIGCAYQRRg6MgYIBxBFGD3SAQc3MDFqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -2256,7 +2357,7 @@
     {
       "title": "GIAC Cyber Threat Intelligence (GCTI) - Credly",
       "url": "https://www.credly.com/badges/758ffdc1-5514-4a59-bfed-8b4bfd82941c/linked_in?t=ss8qsy",
-      "category": "To Review - Uncategorized",
+      "category": "Jobs Scholarships Career",
       "sources": [
         "chrome"
       ],
@@ -2376,7 +2477,7 @@
     {
       "title": "Electro-Optical – IMSAR",
       "url": "https://www.imsar.com/portfolio/electro-optical/#:~:text=EO%20IMAGERY%20ARE%20PHOTOGRAPHIC%20STILLS,IN%20THE%20FORM%20OF%20PIXELS.",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -2412,7 +2513,7 @@
     {
       "title": "Earthdata Search | Earthdata Search",
       "url": "https://search.earthdata.nasa.gov/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -2424,7 +2525,7 @@
     {
       "title": "Minsky-and-Papert-Perceptrons.pdf",
       "url": "https://rodsmith.nz/wp-content/uploads/Minsky-and-Papert-Perceptrons.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -2484,7 +2585,7 @@
     {
       "title": "reduced_stress.pdf",
       "url": "https://www.cs.columbia.edu/~cxz/publications/reduced_stress.pdf?utm_source=chatgpt.com",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -2532,7 +2633,7 @@
     {
       "title": "101 Ways to Design an Experiment, or Some Ideas About Teaching Design of Experiments by William G. Hunter",
       "url": "https://williamghunter.net/articles/101-ways-to-design-an-experiment",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -2544,7 +2645,7 @@
     {
       "title": "About",
       "url": "https://scirate.com/about",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -2616,14 +2717,14 @@
     {
       "title": "Connected Papers | Find and explore academic papers",
       "url": "https://www.connectedpapers.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Attention Mechanism in Randomized Time Warping",
@@ -2796,7 +2897,7 @@
     {
       "title": "Zenodo",
       "url": "https://zenodo.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -2916,7 +3017,7 @@
     {
       "title": "Hyperspectral imaging. Each pixel is given by a vector of values or... | Download Scientific Diagram",
       "url": "https://www.researchgate.net/figure/Hyperspectral-imaging-Each-pixel-is-given-by-a-vector-of-values-or-spectral-signature_fig1_220856031",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -2952,14 +3053,14 @@
     {
       "title": "How to Write a Research Paper: A Step-By-Step Guide | Grammarly Blog",
       "url": "https://www.grammarly.com/blog/academic-writing/how-to-write-a-research-paper/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "[2503.21984] Differential Evolution for Grassmann Manifold Optimization: A Projection Approach",
@@ -3036,14 +3137,14 @@
     {
       "title": "tandfonline.com/doi/pdf/10.1080/15481603.2022.2083791?needAccess=true",
       "url": "https://www.tandfonline.com/doi/pdf/10.1080/15481603.2022.2083791?needAccess=true",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "A novel image fusion method based on UAV and Sentinel-2 for environmental monitoring | Scientific Reports",
@@ -3055,7 +3156,7 @@
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Integrating multi-source remote sensing data and machine learning for predicting tree density and cover in Argania spinosa - ScienceDirect",
@@ -3252,14 +3353,14 @@
     {
       "title": "hai-production.s3.amazonaws.com/files/2024-07/HAI-Policy-Brief-Using-AI-Map-Urban-Change.pdf",
       "url": "https://hai-production.s3.amazonaws.com/files/2024-07/HAI-Policy-Brief-Using-AI-Map-Urban-Change.pdf",
-      "category": "Learning - Programming Tools",
+      "category": "Research - Greenhouses Urban Infrastructure",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "[2304.10811] WATT-EffNet: A Lightweight and Accurate Model for Classifying Aerial Disaster Images",
@@ -3288,14 +3389,14 @@
     {
       "title": "hal.science/hal-01305371/document#page=5.06",
       "url": "https://hal.science/hal-01305371/document#page=5.06",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "blesaux.github.io/courses/JURSE_Deep_Learning_for_Remote_Sensing_Tutorial.pdf",
@@ -3360,7 +3461,7 @@
     {
       "title": "Global Urban Footprint",
       "url": "https://www.dlr.de/en/eoc/research-transfer/projects-missions/global-urban-footprint",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Greenhouses Urban Infrastructure",
       "sources": [
         "chrome"
       ],
@@ -3396,7 +3497,7 @@
     {
       "title": "‪Roberto Pereira‬ - ‪Google Scholar‬",
       "url": "https://scholar.google.com/citations?hl=en&user=rZ6LEK8AAAAJ",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -3624,7 +3725,7 @@
     {
       "title": "Introduction to the Satellite Embedding Dataset | Google Earth Engine | Google for Developers",
       "url": "https://developers.google.com/earth-engine/tutorials/community/satellite-embedding-01-introduction",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -3667,7 +3768,7 @@
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "torchgeo/torchgeo: TorchGeo: datasets, samplers, transforms, and pre-trained models for geospatial data",
@@ -3888,7 +3989,7 @@
     {
       "title": "Enhancing urban flood resilience: a LightGBM-NSGA2 hybrid model for impervious surface optimization - ScienceDirect",
       "url": "https://www.sciencedirect.com/science/article/pii/S0197397525001912",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Research - Change Detection",
       "sources": [
         "chrome"
       ],
@@ -4020,14 +4121,14 @@
     {
       "title": "staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf",
       "url": "https://staff.aist.go.jp/takumi.kobayashi/publication/2017/BMVC2017.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Must Read",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "[2508.16366] Attention Mechanism in Randomized Time Warping",
@@ -4224,7 +4325,7 @@
     {
       "title": "ZEISS Microscopy Online Campus | Introduction to Spectral Imaging",
       "url": "https://zeiss-campus.magnet.fsu.edu/articles/spectralimaging/introduction.html",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -4260,7 +4361,7 @@
     {
       "title": "multichannel image cube diagram - Google Search",
       "url": "https://www.google.com/search?sa=X&sca_esv=e9969d286c4c39d7&rlz=1C1TMBY_enJP1152JP1152&sxsrf=AE3TifMi7MwZyWneZEmAD_eCI9CY3Dj57g:1763554083931&udm=2&fbs=AIIjpHxU7SXXniUZfeShr2fp4giZ1Y6MJ25_tmWITc7uy4KIeiAkWG4OlBE2zyCTMjPbGmMU8EWskMk2JSE__efdUJ3x-dd8PyEzi5Y9BtPQcYyUv-qqGBKcZRAt6t3qPZ3-iSYj4NFTLo_PkVeRaPNr8Tt4VoiX2M8mh9n-sT5J21n9U2PyFXKatPNXBOlz7UuuHiqhCxVYFODW2lnaf74YkzQdFBoLbg&q=multichannel+image+cube+diagram&ved=2ahUKEwiu6dv1lv6QAxXpmq8BHQpjI8QQtKgLegQIEBAB&biw=1745&bih=859&dpr=1.1#vhid=buYEXPW3Ng-oAM&vssid=mosaic",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -4416,14 +4517,14 @@
     {
       "title": "Segment Anything for Microscopy | Nature Methods",
       "url": "https://www.nature.com/articles/s41592-024-02580-4",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Vehicle Detection in Very-High-Resolution Remote Sensing Images Based on an Anchor-Free Detection Model with a More Precise Foveal Area | MDPI",
@@ -4754,14 +4855,14 @@
     {
       "title": "jstage.jst.go.jp/article/jaabe/12/2/12_285/_pdf",
       "url": "https://www.jstage.jst.go.jp/article/jaabe/12/2/12_285/_pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Research"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Change Detection Method - an overview | ScienceDirect Topics",
@@ -4838,7 +4939,7 @@
     {
       "title": "Ramdani Lab",
       "url": "https://sites.google.com/view/ramdani-lab/home?authuser=0",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -4898,7 +4999,7 @@
     {
       "title": "NASA Worldview",
       "url": "https://worldview.earthdata.nasa.gov/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -4958,7 +5059,7 @@
     {
       "title": "Optuna - A hyperparameter optimization framework",
       "url": "https://optuna.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -4970,7 +5071,7 @@
     {
       "title": "jpeg compression method - Google Search",
       "url": "https://www.google.com/search?q=jpeg+compression+method&sca_esv=419882b0705f79b1&rlz=1C1TMBY_enJP1152JP1152&udm=2&biw=1920&bih=945&sxsrf=ANbL-n5m0ixEoG3Wyo5isJiXM7QPYUYc8A%3A1779455831088&ei=V1cQavCHBarp1e8P5fnv8Ao&ved=0ahUKEwiwj9LF_cyUAxWqdPUHHeX8G64Q4dUDCBE&uact=5&oq=jpeg+compression+method&gs_lp=Egtnd3Mtd2l6LWltZyIXanBlZyBjb21wcmVzc2lvbiBtZXRob2QyBRAAGIAEMgQQABgeSOURUIIJWMYQcAF4AJABAJgBSaAB4gOqAQE3uAEDyAEA-AEBmAIIoAL7A8ICBxAjGMkCGCfCAgYQABgHGB7CAgoQABiABBiKBRhDwgIGEAAYHhgKwgIGEAAYBRgewgIGEAAYCBgemAMAiAYBkgcBOKAHjBWyBwE3uAf3A8IHBTEuNS4yyAcQgAgB&sclient=gws-wiz-img#sv=CAMSVhoyKhBlLXF1eXRiZS1DNElzSmlNMg5xdXl0YmUtQzRJc0ppTToOOWx6VXJncFBMR1lGMk0gBCocCgZtb3NhaWMSEGUtcXV5dGJlLUM0SXNKaU0YADABGAcg4pyU4wNKCBABGAEgASgB",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Green Learning PixelHop Wavelets",
       "sources": [
         "chrome"
       ],
@@ -4982,7 +5083,7 @@
     {
       "title": "(41) Create a Simple Deforestation Map using Google Earth Engine - YouTube",
       "url": "https://www.youtube.com/watch?v=XakDiVVbpvE",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "chrome"
       ],
@@ -6086,7 +6187,7 @@
     {
       "title": "Duck DNS",
       "url": "https://www.duckdns.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -6122,14 +6223,14 @@
     {
       "title": "Red teaming ChatGPT in medicine to yield real-world insights on model behavior | npj Digital Medicine",
       "url": "https://www.nature.com/articles/s41746-025-01542-0",
-      "category": "Learning - Math CS ML",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/Cyber llm"
       ],
-      "zotero_candidate": false
+      "zotero_candidate": true
     },
     {
       "title": "Hugging Face Trainer Fine-tuning",
@@ -6158,7 +6259,7 @@
     {
       "title": "InPlay SD Statisticians Panel",
       "url": "https://scoutadmin.geniussports.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "chrome"
       ],
@@ -6220,7 +6321,7 @@
     {
       "title": "https://translate.google.com/",
       "url": "https://translate.google.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "chrome"
       ],
@@ -6244,7 +6345,7 @@
     {
       "title": "https://medium.com/",
       "url": "https://medium.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -6268,7 +6369,7 @@
     {
       "title": "https://www.coursera.org/",
       "url": "https://www.coursera.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -6280,7 +6381,7 @@
     {
       "title": "https://stackoverflow.com/",
       "url": "https://stackoverflow.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -6304,7 +6405,7 @@
     {
       "title": "https://www.linkedin.com/feed/",
       "url": "https://www.linkedin.com/feed/",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "chrome"
       ],
@@ -6340,7 +6441,7 @@
     {
       "title": "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes",
       "url": "https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -6436,7 +6537,7 @@
     {
       "title": "office",
       "url": "https://www.microsoft365.com/?auth=2",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "chrome"
       ],
@@ -6582,7 +6683,7 @@
     {
       "title": "Paul D. Ellis’ \"The Essential Guide to Effect Sizes\", - Google Search",
       "url": "https://www.google.com/search?q=Paul+D.+Ellis%E2%80%99+%22The+Essential+Guide+to+Effect+Sizes%22%2C&oq=Paul+D.+Ellis%E2%80%99+%22The+Essential+Guide+to+Effect+Sizes%22%2C&gs_lcrp=EgZjaHJvbWUyBggAEEUYOdIBBzE0N2owajmoAgCwAgE&sourceid=chrome&ie=UTF-8",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7760,7 +7861,7 @@
     {
       "title": "(165) Latest topics - DeepLearning.AI",
       "url": "https://community.deeplearning.ai/latest",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7772,7 +7873,7 @@
     {
       "title": "Blog and Notes",
       "url": "https://sebastianraschka.com/blog/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7796,31 +7897,31 @@
     {
       "title": "COCO test-dev Benchmark (Object Detection) | Papers With Code",
       "url": "https://paperswithcode.com/sota/object-detection-on-coco",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "Computer Vision | Papers With Code",
       "url": "https://paperswithcode.com/area/computer-vision",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "Courses - DeepLearning.AI",
       "url": "https://www.deeplearning.ai/courses/?courses_date_desc%5BrefinementList%5D%5Bcourse_type%5D%5B0%5D=Courses&courses_date_desc%5BrefinementList%5D%5Bcourse_type%5D%5B1%5D=Specializations",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7844,7 +7945,7 @@
     {
       "title": "kaggle",
       "url": "https://www.kaggle.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7882,7 +7983,7 @@
     {
       "title": "StanfordOnline: Statistical Learning with Python | edX",
       "url": "https://www.edx.org/learn/python/stanford-university-statistical-learning-with-python",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7942,7 +8043,7 @@
     {
       "title": "[ML] I was recommended these 4 books for Beginning ML journey : r/learnmachinelearning",
       "url": "https://www.reddit.com/r/learnmachinelearning/comments/1b8rt0w/ml_i_was_recommended_these_4_books_for_beginning/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7954,7 +8055,7 @@
     {
       "title": "Statistical Learning: 1.1 Opening Remarks - YouTube",
       "url": "https://www.youtube.com/watch?v=LvySJGj-88U&list=PLoROMvodv4rOzrYsAxzQyHb8n_RWNuS1e",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7978,7 +8079,7 @@
     {
       "title": "common crawl - Google Search",
       "url": "https://www.google.com/search?q=common+crawl&oq=common&gs_lcrp=EgZjaHJvbWUqDQgCEAAYkQIYgAQYigUyBwgAEAAYgAQyCggBEC4Y1AIYgAQyDQgCEAAYkQIYgAQYigUyEggDEC4YQxjHARjRAxiABBiKBTIHCAQQLhiABDIGCAUQRRhBMgYIBhBFGEEyBggHEEUYPNIBCDI0MjJqMGo3qAIIsAIB8QXUBkuf8RZsIA&sourceid=chrome&ie=UTF-8",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -7990,7 +8091,7 @@
     {
       "title": "coco ml - Google Search",
       "url": "https://www.google.com/search?q=coco+ml&sca_esv=50b98f5f3f0e371c&sxsrf=AHTn8zrBBYFS-8O3FuFbkA8jybXxKxOg5w%3A1746260378424&ei=mtEVaLXMGa6O2roPr72fkAE&ved=0ahUKEwi1gars7oaNAxUuh1YBHa_eBxIQ4dUDCBA&uact=5&oq=coco+ml&gs_lp=Egxnd3Mtd2l6LXNlcnAiB2NvY28gbWwyBxAuGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyBxAAGIAEGAoyJRAuGIAEGAoYlwUY3AQY3gQY4AQY9AMY8QMY9QMY9gMY9wPYAQFI3ghQ8wJY1AZwAXgBkAEAmAHOAqAB9gSqAQcwLjIuMC4xuAEDyAEA-AEBmAIEoAKzBcICChAAGLADGNYEGEfCAg0QABiABBiwAxhDGIoFwgIOEAAYsAMY5AIY1gTYAQHCAhMQLhiABBiwAxhDGMgDGIoF2AEBwgIKEC4YgAQYQxiKBcICChAAGIAEGEMYigXCAg0QLhiABBhDGNQCGIoFwgIQEC4YgAQY0QMYFBjHARiHAsICGRAuGIAEGEMYigUYlwUY3AQY3gQY4ATYAQHCAgUQABiABMICJRAuGIAEGAoYlwUY3AQY3gQY4AQY9AMY8QMY9QMY9gMY9wPYAQGYAwCIBgGQBhO6BgYIARABGAmSBwcxLjIuMC4xoAeOTbIHBzAuMi4wLjG4B5gF&sclient=gws-wiz-serp",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8002,7 +8103,7 @@
     {
       "title": "image net - Google Search",
       "url": "https://www.google.com/search?q=image+net&oq=image+net&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIGCAEQIxgnMgYIAhBFGDwyBggDEEUYPTIGCAQQRRg8MgYIBRBFGEEyBggGEEUYQTIGCAcQRRhB0gEIMTU4MWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8026,7 +8127,7 @@
     {
       "title": "Lightning AI | Idea to AI product, ⚡️ fast.",
       "url": "https://lightning.ai/",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8050,7 +8151,7 @@
     {
       "title": "k nearest neighbor in python - YouTube",
       "url": "https://www.youtube.com/results?search_query=k+nearest+neighbor+in+python",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8062,7 +8163,7 @@
     {
       "title": "py/ML/17_knn_classification/knn_classification_tutorial.ipynb at master · codebasics/py",
       "url": "https://github.com/codebasics/py/blob/master/ML/17_knn_classification/knn_classification_tutorial.ipynb",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8098,7 +8199,7 @@
     {
       "title": "Cognitive Systems and Signal Processing: 5th International Conference, ICCSIP 2020, Zhuhai, China, December 25–27, 2020, Revised Selected Papers | SpringerLink",
       "url": "https://link.springer.com/book/10.1007/978-981-16-2336-3",
-      "category": "Jobs Scholarships Career",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8110,38 +8211,38 @@
     {
       "title": "A Logistic Regression Based Framework for Spatio-Temporal Feature Representation and Classification of Single-Trial EEG | SpringerLink",
       "url": "https://link.springer.com/chapter/10.1007/978-981-16-2336-3_36",
-      "category": "Research - CCA KCCA Temporal Methods",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "A regularized discriminative framework for EEG analysis with application to brain–computer interface",
       "url": "https://pdf.sciencedirectassets.com/272508/1-s2.0-S1053811909X00212/1-s2.0-S1053811909008192/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLWVhc3QtMSJIMEYCIQClHo2x1OK%2FLX9X9UrO9Wh7qoUJ36J6L4%2Fxr%2B1pV6L1kgIhAMp0vClBEAQO8149qFT54j8liiiLhk1gyo%2Frzv%2FT8xAMKrsFCIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBRoMMDU5MDAzNTQ2ODY1Igx9Xq2OHCPUuVKAvaQqjwVNjGOzjWdg37w3L7aF6qz7b2rEIGIYkb3%2FcIKW1fWOt2cjaO2zjTvV4%2B5%2Fd5Ei32srxLYXdlmfzK8HRON2cqIMoFZg26Etp7VnVlUJnSZ1IA8paKOTS0quqdiIfc%2BojPZb488c1%2BJgEBVstU1lxj34x4YnlogCRzSi%2BdknosaVB%2FuOmxH%2B6PEQjIkUqSbXWCipCftmq%2B5qCUKPohxoxljCkh4QHKZPRtL1RHDp%2BSUsYATINhOueQiDsjSOgabSUuEyTEazlnSuRd499yuE61n2EQSbnAYy6YP17vWjQMvL%2B5eFOCZptyQoHZOv%2BkifFxmWWaa2bkRoWciuTUoonmKQwM1mHPdE0ATxg0f2TvWkzW9gjz95XQ4fZRYPqpwqtJVVOzz2scimekrVMm0kqTeJL8TYUSZN37gwQxKa4DDh5m%2Bu7Z7GToEaz1ZX0fbq9hnNBQCBD7%2FD4NH%2B4LuaWp1MWW9Z%2BFIVDr9JZs%2F7j6tGiXzixBtXvESt%2BBxM2zd7MeSAH%2F2pQA0DvDdnb2VhuL%2BF6xnwBwpRLeK4BEeZPpyTU%2Fm8VYDMjgDftMEf9rv0qghMu2tAxwNkaR7qbPWXU5%2BT41loqOKRX8uAnR3o3b76L%2FFw4v7ygGKcIcj9RdgkS1bAs9JCuRAKlEfv5JMPpfd6qFixSFpZMWkeB5VLvPwfYgEcVfUk4xF3O1bRN9w%2F0O%2FTmgDeq4FHPKmQ60%2Fgxmm5aAups7xtCDhpEDSkp9KCmo8ylNRNhDv%2Bh%2FD5f7ehuJirYrXmkv6I2oeJgB3IpTJF5YOSerVXwv6k9I2jCwT68QdH0v44QAUodG%2FMAvoRmAcfsjDdzbRDZpA6%2BlSM7d4xf7%2BjbpnBU%2FzszPMKJU8DMKCsssMGOrABteHnKvnsSNdiXCq9BGBadjHZtlcUE20emCzlqTv%2FCMhbswdhIfPyA%2FDQ0FF7iRlGf0MsBgnK%2BvaI1OMW0v%2F1A4N6c0aQRrBlW6VUCZl0D3lo8E7LtXfU1ENAIO2w%2F5dJUB%2Fp%2FwSGkSd37QXXLGZrCv1N88uDYqrBZz7o1KUdZjfnuofKmwkiqLqHF8QeYitP5ETzGPkfQOIs9VcNjrpxQEQGQOWCafAKJpMinv2Z96w%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250708T042610Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYXD5MIT62%2F20250708%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c452e446422cb358ca3c6b8870a46b39738fba30a22bc3df5490171791583dcd&hash=ba9dc6f67add044d01872e6b2a8672e5f6aae4187aefc299e2d958f87b6ca5e5&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1053811909008192&tid=spdf-7820210b-f032-4913-940f-82c9f3e41ea7&sid=1d5cf95e9a452540cc59fab97068e41c1956gxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0c1e5b510303015558&rr=95bcd267c9ebe387&cc=jp",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "A regularized discriminative framework for EEG analysis with application to brain–computer interface - ScienceDirect",
       "url": "https://www.sciencedirect.com/science/article/abs/pii/S1053811909008192?via%3Dihub",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "hands-on mathematics for deep learning - Search - Anna’s Archive",
@@ -8194,7 +8295,7 @@
     {
       "title": "jakevdp/PythonDataScienceHandbook: Python Data Science Handbook: full text in Jupyter Notebooks",
       "url": "https://github.com/jakevdp/PythonDataScienceHandbook/tree/master",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8242,7 +8343,7 @@
     {
       "title": "probml.github.io/pml-book/book2.html#toc",
       "url": "https://probml.github.io/pml-book/book2.html#toc",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8254,19 +8355,19 @@
     {
       "title": "[1412.6572] Explaining and Harnessing Adversarial Examples",
       "url": "https://arxiv.org/abs/1412.6572",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "05.07-Support-Vector-Machines.ipynb - Colab",
       "url": "https://colab.research.google.com/github/jakevdp/PythonDataScienceHandbook/blob/master/notebooks/05.07-Support-Vector-Machines.ipynb",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8314,7 +8415,7 @@
     {
       "title": "Learning PyTorch with Examples — PyTorch Tutorials 2.8.0+cu128 documentation",
       "url": "https://docs.pytorch.org/tutorials/beginner/pytorch_with_examples.html",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8326,7 +8427,7 @@
     {
       "title": "(68) PyTorch Beginner Series - YouTube",
       "url": "https://www.youtube.com/playlist?list=PL_lsbAsL_o2CTlGHgMxNrKhzP97BaG9ZN",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8338,7 +8439,7 @@
     {
       "title": "(68) Lecture 6: Backpropagation - YouTube",
       "url": "https://www.youtube.com/watch?v=dB-u77Y5a6A",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8362,7 +8463,7 @@
     {
       "title": "(68) How I'd learn ML in 2025 (if I could start over) - YouTube",
       "url": "https://www.youtube.com/watch?v=_xIwjmCH6D4",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8386,7 +8487,7 @@
     {
       "title": "Home - colah's blog",
       "url": "https://colah.github.io/",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8422,7 +8523,7 @@
     {
       "title": "kameda-yoshinari/IMISToolExeA",
       "url": "https://github.com/kameda-yoshinari/IMISToolExeA/tree/main",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8434,7 +8535,7 @@
     {
       "title": "(29) But how do AI images/videos actually work? | Guest video by ‪@WelchLabsVideo‬ - YouTube",
       "url": "https://www.youtube.com/watch?v=iv-5mZ_9CPY",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8446,14 +8547,14 @@
     {
       "title": "2502.16982.pdf",
       "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://arxiv.org/pdf/2502.16982",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "Stanford University CS231n: Convolutional Neural Networks for Visual Recognition",
@@ -8470,7 +8571,7 @@
     {
       "title": "probml.github.io/pml-book/book2.html",
       "url": "https://probml.github.io/pml-book/book2.html",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8482,7 +8583,7 @@
     {
       "title": "ChatGPT Prompt Engineering for Developers - DeepLearning.AI",
       "url": "https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8494,7 +8595,7 @@
     {
       "title": "Transfer Learning for Computer Vision Tutorial — PyTorch Tutorials 2.8.0+cu128 documentation",
       "url": "https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8518,7 +8619,7 @@
     {
       "title": "A Practical Guide to Support Vector Classification",
       "url": "https://www.csie.ntu.edu.tw/~cjlin/papers/guide/guide.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8530,7 +8631,7 @@
     {
       "title": "Principal Component Analysis",
       "url": "https://sebastianraschka.com/Articles/2015_pca_in_3_steps.html?utm_source=chatgpt.com",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8542,7 +8643,7 @@
     {
       "title": "Introducing Continuous Thought Machines",
       "url": "https://sakana.ai/ctm/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8566,7 +8667,7 @@
     {
       "title": "Dimensionality Reduction: Principal Component Analysis | by Sathya Krishnan Suresh | Medium",
       "url": "https://medium.com/%40mr.sk12112002/dimensionality-reduction-principal-component-analysis-d990233070e9",
-      "category": "Research - Subspace Methods",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8578,14 +8679,14 @@
     {
       "title": "[1404.1100] A Tutorial on Principal Component Analysis",
       "url": "https://arxiv.org/abs/1404.1100",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "Coding LLMs from the Ground Up: A Complete Course",
@@ -8614,7 +8715,7 @@
     {
       "title": "gaussian splatting - Google Search",
       "url": "https://www.google.com/search?q=gaussian+splatting&rlz=1C1TMBY_enJP1152JP1152&oq=gaussian+splatt&gs_lcrp=EgZjaHJvbWUqBwgAEAAYgAQyBwgAEAAYgAQyBggBEEUYOTIHCAIQABiABDIHCAMQABiABDIHCAQQABiABDIHCAUQABiABDIHCAYQABiABDIHCAcQABiABDIHCAgQABiABDIHCAkQABiABNIBCDQxODdqMGo3qAIAsAIA&sourceid=chrome&ie=UTF-8",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8638,14 +8739,14 @@
     {
       "title": "arxiv.org/pdf/1705.07874",
       "url": "https://arxiv.org/pdf/1705.07874",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
       "source_paths": [
         "Bookmarks bar/ML/DL/AI"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "lstm architecture diagram - Google Search",
@@ -8686,7 +8787,7 @@
     {
       "title": "microgpt",
       "url": "https://karpathy.github.io/2026/02/12/microgpt/",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8698,7 +8799,7 @@
     {
       "title": "Neuronpedia",
       "url": "https://www.neuronpedia.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8710,7 +8811,7 @@
     {
       "title": "autograd_tutorial.ipynb - Colab",
       "url": "https://colab.research.google.com/github/pytorch/tutorials/blob/gh-pages/_downloads/8eed7e178f8fa30798f280ea82ff468b/autograd_tutorial.ipynb#scrollTo=FY3lkzLnFjTv",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -8722,7 +8823,7 @@
     {
       "title": "LeetCode",
       "url": "https://leetcode.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8734,7 +8835,7 @@
     {
       "title": "Patterns.dev",
       "url": "https://www.patterns.dev/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8746,7 +8847,7 @@
     {
       "title": "Codewars",
       "url": "https://www.codewars.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8770,7 +8871,7 @@
     {
       "title": "Coding Temple | The Top Coding Bootcamp Nationwide - Contact Now",
       "url": "https://codingtemple.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8782,7 +8883,7 @@
     {
       "title": "Learn to Code - for Free | Codecademy",
       "url": "https://www.codecademy.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8806,7 +8907,7 @@
     {
       "title": "HTML5 UP! Responsive HTML5 and CSS3 Site Templates",
       "url": "https://html5up.net/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8818,7 +8919,7 @@
     {
       "title": "Free API - Huge List of Public APIs For Testing [No Key] - Apipheny",
       "url": "https://apipheny.io/free-api/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8830,7 +8931,7 @@
     {
       "title": "Data Structure Visualization",
       "url": "https://www.cs.usfca.edu/~galles/visualization/Algorithms.html",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8842,7 +8943,7 @@
     {
       "title": "CS 1332 Data Structures and Algorithms Visualizations",
       "url": "https://csvistool.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8854,7 +8955,7 @@
     {
       "title": "Quick sort with Hungarian, folk dance - YouTube",
       "url": "https://www.youtube.com/watch?v=3San3uKKHgg",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8866,7 +8967,7 @@
     {
       "title": "What is Time Series Analysis? - YouTube",
       "url": "https://www.youtube.com/watch?v=GE3JOFwTWVM",
-      "category": "Research - CCA KCCA Temporal Methods",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8878,7 +8979,7 @@
     {
       "title": "visualising data structures and algorithms through animation - VisuAlgo",
       "url": "https://visualgo.net/en",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8914,7 +9015,7 @@
     {
       "title": "Learn Git Branching",
       "url": "https://learngitbranching.js.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8938,7 +9039,7 @@
     {
       "title": "Your Career in Web Development Starts Here | The Odin Project",
       "url": "https://www.theodinproject.com/",
-      "category": "Jobs Scholarships Career",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8962,7 +9063,7 @@
     {
       "title": "Markdown Cheat Sheet | Markdown Guide",
       "url": "https://www.markdownguide.org/cheat-sheet/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -8998,7 +9099,7 @@
     {
       "title": "Git - Documentation",
       "url": "https://git-scm.com/doc",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -9010,7 +9111,7 @@
     {
       "title": "How to Contribute to Open Source | Open Source Guides",
       "url": "https://opensource.guide/how-to-contribute/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -9034,7 +9135,7 @@
     {
       "title": "HTTP Status Codes - REST API Tutorial",
       "url": "https://www.restapitutorial.com/httpstatuscodes",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -9046,7 +9147,7 @@
     {
       "title": "(24) APIs for Beginners - How to use an API (Full Course / Tutorial) - YouTube",
       "url": "https://www.youtube.com/watch?v=WXsD0ZgxjRw",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -9070,7 +9171,7 @@
     {
       "title": "Part 1: Containerize an application | Docker Docs",
       "url": "https://docs.docker.com/get-started/workshop/02_our_app/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -9082,7 +9183,7 @@
     {
       "title": "Algorithms, Part I | Coursera",
       "url": "https://www.coursera.org/learn/algorithms-part1",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -9094,7 +9195,7 @@
     {
       "title": "Algorithms, Part II | Coursera",
       "url": "https://www.coursera.org/learn/algorithms-part2",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -9106,7 +9207,7 @@
     {
       "title": "Algorithms | Coursera",
       "url": "https://www.coursera.org/specializations/algorithms",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -9118,7 +9219,7 @@
     {
       "title": "Divide and Conquer, Sorting and Searching, and Randomized Algorithms | Coursera",
       "url": "https://www.coursera.org/learn/algorithms-divide-conquer",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -9130,7 +9231,7 @@
     {
       "title": "Amideast Scholarship Program | Coursera",
       "url": "https://www.coursera.org/programs/amideast-scholarship-program-dbho3?currentTab=CATALOG",
-      "category": "Jobs Scholarships Career",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -12420,7 +12521,7 @@
     {
       "title": "Taxilen",
       "url": "https://www.figma.com/file/1j7dEziK6dACsQzLYbxWKE/Taxilen?type=design&node-id=0-1&t=BZQxhudoNvntsbxM-0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12432,7 +12533,7 @@
     {
       "title": "Squoosh",
       "url": "https://squoosh.app/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12444,7 +12545,7 @@
     {
       "title": "AI presentation maker",
       "url": "https://www.beautiful.ai/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12456,7 +12557,7 @@
     {
       "title": "AI presentation maker 2",
       "url": "https://www.chatba.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12468,7 +12569,7 @@
     {
       "title": "ByteByteGo Newsletter | Alex Xu | Substack",
       "url": "https://blog.bytebytego.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12480,7 +12581,7 @@
     {
       "title": "Study Arabic in Palestine/West Bank (1-12 Weeks) - The Palestinian Center",
       "url": "https://gopalestine.org/study-arabic-in-palestine-west-bank/",
-      "category": "Life Admin Shopping Travel",
+      "category": "Japanese Language",
       "sources": [
         "chrome"
       ],
@@ -12504,7 +12605,7 @@
     {
       "title": "50 Most Common Interview Questions | Glassdoor Blog",
       "url": "https://www.glassdoor.com/blog/common-interview-questions/?utm_source=lifecycle&utm_medium=email&utm_campaign=postonboarding_us&utm_content=day_15_interview_prep_test&utm_messageId=7cc5794a39204e269ae6f73235d67dbc",
-      "category": "To Review - Uncategorized",
+      "category": "Jobs Scholarships Career",
       "sources": [
         "chrome"
       ],
@@ -12639,7 +12740,7 @@
     {
       "title": "Warp: Style with Warp - Mac terminal themes",
       "url": "https://www.warp.dev/mac-terminal-themes?utm_source=google&utm_medium=search&utm_campaign=mac_terminal_themes_phrase_other&gad_source=1&gad_campaignid=20572558747&gbraid=0AAAAAoTBvvoqjd3zXzwynwrbHlWLmWaBn&gclid=Cj0KCQjwotDBBhCQARIsAG5pinPQKSrUpMIZhRL_QJo1Jga0k0RM8-YOkLkkhW1FnAh9Wr3pefDhXPkaAh0REALw_wcB",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12687,7 +12788,7 @@
     {
       "title": "Magic Patterns",
       "url": "https://www.magicpatterns.com/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12807,7 +12908,7 @@
     {
       "title": "ACCV2012.pdf",
       "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://staff.aist.go.jp/takumi.kobayashi/publication/2012/ACCV2012.pdf",
-      "category": "Research - Subspace Methods",
+      "category": "Research - Must Read",
       "sources": [
         "chrome"
       ],
@@ -12843,7 +12944,7 @@
     {
       "title": "gazebo sim - Google Search",
       "url": "https://www.google.com/search?q=gazebo+sim&rlz=1C1TMBY_enJP1152JP1152&oq=gazebo+&gs_lcrp=EgZjaHJvbWUqBwgBEAAYgAQyBwgAEAAYjwIyBwgBEAAYgAQyBwgCEAAYgAQyBwgDEAAYgAQyBwgEEAAYgAQyBwgFEAAYgAQyBwgGEAAYgAQyBwgHEAAYgAQyBwgIEAAYgAQyDQgJEC4YrwEYxwEYgATSAQgyNzk4ajBqOagCALACAQ&sourceid=chrome&ie=UTF-8",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12867,7 +12968,7 @@
     {
       "title": "SAPIEN",
       "url": "https://sapien.ucsd.edu/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12879,7 +12980,7 @@
     {
       "title": "sapien vs isaac lab - Google Search",
       "url": "https://www.google.com/search?sca_esv=aa86132b60f0534c&rlz=1C1TMBY_enJP1152JP1152&sxsrf=ANbL-n50WCHuCYntZESO9wEwUoFBLYKkoQ:1772020232860&udm=2&fbs=ADc_l-aN0CWEZBOHjofHoaMMDiKpaEWjvZ2Py1XXV8d8KvlI3vxYI1tojT_24H7Q4iMwclSJUz4FcZOM5Pq33gz9PnkySpOwhWLSmy32d1ONyO_Wrv7mAKrNDKTNCT-p6qZDvYKkr2upU_-SljCxOK2M71akCmn8xr_KZcRReX1XREtiZHY80vdwxJ6hb_VXDcQvbLItxRlvIo_E_nLhEUNA3Tx6a6JJsg&q=sapien+vs+isaac+lab&sa=X&ved=2ahUKEwjKxo7kyfSSAxWnlK8BHSgEAq4QtKgLegQIFRAB&biw=1920&bih=991&dpr=1#sv=CAMSVhoyKhBlLTV5N21wUGhhSDFmbmhNMg41eTdtcFBoYUgxZm5oTToOVU9UeWQ1dW5EMlEzVU0gBCocCgZtb3NhaWMSEGUtNXk3bXBQaGFIMWZuaE0YADABGAcgpof55AowAkoIEAIYAiACKAI",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12891,7 +12992,7 @@
     {
       "title": "IROS 2026 | IEEE/RSJ International Conference on Intelligent Robots and Systems",
       "url": "https://2026.ieee-iros.org/",
-      "category": "Jobs Scholarships Career",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12903,7 +13004,7 @@
     {
       "title": "mujoco - Google Search",
       "url": "https://www.google.com/search?sca_esv=aa86132b60f0534c&rlz=1C1TMBY_enJP1152JP1152&sxsrf=ANbL-n4D1JumVjlBdFfACtTwiDij6Mbodg:1772021423349&q=mujoco&source=lnms&fbs=ADc_l-byipRaccqV0jmfPhi1DgzPtklXGmVkws8Z_lBff884vwWzYGOXmwhR8m6ZBpcqcPL0JaSEcIdSH595AL45hGLN1NUGhWHqLN1VOkGTOpQ9YpvbfIc-vdaBtWlqiVkY4iSHZMocztPi8LnH6Z41p0ByZSqiVLhQmykbPSRzmw21pY1L0U8bFf8yVKUrphgl_CPWJUwwxw86ZEhHo5My6wZ7SQm0srXGwz_s1W6r9S26fyDJwhA&sa=X&ved=2ahUKEwjqkOSbzvSSAxU4m68BHbKTDqMQ0pQJegQIChAB&biw=1920&bih=991&dpr=1",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12915,7 +13016,7 @@
     {
       "title": "(92) IsaacSim MCP integration on Linux - YouTube",
       "url": "https://www.youtube.com/watch?v=8LsHCGvJaek&t=323s",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -12939,7 +13040,7 @@
     {
       "title": "Our World in Data",
       "url": "https://ourworldindata.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "chrome"
       ],
@@ -12951,7 +13052,7 @@
     {
       "title": "Fixing academic posters: the #BetterPoster approach | astrobites",
       "url": "https://astrobites.org/2020/02/28/fixing-academic-posters-the-betterposter-approach/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -12963,7 +13064,7 @@
     {
       "title": "Towards an “#evenbetterposter”: improving the #betterposter template : Biological Engineering Communication Lab",
       "url": "https://mitcommlab.mit.edu/be/2023/09/27/toward-an-evenbetterposter-improving-the-betterposter-template/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -12999,7 +13100,7 @@
     {
       "title": "Histography - Timeline of History",
       "url": "https://histography.io/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -13011,7 +13112,7 @@
     {
       "title": "Chaminda Bandara - Research",
       "url": "https://www.wgcban.com/research#h.ar24vwqlm021",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -13023,7 +13124,7 @@
     {
       "title": "Astrophysics Data System",
       "url": "https://ui.adsabs.harvard.edu/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -13035,7 +13136,7 @@
     {
       "title": "Steam Points Shop",
       "url": "https://store.steampowered.com/points/shop/c/avatar",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "chrome"
       ],
@@ -13047,7 +13148,7 @@
     {
       "title": "(131) Creating DSM and DTM in CloudCompare - YouTube",
       "url": "https://www.youtube.com/watch?v=mjPnXMnbhm4",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -13059,7 +13160,7 @@
     {
       "title": "(131) CloudCompare - Loading a GeoTIFF as a point cloud - YouTube",
       "url": "https://www.youtube.com/watch?v=VZe4555NXN4",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -13131,7 +13232,7 @@
     {
       "title": "(131) What is Lie theory? Here is the big picture. | Lie groups, algebras, brackets #3 - YouTube",
       "url": "https://www.youtube.com/watch?v=ZRca3Ggpy_g",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Subspace Methods",
       "sources": [
         "chrome"
       ],
@@ -13167,7 +13268,7 @@
     {
       "title": "(131) CloudCompare Tutorial 01 - Opening files and basic navigation - YouTube",
       "url": "https://www.youtube.com/watch?v=IitUKpvBVBg&list=PLux3IbWwp1UQIZPJzIklR5gMiOikcs1dR",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "chrome"
       ],
@@ -13191,7 +13292,7 @@
     {
       "title": "A Gentle Guide to Intersection over Union (IoU) – learnml.io",
       "url": "https://www.learnml.io/posts/a-gentle-guide-to-intersection-over-union/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Change Detection",
       "sources": [
         "chrome"
       ],
@@ -13253,7 +13354,7 @@
     {
       "title": "BOOST｜JST",
       "url": "https://www.jst.go.jp/program/boost/",
-      "category": "To Review - Uncategorized",
+      "category": "Jobs Scholarships Career",
       "sources": [
         "chrome"
       ],
@@ -13277,7 +13378,7 @@
     {
       "title": "CVLAB - PUBLICATION",
       "url": "https://cvlab.kaist.ac.kr/publication",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "chrome"
       ],
@@ -13301,7 +13402,7 @@
     {
       "title": "Remap",
       "url": "https://remap-keys.app/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "chrome"
       ],
@@ -13337,7 +13438,7 @@
     {
       "title": "rotary motor - Google Search",
       "url": "https://www.google.com/search?q=rotary+motor&oq=rotary+motor&gs_lcrp=EgZjaHJvbWUyDwgAEEUYORiRAhiABBiKBTIHCAEQABiABDINCAIQABiRAhiABBiKBTIHCAMQABiABDIMCAQQABgUGIcCGIAEMgcIBRAAGIAEMgcIBhAAGIAEMgcIBxAAGIAEMgcICBAAGIAEMgcICRAAGIAE0gEINTgzOGowajeoAgCwAgA&sourceid=chrome&ie=UTF-8",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "chrome"
       ],
@@ -13445,7 +13546,7 @@
     {
       "title": "المكتبة الوقفية للكتب المصورة",
       "url": "https://waqfeya.net/books/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9-%D8%A8%D9%8A%D9%86-%D9%8A%D8%AF%D9%8A%D9%83-9ff8a863f2884cbca9cb6178ac323127#google_vignette",
-      "category": "Life Admin Shopping Travel",
+      "category": "Japanese Language",
       "sources": [
         "safari"
       ],
@@ -13565,7 +13666,7 @@
     {
       "title": "mm action - Google Search",
       "url": "https://www.google.com/search?q=mm+action&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -13625,7 +13726,7 @@
     {
       "title": "valorant agent tier list september 2025 - Google Search",
       "url": "https://www.google.com/search?q=valorant+agent+tier+list+september+2025&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -13637,7 +13738,7 @@
     {
       "title": "where can I find barely in japan - Google Search",
       "url": "https://www.google.com/search?q=where+can+I+find+barely+in+japan&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -13938,7 +14039,7 @@
     {
       "title": "linear.axler.net",
       "url": "https://linear.axler.net/LADR4e.pdf#page158",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -13962,7 +14063,7 @@
     {
       "title": "Useful materials｜Study in Japan Official Website",
       "url": "https://www.studyinjapan.go.jp/en/planning/brochures/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari",
         "safari"
@@ -13975,7 +14076,7 @@
     {
       "title": "Study in Japan Official Website",
       "url": "https://www.studyinjapan.go.jp/en/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -13999,7 +14100,7 @@
     {
       "title": "العربية بين يديك Al Arabiyyah Bayna Yadayk : Free Download, Borrow, and Streaming : Internet Archive",
       "url": "https://archive.org/details/al-arabiyyah-bayna-yadayk_202306/%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9_%D8%A8%D9%8A%D9%86_%D9%8A%D8%AF%D9%8A%D9%83_Al_Arabiyyah_Bayna_Yadayk_Book_1_Part_1/page/60/mode/1up",
-      "category": "Jobs Scholarships Career",
+      "category": "Japanese Language",
       "sources": [
         "safari"
       ],
@@ -14011,7 +14112,7 @@
     {
       "title": "مثلثات قطرب - Google Search",
       "url": "https://www.google.com/search?client=safari&sca_esv=f0149a8253a94ec9&hl=en-jp&sxsrf=AHTn8zp9WZem-qXe_IFiniRY8fVJqN96Ww:1740810512983&q=%D9%85%D8%AB%D9%84%D8%AB%D8%A7%D8%AA+%D9%82%D8%B7%D8%B1%D8%A8&sa=X&ved=2ahUKEwjGiv3BoOiLAxXxr1YBHSMAHtsQ7xYoAHoECA0QAQ&biw=440&bih=760&dpr=3",
-      "category": "To Review - Uncategorized",
+      "category": "Japanese Language",
       "sources": [
         "safari"
       ],
@@ -14167,7 +14268,7 @@
     {
       "title": "miro kyoto computer vision - Google Search",
       "url": "https://www.google.com/search?q=miro+kyoto+computer+vision&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "safari"
       ],
@@ -14227,7 +14328,7 @@
     {
       "title": "brin waves - Google Search",
       "url": "https://www.google.com/search?q=brin+waves&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14288,7 +14389,7 @@
     {
       "title": "Digital Fundamentals",
       "url": "https://www.pearson.com/en-us/subject-catalog/p/digital-fundamentals/P200000001044/9780137506309",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14324,7 +14425,7 @@
     {
       "title": "Learn Python, Data Viz, Pandas & More | Tutorials | Kaggle",
       "url": "https://www.kaggle.com/learn",
-      "category": "Learning - Programming Tools",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14348,7 +14449,7 @@
     {
       "title": "Learn to Code — For Free — Coding Courses for Busy People",
       "url": "https://www.freecodecamp.org/learn",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14360,7 +14461,7 @@
     {
       "title": "Angela YU 100 days of code on Udemy - Google Search",
       "url": "https://www.google.com/search?q=Angela+YU+100+days+of+code+on+Udemy&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14372,7 +14473,7 @@
     {
       "title": "traversy media on yt - Google Search",
       "url": "https://www.google.com/search?q=traversy+media+on+yt&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14517,7 +14618,7 @@
     {
       "title": "The Latest Books, Reports, Videos, and Audiobooks - O'Reilly Media",
       "url": "https://www.oreilly.com/products/books-videos.html",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14529,7 +14630,7 @@
     {
       "title": "oreilly learning apark - Google Search",
       "url": "https://www.google.com/search?q=oreilly+learning+apark&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14541,7 +14642,7 @@
     {
       "title": "Start Here",
       "url": "https://www.acquisition.com/training/leads",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -14553,7 +14654,7 @@
     {
       "title": "Start Here",
       "url": "https://www.acquisition.com/training/offers",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -14614,7 +14715,7 @@
     {
       "title": "doc.ic.ac.uk",
       "url": "https://www.doc.ic.ac.uk/~dfg/ProbabilisticInference/InferenceAndMachineLearningNotes.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14746,7 +14847,7 @@
     {
       "title": "Home",
       "url": "https://www.eeml.eu/home",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14758,7 +14859,7 @@
     {
       "title": "印晶堂 - Google Search",
       "url": "https://www.google.com/search?sca_esv=3a30a683573ba2c0&hl=en-GB&gl=jp&output=search&kgmid=/g/1tff345v&q=%E5%8D%B0%E6%99%B6%E5%A0%82&shndl=30&source=sh/x/loc/act/m1/3&kgs=6043726ef1a851c2#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -14794,7 +14895,7 @@
     {
       "title": "how to see my likes facebook - Google Search",
       "url": "https://www.google.com/search?q=how+to+see+my+likes+facebook&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -14854,7 +14955,7 @@
     {
       "title": "on live. air - Google Search",
       "url": "https://www.google.com/search?q=on+live.+air&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -14938,7 +15039,7 @@
     {
       "title": "Learn Shell - Free Interactive Shell Tutorial",
       "url": "https://www.learnshell.org/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -14974,7 +15075,7 @@
     {
       "title": "state of the art meaning - Google Search",
       "url": "https://www.google.com/search?q=state+of+the+art+meaning&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -14998,7 +15099,7 @@
     {
       "title": "ros robotics - Google Search",
       "url": "https://www.google.com/search?q=ros+robotics&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15046,7 +15147,7 @@
     {
       "title": "Designing Data-Intensive Applications\" by Martin Kleppmann - Google Search",
       "url": "https://www.google.com/search?q=Designing+Data-Intensive+Applications%22+by+Martin+Kleppmann&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15058,7 +15159,7 @@
     {
       "title": "The DevOps Handbook - Google Search",
       "url": "https://www.google.com/search?q=The+DevOps+Handbook&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15082,7 +15183,7 @@
     {
       "title": "The Pragmatic Programmer - Google Search",
       "url": "https://www.google.com/search?q=The+Pragmatic+Programmer&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15106,7 +15207,7 @@
     {
       "title": "what are some good ai tools to create powerpoint presentations? : r/powerpoint",
       "url": "https://www.reddit.com/r/powerpoint/comments/176sxbp/what_are_some_good_ai_tools_to_create_powerpoint/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15118,7 +15219,7 @@
     {
       "title": "ChatSlide - AI Workspace For Knowledge Sharing",
       "url": "https://www.chatslide.ai/?via=jessica",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari",
         "safari"
@@ -15131,7 +15232,7 @@
     {
       "title": "the beatles members long hair - Google Search",
       "url": "https://www.google.com/search?q=the+beatles+members+long+hair&client=safari&sca_esv=7e54d0755322b7a2&hl=en-jp&udm=2&biw=440&bih=760&sxsrf=AHTn8zrT1KRQi07aYqpzlQrD35YYVvbasQ%3A1743339014186&ei=Bj7pZ7SJC7y9vr0PqYyRwAQ&oq=the+beatles+members+long+hair&gs_lp=EhJtb2JpbGUtZ3dzLXdpei1pbWciHXRoZSBiZWF0bGVzIG1lbWJlcnMgbG9uZyBoYWlyMgQQABgeMggQABiABBiiBDIIEAAYgAQYogRI6hJQmgVYrBJwAXgAkAEAmAHxAaAB8AyqAQYxLjEwLjG4AQPIAQD4AQGYAgygApYLwgIKEAAYgAQYQxiKBcICBhAAGAcYHsICBRAAGIAEwgIEECEYFcICCBAAGKIEGIkFwgIHEAAYgAQYDcICBhAAGA0YHpgDAOIDBRIBMSBAiAYBkgcEMi4xMKAHpCM&sclient=mobile-gws-wiz-img",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15167,7 +15268,7 @@
     {
       "title": "How is everyone making the Studio Ghibli style photos? : r/ChatGPTPro",
       "url": "https://www.reddit.com/r/ChatGPTPro/comments/1jldtt2/how_is_everyone_making_the_studio_ghibli_style/",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15191,7 +15292,7 @@
     {
       "title": "How to Join the Top 10: Key Tools to Attract Digital Nomads to Kazakhstan",
       "url": "https://astanahub.com/en/article/kak-voiti-v-top-10-stran-kliuchevye-instrumenty-dlia-privlecheniia-tsifrovykh-kochevnikov-v-kazakhstan",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15239,7 +15340,7 @@
     {
       "title": "point separability filter - Google Search",
       "url": "https://www.google.com/search?q=point+seperability+filter&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Subspace Methods",
       "sources": [
         "safari"
       ],
@@ -15275,7 +15376,7 @@
     {
       "title": "hyperland - Google Search",
       "url": "https://www.google.com/search?q=hyperland&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15287,7 +15388,7 @@
     {
       "title": "minegrub - Google Search",
       "url": "https://www.google.com/search?q=minegrub&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15299,7 +15400,7 @@
     {
       "title": "nginx - Google Search",
       "url": "https://www.google.com/search?q=nginx&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -15359,7 +15460,7 @@
     {
       "title": "LiDAR Camera L515 – Intel® RealSense™ Depth and Tracking Cameras",
       "url": "https://www.intelrealsense.com/lidar-camera-l515/",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15371,7 +15472,7 @@
     {
       "title": "MDAトップ人材養成特別演習 履修説明会（2025年度）参加申込み",
       "url": "https://forms.office.com/pages/responsepage.aspx?id=_V1bnp1m-E6yQEIpy_SoPdhy-bvgTL5GvQjWIZev5c9UQjdPSVk5RUJFMFdOQ0RQWEJHUTdITUQ0SS4u&origin=QRCode&route=shorturl",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15395,7 +15496,7 @@
     {
       "title": "傷ついた目を開いて：眼科医が見たガザの現場・Wounded Eyes Wide Open: An Opthalmologist 's Account from Gaza | Peatix",
       "url": "https://woundedeyeswideopentokyo.peatix.com/?fbclid=PAZXh0bgNhZW0CMTEAAaeFROVHJHw8E7W-VmDVRzLf4YVqhssJyHqfUdk_CYU6T2HIl06j2i2T7YkunQ_aem_X-2taJjfcDutfSJZS9NcNQ",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15407,7 +15508,7 @@
     {
       "title": "Peatix",
       "url": "https://peatix.com/sales/event/4387249/confirmed",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15419,7 +15520,7 @@
     {
       "title": "Change Sign-In Email Address - Zoom",
       "url": "https://us04web.zoom.us/change_email_help?code=VzW3WL17YKXciQhtKS7arD8V3ymJsYO632GyEqaoLYc.AG.Z1jxc5poAV-Nu6GEqEcg5NJ_KRvSLIhvan-dheWRzJj0Tn4DgjXCcJBmhCIdE3GNVq4pA4TULQ4G1UBkePfM29n8ykc-2LCesKlnvv77HlucgfLaHrYHzDJFCfYWibUhH5kJ8LXQseGtRTtjjW_dfmXwpCKrnPdqgxxdO0LGhx9CTYR7P_K-5updqb6LvNZc7GU1VM0oh8u_NfjWlh1wTY84QqtAvD9xoAaConOiFc3eoiy0Ya6BMRpbK2UO0oGPG2T28w.tvgYEhcJrAhA3JiTQzF_DQ.fvWnviu2Ga3sCi4c",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15431,7 +15532,7 @@
     {
       "title": "MDAトップ人材養成特別演習 希望調査（2025）【4/30締め切り】",
       "url": "https://forms.office.com/pages/responsepage.aspx?id=_V1bnp1m-E6yQEIpy_SoPafX2Gf-u51LhaU3MEb5pENURVcxQ1hGMktFUTJVWFgyMFY4UldORjA0WC4u&origin=QRCode&route=shorturl",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15480,7 +15581,7 @@
     {
       "title": "what does pagan mean - Google Search",
       "url": "https://www.google.com/search?q=what+does+pagan+mean&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#ebo=0",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15504,7 +15605,7 @@
     {
       "title": "Can’t Open Page",
       "url": "https://www.google.com/search?q=mussafa+app&client=safari&sca_esv=e2833360f61929be&hl=en-jp&sxsrf=AHTn8zoS0qym4uK_fNWxdVxoUwBjzNvunA%3A1746763655283&ei=h38daMGIEY6pvr0PwpzWyAI&oq=mussafa+app&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIgttdXNzYWZhIGFwcDIHECMYsAMYJzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzIKEAAYsAMY1gQYRzINEAAYgAQYsAMYQxiKBTINEAAYgAQYsAMYQxiKBTITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBATITEC4YgAQYsAMYQxjIAxiKBdgBAUjLGVD5BVjjEXACeAGQAQCYAQCgAQCqAQC4AQPIAQD4AQGYAgKgAgiYAwDiAwUSATEgQIgGAZAGEboGBAgBGAiSBwEyoAcAsgcAuAcA&sclient=mobile-gws-wiz-serp",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15516,7 +15617,7 @@
     {
       "title": "extrapulate - Google Search",
       "url": "https://www.google.com/search?q=extrapulate&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -15528,7 +15629,7 @@
     {
       "title": "shisha - Google Search",
       "url": "https://www.google.com/search?q=shisha&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15540,7 +15641,7 @@
     {
       "title": "Create a Gmail account - Gmail Help",
       "url": "https://support.google.com/mail/answer/56256?hl=en",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15576,7 +15677,7 @@
     {
       "title": "List of AirPods - The Apple Wiki",
       "url": "https://theapplewiki.com/wiki/List_of_AirPods",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15588,7 +15689,7 @@
     {
       "title": "apple watch series 6 used - Google Search",
       "url": "https://www.google.com/search?q=apple+watch+series+6+used&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15612,7 +15713,7 @@
     {
       "title": "how do you say خصم in english - Google Search",
       "url": "https://www.google.com/search?q=how+do+you+say+%D8%AE%D8%B5%D9%85+in+english&client=safari&sca_esv=076e05d021dd9d5f&hl=en-jp&sxsrf=AHTn8zroPQ_ygFHTy-n1E7CX0gsgaHD09w%3A1746001118926&ei=3twRaKuOOK3f2roPifzlkQ0&oq=how+do+you+say+%D8%AE%D8%B5%D9%85+in+english&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIiBob3cgZG8geW91IHNheSDYrti12YUgaW4gZW5nbGlzaEivEVD2C1ihEHAAeACQAQCYAQCgAQCqAQC4AQPIAQD4AQGYAgCgAgCYAwCIBgGSBwCgBwCyBwC4BwA&sclient=mobile-gws-wiz-serp",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15636,7 +15737,7 @@
     {
       "title": "earth ellipse shape sun - Google Search",
       "url": "https://www.google.com/search?client=safari&sca_esv=d20ad1224ee610a9&hl=en-jp&sxsrf=AHTn8zrfy7wqNM4ek9tuRUjNYpTd_wyGpw:1746081754476&udm=2&fbs=ABzOT_CpGl4iTifXrR0wiRhoFvN4KC3CZFw4eZw55Dhid0WPwh0pbdXXPcCe9TjVbzqvWIrF7pgiBKtna8Z7BPSC0HPPfeRfAAtjYq3VHx5M9ddEqPkjJ-0HR-vnqfFFMbYUhqYioQr_1qJbpSSJS0APxBwXqwY0tuIuePkOYhlJ-9O8PXTOPtRM0s2Xpzf3UMEzPUgDiNHLNbiyzHAYltpVr0T8OrtvpK2SzI5MRG3Gmin81ZyX9vc&q=earth+ellipse+shape+sun&sa=X&ved=2ahUKEwjUq-W11YGNAxUW5DQHHZ6lM3wQtKgLegQIEhAB&biw=440&bih=760&dpr=3",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15648,7 +15749,7 @@
     {
       "title": "QZSS - Google Search",
       "url": "https://www.google.com/search?q=QZSS&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15660,7 +15761,7 @@
     {
       "title": "whats GNSS - Google Search",
       "url": "https://www.google.com/search?q=whats+GNSS&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15672,7 +15773,7 @@
     {
       "title": "what is GLONASS - Google Search",
       "url": "https://www.google.com/search?q=whats+GLONASS&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15684,7 +15785,7 @@
     {
       "title": "whats reaction wheel - Google Search",
       "url": "https://www.google.com/search?q=whats+reaction+wheel&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15696,19 +15797,19 @@
     {
       "title": "(PDF) Sentiment Analysis of Palestinian Arabic Dialect Using Lexicon-Based Approach",
       "url": "https://www.researchgate.net/publication/391535123_Sentiment_Analysis_of_Palestinian_Arabic_Dialect_Using_Lexicon-Based_Approach",
-      "category": "Research - Conferences Journals Zotero",
+      "category": "Japanese Language",
       "sources": [
         "safari"
       ],
       "source_paths": [
         "Safari links.md"
       ],
-      "zotero_candidate": true
+      "zotero_candidate": false
     },
     {
       "title": "buy stevia drops online - Google Search",
       "url": "https://www.google.com/search?q=buy+stevia+drops+online&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15744,7 +15845,7 @@
     {
       "title": "ucl - Google Search",
       "url": "https://www.google.com/search?q=ucl&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -15792,7 +15893,7 @@
     {
       "title": "weather today - Google Search",
       "url": "https://www.google.com/search?q=weather+today&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Life Admin Shopping Travel",
       "sources": [
         "safari"
       ],
@@ -15804,7 +15905,7 @@
     {
       "title": "テルモ My Page2027",
       "url": "https://mypage.3070.i-webs.jp/terumo2027/applicant/entry/baitai-entry/entrycd/20250301RD",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15816,7 +15917,7 @@
     {
       "title": "rd.ntt",
       "url": "https://www.rd.ntt/download/rd2024-j.pdf",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15828,7 +15929,7 @@
     {
       "title": "資料ダウンロード | NTT R&D Website",
       "url": "https://www.rd.ntt/download/",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15852,7 +15953,7 @@
     {
       "title": "FPGA in computer - Google Search",
       "url": "https://www.google.com/search?q=FPGA+in+computer&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15900,7 +16001,7 @@
     {
       "title": "ADAS in driving technology - Google Search",
       "url": "https://www.google.com/search?q=ADAS+in+driving+trchnology&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Remote Sensing Datasets",
       "sources": [
         "safari"
       ],
@@ -15912,7 +16013,7 @@
     {
       "title": "デクセリアルズ株式会社 27年新卒採用マイページ",
       "url": "https://mypage.3030.i-webs.jp/dexerials2027/applicant/login/baitai-entry/entrycd/lf1",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -15948,7 +16049,7 @@
     {
       "title": "magic patterns - Google Search",
       "url": "https://www.google.com/search?q=magic+patterns&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -16044,7 +16145,7 @@
     {
       "title": "Gabrielle De Lannoy - Google Scholar",
       "url": "https://scholar.google.be/citations?user=IeM7opcAAAAJ&hl=en",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "safari"
       ],
@@ -16116,7 +16217,7 @@
     {
       "title": "what is the limit of paypal in japana - Google Search",
       "url": "https://www.google.com/search?q=what+is+the+limit+of+paypal+in+japana&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -17005,7 +17106,7 @@
     {
       "title": "Learning How to Learn by Deep Teaching Solutions | Coursera",
       "url": "https://www.coursera.org/learn/learning-how-to-learn/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -17029,7 +17130,7 @@
     {
       "title": "supermemory — Universal Memory API for AI apps",
       "url": "https://supermemory.ai/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -17113,7 +17214,7 @@
     {
       "title": "did arthur mitchell kill rita - Google Search",
       "url": "https://www.google.com/search?q=did+arthur+mitchell+kill+rita&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -17797,7 +17898,7 @@
     {
       "title": "Continuous Thought Machines",
       "url": "https://pub.sakana.ai/ctm/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Math CS ML",
       "sources": [
         "safari"
       ],
@@ -18325,7 +18426,7 @@
     {
       "title": "Welcome to nginx!",
       "url": "http://130.158.43.113/",
-      "category": "To Review - Uncategorized",
+      "category": "Learning - Programming Tools",
       "sources": [
         "safari"
       ],
@@ -18553,7 +18654,7 @@
     {
       "title": "Ramdani Lab - Vacancy",
       "url": "https://sites.google.com/view/ramdani-lab/vacancy?authuser=0",
-      "category": "To Review - Uncategorized",
+      "category": "Research - Conferences Journals Zotero",
       "sources": [
         "safari"
       ],
@@ -18565,7 +18666,7 @@
     {
       "title": "Exploring the Earth with QGIS: A Guide to Using Satellite Imagery at Its Full Potential by Fatwa Ramdani - Google Search",
       "url": "https://www.google.com/search?q=Exploring+the+Earth+with+QGIS%3A+A+Guide+to+Using+Satellite+Imagery+at+Its+Full+Potential+by+Fatwa+Ramdani&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "safari"
       ],
@@ -18577,7 +18678,7 @@
     {
       "title": "Case Studies and Examples of Earth Remote Sensing Applications Using QGIS | Springer Nature Link",
       "url": "https://link.springer.com/chapter/10.1007/978-3-031-46042-5_10",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "safari",
         "safari"
@@ -18590,7 +18691,7 @@
     {
       "title": "Downloading Sentinel 2 images using QGIS | SCP Plugin - YouTube",
       "url": "https://m.youtube.com/watch?v=48-pF8nFw6o",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "safari"
       ],
@@ -18602,7 +18703,7 @@
     {
       "title": "How to Download and Visualize Sentinel Data in QGIS",
       "url": "https://www.geodose.com/2021/05/how-to-download-visualize-sentine-qgis.html?m=1",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "safari"
       ],
@@ -18614,7 +18715,7 @@
     {
       "title": "Amazon.co.jp: Exploring the Earth with QGIS: A Guide to Using Satellite Imagery at Its Full Potential (Springer Remote Sensing/Photogrammetry) : Ramdani, Fatwa: Foreign Language Books",
       "url": "https://www.amazon.co.jp/Exploring-Earth-QGIS-Satellite-Photogrammetry/dp/3031460448?dplnkId=1d774c64-5486-4f8d-a483-ba8cf46d56b9&nodl=1",
-      "category": "Research - Remote Sensing Datasets",
+      "category": "Research - Code And Tooling",
       "sources": [
         "safari"
       ],
@@ -18830,7 +18931,7 @@
     {
       "title": "TUANリレーション登録／TUAN-Relation Registration",
       "url": "https://forms.office.com/Pages/ResponsePage.aspx?id=_V1bnp1m-E6yQEIpy_SoPc5fqiMNb-FCiiVUPr72HJtUMURFN1IxTzlKM1BZR0Q1QTBSNUxHTVBTWSQlQCN0PWcu&origin=QRCode",
-      "category": "To Review - Uncategorized",
+      "category": "University Tsukuba Admin",
       "sources": [
         "safari"
       ],
@@ -19019,5 +19120,11 @@
       ],
       "zotero_candidate": false
     }
-  ]
+  ],
+  "organized_output_bookmark_entries": 1551,
+  "organized_output_unique_urls": 1532,
+  "duplicate_entries_preserved_in_review": 19,
+  "missing_bookmark_entries_after_organization": 0,
+  "extra_bookmark_entries_after_organization": 0,
+  "exact_duplicate_bookmark_entries_detected": 19
 }
