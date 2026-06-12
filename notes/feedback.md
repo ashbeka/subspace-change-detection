@@ -2,18 +2,16 @@
 
 ## Table Of Contents
 
-- [Current Sensei Feedback](#current-sensei-feedback)
-- [Subspace Construction Feedback](#subspace-construction-feedback)
-- [Venus And TPAMI Feedback](#venus-and-tpami-feedback)
-- [Project Framing Feedback](#project-framing-feedback)
-- [Older Advisor And Senpai Feedback](#older-advisor-and-senpai-feedback)
-- [First Seminar Student Feedback](#first-seminar-student-feedback)
-- [First Seminar QA Report Follow-Up](#first-seminar-qa-report-follow-up)
-- [Paused Or Unsafe Claims](#paused-or-unsafe-claims)
+- [1. Current Sensei Feedback](#1-current-sensei-feedback)
+- [2. Subspace Construction Feedback](#2-subspace-construction-feedback)
+- [3. Venus And TPAMI Feedback](#3-venus-and-tpami-feedback)
+- [4. Project Framing Feedback](#4-project-framing-feedback)
+- [5. Older Advisor And Senpai Feedback](#5-older-advisor-and-senpai-feedback)
+- [6. First Seminar Student Feedback](#6-first-seminar-student-feedback)
+- [7. First Seminar QA Report Follow-Up](#7-first-seminar-qa-report-follow-up)
+- [8. Paused Or Unsafe Claims](#8-paused-or-unsafe-claims)
 
-This file keeps advisor, senpai, seminar, and self-critique feedback in one place. Each item should end in a concrete action.
-
-## Current Sensei Feedback
+## 1. Current Sensei Feedback
 
 Sensei agreed that the current algorithm can form a subspace, but warned that it can break spatial information in the input image.
 
@@ -50,7 +48,7 @@ Actions:
 - Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.
 - Prepare concrete questions for Jang/Suto/Pedro/Santos about sample definition, spatial preservation, rank choice, and reference-code behavior.
 
-## Subspace Construction Feedback
+## 2. Subspace Construction Feedback
 
 Questions raised by Sensei/senpais:
 
@@ -80,7 +78,7 @@ Action:
 - Add valid-mask exclusion checks so real changed pixels are not silently removed.
 - Add rank sensitivity experiments instead of treating rank 6 as special.
 
-## Venus And TPAMI Feedback
+## 3. Venus And TPAMI Feedback
 
 Sensei provided Venus MATLAB files used in the TPAMI 2015 nonlinear DS/KGDS setting.
 
@@ -115,7 +113,7 @@ Action:
 - Use the Venus implementation as a learning and reference audit.
 - Implement preimage reconstruction only if TPAMI-style emphasized images become necessary.
 
-## Project Framing Feedback
+## 4. Project Framing Feedback
 
 Current danger:
 
@@ -137,7 +135,7 @@ Action:
 - Treat negative results as valid evidence.
 - Focus on what subspace construction is appropriate for satellite imagery.
 
-## Older Advisor And Senpai Feedback
+## 5. Older Advisor And Senpai Feedback
 
 Source: nested repo `research-notes/`, especially `notes/sensei_notes.md`, `notes/senpais_notes.md`, `notes/my_notes.md`, `notes/old_notes.md`, and `master/session_audit_2026-03-24.md`.
 
@@ -170,7 +168,7 @@ Actions:
 - Treat xBD-S12, MultiSenGE GDS/KGDS, SSC change-type clustering, and operational decision layers as future or warm-extension tracks, not active claims.
 - Before adding new methods, write the problem they solve and the evaluation that would prove they help.
 
-## First Seminar Student Feedback
+## 6. First Seminar Student Feedback
 
 Source: local Excel import `docs/source_records/student_feedback_channel4_2025-11-20.xlsx`.
 
@@ -246,7 +244,7 @@ Concrete research tasks from student feedback:
 - Clarify application scope: general change detection, disaster damage, construction monitoring, greenhouse mapping, or another specific target.
 - Add seasonal/pseudo-change robustness to the future experiment list.
 
-## First Seminar QA Report Follow-Up
+## 7. First Seminar QA Report Follow-Up
 
 Source: submitted QA report `docs/source_records/qa_report_response_2025-11-20.pdf`.
 
@@ -273,7 +271,7 @@ Actions:
 - Add snow/cloud/season-aware preprocessing to the future experimental design.
 - Audit IR-MAD before using it as a negative baseline in a paper.
 
-## Paused Or Unsafe Claims
+## 8. Paused Or Unsafe Claims
 
 Do not currently claim:
 

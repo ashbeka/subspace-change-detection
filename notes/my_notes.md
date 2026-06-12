@@ -5,6 +5,16 @@
 - [1. Purpose](#1-purpose)
 - [2. How To Use This File](#2-how-to-use-this-file)
 - [3. Current Rough Notes](#3-current-rough-notes)
+  - [3.1 Main Research Doubt](#31-main-research-doubt)
+  - [3.2 Current Safe Framing](#32-current-safe-framing)
+  - [3.3 Subspace Construction Questions](#33-subspace-construction-questions)
+  - [3.4 Spatial Information And Green Learning Ideas](#34-spatial-information-and-green-learning-ideas)
+  - [3.5 CCA, KCCA, And Structured Matching Ideas](#35-cca-kcca-and-structured-matching-ideas)
+  - [3.6 DS, GDS, KDS, KGDS, And Temporal Methods](#36-ds-gds-kds-kgds-and-temporal-methods)
+  - [3.7 SSC And Change-Type Clustering](#37-ssc-and-change-type-clustering)
+  - [3.8 Dataset And Use-Case Notes](#38-dataset-and-use-case-notes)
+  - [3.9 Experiment Ideas To Keep Alive](#39-experiment-ideas-to-keep-alive)
+  - [3.10 Paper And Presentation Warnings](#310-paper-and-presentation-warnings)
 - [4. Notes To Translate Later](#4-notes-to-translate-later)
 
 ## 1. Purpose

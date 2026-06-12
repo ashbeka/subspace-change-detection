@@ -2,17 +2,15 @@
 
 ## Table Of Contents
 
-- [Must-Cite Core Sources](#must-cite-core-sources)
-- [Subspace And Kernel References](#subspace-and-kernel-references)
-- [Reference Code](#reference-code)
-- [Dataset Context](#dataset-context)
-- [Bookmark Triage Rules](#bookmark-triage-rules)
-- [Literature Leads](#literature-leads)
-- [Reference Leads](#reference-leads)
+- [1. Must-Cite Core Sources](#1-must-cite-core-sources)
+- [2. Subspace And Kernel References](#2-subspace-and-kernel-references)
+- [3. Reference Code](#3-reference-code)
+- [4. Dataset Context](#4-dataset-context)
+- [5. Bookmark Triage Rules](#5-bookmark-triage-rules)
+- [6. Literature Leads](#6-literature-leads)
+- [7. Reference Leads](#7-reference-leads)
 
-This file is the paper and reference-code matrix. Keep entries short and useful.
-
-## Must-Cite Core Sources
+## 1. Must-Cite Core Sources
 
 | Source | Why it matters | Project use |
 |---|---|---|
@@ -36,7 +34,7 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | Wavelet transform / image compression resources | Senpai-suggested intuition for multiscale decomposition and information-preserving representations. | Future explanatory and feature-engineering lead; not current evidence. |
 | Harmonized Sentinel-2 L2A | Sensei-supported candidate for time-sequential satellite experiments. | Dataset feasibility audit before first/second DS, GDS/KGDS, or geodesic claims. |
 
-## Subspace And Kernel References
+## 2. Subspace And Kernel References
 
 Fukui and Maki TPAMI 2015:
 
@@ -88,7 +86,7 @@ Temporal and image-set subspace ideas:
 - The superposed shape-subspace MVA hand-action paper stacks multiple skeleton frames into one high-dimensional subspace and selects informative frames for efficient CPU classification. Use it as an analogy for key-date or patch-stack selection in satellite sequences.
 - The MVA human-motion shape-subspace paper uses DS between shape subspaces to measure whole-motion variation, landmark contribution, and coordination between body parts. Use it as an analogy for future attribution: which bands, patches, or regions contribute to a change subspace and how different regions move together.
 
-## Reference Code
+## 3. Reference Code
 
 Bundled code in this repo:
 
@@ -130,7 +128,7 @@ Archived external-file leads:
 
 Use these as reference points, not unquestioned ground truth.
 
-## Dataset Context
+## 4. Dataset Context
 
 OSCD:
 
@@ -163,7 +161,7 @@ Harmonized Sentinel-2 L2A:
 - This should be audited before using first/second DS, GDS/KGDS, or geodesic projection on it.
 - Important checks: available bands, date cadence, cloud/no-data filtering, same-region alignment, and whether there is any evaluation signal.
 
-## Bookmark Triage Rules
+## 5. Bookmark Triage Rules
 
 When Chrome bookmarks are imported later, classify each item as one of:
 
@@ -176,7 +174,7 @@ When Chrome bookmarks are imported later, classify each item as one of:
 
 The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
 
-## Literature Leads
+## 6. Literature Leads
 
 Source: `research-notes/refs_links/`, `research-notes/notes/sensei_notes.md`, and `research-notes/coverage_matrix.csv`.
 
@@ -212,7 +210,7 @@ Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
 - U-Net and ResNet only when the corresponding models are discussed.
 - Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
 
-## Reference Leads
+## 7. Reference Leads
 
 Additional references and code leads from old archive notes:
 

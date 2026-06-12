@@ -2,18 +2,16 @@
 
 ## Table Of Contents
 
-- [Source And Preservation](#source-and-preservation)
-- [Category Counts](#category-counts)
-- [Zotero-First Reading Queue](#zotero-first-reading-queue)
-- [Manual Additions After Bookmark Import](#manual-additions-after-bookmark-import)
-- [Implementation References To Keep Visible](#implementation-references-to-keep-visible)
-- [How To Use This](#how-to-use-this)
-- [Import Back To Chrome](#import-back-to-chrome)
-- [Categorization Notes](#categorization-notes)
+- [1. Source And Preservation](#1-source-and-preservation)
+- [2. Category Counts](#2-category-counts)
+- [3. Zotero-First Reading Queue](#3-zotero-first-reading-queue)
+- [4. Manual Additions After Bookmark Import](#4-manual-additions-after-bookmark-import)
+- [5. Implementation References To Keep Visible](#5-implementation-references-to-keep-visible)
+- [6. How To Use This](#6-how-to-use-this)
+- [7. Import Back To Chrome](#7-import-back-to-chrome)
+- [8. Categorization Notes](#8-categorization-notes)
 
-This file summarizes the Chrome bookmark export for research reading and Zotero triage. The full raw and organized bookmark HTML files live in `docs/source_records/`.
-
-## Source And Preservation
+## 1. Source And Preservation
 
 - Raw export: `docs/source_records/chrome_bookmarks_raw_2026-06-07.html`
 - Organized Chrome import file: `docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html`
@@ -24,7 +22,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 - Zotero context: use the high-priority paper list below to manually import the important papers first.
 - Local PDF copies in `references/reference_papers/` were removed after their ideas and public links were represented here and in `notes/literature.md`; the only retained PDF is the human-motion MVA paper without a reliable public URL.
 
-## Category Counts
+## 2. Category Counts
 
 | category | count | use |
 |---|---:|---|
@@ -38,7 +36,7 @@ This file summarizes the Chrome bookmark export for research reading and Zotero 
 | 08 Venues Search Portals And Learning Tools | 57 | search portals, venues, courses, non-paper utility |
 | 09 Low Relevance Or Needs Review | 94 | kept for review; not thesis-first |
 
-## Zotero-First Reading Queue
+## 3. Zotero-First Reading Queue
 
 Start here. Some papers appear as arXiv/PDF/IEEE duplicates; import one canonical Zotero item and attach alternate URLs/PDFs if useful.
 
@@ -79,7 +77,7 @@ Start here. Some papers appear as arXiv/PDF/IEEE duplicates; import one canonica
 | medium | [Image-set based Classification using Multiple Pseudo-whitened Mutual Subspace Method](https://www.scitepress.org/Papers/2022/108365/108365.pdf) | discriminative/pseudo-whitened mutual subspace reference |
 | low | [Efficient Skeleton-Based Action Recognition using Superposed Shape Subspace](https://cir.nii.ac.jp/crid/1390869390127946880) | shape-subspace/key-frame selection analogy; future patch/key-date idea |
 
-## Manual Additions After Bookmark Import
+## 4. Manual Additions After Bookmark Import
 
 These were added after the 2026-06-07 Chrome export. They do not change the raw export counts, but they are included in the organized Chrome import file.
 
@@ -95,7 +93,7 @@ These were added after the 2026-06-07 Chrome export. They do not change the raw 
 
 No reliable public URL was found for `MVA_2025_human_motion_analysis.pdf` during this pass. Its idea is ingested in `notes/literature.md`, `notes/methods.md`, and `notes/experiments.md`, but the source itself is not safe in Chrome/Zotero unless a public record is found or the PDF is preserved elsewhere. Keep that local PDF until the user either finds a public source or imports it into Zotero manually.
 
-## Implementation References To Keep Visible
+## 5. Implementation References To Keep Visible
 
 | item | why |
 |---|---|
@@ -115,18 +113,18 @@ No reliable public URL was found for `MVA_2025_human_motion_analysis.pdf` during
 | [pallavijain-pj/SenCLIP](https://github.com/pallavijain-pj/SenCLIP) | code/repository |
 | [seunghyeokleeme/xBD_road_damage_assessment: [Appl. Sci. 2025, 15(14), 7669] Deep Learning-Based Detection and Assessment of Road Damage Caused by Disaster with Satellite Imagery](https://github.com/seunghyeokleeme/xBD_road_damage_assessment) | code/repository |
 
-## How To Use This
+## 6. How To Use This
 
 - For Zotero: manually import the `01 Must Read` papers first, then inspect categories `02`, `03`, and `06`.
 - For Codex implementation work: use `05 Implementation Reference Code` and the method papers in `02`.
 - For thesis related work: prioritize `01`, then surveys and benchmark papers from `03`.
 - For cleanup: review `09 Low Relevance Or Needs Review` later before deleting anything from Chrome.
 
-## Import Back To Chrome
+## 7. Import Back To Chrome
 
 Use Chrome Bookmark Manager -> Import bookmarks -> select `docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html`.
 
-## Categorization Notes
+## 8. Categorization Notes
 
 - Categorization is heuristic and should be treated as a starting point, not final bibliography truth.
 - Search pages and portals are intentionally not marked Zotero-first even when their titles mention important papers.

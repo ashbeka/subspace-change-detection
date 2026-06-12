@@ -2,17 +2,13 @@
 
 ## Table Of Contents
 
-- [Active Docs](#active-docs)
-- [Source Records](#source-records)
-- [Active Notes](#active-notes)
-- [Historical Archive](#historical-archive)
-- [Research Notes Rule](#research-notes-rule)
+- [1. Active Docs](#1-active-docs)
+- [2. Source Records](#2-source-records)
+- [3. Active Notes](#3-active-notes)
+- [4. Historical Archive](#4-historical-archive)
+- [5. Research Notes Rule](#5-research-notes-rule)
 
-`docs/` is for project-facing documentation: concise project status, exact commands, and accepted results.
-
-Use `../notes/` for active research thinking: feedback, method understanding, literature triage, and experiment ideas.
-
-## Active Docs
+## 1. Active Docs
 
 Read these first:
 
@@ -25,7 +21,7 @@ Read these first:
 3. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the current major OSCD 3-seed sweep.
 
-## Source Records
+## 2. Source Records
 
 `source_records/` preserves original human-facing project records:
 
@@ -41,10 +37,12 @@ Read these first:
   - Importable organized Chrome bookmark file preserving every URL once.
 - `presentations/legacy_2025_oscd_ds_seminar/`
   - Historical seminar slide PNGs and talk notes. These are provenance, not current evidence; some result claims were superseded by later controlled sweeps.
+- `final_organization_2026-06-12/`
+  - Raw source batch for the final notes/bookmark organization pass, including Apple Notes, Slack exports, Word notes, Fukui subspace PDF, image attachments, Chrome export, Safari links, and moved historical ingestion ledgers.
 
 These files are preserved as provenance. They are not the active project truth. Useful knowledge from them should be reflected in `../notes/` or the active docs.
 
-## Active Notes
+## 3. Active Notes
 
 The active thinking files are:
 
@@ -56,13 +54,13 @@ The active thinking files are:
 - `../notes/reference_bookmarks.md`
 - `../notes/research_paper_plan.md`
 
-## Historical Archive
+## 4. Historical Archive
 
 `docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into the active `../notes/` files and project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
 
 The old `phase1/docs/` and `phase2/docs/` folders were also removed after consolidation. Their useful commands, method details, historical result caveats, and experiment plans now live in `../notes/methods.md`, `../notes/experiments.md`, and `RUNBOOK.md`. Their generated figures were not kept as active docs; regenerate or recover from Git history only if a specific figure is needed.
 
-## Research Notes Rule
+## 5. Research Notes Rule
 
 `../notes/` is the current active notes location.
 

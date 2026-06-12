@@ -2,18 +2,16 @@
 
 ## Table Of Contents
 
-- [Current Scope](#current-scope)
-- [Problem Statement](#problem-statement)
-- [Implemented Pipeline](#implemented-pipeline)
-- [Current Evidence](#current-evidence)
-- [Immediate Next Decision](#immediate-next-decision)
-- [Forbidden Overclaims](#forbidden-overclaims)
-- [Active Reading Map](#active-reading-map)
-- [Historical Archive](#historical-archive)
+- [1. Current Scope](#1-current-scope)
+- [2. Problem Statement](#2-problem-statement)
+- [3. Implemented Pipeline](#3-implemented-pipeline)
+- [4. Current Evidence](#4-current-evidence)
+- [5. Immediate Next Decision](#5-immediate-next-decision)
+- [6. Forbidden Overclaims](#6-forbidden-overclaims)
+- [7. Active Reading Map](#7-active-reading-map)
+- [8. Historical Archive](#8-historical-archive)
 
-This is the current project-facing summary. It should stay short. For research thinking, use `notes/`. For commands, use `docs/RUNBOOK.md`.
-
-## Current Scope
+## 1. Current Scope
 
 The broader research direction is **interpretable subspace-based change detection for multispectral satellite imagery**.
 
@@ -29,7 +27,7 @@ pre/post Sentinel-2 images -> Phase 1 prior maps -> Phase 2 supervised segmentat
 
 OSCD is the current concrete benchmark and evidence source, not a permanent boundary on the thesis. xBD, xBD-S12, MultiSenGE semantic change, Harmonized Sentinel-2 L2A, and abandoned-greenhouse mapping are future or candidate directions unless their own data pipeline, labels, and evaluation are implemented.
 
-## Problem Statement
+## 2. Problem Statement
 
 Current research question:
 
@@ -39,7 +37,7 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 
 The key methodological risk is spatial information. The current global pixel DS can build a subspace, but it fits PCA from unordered 13-band pixel vectors. Pixel position is only restored after scoring.
 
-## Implemented Pipeline
+## 3. Implemented Pipeline
 
 Phase 1:
 
@@ -55,7 +53,7 @@ Phase 2:
 - trains binary segmentation models such as U-Net and Siamese U-Net;
 - evaluates stitched city-level OSCD masks under ignored `phase2/outputs/`.
 
-## Current Evidence
+## 4. Current Evidence
 
 Trusted local evidence:
 
@@ -80,7 +78,7 @@ Subspace correction:
 - It is now treated as legacy.
 - Canonical/eig DS are the cleaner linear DS paths.
 
-## Immediate Next Decision
+## 5. Immediate Next Decision
 
 Before more long U-Net sweeps, run a spatial subspace audit:
 
@@ -92,7 +90,7 @@ This directly answers Sensei's concern about breaking spatial information.
 
 The experiment should report AUROC, PR-AUC, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusion rate, runtime, and visual maps.
 
-## Forbidden Overclaims
+## 6. Forbidden Overclaims
 
 Do not currently claim:
 
@@ -104,7 +102,7 @@ Do not currently claim:
 - OSCD binary change results prove disaster damage performance;
 - current global pixel DS preserves spatial structure during fitting.
 
-## Active Reading Map
+## 7. Active Reading Map
 
 - `notes/feedback.md`: advisor/senpai feedback and what it implies.
 - `notes/methods.md`: DS, GDS, KDS, KGDS, OSCD, and Phase 2 method understanding.
@@ -114,6 +112,6 @@ Do not currently claim:
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep result report.
 
-## Historical Archive
+## 8. Historical Archive
 
 The useful knowledge from the old `docs/archive/` folder has been consolidated into the active `notes/` files and project docs. The archive folder was removed after final review; tracked historical files remain available through Git/GitHub history.

@@ -2,20 +2,20 @@
 
 ## Table Of Contents
 
-- [Current Project Scope](#current-project-scope)
-- [Data](#data)
-- [Phase 1: Prior Maps](#phase-1-prior-maps)
-- [Spectral Change Versus Semantic Change](#spectral-change-versus-semantic-change)
-- [Phase 2: Supervised Segmentation](#phase-2-supervised-segmentation)
-- [DS In The Current OSCD Adaptation](#ds-in-the-current-oscd-adaptation)
-- [Corrected DS Implementation](#corrected-ds-implementation)
-- [PCA Rank 6](#pca-rank-6)
-- [DS, GDS, KDS, KGDS](#ds-gds-kds-kgds)
-- [Future Method Hooks](#future-method-hooks)
-- [Venus KDS/KGDS Audit](#venus-kdskgds-audit)
-- [Spatial Information Problem](#spatial-information-problem)
-- [Projection Back To Image Space](#projection-back-to-image-space)
-- [Method Caveats](#method-caveats)
+- [1. Current Project Scope](#1-current-project-scope)
+- [2. Data](#2-data)
+- [3. Phase 1: Prior Maps](#3-phase-1-prior-maps)
+- [4. Spectral Change Versus Semantic Change](#4-spectral-change-versus-semantic-change)
+- [5. Phase 2: Supervised Segmentation](#5-phase-2-supervised-segmentation)
+- [6. DS In The Current OSCD Adaptation](#6-ds-in-the-current-oscd-adaptation)
+- [7. Corrected DS Implementation](#7-corrected-ds-implementation)
+- [8. PCA Rank 6](#8-pca-rank-6)
+- [9. DS, GDS, KDS, KGDS](#9-ds-gds-kds-kgds)
+- [10. Future Method Hooks](#10-future-method-hooks)
+- [11. Venus KDS/KGDS Audit](#11-venus-kdskgds-audit)
+- [12. Spatial Information Problem](#12-spatial-information-problem)
+- [13. Projection Back To Image Space](#13-projection-back-to-image-space)
+- [14. Method Caveats](#14-method-caveats)
   - [Subspace code reading path](#subspace-code-reading-path)
   - [Paper-to-code verification](#paper-to-code-verification)
   - [Prior folder naming](#prior-folder-naming)
@@ -29,9 +29,7 @@
   - [KDS and CCA implementation gaps](#kds-and-cca-implementation-gaps)
   - [Deep-feature subspace gap](#deep-feature-subspace-gap)
 
-This file explains how the current project works and what each method means. It is intentionally direct and code-facing.
-
-## Current Project Scope
+## 1. Current Project Scope
 
 Current implemented core:
 
@@ -56,7 +54,7 @@ Current project is not yet:
 - multi-class semantic change detection;
 - operational disaster response mapping.
 
-## Data
+## 2. Data
 
 OSCD uses pre/post Sentinel-2 image pairs. Each image has 13 aligned bands:
 
@@ -77,7 +75,7 @@ X_post shape = 13 x 1,262,600
 
 In code, `phase1/data/preprocessing.py::vectorize_cube` maps `(C,H,W)` to `(C,N)`.
 
-## Phase 1: Prior Maps
+## 3. Phase 1: Prior Maps
 
 Phase 1 computes unsupervised change-score maps from pre/post imagery.
 
@@ -99,7 +97,7 @@ phase1/outputs/<run>/oscd_change_maps/<split>/<method>/<city>_score.npy
 
 Phase 2 can load those maps as extra input channels.
 
-## Spectral Change Versus Semantic Change
+## 4. Spectral Change Versus Semantic Change
 
 DS, PCA-diff, pixel difference, CVA, Celik, and IR-MAD are unsupervised spectral/radiometric change methods.
 
@@ -119,7 +117,7 @@ Therefore a prior map can highlight vegetation seasonality, snow, haze, thin clo
 
 For supervised segmentation, current Phase 2 uses continuous prior score maps as extra channels. It does not use thresholded DS/PCA masks as labels by default.
 
-## Phase 2: Supervised Segmentation
+## 5. Phase 2: Supervised Segmentation
 
 Phase 2 trains binary OSCD segmentation models.
 
@@ -148,7 +146,7 @@ Main active comparison:
 E0_raw_unet vs prior-channel variants
 ```
 
-## DS In The Current OSCD Adaptation
+## 6. DS In The Current OSCD Adaptation
 
 Current global OSCD DS:
 
@@ -174,7 +172,7 @@ Important limitation:
 - Position is only restored after scoring.
 - This is why spatially aware DS must be tested.
 
-## Corrected DS Implementation
+## 7. Corrected DS Implementation
 
 Old unsafe behavior:
 
@@ -200,7 +198,7 @@ eig D shape:        (13, 6),  corr with raw L2 = 0.190370
 canonical D shape:  (13, 6),  corr with raw L2 = 0.190364
 ```
 
-## PCA Rank 6
+## 8. PCA Rank 6
 
 Rank 6 means PCA keeps 6 basis directions in the 13-band feature space.
 
@@ -213,7 +211,7 @@ Action:
 - Test ranks `2, 3, 4, 5, 6, 8, 10, 12`.
 - Test variance thresholds such as `95%`, `99%`, and `99.5%`.
 
-## DS, GDS, KDS, KGDS
+## 9. DS, GDS, KDS, KGDS
 
 DS:
 
@@ -249,7 +247,7 @@ Signal Latent Subspace:
 - For this project, the satellite analogue would be: extract features from a remote-sensing CNN/foundation model, build subspaces from patch/tile/date features, then compare raw-spectral DS against latent-feature DS.
 - Do not treat this as implemented or as remote-sensing evidence yet.
 
-## Future Method Hooks
+## 10. Future Method Hooks
 
 These are preserved as method hooks, not active evidence. They come from prior notes, advisor/senpai feedback, reference code, and the final organization source batch.
 
@@ -316,7 +314,7 @@ Historical conflict to preserve:
 
 - Some old `research-notes/` files said residual/eig DS behaved almost identically on OSCD. The later subspace audit found the active residual-stack path was not paper-faithful enough and behaved almost like raw L2 on Beirut. Treat the old equivalence statement as historical conflict, not current truth.
 
-## Venus KDS/KGDS Audit
+## 11. Venus KDS/KGDS Audit
 
 Sensei's Venus data:
 
@@ -341,7 +339,7 @@ Current status:
 - Preimage reconstruction is not implemented.
 - Therefore, current Venus outputs are projection-energy/coordinate diagnostics, not full TPAMI figure reproduction.
 
-## Spatial Information Problem
+## 12. Spatial Information Problem
 
 Current global pixel DS sees unordered 13-D samples:
 
@@ -368,7 +366,7 @@ Implementation details to preserve:
 - Local-window DS should save both per-city metrics and maps, and should inspect boundary artifacts from overlapping-window aggregation.
 - Audit whether any existing `sliding_window_ds` code path uses corrected `canonical`/`eig` DS or still behaves like legacy residual-stack DS before using it as evidence.
 
-## Projection Back To Image Space
+## 13. Projection Back To Image Space
 
 Current OSCD DS does not reconstruct a 13-band image.
 
@@ -384,7 +382,7 @@ residual     = delta_x - delta_x_ds
 
 This could show which band combinations DS emphasizes and may help explain projection to Sensei/senpais.
 
-## Method Caveats
+## 14. Method Caveats
 
 These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
 
