@@ -15,10 +15,13 @@ Read these first:
 1. `PROJECT_BRIEF.md`
    - Short project truth: scope, pipeline, evidence, next decision, and forbidden overclaims.
 
-2. `RUNBOOK.md`
+2. `RESEARCH_RESET_AUDIT.md`
+   - Critical reset document: current code truth, literature-grounded problem map, ranked thesis framings, minimum viable thesis path, and 7-day action plan.
+
+3. `RUNBOOK.md`
    - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
 
-3. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+4. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the current major OSCD 3-seed sweep.
 
 ## 2. Source Records

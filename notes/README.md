@@ -26,6 +26,7 @@
 - Result, experiment idea, failed run, or next test: add it to `experiments.md`.
 - Paper/thesis argument, contribution framing, or section outline: add it to `research_paper_plan.md`.
 - Exact command that should be reused: keep it in `docs/RUNBOOK.md`, then reference it from `experiments.md` if needed.
+- Major research-reset decision or thesis-framing audit: keep the standalone document in `docs/RESEARCH_RESET_AUDIT.md`, then distill stable tasks and claims into the notes above.
 
 ## 3. Rules
 

@@ -109,6 +109,7 @@ Do not currently claim:
 - `notes/literature.md`: papers, datasets, and code references.
 - `notes/experiments.md`: experiment evidence and next tests.
 - `notes/research_paper_plan.md`: full paper-facing argument and thesis skeleton.
+- `docs/RESEARCH_RESET_AUDIT.md`: critical reset audit and ranked problem/framing plan.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep result report.
 
