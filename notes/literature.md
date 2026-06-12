@@ -139,6 +139,17 @@ Archived external-file leads:
 
 Use these as reference points, not unquestioned ground truth.
 
+Pending reference-code reminder:
+
+- The user has at least three additional senpai-provided reference codebases that should be added later under `references/reference_code/` or another agreed reference-code location.
+- When they are supplied, inventory them before cleanup or implementation:
+  - implemented method families;
+  - language/dependencies;
+  - expected input sample definitions;
+  - source papers/equations if visible;
+  - whether they can verify DS/GDS/KDS/KGDS/CCA/KCCA/spatial or temporal subspace variants.
+- Do not start a major new subspace-method implementation before asking whether these reference codebases should be included in the paper-to-code comparison.
+
 ## 4. Dataset Context
 
 OSCD:

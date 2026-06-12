@@ -19,6 +19,7 @@
   - [Multiscale subspace pyramid / Green Learning lead](#multiscale-subspace-pyramid--green-learning-lead)
 - [13. Projection Back To Image Space](#13-projection-back-to-image-space)
 - [14. Method Caveats](#14-method-caveats)
+  - [Subspace construction card](#subspace-construction-card)
   - [Source-linked implementation workflow](#source-linked-implementation-workflow)
   - [Subspace code reading path](#subspace-code-reading-path)
   - [Paper-to-code verification](#paper-to-code-verification)
@@ -486,6 +487,45 @@ This could show which band combinations DS emphasizes and may help explain proje
 ## 14. Method Caveats
 
 These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
+
+### Subspace construction card
+
+For every method variant, write a short construction card before treating its output as research evidence. This is the seminar-critical explanation.
+
+Required fields:
+
+```text
+variant name:
+source/reference:
+sample unit:
+input matrix/tensor:
+subspace count:
+subspace basis shape:
+how basis is fit:
+how pre/post are compared:
+score map semantics:
+spatial information preserved:
+spatial information lost:
+code path:
+verification:
+```
+
+Current variant cards:
+
+| variant | sample unit | input object | subspace construction | comparison / score | spatial status |
+|---|---|---|---|---|---|
+| global pixel DS | one valid pixel | `X_pre, X_post in R^(13 x N)` | PCA on all valid 13-band pixels per date, giving `Phi, Psi in R^(13 x r)` | canonical/eig DS basis `D`, score `||D^T(x_post - x_pre)||^2` | loses pixel position during fitting; restores scores to map afterward |
+| local-window DS | one valid pixel inside a window | for each window, `X_pre_w, X_post_w in R^(13 x N_w)` | PCA per pre/post window | score pixels inside that window with the window's DS basis; aggregate overlaps | preserves regional context; may create boundary/block artifacts |
+| patch-vector DS | one local patch centered on a pixel | `3x3x13 = 117-D` or `5x5x13 = 325-D` sample vectors | PCA on flattened patch samples per date | score center pixel using DS in patch-feature space | preserves local layout inside each sample; higher dimensional |
+| multiscale subspace pyramid | one cell or pixel inside a pyramid cell | whole image, `2x2`, `4x4`, `8x8` grid cells | PCA/DS per spatial cell and date | combine per-scale DS scores into one map | preserves coarse and fine spatial support; weights and block artifacts must be audited |
+| tensor / n-mode GDS | tensor sample or tensor mode | e.g. `bands x height x width x time` | mode-wise subspaces instead of full flattening | n-mode GDS / tensor comparison | preserves explicit modes; future method track |
+| deep-feature subspace | encoder feature vector or patch embedding | feature matrix from CNN/foundation model | PCA/subspace over learned features | DS/GDS over latent feature subspaces | preserves whatever the encoder learned; source of interpretability is weaker unless audited |
+
+Use this wording in seminar if asked:
+
+```text
+The main difference between variants is the sample unit used to construct the subspace. In global pixel DS, the sample is one 13-band pixel. In patch DS, the sample is a local spatial patch. In local-window DS, the subspace is fitted separately inside each region. The experiment is testing which sample definition preserves enough spatial information for a meaningful change map.
+```
 
 ### Source-linked implementation workflow
 

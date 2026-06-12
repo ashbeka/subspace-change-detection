@@ -225,6 +225,8 @@ Before coding a paper-derived or reference-code-derived method, identify the pap
 
 When reporting an implemented experiment to the user, explain what source material guided it, what was adapted for Sentinel-2 or another dataset, and what remains an implementation choice rather than paper theory.
 
+For subspace experiments, always explain subspace construction first. Use the construction-card fields from `notes/methods.md`: variant name, source/reference, sample unit, input matrix/tensor, subspace count, basis shape, fitting method, comparison/score, spatial information preserved/lost, code path, and verification. This is seminar-critical; do not assume "we build a subspace" is enough explanation.
+
 ## Current Priority
 
 Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace audit:

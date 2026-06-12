@@ -120,6 +120,7 @@ Implementation note:
 - Record the exact sample definition for every variant.
 - Record whether the variant preserves no position, local neighborhood position, regional context, object context, or tensor modes.
 - Add toy/shape checks before full-city outputs.
+- For each method variant, fill the subspace construction card from `notes/methods.md` before running more than one city. The card must explain sample unit, input matrix/tensor, basis shape, fitting method, comparison score, spatial information preserved/lost, code path, and verification.
 
 Implement:
 
