@@ -51,6 +51,8 @@ The following source themes are represented in active notes:
 A concept/function bookmark hierarchy pass was run on 2026-06-12 after the user requested more granular folders and clearer handling of links that could fit multiple categories. The organized HTML was rebuilt from the original Chrome export and the explicit Markdown links in `Safari links.md`, with HTML-escaped `href` values so query strings containing `&copy`, `&currency`, and similar sequences are preserved correctly by browsers.
 
 Classification policy: one primary folder per bookmark, with research relevance taking priority over programming/ML/tooling when a link is useful to the thesis. This avoids artificial duplicate clutter while keeping research resources amassed under `Research`.
+A later granular quality pass also rechecked research-like links outside `Research`, rescued paper/venue/dataset/method/research-code links, and flattened single-child generic folders such as `Green Learning Compression Wavelets / Methods`. Topic rules use bookmark title and URL rather than source paths like `Bookmarks bar`, which avoids false book/reference matches.
+
 
 | check | result |
 |---|---:|
@@ -60,8 +62,8 @@ Classification policy: one primary folder per bookmark, with research relevance 
 | Organized output bookmark entries | 1556 |
 | Unique URLs | 1537 |
 | Duplicate URL entries preserved | 19 |
-| Research entries | 454 |
-| Manual review entries | 133 |
+| Research entries | 603 |
+| Manual review entries | 127 |
 | Missing entries after organization | 0 |
 | Extra entries after organization | 0 |
 
@@ -75,7 +77,7 @@ Machine-readable summary:
 
 ## 5. Remaining Review Work
 
-- `To Review` contains `133` unclear or personal/search links that still need human judgment.
+- `To Review` contains `127` unclear or personal/search links that still need human judgment.
 - `final_organizing_task_patch/` remains untracked and undeleted until the user approves deletion.
 - The organized bookmark HTML is ready to import into Chrome, but importing itself was not performed.
 - Zotero import remains manual. Start with `Research / 00 Must Read and Zotero First`, then the most relevant method and dataset folders under `Research`.
