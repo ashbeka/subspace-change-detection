@@ -48,6 +48,23 @@ The following source themes are represented in active notes:
 
 ## 4. Bookmark Coverage
 
+A final bookmark categorization pass was run on 2026-06-12 after the user requested a more functional tree and pointed out that research links such as `https://captain-whu.github.io/SCD/` were misplaced. The organized HTML was rebuilt from the original Chrome export and the explicit Markdown links in `Safari links.md`, with HTML-escaped `href` values so query strings containing `&copy`, `&currency`, and similar sequences are preserved correctly by browsers. Targeted rescue passes moved clear research, learning, programming, university, career, and life/admin links out of `To Review`, then tightened the UI/UX folder so random query-string matches no longer pull unrelated bookmarks into design.
+
+| check | result |
+|---|---:|
+| Chrome input bookmarks | 1060 |
+| Safari input links | 496 |
+| Combined input entries | 1556 |
+| Organized output bookmark entries | 1556 |
+| Unique URLs | 1537 |
+| Duplicate URL entries preserved | 19 |
+| Research entries | 491 |
+| Manual review entries | 134 |
+| Missing entries after organization | 0 |
+| Extra entries after organization | 0 |
+
+The revised hierarchy avoids overly broad buckets such as combined math/statistics/foundations or university/career/Japan. It uses separate top-level roots for `Research`, `Learning`, `Programming and Tools`, `University`, `Career and Scholarships`, `Language Study`, `Projects`, `Life Admin`, and `To Review`, with research organized by function first and concept second.
+
 Generated import file:
 
 `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-12.html`
@@ -56,102 +73,13 @@ Machine-readable summary:
 
 `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-12.json`
 
-Counts:
-
-| item | count |
-|---|---:|
-| Chrome input bookmarks | 1060 |
-| Safari input links | 491 |
-| Combined input bookmark/link entries | 1551 |
-| Exact duplicate URL entries preserved in duplicate review folder | 19 |
-| Organized output bookmark entries | 1551 |
-| Unique URLs in organized output | 1532 |
-| Missing bookmark/link entries after organization | 0 |
-| Extra bookmark/link entries after organization | 0 |
-| Zotero candidate links | 264 |
-| Manual review entries | 164 |
-
-Safari links were merged into the functional Chrome hierarchy. There is no separate Safari folder.
-
 ## 5. Remaining Review Work
 
-- `To Review - Uncategorized` remains intentionally broad. It contains generic, personal, login, search, local PDF, and unclear links that should not be over-classified automatically.
+- `To Review` contains `134` unclear or personal/search links that still need human judgment.
 - `final_organizing_task_patch/` remains untracked and undeleted until the user approves deletion.
 - The organized bookmark HTML is ready to import into Chrome, but importing itself was not performed.
-- Zotero import remains manual. Start with `Research - Must Read`, then `Research - Subspace Methods`, `Research - Change Detection`, and `Research - CCA KCCA Temporal Methods`.
+- Zotero import remains manual. Start with `Research / 00 Must Read and Zotero First`, then the most relevant method and dataset folders under `Research`.
 
 ## 6. Conclusion
 
 The batch is preserved, its useful research knowledge has been consolidated into active notes/docs, and the Chrome/Safari URL set has been reorganized without URL loss. It is safe to review the organized notes and importable bookmark file; deletion of the original source folder should still wait for explicit user approval.
-
-
-## 7. Refined Bookmark Categorization Pass
-
-A second categorization pass was run on 2026-06-12 after inspecting the remaining `To Review - Uncategorized` links. The refined pass used original Chrome folder paths and Google query text in addition to title/URL matching. It preserved `1551` bookmark/link entries and `1532` unique output URLs with zero missing entries. The remaining review area is `145` uncategorized entries plus `19` exact duplicate URL entries.
-
-
-## 8. Re-Verification After User Review Request
-
-A second verification was run after the user asked whether bookmarks and source knowledge were truly preserved and ingested.
-
-Bookmark verification:
-
-| check | result |
-|---|---:|
-| Chrome input bookmarks | 1060 |
-| Safari input links | 491 |
-| Combined input entries | 1551 |
-| Organized output bookmark entries | 1551 |
-| Unique URLs in organized output | 1532 |
-| Parsed unique URLs from organized HTML | 1532 |
-| Missing bookmark/link entries after organization | 0 |
-| Extra bookmark/link entries after organization | 0 |
-| Manual review entries after refined categorization | 164 |
-
-Knowledge coverage scan:
-
-| theme | present in source batch | represented in active notes/docs | active evidence terms |
-|---|---:|---:|---|
-| problem-driven thesis, not method forcing | yes | yes | problem-driven, method-forcing, do not solve a problem, research gap |
-| Sensei spatial-information warning | yes | yes | spatial information, pixel position, local patch, sliding window, patch-vector |
-| global pixel DS vs local/window DS | yes | yes | global pixel, patch-vector, local-window, local window, sliding window |
-| DS/GDS/KDS/KGDS family | yes | yes | difference subspace, gds, kds, kgds, second-order, geodesic |
-| CCA/KCCA/S3CCA/TRCCA | yes | yes | cca, kcca, s3cca, trcca |
-| green learning / PixelHop / wavelets | yes | yes | green learning, pixelhop, wavelet, compression |
-| pseudo-change vs real change | yes | yes | pseudo-change, seasonal, shadow, registration |
-| datasets and applications | yes | yes | oscd, multisenge, harmonized sentinel, xbd, xbd-s12, greenhouse |
-| projection/rank/Otsu/normalization | yes | yes | projection, pca rank, otsu, normalization |
-| paper-to-code verification | no | yes | paper-to-code, formula-verification, hallucinated, reference implementation |
-| personal notes workflow | no | yes | my_notes, rough notes |
-
-This scan is not a substitute for reading every source manually, but it checks the high-risk themes from the user's instructions against the active notes/docs after ingestion.
-
-
-Duplicate-entry preservation: Every combined Chrome/Safari bookmark entry is represented in the organized import file. Exact duplicate URLs are placed in `To Review - Duplicates Or Ambiguous` instead of being silently dropped.
-
-
-## 9. Nested Bookmark Hierarchy Pass
-
-The bookmark organization was rebuilt from a flat category list into a conceptual tree on 2026-06-12. The tree is organized by function first, then concept: research workflow/methods/data/code, learning paths, university/career, language, projects, life admin, and review. A targeted review-reduction pass then moved obvious remaining links into the tree while leaving genuinely ambiguous or personal links in `To Review`.
-
-Entry preservation after nesting:
-
-| check | result |
-|---|---:|
-| Combined Chrome/Safari input entries | 1551 |
-| Organized output bookmark entries | 1551 |
-| Unique output URLs | 1532 |
-| Missing bookmark/link entries | 0 |
-| Extra bookmark/link entries | 0 |
-
-Root folder counts:
-
-| root folder | entries |
-|---|---:|
-| Language Study | 60 |
-| Learning and Technical Skills | 362 |
-| Life Admin and Personal | 102 |
-| Projects | 325 |
-| Research | 467 |
-| To Review | 89 |
-| University Career and Japan | 146 |
