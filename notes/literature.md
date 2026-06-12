@@ -7,8 +7,9 @@
 - [3. Reference Code](#3-reference-code)
 - [4. Dataset Context](#4-dataset-context)
 - [5. Bookmark Triage Rules](#5-bookmark-triage-rules)
-- [6. Literature Leads](#6-literature-leads)
-- [7. Reference Leads](#7-reference-leads)
+- [6. Bookmark-Backed Concept Map](#6-bookmark-backed-concept-map)
+- [7. Literature Leads](#7-literature-leads)
+- [8. Reference Leads](#8-reference-leads)
 
 ## 1. Must-Cite Core Sources
 
@@ -174,7 +175,26 @@ When Chrome bookmarks are imported later, classify each item as one of:
 
 The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
 
-## 6. Literature Leads
+## 6. Bookmark-Backed Concept Map
+
+Use this section as the bridge between literature concepts and the organized Chrome bookmark tree. The bookmark folders are not evidence by themselves; they are the reading queue for papers, datasets, reference implementations, and background resources.
+
+| Concept | Why it matters | Bookmark priority folder |
+|---|---|---|
+| DS, GDS, KDS, KGDS, CCA/KCCA, and Sensei's subspace-method leads | Defines the mathematical family this project must understand before claiming any subspace contribution. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` |
+| OSCD, FC-Siamese, Metric-CD, Celik PCA-kmeans, IR-MAD, and CVA | Defines the current binary change-detection benchmark and the classical/deep baselines that pressure novelty claims. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines` |
+| OSCD, MultiSenGE, HR/SCD, xBD/xBD-S12, and candidate EO datasets | Clarifies which dataset supports which claim: OSCD for binary change, MultiSenGE/Harmonized Sentinel-2 for temporal ideas, xBD/xBD-S12 for future damage work. | `Research / 01 Read First - Thesis Core / 03 Datasets And Problem Setting` and `Research / 04 Datasets - Current Candidate Future` |
+| Change-detection surveys and reality checks | Prevents method-forcing and helps state what is already known before proposing DS-based priors or spatial subspace variants. | `Research / 01 Read First - Thesis Core / 04 Review Papers And Reality Checks` |
+| Spatial information, semantic change, patch/local DS, and prior-guided CD | Directly answers Sensei's criticism that global pixel subspaces may break spatial information. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
+| Subspace implementation and reference code | Supports paper-to-code checks for PCA/KPCA/CCA/KCCA/DS/GDS and prevents hallucinated implementations. | `Research / 02 Methods - Subspace Geometry` and `Research / 08 Tools And Code - Implementation Support / 01 Reference Implementations` |
+| Remote-sensing preprocessing and multitemporal/sensor issues | Necessary before interpreting change maps; clouds, registration, seasonality, sensor differences, and temporal sampling can dominate true change. | `Research / 03 Methods - Change Detection / 04 Preprocessing Multitemporal And Sensor Issues` |
+| Application framing: greenhouses, urban infrastructure, humanitarian mapping, ecology | Useful for motivation and future datasets, but only becomes evidence after labels/evaluation protocols exist. | `Research / 05 Applications - Use Cases And Problem Framing` |
+| ML/CV background, tutorials, and generic LLM/tooling material | Useful for personal learning but not thesis literature unless tied to the satellite/subspace/change-detection problem. | `Learning / Machine Learning and AI`, `Learning / Math`, and `Programming and Tools` |
+| Lower-priority research-like papers | Preserved for future exploration without distracting from thesis-core reading. | `Research / 09 Parking Lot - Lower Priority` |
+
+The current reading rule is: start with `Research / 01 Read First - Thesis Core`, then move to `02 Methods`, `03 Methods`, and `04 Datasets` only as needed for the next experiment or paper section. Do not start by reading generic ML tutorials when the project blocker is subspace construction, spatial preservation, or change-detection evaluation.
+
+## 7. Literature Leads
 
 Source: `research-notes/refs_links/`, `research-notes/notes/sensei_notes.md`, and `research-notes/coverage_matrix.csv`.
 
@@ -210,7 +230,7 @@ Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
 - U-Net and ResNet only when the corresponding models are discussed.
 - Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
 
-## 7. Reference Leads
+## 8. Reference Leads
 
 Additional references and code leads from old archive notes:
 
