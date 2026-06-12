@@ -215,6 +215,16 @@ Use tests and audits to answer:
 
 This is especially important for DS, GDS, KDS, KGDS, PCA-diff, Celik PCA-kmeans, IR-MAD, CVA, CCA/KCCA/S3CCA, and any future spatial or temporal subspace variant. Formula-verification tests are not proof that the research problem is solved; they are guards against hallucinated or paper-inaccurate implementations.
 
+For every new method implementation, preserve a source-to-code trail:
+
+```text
+source material -> math object -> satellite adaptation -> code path -> test -> one-city output -> thesis claim
+```
+
+Before coding a paper-derived or reference-code-derived method, identify the paper section/equation or reference file, the exact satellite sample definition, input/output dimensions, projection or scoring equation, code files/functions to edit, and the toy or smoke check that will prove the implementation is at least shape- and formula-consistent.
+
+When reporting an implemented experiment to the user, explain what source material guided it, what was adapted for Sentinel-2 or another dataset, and what remains an implementation choice rather than paper theory.
+
 ## Current Priority
 
 Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace audit:

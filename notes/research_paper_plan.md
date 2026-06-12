@@ -165,6 +165,30 @@ Corrected DS status:
 - Canonical/eig DS are the cleaner first-order linear DS paths.
 - KDS/KGDS are implemented for the Venus learning audit, not yet as the active OSCD method.
 
+Research posture:
+
+```text
+Do not frame the thesis as "subspace beats deep learning."
+```
+
+The defensible posture is:
+
+```text
+geometric representation first -> neural/deep-learning integration second
+```
+
+Layer 1: geometry-only.
+
+- DS, patch DS, local-window DS, PCA-diff, CVA, and related priors produce interpretable change maps without labels.
+- This layer answers whether the subspace construction itself captures meaningful change.
+
+Layer 2: geometry plus learning.
+
+- A useful geometric map can be used as an extra channel, prior, diagnostic feature, pseudo-label source, attention cue, or label-efficient aid for U-Net/Siamese/future models.
+- This layer answers whether the geometric representation complements supervised learning.
+
+This matches the lab style of mixing geometrical representations and deep learning, while avoiding the unrealistic claim that a simple hand-built prior should outperform modern neural methods by itself.
+
 ## 7. Proposed Research Path
 
 Immediate method question:
@@ -214,6 +238,24 @@ Variants to compare:
    - future method bridge inspired by Mahyub et al. 2024 Signal Latent Subspace
    - one sample could be a patch/tile/date embedding from a remote-sensing model rather than a raw 13-band pixel
    - useful only if it answers the spatial-information problem better than raw pixel DS
+
+Current main candidate:
+
+```text
+Spatially aware Difference Subspace priors for interpretable Sentinel-2 changed-area detection.
+```
+
+Status:
+
+- This is the strongest current candidate, not a proven contribution.
+- The claim becomes strong only if experiments show that patch/local/object/tensor-aware subspace construction improves spatial meaning, robustness, or downstream prior usefulness.
+- Existing remote-sensing literature already contains spatial-spectral subspace and low-rank/sparse ideas, so novelty must be framed as a specific DS/GDS-style adaptation and evaluation, not as the invention of spatial satellite subspaces.
+
+Possible sharper thesis question:
+
+```text
+Can spatial support in DS-style subspace construction make geometric change priors more useful and interpretable for multispectral Sentinel-2 change detection?
+```
 
 ## 8. Experiment Plan
 
@@ -285,6 +327,7 @@ Defensible contribution if spatial audit succeeds:
 - A careful adaptation and evaluation of spatially aware Difference Subspace priors for Sentinel-2 binary change segmentation.
 - Evidence about when global, patch, or window subspace construction preserves useful change information.
 - A reproducible two-stage pipeline separating interpretable prior generation from supervised segmentation.
+- A clear demonstration of how geometric subspace priors can complement, rather than replace, deep change-detection models.
 
 Defensible contribution if spatial audit is negative:
 
@@ -299,6 +342,12 @@ Unsafe contribution claims:
 - DS improves supervised segmentation generally.
 - OSCD results prove disaster damage mapping.
 - The current project is xBD/xBD-S12 damage segmentation.
+
+Current novelty boundary:
+
+- Not novel: DS itself, KPCA/KDS itself, PCA-diff, CVA, IR-MAD, U-Net, Siamese CD, generic spatial-spectral subspace analysis.
+- Potentially novel enough for a thesis: a carefully verified spatial-support DS adaptation for Sentinel-2 change maps, compared against global pixel DS and classical/neural baselines with honest failure analysis.
+- Stronger future novelty: tensor/n-mode or product-Grassmann spatial-spectral-temporal subspace construction for multi-date satellite imagery, if supported by a dataset and evaluation protocol.
 
 ## 11. Paper Skeleton
 

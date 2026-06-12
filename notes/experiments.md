@@ -103,6 +103,24 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
+The next experiment is not a blind coding task. It must be implemented as a source-linked audit so the student can trace every step:
+
+```text
+source material -> mathematical object -> satellite adaptation -> code path -> toy check -> one-city map -> thesis claim
+```
+
+Minimum source material before coding:
+
+- TPAMI 2015 DS/GDS/KDS/KGDS paper for DS terminology and projection logic.
+- Current repaired DS code in `phase1/ds/pca_utils.py` and `phase1/ds/ds_scores.py`.
+- Spatial/subspace related-work anchors such as Wu-Du-Zhang HSI subspace CD, LRSD_SS, and n-mode GDS, to avoid claiming that spatial subspaces are entirely new.
+
+Implementation note:
+
+- Record the exact sample definition for every variant.
+- Record whether the variant preserves no position, local neighborhood position, regional context, object context, or tensor modes.
+- Add toy/shape checks before full-city outputs.
+
 Implement:
 
 ```text
@@ -146,6 +164,13 @@ Decision:
 - If global pixel DS is stable and competitive, keep it as a spectral-distribution baseline.
 - If patch/window DS improves maps or metrics, pivot to spatially aware DS.
 - If corrected DS variants remain weaker than raw/PCA-diff, stop claiming DS superiority.
+
+Research interpretation:
+
+- This experiment tests a strong hypothesis, not a proven claim.
+- A positive result supports "spatial support matters for DS-style satellite change priors."
+- A negative result is still useful because it shows that global/patch/window DS is not the right tool under this setup.
+- The goal is not to beat modern deep learning directly; the first goal is to produce interpretable geometric change evidence that can later be used alone, as a prior channel, as a diagnostic feature, or as a label-efficient aid.
 
 Suggested first command shape:
 
@@ -228,6 +253,8 @@ Acceptance checks:
    - E0 raw-only.
    - raw + global canonical DS.
    - raw + best spatially aware DS prior.
+   - Treat this as "geometry complements learning," not "geometry beats learning."
+   - Only run this after Phase 1 maps are visually and metrically meaningful.
 
 11. DS scalar change-map construction:
    - Current DS prior is `||D^T (x_post - x_pre)||^2`.
@@ -261,46 +288,47 @@ Acceptance checks:
      - or an empirical benchmark showing where subspace priors help or fail.
    - Do not run another long U-Net sweep until this decision is made.
 
-14. MultiSenGE pairing and seasonality audit:
+16. MultiSenGE pairing and seasonality audit:
    - Compare earliest/latest pairing against within-season pairings and date-windowed pairings.
    - Add snow/cloud/invalid-scene checks before DS/PCA-diff map generation.
    - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
-15. IR-MAD fair-comparison audit:
+17. IR-MAD fair-comparison audit:
    - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
    - Do not claim IR-MAD is weak from old runs unless this audit supports it.
 
-16. Multi-date / period-subspace DS feasibility audit:
+18. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.
    - Compare earliest/latest, adjacent, same-season, and period-window pairings.
    - Test first-order DS before second-order DS, GDS, or KGDS.
    - Do not use unlabeled MultiSenGE visuals as performance evidence without an evaluation proxy.
 
-17. Band-group attribution audit:
+19. Band-group attribution audit:
    - Compute DS basis energy by Sentinel-2 band or band group.
    - Compare VIS, red-edge, NIR, SWIR, and atmospheric bands.
    - Use this to explain whether maps are likely surface change, vegetation/soil moisture, or atmospheric artifact.
 
-18. SSC change-type clustering pilot:
+20. SSC change-type clustering pilot:
    - Only after the spatial DS audit.
    - Input candidates: raw delta, DS projection coefficients, PCA-diff features, patch/deep features.
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
    - Must define cluster count selection and validation before implementation.
 
-19. Greenhouse application feasibility audit:
+21. Greenhouse application feasibility audit:
    - Treat abandoned greenhouse mapping as a possible application, not current evidence.
    - Define the task first: object mapping, abandonment classification, change detection, or temporal condition scoring.
    - Check whether labels, dates, and evaluation metrics exist before connecting it to DS/KDS/GDS.
 
-20. Deep-feature subspace pilot:
+22. Deep-feature subspace pilot:
    - Inspired by Mahyub et al. 2024 Signal Latent Subspace, not currently implemented.
    - Extract latent features from a remote-sensing CNN, U-Net encoder, or foundation model.
    - Build subspaces from patch/tile/date latent features instead of raw 13-band pixel vectors.
    - Compare latent-feature DS/GDS against raw spectral DS, local/window DS, PCA-diff, and the neural baseline.
    - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
+   - This is the more explicit hybrid route: geometrical representation over learned features instead of only raw bands.
 
-21. Temporal subspace literature pilots:
+23. Temporal subspace literature pilots:
    - RTW/Deep RTW pilot: for MultiSenGE or Harmonized Sentinel-2 L2A sequences, randomly sample ordered date subsequences, build sequence-hypothesis subspaces, and compare them to same-season or event-window references.
    - SFA/SFS pilot: learn slowly varying temporal components from aligned date sequences, then test whether residuals or slow-feature subspaces separate seasonal drift from abrupt land-cover change.
    - Product-Grassmann/Hankel pilot: represent one patch as multiple subspace factors, such as spectral, spatial, and temporal/Hankel factors, then use geodesic distances for clustering or anomaly ranking.
@@ -308,7 +336,7 @@ Acceptance checks:
    - Shape-subspace attribution pilot: adapt the human-motion DS idea by reporting which bands, patch regions, or date windows contribute most to the difference subspace.
    - Do not start these before the spatial OSCD audit; these are method-expansion tracks, not current evidence.
 
-22. xBD-S12 metric protocol audit:
+24. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.

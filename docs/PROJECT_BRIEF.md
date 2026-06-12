@@ -37,6 +37,14 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 
 The key methodological risk is spatial information. The current global pixel DS can build a subspace, but it fits PCA from unordered 13-band pixel vectors. Pixel position is only restored after scoring.
 
+Current research posture:
+
+```text
+geometric/subspace change evidence first -> supervised/deep-learning integration second
+```
+
+The project is not trying to prove that DS beats deep learning outright. It is testing whether spatially aware subspace geometry can produce interpretable change priors that are useful by themselves and possibly useful as inputs, diagnostics, or label-efficient aids for neural change-detection models.
+
 ## 3. Implemented Pipeline
 
 Phase 1:
@@ -87,6 +95,8 @@ global pixel DS vs patch-vector DS vs local-window DS
 ```
 
 This directly answers Sensei's concern about breaking spatial information.
+
+Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 
 The experiment should report AUROC, PR-AUC, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusion rate, runtime, and visual maps.
 

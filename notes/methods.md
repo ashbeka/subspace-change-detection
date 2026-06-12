@@ -14,8 +14,11 @@
 - [10. Future Method Hooks](#10-future-method-hooks)
 - [11. Venus KDS/KGDS Audit](#11-venus-kdskgds-audit)
 - [12. Spatial Information Problem](#12-spatial-information-problem)
+  - [Spatial-subspace novelty boundary](#spatial-subspace-novelty-boundary)
+  - [Tensor / n-mode GDS idea](#tensor--n-mode-gds-idea)
 - [13. Projection Back To Image Space](#13-projection-back-to-image-space)
 - [14. Method Caveats](#14-method-caveats)
+  - [Source-linked implementation workflow](#source-linked-implementation-workflow)
   - [Subspace code reading path](#subspace-code-reading-path)
   - [Paper-to-code verification](#paper-to-code-verification)
   - [Prior folder naming](#prior-folder-naming)
@@ -356,6 +359,60 @@ Spatial alternatives to test:
 - Coordinate-augmented DS: diagnostic only, not a main method.
 - CCA/S3CCA-style structured matching: larger future research track.
 
+### Spatial-subspace novelty boundary
+
+The latest literature check changes the claim boundary:
+
+- Spatially aware subspace ideas already exist in remote sensing and hyperspectral imaging.
+- Therefore the thesis should not claim that "spatial subspaces for satellite images" are entirely new.
+- The possible niche is narrower: adapt and evaluate DS/GDS-style subspace geometry for multispectral satellite change maps while comparing sample definitions that preserve different amounts of spatial support.
+
+Useful related-work anchors:
+
+- Wu, Du, and Zhang, 2013, "A Subspace-Based Change Detection Method for Hyperspectral Images" uses subspace reasoning for hyperspectral change detection. The MDPI integrated HSI CD paper lists it as a core classical HSI-CD reference: https://www.mdpi.com/2072-4292/14/11/2523
+- Chen and Wang, 2017, LRSD_SS uses spectrally-spatially regularized low-rank/sparse decomposition for multitemporal hyperspectral change feature extraction: https://www.mdpi.com/2072-4292/9/10/1044
+- Spectral-spatial sparse subspace clustering exists for hyperspectral remote-sensing image analysis, so clustering/spatial-subspace language is not novel by itself.
+
+Safe current claim:
+
+```text
+Spatial support is the key unresolved adaptation problem for using DS-style subspace geometry on Sentinel-2 change maps.
+```
+
+Unsafe current claim:
+
+```text
+This project invents the first spatial subspace representation for satellite images.
+```
+
+The current method candidates should be treated as a hierarchy:
+
+1. global pixel DS: easiest, least spatial;
+2. local-window DS: still pixel-sample based, but region-specific;
+3. patch-vector DS: preserves local layout inside each sample;
+4. object/superpixel DS: preserves semantic/spatial units if reliable objects exist;
+5. tensor/n-mode DS or GDS: preserves modes explicitly, but is a later method track.
+
+### Tensor / n-mode GDS idea
+
+Tensor or n-mode GDS is intriguing because satellite data are naturally multi-dimensional:
+
+```text
+bands x height x width
+bands x patch_height x patch_width
+bands x height x width x time
+```
+
+Ordinary global pixel DS flattens this structure into columns of 13-band samples. Tensor/n-mode methods instead try to keep separate modes such as spectral, spatial, and temporal axes.
+
+The relevant reference is Gatto et al., "Tensor Analysis with n-Mode Generalized Difference Subspace," which proposes n-mode GDS for tensor data because ordinary GDS does not directly handle tensor structure: https://arxiv.org/abs/1909.01954
+
+Project role:
+
+- future method-development track, not immediate OSCD evidence;
+- potentially strong if the thesis shifts from "better prior channel" to "subspace construction for spatial-spectral-temporal satellite tensors";
+- should only be implemented after the simpler global/window/patch audit identifies what structure is actually missing.
+
 Implementation details to preserve:
 
 - `3x3` patch vectors have `13 x 3 x 3 = 117` values.
@@ -385,6 +442,43 @@ This could show which band combinations DS emphasizes and may help explain proje
 ## 14. Method Caveats
 
 These caveats were extracted from the old archive docs and should stay visible because they affect thesis claims and future code work.
+
+### Source-linked implementation workflow
+
+For every new method or experiment, Codex must leave a clear trail from source material to code. This is now part of the research workflow because the previous project risk was implementing methods without the student understanding or verifying the source.
+
+Before implementing a paper-derived or reference-code-derived method, write down:
+
+1. Source material:
+   - paper title, equation/section if known, URL or local path;
+   - reference code path if used;
+   - what is treated as theory, what is treated only as implementation guidance.
+2. Satellite data object:
+   - exact sample definition: pixel, patch, local window, object, date, or deep feature;
+   - input shape before transformation;
+   - output shape and map semantics.
+3. Mathematical object:
+   - basis/subspace dimension;
+   - projection, residual, canonical-angle, kernel, or tensor operation;
+   - scalar score definition if a map is produced.
+4. Code object:
+   - new or edited files;
+   - function names;
+   - config keys;
+   - dependency choices.
+5. Verification:
+   - toy test or shape check;
+   - equal/shared-subspace edge case if relevant;
+   - reference-code comparison if available;
+   - one-city smoke output before full experiments.
+
+The expected discussion flow with the student is:
+
+```text
+source -> math object -> satellite adaptation -> code path -> test -> one-city output -> thesis claim
+```
+
+Do not jump from source directly to large experiments. Do not promote a method to "evidence" until this chain is clear.
 
 ### Subspace code reading path
 

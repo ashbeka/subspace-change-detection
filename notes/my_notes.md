@@ -15,6 +15,7 @@
   - [3.8 Dataset And Use-Case Notes](#38-dataset-and-use-case-notes)
   - [3.9 Experiment Ideas To Keep Alive](#39-experiment-ideas-to-keep-alive)
   - [3.10 Paper And Presentation Warnings](#310-paper-and-presentation-warnings)
+  - [3.11 Latest Research Reset Decisions](#311-latest-research-reset-decisions)
 - [4. Notes To Translate Later](#4-notes-to-translate-later)
 
 ## 1. Purpose
@@ -170,6 +171,18 @@ These notes are distilled from Apple Notes, Slack notes, Sensei messages, the up
 - Do not say OSCD proves disaster damage performance.
 - Do not make the story only about the method.
 - The contribution may become negative or diagnostic: finding when subspace priors help, when they fail, and which subspace construction is appropriate.
+
+### 3.11 Latest Research Reset Decisions
+
+- Spatially aware DS is the strongest current candidate, but it is still a hypothesis, not a proven claim.
+- Spatially aware subspace methods already exist in remote sensing/hyperspectral work, so the novelty cannot be "the first spatial subspace for satellite images."
+- The possible niche is a specific DS/GDS-style spatial-support adaptation for multispectral Sentinel-2 change maps, tested honestly against global pixel DS, raw L2/CVA, PCA-diff, and neural baselines.
+- Tensor or n-mode GDS is interesting because satellite data naturally have modes such as bands, height, width, and time. It could preserve structure that global pixel DS flattens away, but it is a future track after the simpler patch/window audit.
+- The project should not be framed as trying to beat deep learning directly.
+- Better framing: geometry-only first, then geometry plus learning.
+- Geometry-only means DS/PCA-diff/CVA/patch DS/local DS produce interpretable change evidence without labels.
+- Geometry plus learning means a useful map can become a prior channel, attention cue, pseudo-label, diagnostic feature, or label-efficient aid for U-Net/Siamese/future models.
+- For future implementation, I want to understand every method from source material to code. The working chain should be: source -> math object -> satellite adaptation -> code path -> test -> one-city output -> thesis claim.
 
 ## 4. Notes To Translate Later
 
