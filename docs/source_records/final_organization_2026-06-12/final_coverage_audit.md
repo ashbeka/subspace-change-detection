@@ -128,3 +128,30 @@ This scan is not a substitute for reading every source manually, but it checks t
 
 
 Duplicate-entry preservation: Every combined Chrome/Safari bookmark entry is represented in the organized import file. Exact duplicate URLs are placed in `To Review - Duplicates Or Ambiguous` instead of being silently dropped.
+
+
+## 9. Nested Bookmark Hierarchy Pass
+
+The bookmark organization was rebuilt from a flat category list into a conceptual tree on 2026-06-12. The tree is organized by function first, then concept: research workflow/methods/data/code, learning paths, university/career, language, projects, life admin, and review. A targeted review-reduction pass then moved obvious remaining links into the tree while leaving genuinely ambiguous or personal links in `To Review`.
+
+Entry preservation after nesting:
+
+| check | result |
+|---|---:|
+| Combined Chrome/Safari input entries | 1551 |
+| Organized output bookmark entries | 1551 |
+| Unique output URLs | 1532 |
+| Missing bookmark/link entries | 0 |
+| Extra bookmark/link entries | 0 |
+
+Root folder counts:
+
+| root folder | entries |
+|---|---:|
+| Language Study | 60 |
+| Learning and Technical Skills | 362 |
+| Life Admin and Personal | 102 |
+| Projects | 325 |
+| Research | 467 |
+| To Review | 89 |
+| University Career and Japan | 146 |
