@@ -47,6 +47,12 @@ After new notes are added here, Codex should translate them into the functional 
 
 Do not treat this file as polished truth. Treat it as the human thinking layer.
 
+Future workflow note:
+
+- If these rough notes later live in Notion or another notes app through MCP, that external note source becomes the intake layer.
+- The rule stays the same: keep the raw human note, then translate only stable implications into `feedback.md`, `methods.md`, `literature.md`, `experiments.md`, or `research_paper_plan.md`.
+- Do not let Notion plus repo notes become two competing truth sources; the repo notes remain the structured research/action layer unless we explicitly redesign the system.
+
 ## 3. Current Rough Notes
 
 These notes are distilled from Apple Notes, Slack notes, Sensei messages, the updated Word research notes, and supporting source files preserved in `docs/source_records/final_organization_2026-06-12/`.
@@ -154,6 +160,8 @@ These notes are distilled from Apple Notes, Slack notes, Sensei messages, the up
 - Study pseudo-change explicitly: shadows, seasonal vegetation, registration, clouds, sensor differences.
 - For multi-date data, compare first-order DS, second-order DS, GDS/KGDS, geodesic projection, and temporal methods.
 - For greenhouse mapping, first ask whether change detection, classification, or object mapping is the actual task.
+- For object/building-level descriptors, first define the object unit: building polygon, greenhouse polygon, local patch, connected component, or tile. Then decide whether subspace features describe object state, object change, or neighborhood context.
+- For the core research reset, explicitly ask: am I using subspaces because they solve a documented change-detection problem, or because the lab method exists and I am searching for a place to put it?
 
 ### 3.10 Paper And Presentation Warnings
 

@@ -82,6 +82,8 @@ When processing `notes/my_notes.md`:
 - avoid inventing a neat narrative that the user did not actually decide;
 - do not erase rough notes merely because they have been translated unless the user explicitly asks for cleanup.
 
+Future note intake may move from local Markdown to Notion or another notes app via MCP. If that happens, treat the external note source as the new rough-note intake layer, but keep the same workflow: preserve the raw note, extract useful research content, and distill it into the functional repo notes without creating a second scattered knowledge system.
+
 When ingesting archives, old docs, pasted notes, Apple Notes exports, bookmarks, or `research-notes/`:
 
 - Read broadly enough to understand each file's purpose before moving information.

@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-06-12",
-  "refined_at": "2026-06-12T19:58:19",
+  "refined_at": "2026-06-12T21:00:13",
   "chrome_input_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/all_bookmarks_6_12_26.html",
   "safari_input_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/Safari links.md",
   "organized_output_path": "E:/research_projects/DS_damage_segmentation/docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-12.html",
@@ -17,12 +17,12 @@
   "tree_root_counts": {
     "Career and Opportunities": 106,
     "Language Study": 62,
-    "Learning": 224,
-    "Life Admin": 67,
-    "Personal Notes and Culture": 16,
-    "Programming and Tools": 120,
+    "Learning": 232,
+    "Life Admin": 69,
+    "Personal Notes and Culture": 18,
+    "Programming and Tools": 122,
     "Projects": 284,
-    "Research": 473,
+    "Research": 459,
     "To Review": 150,
     "University": 54
   },
@@ -43,13 +43,17 @@
     "Language Study/Japanese/Tsukuba Japanese Resources": 2,
     "Learning/Computer Science/Foundations and Curricula": 16,
     "Learning/General Learning/Courses Books Tutorials": 28,
+    "Learning/General Learning/Reading and Note Taking": 1,
     "Learning/Machine Learning and AI/Books and References": 33,
+    "Learning/Machine Learning and AI/Classic Papers": 1,
     "Learning/Machine Learning and AI/Courses": 37,
     "Learning/Machine Learning and AI/Datasets and Benchmarks": 3,
+    "Learning/Machine Learning and AI/Deep Learning Visuals": 2,
     "Learning/Machine Learning and AI/General Resources": 18,
-    "Learning/Machine Learning and AI/LLMs and Modern AI": 24,
+    "Learning/Machine Learning and AI/LLMs and Modern AI": 26,
+    "Learning/Machine Learning and AI/Roadmaps and Study Plans": 1,
     "Learning/Math/Calculus Geometry Manifolds": 16,
-    "Learning/Math/Linear Algebra": 13,
+    "Learning/Math/Linear Algebra": 14,
     "Learning/Statistics/Causality Probabilistic Inference": 1,
     "Learning/Statistics/Experimental Design": 5,
     "Learning/Statistics/Probability Inference": 30,
@@ -57,16 +61,16 @@
     "Life Admin/Devices Accounts/Apple Devices": 4,
     "Life Admin/Finance Admin": 3,
     "Life Admin/Food Fragrance": 13,
-    "Life Admin/Health Fitness": 13,
-    "Life Admin/Shopping": 14,
+    "Life Admin/Health Fitness": 14,
+    "Life Admin/Shopping": 15,
     "Life Admin/Travel Local Life": 14,
     "Personal Notes and Culture/Culture Media": 6,
     "Personal Notes and Culture/Politics Society": 2,
-    "Personal Notes and Culture/Politics Society/Palestine Resources": 1,
-    "Personal Notes and Culture/Religion": 7,
+    "Personal Notes and Culture/Politics Society/Palestine Resources": 2,
+    "Personal Notes and Culture/Religion": 8,
     "Programming and Tools/AI Tools and APIs": 16,
     "Programming and Tools/Editors IDEs": 13,
-    "Programming and Tools/Mobile App Development/Flutter Firebase": 1,
+    "Programming and Tools/Mobile App Development/Flutter Firebase": 3,
     "Programming and Tools/Productivity Tools": 7,
     "Programming and Tools/Programming Learning": 9,
     "Programming and Tools/Programming Q&A/Stack Overflow": 1,
@@ -89,32 +93,32 @@
     "Projects/Old Work/UX UI Design": 30,
     "Research/01 Read First - Thesis Core/01 Subspace DS KDS GDS And CCA": 25,
     "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines": 11,
-    "Research/01 Read First - Thesis Core/03 Datasets And Problem Setting": 23,
+    "Research/01 Read First - Thesis Core/03 Datasets And Problem Setting": 21,
     "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks": 11,
     "Research/01 Read First - Thesis Core/05 Spatial And Semantic Change Questions": 12,
     "Research/02 Methods - Subspace Geometry/01 General Subspace Geometry And Toolboxes": 30,
     "Research/02 Methods - Subspace Geometry/02 Kernel PCA And Kernel Subspace": 1,
     "Research/02 Methods - Subspace Geometry/03 Optional Green Learning Wavelets Compression": 5,
-    "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection": 17,
+    "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection": 16,
     "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection": 21,
     "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning": 27,
-    "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues": 43,
+    "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues": 40,
     "Research/04 Datasets - Current Candidate Future/01 Sentinel OSCD MultiSenGE And EO Datasets": 12,
-    "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs": 19,
+    "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs": 16,
     "Research/04 Datasets - Current Candidate Future/03 Disaster Damage And Semantic Datasets": 10,
     "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background": 22,
     "Research/05 Applications - Use Cases And Problem Framing/01 Greenhouses Agriculture Environmental Monitoring": 2,
-    "Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment": 22,
-    "Research/05 Applications - Use Cases And Problem Framing/03 Humanitarian And Conflict Mapping": 15,
+    "Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment": 21,
+    "Research/05 Applications - Use Cases And Problem Framing/03 Humanitarian And Conflict Mapping": 11,
     "Research/05 Applications - Use Cases And Problem Framing/04 Ecology And Wildlife Monitoring": 8,
     "Research/06 Background - Read As Needed/01 Remote Sensing Books And Guides": 2,
-    "Research/06 Background - Read As Needed/02 ML CV Foundation Papers": 13,
-    "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls": 39,
-    "Research/07 Literature Workflow - Search Venues Writing/02 Search And Reference Management": 15,
-    "Research/07 Literature Workflow - Search Venues Writing/03 Writing Posters And Presentation": 12,
+    "Research/06 Background - Read As Needed/02 ML CV Foundation Papers": 16,
+    "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls": 38,
+    "Research/07 Literature Workflow - Search Venues Writing/02 Search And Reference Management": 14,
+    "Research/07 Literature Workflow - Search Venues Writing/03 Writing Posters And Presentation": 10,
     "Research/08 Tools And Code - Implementation Support/01 Reference Implementations": 5,
     "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling": 5,
-    "Research/09 Parking Lot - Lower Priority/02 Nonproject Papers To Triage Later": 45,
+    "Research/09 Parking Lot - Lower Priority/02 Nonproject Papers To Triage Later": 46,
     "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links": 1,
     "To Review/Search Social Video": 79,
     "To Review/Uncategorized": 71,
@@ -127,9 +131,9 @@
     "University/Tsukuba/Portals and Systems": 23,
     "University/Tsukuba/Research Presentations": 1
   },
-  "research_entries": 473,
+  "research_entries": 459,
   "manual_review_entries": 150,
-  "zotero_candidate_count": 239,
+  "zotero_candidate_count": 312,
   "captain_whu_paths": [
     [
       "Research",
@@ -2856,11 +2860,11 @@
       "source_path": "Bookmarks bar/Research",
       "id": 35,
       "tree_path": [
-        "Research",
-        "05 Applications - Use Cases And Problem Framing",
-        "02 Urban Infrastructure And Built Environment"
+        "Learning",
+        "Machine Learning and AI",
+        "Roadmaps and Study Plans"
       ],
-      "read_priority_rank": 315
+      "read_priority_rank": 820
     },
     {
       "title": "ChatGPT Prompt Engineering for Developers - DeepLearning.AI",
@@ -3103,11 +3107,11 @@
       "source_path": "Bookmarks bar/Research",
       "id": 152,
       "tree_path": [
-        "Research",
-        "06 Background - Read As Needed",
-        "02 ML CV Foundation Papers"
+        "Learning",
+        "Machine Learning and AI",
+        "Classic Papers"
       ],
-      "read_priority_rank": 300
+      "read_priority_rank": 820
     },
     {
       "title": "ML Mastery | Sambhav Athreya - Google Docs",
@@ -3294,8 +3298,8 @@
       "id": 637,
       "tree_path": [
         "Research",
-        "03 Methods - Change Detection",
-        "04 Preprocessing Multitemporal And Sensor Issues"
+        "06 Background - Read As Needed",
+        "02 ML CV Foundation Papers"
       ],
       "read_priority_rank": 150
     },
@@ -4210,11 +4214,11 @@
       "source_path": "Safari links.md:107",
       "id": 1166,
       "tree_path": [
-        "Research",
-        "04 Datasets - Current Candidate Future",
-        "02 Earth Observation Portals And Catalogs"
+        "Learning",
+        "Machine Learning and AI",
+        "LLMs and Modern AI"
       ],
-      "read_priority_rank": 200
+      "read_priority_rank": 860
     },
     {
       "title": "Crossing the uncanny valley of conversational voice",
@@ -4223,11 +4227,11 @@
       "source_path": "Safari links.md:166",
       "id": 1225,
       "tree_path": [
-        "Research",
-        "04 Datasets - Current Candidate Future",
-        "02 Earth Observation Portals And Catalogs"
+        "Learning",
+        "Machine Learning and AI",
+        "LLMs and Modern AI"
       ],
-      "read_priority_rank": 200
+      "read_priority_rank": 860
     },
     {
       "title": "Cyberllm hf",
@@ -6059,11 +6063,10 @@
       "source_path": "Safari links.md:476",
       "id": 1535,
       "tree_path": [
-        "Research",
-        "05 Applications - Use Cases And Problem Framing",
-        "03 Humanitarian And Conflict Mapping"
+        "Life Admin",
+        "Health Fitness"
       ],
-      "read_priority_rank": 290
+      "read_priority_rank": 900
     },
     {
       "title": "buy sidr powder japan - Google Search",
@@ -6072,11 +6075,10 @@
       "source_path": "Safari links.md:446",
       "id": 1505,
       "tree_path": [
-        "Research",
-        "05 Applications - Use Cases And Problem Framing",
-        "03 Humanitarian And Conflict Mapping"
+        "Life Admin",
+        "Shopping"
       ],
-      "read_priority_rank": 290
+      "read_priority_rank": 900
     },
     {
       "title": "Can’t Open Page",
@@ -6085,11 +6087,10 @@
       "source_path": "Safari links.md:196",
       "id": 1255,
       "tree_path": [
-        "Research",
-        "05 Applications - Use Cases And Problem Framing",
-        "03 Humanitarian And Conflict Mapping"
+        "Personal Notes and Culture",
+        "Religion"
       ],
-      "read_priority_rank": 250
+      "read_priority_rank": 900
     },
     {
       "title": "Fundraiser by Majd Khadra : Gaza: Help Abood Escape Genocide & Pursue Dreams",
@@ -6098,11 +6099,11 @@
       "source_path": "Safari links.md:488",
       "id": 1547,
       "tree_path": [
-        "Research",
-        "05 Applications - Use Cases And Problem Framing",
-        "03 Humanitarian And Conflict Mapping"
+        "Personal Notes and Culture",
+        "Politics Society",
+        "Palestine Resources"
       ],
-      "read_priority_rank": 250
+      "read_priority_rank": 900
     },
     {
       "title": "Gaza 3D Digital Archives | A UTokyo & Partners Initiative",
@@ -6149,11 +6150,11 @@
       "source_path": "Safari links.md:279",
       "id": 1338,
       "tree_path": [
-        "Research",
-        "04 Datasets - Current Candidate Future",
-        "02 Earth Observation Portals And Catalogs"
+        "Learning",
+        "Math",
+        "Linear Algebra"
       ],
-      "read_priority_rank": 240
+      "read_priority_rank": 800
     },
     {
       "title": "Map of the topography of Historical Palestine (after Palestine... | Download Scientific Diagram",
@@ -7634,11 +7635,11 @@
       "source_path": "Bookmarks bar/ML/DL/AI",
       "id": 670,
       "tree_path": [
-        "Research",
-        "07 Literature Workflow - Search Venues Writing",
-        "03 Writing Posters And Presentation"
+        "Learning",
+        "Machine Learning and AI",
+        "Deep Learning Visuals"
       ],
-      "read_priority_rank": 390
+      "read_priority_rank": 830
     },
     {
       "title": "Understanding LSTM and its diagrams | by Shi Yan | ML Review",
@@ -7647,11 +7648,11 @@
       "source_path": "Bookmarks bar/ML/DL/AI",
       "id": 671,
       "tree_path": [
-        "Research",
-        "07 Literature Workflow - Search Venues Writing",
-        "03 Writing Posters And Presentation"
+        "Learning",
+        "Machine Learning and AI",
+        "Deep Learning Visuals"
       ],
-      "read_priority_rank": 350
+      "read_priority_rank": 830
     },
     {
       "title": "All Paths | The Odin Project",
@@ -10809,11 +10810,11 @@
       "source_path": "Bookmarks bar/old/Flutter",
       "id": 762,
       "tree_path": [
-        "Research",
-        "01 Read First - Thesis Core",
-        "03 Datasets And Problem Setting"
+        "Programming and Tools",
+        "Mobile App Development",
+        "Flutter Firebase"
       ],
-      "read_priority_rank": 50
+      "read_priority_rank": 860
     },
     {
       "title": "Flutter Bottom Navigation Bar Explained Step by Step - YouTube",
@@ -11018,11 +11019,11 @@
       "source_path": "Bookmarks bar/old/Flutter",
       "id": 760,
       "tree_path": [
-        "Research",
-        "01 Read First - Thesis Core",
-        "03 Datasets And Problem Setting"
+        "Programming and Tools",
+        "Mobile App Development",
+        "Flutter Firebase"
       ],
-      "read_priority_rank": 50
+      "read_priority_rank": 860
     },
     {
       "title": "How to build next-gen UIs in Flutter - YouTube",
@@ -15036,10 +15037,10 @@
       "id": 212,
       "tree_path": [
         "Research",
-        "07 Literature Workflow - Search Venues Writing",
-        "01 Conferences Journals And Calls"
+        "09 Parking Lot - Lower Priority",
+        "02 Nonproject Papers To Triage Later"
       ],
-      "read_priority_rank": 350
+      "read_priority_rank": 760
     },
     {
       "title": "Elsevier Journal Catalog: Browse Peer-Reviewed Journals List",
@@ -15319,11 +15320,11 @@
       "source_path": "Safari links.md:113",
       "id": 1172,
       "tree_path": [
-        "Research",
-        "07 Literature Workflow - Search Venues Writing",
-        "02 Search And Reference Management"
+        "Learning",
+        "General Learning",
+        "Reading and Note Taking"
       ],
-      "read_priority_rank": 375
+      "read_priority_rank": 850
     },
     {
       "title": "device for reading and annotating, research papers and academic books, zotero syncing : r/academia",
@@ -16236,8 +16237,8 @@
       "id": 327,
       "tree_path": [
         "Research",
-        "03 Methods - Change Detection",
-        "01 Binary And Unsupervised Change Detection"
+        "06 Background - Read As Needed",
+        "02 ML CV Foundation Papers"
       ],
       "read_priority_rank": 150
     },
@@ -17042,8 +17043,8 @@
       "id": 263,
       "tree_path": [
         "Research",
-        "03 Methods - Change Detection",
-        "04 Preprocessing Multitemporal And Sensor Issues"
+        "06 Background - Read As Needed",
+        "02 ML CV Foundation Papers"
       ],
       "read_priority_rank": 150
     },
@@ -17055,8 +17056,8 @@
       "id": 86,
       "tree_path": [
         "Research",
-        "03 Methods - Change Detection",
-        "04 Preprocessing Multitemporal And Sensor Issues"
+        "06 Background - Read As Needed",
+        "02 ML CV Foundation Papers"
       ],
       "read_priority_rank": 150
     },
@@ -20156,1116 +20157,1632 @@
   ],
   "zotero_candidates_first_120": [
     {
-      "title": "1911.09296",
-      "url": "https://arxiv.org/pdf/1911.09296",
+      "title": "Difference Subspace and Its Generalization for Subspace-Based Methods | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/7053916",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 174,
       "tree_path": [
         "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 5
     },
     {
-      "title": "[1911.09296] xBD: A Dataset for Assessing Building Damage from Satellite Imagery",
-      "url": "https://arxiv.org/abs/1911.09296",
+      "title": "untitled",
+      "url": "https://www.cs.tsukuba.ac.jp/~kfukui/papers/TPAMI2408358-revised.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 172,
       "tree_path": [
         "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection",
-      "url": "https://ar5iv.labs.arxiv.org/html/2303.09536",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection",
-      "url": "https://arxiv.org/abs/2303.09536",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "arxiv.org",
-      "url": "https://arxiv.org/pdf/1911.09296",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2303.09536",
-      "url": "https://arxiv.org/pdf/2303.09536",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Creating xBD: A Dataset for Assessing Building Damage from Satellite Imagery",
-      "url": "https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "down",
-      "url": "https://ieee-dataport.org/open-access/oscd-onera-satellite-change-detection",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 5
     },
     {
       "title": "Fully Convolutional Siamese Networks for Change Detection | IEEE Conference Publication | IEEE Xplore",
       "url": "https://ieeexplore.ieee.org/document/8451652",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 310,
       "tree_path": [
         "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Hyperspectral change detection using IR-MAD and feature reduction | IEEE Conference Publication | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/6048907",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Multimodal and Multitemporal Land Use/Land Cover Semantic Segmentation on Sentinel-1 and Sentinel-2 Imagery: An Application on a MultiSenGE Dataset",
-      "url": "https://www.mdpi.com/2072-4292/15/1/151",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Multimodal and Multitemporal Land Use/Land Cover Semantic Segmentation on Sentinel-1 and Sentinel-2 Imagery: An Application on a MultiSenGE Dataset",
-      "url": "https://www.mdpi.com/2072-4292/15/1/151#:~:text=are%20selected.%20Each%20MultiSenGE%20Sentinel,to%2010%20m%20spatial%20resolution",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Multitemporal and multimodal cross-region fine-tuning: MultiSenGE and MultiSenNA applications: Remote Sensing Letters: Vol 17 , No 1 - Get Access",
-      "url": "https://www.tandfonline.com/doi/full/10.1080/2150704X.2025.2586169",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 5
     },
     {
       "title": "The Regularized Iteratively Reweighted MAD Method for Change Detection in Multi- and Hyperspectral Data | IEEE Journals & Magazine | IEEE Xplore",
       "url": "https://ieeexplore.ieee.org/document/4060945",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 311,
       "tree_path": [
         "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
-    },
-    {
-      "title": "Unsupervised Change Detection in Satellite Images Using Principal Component Analysis and --Means Clustering | IEEE Journals & Magazine | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/5196726",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Change Detection Core"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 5
     },
     {
       "title": "2303.17802v2.pdf",
       "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://arxiv.org/pdf/2303.17802",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
-      "url": "https://arxiv.org/abs/2303.17802",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
-      "url": "https://web3.arxiv.org/abs/2303.17802",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "[2409.08563] Second-order difference subspace",
-      "url": "https://www.arxiv.org/abs/2409.08563",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "Difference Subspace and Its Generalization for Subspace-Based Methods | IEEE Journals & Magazine | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/7053916",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "Discriminant Feature Extraction by Generalized Difference Subspace | IEEE Journals & Magazine | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/9760096",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "IEEE Xplore Full-Text PDF:",
-      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7053916&tag=1",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "researchgate.net/profile/Kazuhiro-Fukui/publication/303563203_Spotting_fingerspelled_words_from_sign_language_video_by_temporally_regularized_canonical_component_analysis/links/5a8a413faca272017e621f5d/Spotting-fingerspelled-words-from-sign-language-video-by-temporally-regularized-canonical-component-analysis.pdf",
-      "url": "https://www.researchgate.net/profile/Kazuhiro-Fukui/publication/303563203_Spotting_fingerspelled_words_from_sign_language_video_by_temporally_regularized_canonical_component_analysis/links/5a8a413faca272017e621f5d/Spotting-fingerspelled-words-from-sign-language-video-by-temporally-regularized-canonical-component-analysis.pdf",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "Signal latent subspace: A new representation for environmental sound classification - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003682X24003323",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "Spotting fingerspelled words from sign language video by temporally regularized canonical component analysis | IEEE Conference Publication | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/7477238",
-      "tree_path": [
-        "Research",
-        "00 Must Read and Zotero First",
-        "Subspace Advisor Core"
-      ]
-    },
-    {
-      "title": "Integrating multi-source remote sensing data and machine learning for predicting tree density and cover in Argania spinosa - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S2772375525001443",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Environmental Monitoring",
-        "Remote Sensing Applications"
-      ]
-    },
-    {
-      "title": "Mapping Groundwater Prospective Zones Using Remote Sensing and Geographical Information System Techniques in Wadi Fatima, Western Saudi Arabia",
-      "url": "https://www.mdpi.com/2071-1050/15/21/15629",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Environmental Monitoring",
-        "Remote Sensing Applications"
-      ]
-    },
-    {
-      "title": "Time series analysis of remote sensing images of vegetation cover change in the Faro-Bénoué-Bouba Ndjidda ecological landscape, north region of Cameroon - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/abs/pii/S2352938522001008",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Environmental Monitoring",
-        "Remote Sensing Applications"
-      ]
-    },
-    {
-      "title": "A lightweight and scalable greenhouse mapping method based on remote sensing imagery - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S1569843223003771",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Greenhouses and Agriculture",
-        "Mapping Datasets and Methods"
-      ]
-    },
-    {
-      "title": "Agricultural drought forecasting using remote sensing: A hybrid modeling framework by integrating wavelet transformation and machine learning techniques - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0378377425006365",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Greenhouses and Agriculture",
-        "Use Case Resources"
-      ]
-    },
-    {
-      "title": "Sentinel-2 cropland mapping using pixel-based and object-based time-weighted dynamic time warping analysis - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0034425717304686",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Greenhouses and Agriculture",
-        "Use Case Resources"
-      ]
-    },
-    {
-      "title": "YOLO-RS: Remote Sensing Enhanced Crop Detection Methods",
-      "url": "https://arxiv.org/html/2504.11165v2",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Greenhouses and Agriculture",
-        "Use Case Resources"
-      ]
-    },
-    {
-      "title": "[1810.08468] Urban Change Detection for Multispectral Earth Observation Using Convolutional Neural Networks",
-      "url": "https://arxiv.org/abs/1810.08468",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "Advances in remote sensing applications for urban sustainability | Euro-Mediterranean Journal for Environmental Integration",
-      "url": "https://link.springer.com/article/10.1007/s41207-016-0007-4",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "Deep learning for urban land use category classification: A review and experimental assessment - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0034425724003080",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "Detection of Urban and Environmental Changes via Remote Sensing | Circular Economy and Sustainability",
-      "url": "https://link.springer.com/article/10.1007/s43615-021-00035-y",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "J. Imaging | Free Full-Text | Review of Image-Processing-Based Technology for Structural Health Monitoring of Civil Infrastructures",
-      "url": "https://www.mdpi.com/2313-433X/10/4/93",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "Remote Sensing | Special Issue : Decision Support Systems for Civil Infrastructure Management Based on Satellite Technology",
-      "url": "https://www.mdpi.com/journal/remotesensing/special_issues/O14L387P95",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "SIGNet: A Siamese Graph Convolutional Network for Multi-Class Urban Change Detection",
-      "url": "https://www.mdpi.com/2072-4292/15/9/2464",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "Urban Change Detection for Multispectral Earth Observation Using Convolutional Neural Networks | IEEE Conference Publication | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/abstract/document/8518015",
-      "tree_path": [
-        "Research",
-        "Applications",
-        "Urban Infrastructure",
-        "Urban Mapping Resources"
-      ]
-    },
-    {
-      "title": "(PDF) Technical Solution Discussion for Key Challenges of Operational Convolutional Neural Network-Based Building-Damage Assessment from Satellite Imagery: Perspective from Benchmark xBD Dataset",
-      "url": "https://www.researchgate.net/publication/347087245_Technical_Solution_Discussion_for_Key_Challenges_of_Operational_Convolutional_Neural_Network-Based_Building-Damage_Assessment_from_Satellite_Imagery_Perspective_from_Benchmark_xBD_Dataset",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Disaster Damage Datasets"
-      ]
-    },
-    {
-      "title": "Benchmarking attention mechanisms and consistency regularization semi-supervised learning for post-flood building damage assessment - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S2212420925004881",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Disaster Damage Datasets"
-      ]
-    },
-    {
-      "title": "Pyramid Pooling Module-Based Semi-Siamese Network: A Benchmark Model for Assessing Building Damage from xBD Satellite Imagery Datasets | MDPI",
-      "url": "https://www.mdpi.com/2072-4292/12/24/4055",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Disaster Damage Datasets"
-      ]
-    },
-    {
-      "title": "[2105.10196] Multimodal Remote Sensing Benchmark Datasets for Land Cover Classification with A Shared and Specific Feature Learning Model",
-      "url": "https://arxiv.org/abs/2105.10196",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "A Deep Learning Method for Land Use Classification Based on Feature Augmentation",
-      "url": "https://www.mdpi.com/2072-4292/17/8/1398",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "A hybrid learning model for efficient classification of Land Use and land change from satellite images - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1474706522001772",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "A hybrid learning model for efficient classification of Land Use and land change from satellite images - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S1474706522001772",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "A novel hybrid methodology integrating pixel- and object-based techniques for mapping land use and land cover from high-resolution satellite data: International Journal of Remote Sensing: Vol 45 , No 16 - Get Access",
-      "url": "https://www.tandfonline.com/doi/full/10.1080/01431161.2024.2379515",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Comparison of Land Use Land Cover Classifiers Using Different Satellite Imagery and Machine Learning Techniques",
-      "url": "https://www.mdpi.com/2072-4292/14/19/4978",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Deep Learning for Land Use and Land Cover Classification Based on Hyperspectral and Multispectral Earth Observation Data: A Review",
-      "url": "https://www.mdpi.com/2072-4292/12/15/2495",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Deep learning for land use classification: a systematic review of HS-LiDAR imagery | Artificial Intelligence Review",
-      "url": "https://link.springer.com/article/10.1007/s10462-025-11265-z",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Deep Transfer Learning for Land Use and Land Cover Classification: A Comparative Study",
-      "url": "https://www.mdpi.com/1424-8220/21/23/8083",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Hybrid Model for Forecasting of Changes in Land Use and Land Cover Using Satellite Techniques | IEEE Journals & Magazine | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/abstract/document/8605374",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Land Use Classification Using High-Resolution Remote Sensing Images Based on Structural Topic Model | IEEE Journals & Magazine | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/9274417",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Remote Sensing | Special Issue : Urban Land Use Mapping Using Deep Learning",
-      "url": "https://www.mdpi.com/journal/remotesensing/special_issues/9H7SNU8VHJ",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "Transformer-based land use and land cover classification with explainability using satellite imagery | Scientific Reports",
-      "url": "https://www.nature.com/articles/s41598-024-67186-4",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Land Use Land Cover"
-      ]
-    },
-    {
-      "title": "[2001.06372] BigEarthNet Dataset with A New Class-Nomenclature for Remote Sensing Image Understanding",
-      "url": "https://arxiv.org/abs/2001.06372?utm_source=chatgpt.com",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Remote Sensing Datasets"
-      ]
-    },
-    {
-      "title": "[2010.07830] Semi-Supervised Semantic Segmentation in Earth Observation: The MiniFrance Suite, Dataset Analysis and Multi-task Network Study",
-      "url": "https://arxiv.org/abs/2010.07830",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Remote Sensing Datasets"
-      ]
-    },
-    {
-      "title": "DLR-MF-DAS/SSL4EO-S12-v1.1: resources as addition to the updated version of the SSL4EO-S12 dataset, cf. https://arxiv.org/abs/2503.00168",
-      "url": "https://github.com/DLR-MF-DAS/SSL4EO-S12-v1.1?tab=readme-ov-file",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Remote Sensing Datasets"
-      ]
-    },
-    {
-      "title": "Advanced Remote Sensing | ScienceDirect",
-      "url": "https://www.sciencedirect.com/book/9780123859549/advanced-remote-sensing",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Remote Sensing General Resources"
-      ]
-    },
-    {
-      "title": "ISPRS Journal of Photogrammetry and Remote Sensing | ScienceDirect.com by Elsevier",
-      "url": "https://www.sciencedirect.com/journal/isprs-journal-of-photogrammetry-and-remote-sensing",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Remote Sensing General Resources"
-      ]
-    },
-    {
-      "title": "(PDF) Land Use and Land Cover Mapping with VHR and Multi-Temporal Sentinel-2 Imagery",
-      "url": "https://www.researchgate.net/publication/370669231_Land_Use_and_Land_Cover_Mapping_with_VHR_and_Multi-Temporal_Sentinel-2_Imagery",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "A novel image fusion method based on UAV and Sentinel-2 for environmental monitoring | Scientific Reports",
-      "url": "https://www.nature.com/articles/s41598-025-13049-5",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Fusing Landsat 8 and Sentinel-2 data for 10-m dense time-series imagery using a degradation-term constrained deep network - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0303243422000642",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Image Classification and Land Cover Mapping Using Sentinel-2 Imagery: Optimization of SVM Parameters",
-      "url": "https://www.mdpi.com/2073-445X/11/7/993",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Integration of UAV, Sentinel-1, and Sentinel-2 Data for Mangrove Plantation Aboveground Biomass Monitoring in Senegal",
-      "url": "https://www.mdpi.com/2072-4292/11/1/77",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Land Use and Land Cover Mapping Using Sentinel-2, Landsat-8 Satellite Images, and Google Earth Engine: A Comparison of Two Composition Methods",
-      "url": "https://www.mdpi.com/2072-4292/14/9/1977",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Land Use and Land Cover Mapping with VHR and Multi-Temporal Sentinel-2 Imagery",
-      "url": "https://www.mdpi.com/2072-4292/15/10/2501",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Multi-Temporal Image - an overview | ScienceDirect Topics",
-      "url": "https://www.sciencedirect.com/topics/earth-and-planetary-sciences/multi-temporal-image",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "SenCLIP: Enhancing zero-shot land-use mapping for Sentinel-2 with ground-level prompting",
-      "url": "https://arxiv.org/html/2412.08536v1",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "SenCLIP: Enhancing Zero-Shot Land-Use Mapping for Sentinel-2 with Ground-Level Prompting | IEEE Conference Publication | IEEE Xplore",
-      "url": "https://ieeexplore.ieee.org/document/10943453",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Sentinel-2: ESA's Optical High-Resolution Mission for GMES Operational Services - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S0034425712000636?via%3Dihub",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "Super-Resolution of Sentinel-2 Images Using a Geometry-Guided Back-Projection Network with Self-Attention",
-      "url": "https://www.researchgate.net/publication/394396656_Super-Resolution_of_Sentinel-2_Images_Using_a_Geometry-Guided_Back-Projection_Network_with_Self-Attention",
-      "tree_path": [
-        "Research",
-        "Datasets and Benchmarks",
-        "Sentinel OSCD MultiSenGE"
-      ]
-    },
-    {
-      "title": "2025 Conference",
-      "url": "https://cvpr.thecvf.com/",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "2025 IEEE International Conference on Image Processing",
-      "url": "https://2025.ieeeicip.org/#",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "2026 Conference",
-      "url": "https://wacv.thecvf.com/",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "Accueil - International Conference on Computer Vision - October 2-6, 2023 - Paris - France - ICCV2023",
-      "url": "https://iccv2023.thecvf.com/",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "calls for papers 2025 ieee - Google Search",
-      "url": "https://www.google.com/search?q=calls+for+papers+2025+ieee&oq=calls+for+papers+2025+ieee&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIICAEQABgWGB4yDQgCEAAYhgMYgAQYigUyDQgDEAAYhgMYgAQYigUyDQgEEAAYhgMYgAQYigUyDQgFEAAYhgMYgAQYigUyDQgGEAAYhgMYgAQYigUyCggHEAAYogQYiQUyBwgIEAAY7wUyCggJEAAYgAQYogTSAQkxMjk2N2owajeoAgCwAgA&sourceid=chrome&ie=UTF-8#vhid=zephyr:0&vssid=atritem-https://2025.ieeeicip.org/call-for-papers/",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "openaccess.thecvf.com",
-      "url": "https://openaccess.thecvf.com/content/WACV2025/html/Bandara_Deep_Metric_Learning_for_Unsupervised_Remote_Sensing_Change_Detection_WACV_2025_paper.html",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "openaccess.thecvf.com",
-      "url": "https://openaccess.thecvf.com/content/WACV2025/papers/Bandara_Deep_Metric_Learning_for_Unsupervised_Remote_Sensing_Change_Detection_WACV_2025_paper.pdf",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "openaccess.thecvf.com/content_cvpr_2015/papers/Gueguen_Large-Scale_Damage_Detection_2015_CVPR_paper.pdf",
-      "url": "https://openaccess.thecvf.com/content_cvpr_2015/papers/Gueguen_Large-Scale_Damage_Detection_2015_CVPR_paper.pdf",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "Satellite Workshops – 2025 IEEE International Conference on Image Processing",
-      "url": "https://2025.ieeeicip.org/workshops/",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Conferences and Venues"
-      ]
-    },
-    {
-      "title": "1812.05581",
-      "url": "https://arxiv.org/pdf/1812.05581",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "2208.11813",
-      "url": "https://arxiv.org/pdf/2208.11813",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Subspaces",
+      "id": 1017,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
       "title": "2409.08563",
       "url": "https://arxiv.org/pdf/2409.08563",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 171,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
       "title": "2409.08563",
       "url": "https://www.arxiv.org/pdf/2409.08563",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 141,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "2502.16982.pdf",
-      "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://arxiv.org/pdf/2502.16982",
+      "title": "Attention Mechanism in Randomized Time Warping",
+      "url": "https://www.arxiv.org/pdf/2508.16366",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 169,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "A regularized discriminative framework for EEG analysis with application to brain–computer interface",
-      "url": "https://pdf.sciencedirectassets.com/272508/1-s2.0-S1053811909X00212/1-s2.0-S1053811909008192/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEHwaCXVzLWVhc3QtMSJIMEYCIQClHo2x1OK%2FLX9X9UrO9Wh7qoUJ36J6L4%2Fxr%2B1pV6L1kgIhAMp0vClBEAQO8149qFT54j8liiiLhk1gyo%2Frzv%2FT8xAMKrsFCIX%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQBRoMMDU5MDAzNTQ2ODY1Igx9Xq2OHCPUuVKAvaQqjwVNjGOzjWdg37w3L7aF6qz7b2rEIGIYkb3%2FcIKW1fWOt2cjaO2zjTvV4%2B5%2Fd5Ei32srxLYXdlmfzK8HRON2cqIMoFZg26Etp7VnVlUJnSZ1IA8paKOTS0quqdiIfc%2BojPZb488c1%2BJgEBVstU1lxj34x4YnlogCRzSi%2BdknosaVB%2FuOmxH%2B6PEQjIkUqSbXWCipCftmq%2B5qCUKPohxoxljCkh4QHKZPRtL1RHDp%2BSUsYATINhOueQiDsjSOgabSUuEyTEazlnSuRd499yuE61n2EQSbnAYy6YP17vWjQMvL%2B5eFOCZptyQoHZOv%2BkifFxmWWaa2bkRoWciuTUoonmKQwM1mHPdE0ATxg0f2TvWkzW9gjz95XQ4fZRYPqpwqtJVVOzz2scimekrVMm0kqTeJL8TYUSZN37gwQxKa4DDh5m%2Bu7Z7GToEaz1ZX0fbq9hnNBQCBD7%2FD4NH%2B4LuaWp1MWW9Z%2BFIVDr9JZs%2F7j6tGiXzixBtXvESt%2BBxM2zd7MeSAH%2F2pQA0DvDdnb2VhuL%2BF6xnwBwpRLeK4BEeZPpyTU%2Fm8VYDMjgDftMEf9rv0qghMu2tAxwNkaR7qbPWXU5%2BT41loqOKRX8uAnR3o3b76L%2FFw4v7ygGKcIcj9RdgkS1bAs9JCuRAKlEfv5JMPpfd6qFixSFpZMWkeB5VLvPwfYgEcVfUk4xF3O1bRN9w%2F0O%2FTmgDeq4FHPKmQ60%2Fgxmm5aAups7xtCDhpEDSkp9KCmo8ylNRNhDv%2Bh%2FD5f7ehuJirYrXmkv6I2oeJgB3IpTJF5YOSerVXwv6k9I2jCwT68QdH0v44QAUodG%2FMAvoRmAcfsjDdzbRDZpA6%2BlSM7d4xf7%2BjbpnBU%2FzszPMKJU8DMKCsssMGOrABteHnKvnsSNdiXCq9BGBadjHZtlcUE20emCzlqTv%2FCMhbswdhIfPyA%2FDQ0FF7iRlGf0MsBgnK%2BvaI1OMW0v%2F1A4N6c0aQRrBlW6VUCZl0D3lo8E7LtXfU1ENAIO2w%2F5dJUB%2Fp%2FwSGkSd37QXXLGZrCv1N88uDYqrBZz7o1KUdZjfnuofKmwkiqLqHF8QeYitP5ETzGPkfQOIs9VcNjrpxQEQGQOWCafAKJpMinv2Z96w%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20250708T042610Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTYXD5MIT62%2F20250708%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=c452e446422cb358ca3c6b8870a46b39738fba30a22bc3df5490171791583dcd&hash=ba9dc6f67add044d01872e6b2a8672e5f6aae4187aefc299e2d958f87b6ca5e5&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S1053811909008192&tid=spdf-7820210b-f032-4913-940f-82c9f3e41ea7&sid=1d5cf95e9a452540cc59fab97068e41c1956gxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0c1e5b510303015558&rr=95bcd267c9ebe387&cc=jp",
+      "title": "Discriminant Feature Extraction by Generalized Difference Subspace | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/9760096",
+      "source": "safari",
+      "source_path": "Safari links.md:355",
+      "id": 1414,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "arxiv.org",
-      "url": "https://arxiv.org/pdf/2410.16565",
+      "title": "Fukui, K.: “Subspace Methods,” Computer Vision,... - Google Scholar",
+      "url": "https://scholar.google.co.jp/scholar?q=Fukui,+K.:+%E2%80%9CSubspace+Methods,%E2%80%9D+Computer+Vision,+pp.777%E2%80%93781,+2014&hl=en&as_sdt=0&as_vis=1&oi=scholart",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 156,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org",
-      "url": "https://arxiv.org/pdf/2506.14730v1",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org",
-      "url": "https://arxiv.org/pdf/2511.05461",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/1705.07874",
-      "url": "https://arxiv.org/pdf/1705.07874",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/1806.03125",
-      "url": "https://arxiv.org/pdf/1806.03125",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/1810.08462",
-      "url": "https://arxiv.org/pdf/1810.08462",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/1903.11240",
-      "url": "https://arxiv.org/pdf/1903.11240",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/1909.08190",
-      "url": "https://arxiv.org/pdf/1909.08190",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2002.03141",
-      "url": "https://arxiv.org/pdf/2002.03141",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2010.06497",
-      "url": "https://arxiv.org/pdf/2010.06497",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2109.00900",
-      "url": "https://arxiv.org/pdf/2109.00900",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2207.07189",
-      "url": "https://arxiv.org/pdf/2207.07189",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2304.10811",
-      "url": "https://arxiv.org/pdf/2304.10811",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2401.11489",
-      "url": "https://arxiv.org/pdf/2401.11489",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2404.03936",
-      "url": "https://arxiv.org/pdf/2404.03936",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2410.07824",
-      "url": "https://arxiv.org/pdf/2410.07824",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/2507.13716",
-      "url": "https://arxiv.org/pdf/2507.13716",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
-    },
-    {
-      "title": "arxiv.org/pdf/math-ph/0005032",
-      "url": "https://arxiv.org/pdf/math-ph/0005032",
-      "tree_path": [
-        "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
       "title": "IEEE Xplore Full-Text PDF:",
-      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10965471#:~:text=shown.%20Different%20objects%2C%20such%20as%20soil%2C%20water%2C,vector%20of%20pixel%20values%20across%20the%20bands.",
+      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=7053916&tag=1",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Subspaces",
+      "id": 1018,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "IEEE Xplore Full-Text PDF:",
-      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=11072209",
+      "title": "Signal latent subspace: A new representation for environmental sound classification - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003682X24003323",
+      "source": "safari",
+      "source_path": "Safari links.md:491",
+      "id": 1550,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "pdf.sciencedirectassets.com/272324/1-s2.0-S1047320322X00084/1-s2.0-S104732032200205X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDrm3cDJRftXZHv3pRJQd1jOxtdSlw113%2BY%2FCAk%2FUneXQIhAL2Eudl3Iz%2Bq4R266ytBupmKizhQTPg5xlajYYfeJ2NrKrMFCHcQBRoMMDU5MDAzNTQ2ODY1IgzegEJOYiB4PLNR2V8qkAW%2FhqnqDSMPNfzgBq2xcN6iZpNPGbqGcFP7gN%2BLwL4V%2F3PGNWbHaccl1GEd%2F5S3Cvd78Ip%2BkDCiHpE3oE%2BdzdnpTTPC9bVynwLaY0K%2BG12OrkJofhCq9QVxr2cAsm7XhjjoRzCklhjegWvocXppRcN9CQASpqsWrntLMQFmbS3LTp9YZJzeWqUCb1t8eAKezYJSCIr8r%2FPAcRm9NlChj81LmM66B84ZiZe%2FVlPVhJMYWW2FPF7piVRbGR9uOX%2FuN3haewW1V0E3UuB7AHsKBzF8M9t8y%2FOWZLFh1LT06FXatUFpOmCLcWhcprw8lrmPMZ1l0rdMkoRUEtM8pFvVmNlm5GGDUJmDbg8yP%2FBi4gjNitE4nKQpoN%2F%2FjK3baBlHPX00zrwfjV2FEj%2BQ%2F%2FOGJyU7UASZbQIiN%2FoVnQP83fP9bdnKAavTyTiIfkmcas12rPWXOFKg8e%2Fqi5LxW29IJNyF2R%2F0msAxSKtXqIIU3nD95dM99AL0c4EsRcDqyQulVTiwEQRhj2kxuERVnMR6oXegjlPBGg0vpX3K5LtqvFIimZDvjKIM%2BPSIbrkZtN1w9yUf6Oozxq%2BTj2C4MuZUJkFRLo1FYtkCFSrPzNp17FRoibbV1faECcjvJoWnvoC8XMkWPp0MgJMR7PQ2cgvJEEHTl%2FqYSildZOnlBGcpBSUWb279S2k7p3HR9scVlDxQemKoyPDaJG%2BiwwacgvKpe2a1St6lz2R%2Byc8x%2BqaNBUmTFTAoxA5TqLDslw6HTdC%2FLqA0as%2FN%2BAXBbG3HB8XvU2Lu%2B7fXgdjLpEleZmHb3SIwlmwJGRCjP1ErWtVC66EzFwHLpTqJ2o%2F5zdu%2B5s%2BhG1kurr4c8CZySEnyVPGCsI5XSTCs5dTQBjqwAddWLDKv61IZvbjs%2BxWieo%2BbEWr9V63AzbieUm3xMeIsTdj4HIOezltjiTV089BOnRxpugh%2BPu4zpI4iOmFfcSvIebcgh1%2BDugkyVAeg90xekqsjR82T8aWqW3adJCSzHsIcbAHKjNTt5uMlr6J9KjceQVSyqA5SNsxvVhR6dCTnl5EZPS74Yyggpez8l4qj3%2BEbZdpkHOgdsLsmuLP7ggd5AvEo9Fl5TUSwiLlSWA6U&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260526T062158Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY5UWJ5C4P%2F20260526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=5eac9e05352ac4be55a3df78d13429c884482ba55e79a76d2a5b9b648a48f01e&hash=9bfaba5a5fa27dd5e514c244ec63eaec2013c3a16faf7540c6f8bae27e8216b5&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S104732032200205X&tid=spdf-16769d88-7cd4-45a4-b25f-cf2a11b0eda3&sid=4a38659b46e1d04d973b27e2265563fe633bgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0c16035353030e010057&rr=a01aaec638f79889&cc=jp",
-      "url": "https://pdf.sciencedirectassets.com/272324/1-s2.0-S1047320322X00084/1-s2.0-S104732032200205X/main.pdf?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJIMEYCIQDrm3cDJRftXZHv3pRJQd1jOxtdSlw113%2BY%2FCAk%2FUneXQIhAL2Eudl3Iz%2Bq4R266ytBupmKizhQTPg5xlajYYfeJ2NrKrMFCHcQBRoMMDU5MDAzNTQ2ODY1IgzegEJOYiB4PLNR2V8qkAW%2FhqnqDSMPNfzgBq2xcN6iZpNPGbqGcFP7gN%2BLwL4V%2F3PGNWbHaccl1GEd%2F5S3Cvd78Ip%2BkDCiHpE3oE%2BdzdnpTTPC9bVynwLaY0K%2BG12OrkJofhCq9QVxr2cAsm7XhjjoRzCklhjegWvocXppRcN9CQASpqsWrntLMQFmbS3LTp9YZJzeWqUCb1t8eAKezYJSCIr8r%2FPAcRm9NlChj81LmM66B84ZiZe%2FVlPVhJMYWW2FPF7piVRbGR9uOX%2FuN3haewW1V0E3UuB7AHsKBzF8M9t8y%2FOWZLFh1LT06FXatUFpOmCLcWhcprw8lrmPMZ1l0rdMkoRUEtM8pFvVmNlm5GGDUJmDbg8yP%2FBi4gjNitE4nKQpoN%2F%2FjK3baBlHPX00zrwfjV2FEj%2BQ%2F%2FOGJyU7UASZbQIiN%2FoVnQP83fP9bdnKAavTyTiIfkmcas12rPWXOFKg8e%2Fqi5LxW29IJNyF2R%2F0msAxSKtXqIIU3nD95dM99AL0c4EsRcDqyQulVTiwEQRhj2kxuERVnMR6oXegjlPBGg0vpX3K5LtqvFIimZDvjKIM%2BPSIbrkZtN1w9yUf6Oozxq%2BTj2C4MuZUJkFRLo1FYtkCFSrPzNp17FRoibbV1faECcjvJoWnvoC8XMkWPp0MgJMR7PQ2cgvJEEHTl%2FqYSildZOnlBGcpBSUWb279S2k7p3HR9scVlDxQemKoyPDaJG%2BiwwacgvKpe2a1St6lz2R%2Byc8x%2BqaNBUmTFTAoxA5TqLDslw6HTdC%2FLqA0as%2FN%2BAXBbG3HB8XvU2Lu%2B7fXgdjLpEleZmHb3SIwlmwJGRCjP1ErWtVC66EzFwHLpTqJ2o%2F5zdu%2B5s%2BhG1kurr4c8CZySEnyVPGCsI5XSTCs5dTQBjqwAddWLDKv61IZvbjs%2BxWieo%2BbEWr9V63AzbieUm3xMeIsTdj4HIOezltjiTV089BOnRxpugh%2BPu4zpI4iOmFfcSvIebcgh1%2BDugkyVAeg90xekqsjR82T8aWqW3adJCSzHsIcbAHKjNTt5uMlr6J9KjceQVSyqA5SNsxvVhR6dCTnl5EZPS74Yyggpez8l4qj3%2BEbZdpkHOgdsLsmuLP7ggd5AvEo9Fl5TUSwiLlSWA6U&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260526T062158Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAQ3PHCVTY5UWJ5C4P%2F20260526%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=5eac9e05352ac4be55a3df78d13429c884482ba55e79a76d2a5b9b648a48f01e&hash=9bfaba5a5fa27dd5e514c244ec63eaec2013c3a16faf7540c6f8bae27e8216b5&host=68042c943591013ac2b2430a89b270f6af2c76d8dfd086a07176afe7c76c2c61&pii=S104732032200205X&tid=spdf-16769d88-7cd4-45a4-b25f-cf2a11b0eda3&sid=4a38659b46e1d04d973b27e2265563fe633bgxrqa&type=client&tsoh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&rh=d3d3LnNjaWVuY2VkaXJlY3QuY29t&ua=0c16035353030e010057&rr=a01aaec638f79889&cc=jp",
+      "title": "Spotting fingerspelled words from sign language video by temporally regularized canonical component analysis | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/7477238",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research/senseis paper from semi to look at and try to implement",
+      "id": 19,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and PDFs To Inspect"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[1404.1100] A Tutorial on Principal Component Analysis",
-      "url": "https://arxiv.org/abs/1404.1100",
+      "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
+      "url": "https://arxiv.org/abs/2303.17802",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 284,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[1409.1556] Very Deep Convolutional Networks for Large-Scale Image Recognition",
-      "url": "https://arxiv.org/abs/1409.1556",
+      "title": "[2303.17802] Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces",
+      "url": "https://web3.arxiv.org/abs/2303.17802",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 322,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[2301.08243] Self-Supervised Learning from Images with a Joint-Embedding Predictive Architecture",
-      "url": "https://arxiv.org/abs/2301.08243",
+      "title": "[2409.08563] Second-order difference subspace",
+      "url": "https://www.arxiv.org/abs/2409.08563",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 119,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[2302.05543] Adding Conditional Control to Text-to-Image Diffusion Models",
-      "url": "https://arxiv.org/abs/2302.05543",
+      "title": "[2508.16366] Attention Mechanism in Randomized Time Warping",
+      "url": "https://arxiv.org/abs/2508.16366",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 286,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[2402.12928] A Literature Review of Literature Reviews in Pattern Analysis and Machine Intelligence",
-      "url": "https://arxiv.org/abs/2402.12928",
+      "title": "imavis2016.pdf",
+      "url": "https://www.cs.tsukuba.ac.jp/~kfukui/english/epapers/imavis2016.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 170,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[2506.15692] MLE-STAR: Machine Learning Engineering Agent via Search and Targeted Refinement",
-      "url": "https://www.arxiv.org/abs/2506.15692",
+      "title": "subspace_method.pdf",
+      "url": "https://www.cs.tsukuba.ac.jp/~kfukui/english/epapers/subspace_method.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 142,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "[2506.21521] Potemkin Understanding in Large Language Models",
-      "url": "https://arxiv.org/abs/2506.21521",
+      "title": "subspace_method.pdf (SECURED)",
+      "url": "chrome-extension://efaidnbmnnnibpcajpcglclefindmkaj/https://www.cs.tsukuba.ac.jp/~kfukui/english/epapers/subspace_method.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Subspaces",
+      "id": 1015,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "A regularized discriminative framework for EEG analysis with application to brain–computer interface - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/abs/pii/S1053811909008192?via%3Dihub",
+      "title": "A New Approach to Change Vector Analysis Using Distance and Similarity Measures",
+      "url": "https://www.mdpi.com/2072-4292/3/11/2473#:~:text=Abstract,measure%20was%20Spectral%20Angle%20Mapper.",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 192,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "A review of machine learning techniques for urban resilience research: The application and progress of different machine learning techniques in assessing and enhancing urban resilience - ScienceDirect",
-      "url": "https://www.sciencedirect.com/science/article/pii/S2772941925000870",
+      "title": "Hyperspectral change detection using IR-MAD and feature reduction | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/6048907",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 27,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "arxiv.org/ftp/arxiv/papers/2311/2311.13531.pdf",
-      "url": "https://arxiv.org/ftp/arxiv/papers/2311/2311.13531.pdf",
+      "title": "Unsupervised Change Detection in Satellite Images Using Principal Component Analysis and --Means Clustering | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/5196726",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 279,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
     },
     {
-      "title": "Cognitive Systems and Signal Processing: 5th International Conference, ICCSIP 2020, Zhuhai, China, December 25–27, 2020, Revised Selected Papers | SpringerLink",
-      "url": "https://link.springer.com/book/10.1007/978-981-16-2336-3",
+      "title": "[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection",
+      "url": "https://ar5iv.labs.arxiv.org/html/2303.09536",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 337,
       "tree_path": [
         "Research",
-        "Literature Workflow",
-        "Papers and Publisher Pages"
-      ]
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "[2303.09536] Deep Metric Learning for Unsupervised Remote Sensing Change Detection",
+      "url": "https://arxiv.org/abs/2303.09536",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 345,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "arxiv.org/pdf/2303.09536",
+      "url": "https://arxiv.org/pdf/2303.09536",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research2",
+      "id": 9,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "02 OSCD And Classical Change Detection Baselines"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "(PDF) Technical Solution Discussion for Key Challenges of Operational Convolutional Neural Network-Based Building-Damage Assessment from Satellite Imagery: Perspective from Benchmark xBD Dataset",
+      "url": "https://www.researchgate.net/publication/347087245_Technical_Solution_Discussion_for_Key_Challenges_of_Operational_Convolutional_Neural_Network-Based_Building-Damage_Assessment_from_Satellite_Imagery_Perspective_from_Benchmark_xBD_Dataset",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 104,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A new remote sensing benchmark dataset for machine learning applications : MultiSenGE",
+      "url": "https://zenodo.org/records/6375466",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 176,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "High Resolution Semantic Change Detection Dataset - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/hrscd/",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 26,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "ISPRS-Annals - MULTISENGE: A MULTIMODAL AND MULTITEMPORAL BENCHMARK DATASET FOR LAND USE/LAND COVER REMOTE SENSING APPLICATIONS",
+      "url": "https://isprs-annals.copernicus.org/articles/V-3-2022/635/2022/#:~:text=and%20multitemporal%20benchmark%20dataset%20covering,known%20deep%20learning",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 185,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Multimodal and Multitemporal Land Use/Land Cover Semantic Segmentation on Sentinel-1 and Sentinel-2 Imagery: An Application on a MultiSenGE Dataset",
+      "url": "https://www.mdpi.com/2072-4292/15/1/151",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 300,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Multimodal and Multitemporal Land Use/Land Cover Semantic Segmentation on Sentinel-1 and Sentinel-2 Imagery: An Application on a MultiSenGE Dataset",
+      "url": "https://www.mdpi.com/2072-4292/15/1/151#:~:text=are%20selected.%20Each%20MultiSenGE%20Sentinel,to%2010%20m%20spatial%20resolution",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 186,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Multitemporal and multimodal cross-region fine-tuning: MultiSenGE and MultiSenNA applications: Remote Sensing Letters: Vol 17 , No 1 - Get Access",
+      "url": "https://www.tandfonline.com/doi/full/10.1080/2150704X.2025.2586169",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 255,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Onera Satellite Change Detection Dataset - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/oscd/",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 188,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "down",
+      "url": "https://ieee-dataport.org/open-access/oscd-onera-satellite-change-detection",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 292,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "r-wenger/MultiSenGE-NA-Tools: Tools for MultiSenGE dataset.",
+      "url": "https://github.com/r-wenger/MultiSenGE-NA-Tools",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 257,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "xBD-S12 dataset",
+      "url": "https://zenodo.org/records/18960454",
+      "source": "safari",
+      "source_path": "Safari links.md:425",
+      "id": 1484,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A Change Detection Reality Check | Papers With Code",
+      "url": "https://paperswithcode.com/paper/a-change-detection-reality-check",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 101,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A Comprehensive Review of Remote Sensing and Artificial Intelligence Integration: Advances, Applications, and Challenges",
+      "url": "https://www.mdpi.com/1424-8220/25/19/5965",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 267,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A Review of Deep-Learning Methods for Change Detection in Multispectral Remote Sensing Images",
+      "url": "https://www.mdpi.com/2072-4292/15/8/2092",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 325,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A Review of Various Categories of Satellite Image Processing in Remote Sensing | SpringerLink",
+      "url": "https://link.springer.com/chapter/10.1007/978-981-10-5903-2_34",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 57,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A Systematic View of Remote Sensing - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/abs/pii/B9780123859549000010",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 121,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A survey of machine learning and deep learning in remote sensing of geological environment: Challenges, advances, and opportunities - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0924271623001582",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 49,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "A survey of machine learning and deep learning in remote sensing of geological environment: Challenges, advances, and opportunities - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0924271623001582?via%3Dihub",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 62,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Change Detection Methods for Remote Sensing in the Last Decade: A Comprehensive Review",
+      "url": "https://www.mdpi.com/2072-4292/16/13/2355",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 290,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Change Detection Techniques: A Review | Springer Nature Link",
+      "url": "https://link.springer.com/chapter/10.1007/978-3-319-47037-5_2",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 349,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Deep Learning-Based Change Detection in Remote Sensing: A Comprehensive Review | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/11146768",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 24,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "[2305.05813] Change Detection Methods for Remote Sensing in the Last Decade: A Comprehensive Review",
+      "url": "https://arxiv.org/abs/2305.05813",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 30,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "04 Review Papers And Reality Checks"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Remote Sensing Image Change Detection Using Superpixel Cosegmentation",
+      "url": "https://www.mdpi.com/2078-2489/12/2/94",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 352,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Remote Sensing | Free Full-Text | Urban Remote Sensing with Spatial Big Data: A Review and Renewed Perspective of Urban Studies in Recent Decades",
+      "url": "https://www.mdpi.com/2072-4292/15/5/1307",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 40,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Subspace Analysis for Multi-temporal Disaster Mapping Using Satellite Imagery | Advances in Visual Computing",
+      "url": "https://dl.acm.org/doi/abs/10.1007/978-3-031-20713-6_12",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 145,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "[2006.05589] CNN-Based Semantic Change Detection in Satellite Imagery",
+      "url": "https://arxiv.org/abs/2006.05589",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 206,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "[2010.05687] Semantic Change Detection with Asymmetric Siamese Networks",
+      "url": "https://arxiv.org/abs/2010.05687",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 28,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "torchgeo/torchgeo: TorchGeo: datasets, samplers, transforms, and pre-trained models for geospatial data",
+      "url": "https://github.com/torchgeo/torchgeo",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 256,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 10
+    },
+    {
+      "title": "Difference Subspace implementation search",
+      "url": "https://chatgpt.com/c/6893084e-98a4-8327-a5ea-52aba8956eff",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Subspaces",
+      "id": 1011,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "difference subspace fukui kazuhrio - Google Search",
+      "url": "https://www.google.com/search?q=difference+subspace+fukui+kazuhrio&oq=difference+subspace+fukui+kazuhrio&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIJCAEQIRgKGKABMgcIAhAhGI8CMgcIAxAhGI8CMgcIBBAhGI8C0gEIOTA2OWowajeoAgCwAgA&sourceid=chrome&ie=UTF-8",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 153,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "01 Subspace DS KDS GDS And CCA"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "blanchon/OSCD_MSI · Datasets at Hugging Face",
+      "url": "https://huggingface.co/datasets/blanchon/OSCD_MSI?utm_source=chatgpt.com",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 189,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "give this mana true - Google Search",
+      "url": "https://www.google.com/search?client=safari&sca_esv=c08fbbc63a498a11&hl=en-jp&sxsrf=AE3TifNtiFDCgfP9Rwn9eMWGfI73iRws1Q:1758713906544&udm=2&fbs=AIIjpHxCtmkhHKu27CW9pNYJlh4RjL2XNN7H2eGEwe1vRehTgx2PNlKqSsUGSlpdjHDY7h78dYWNpI-Nc023idAsZIZE2Om9OclGIrc1yfoMzHNjiXJ1v58lrKS-2bf5wyvRmqTOuik-FP4SqRMQBQRWokhOen5EpdfJX45xm5lf9Oc7bswv6WS2HROhdoG_8aTrQrsQGM7u9Zz_wF0kzFfXAIedpJM8WMzlO3hrYXyxiQJr9TkXY8Y&q=give+this+mana+true&sa=X&ved=2ahUKEwi72KTtp_GPAxXbdvUHHcyvFi8QtKgLegQIDhAB&biw=440&bih=760&dpr=3#sv=CAMSgQUa4QQKkQIKuQEStgEKd0FMa3RfdkYwa0loTXVUaUx2Njlsdm5Pc3AyZlRBVnJoQTBoamt5OXhuMDBDOHBtTVFENXdScjljSzItT1BOM0R0ekk2R1JxLVVRTkRVU1ExdFlrUFAtWHJCUGN2bEZFcTVWV2lSUVc3d2hWSlZuMk4wYkhab3BzEhdOZGpUYU9tMUJzSFcxZThQaXZYSHVBbxoiQUZNQUdHcjJ4VW9WNWhDLXRwT0JzZkhld2hGU0p2a3IwZxIDODQ5GgEzIhgKAXESE2dpdmUgdGhpcyBtYW5hIHRydWUiBwoDdGJzEgAiKAoEZXFsZBIgQ2dJSUFCQUFPZ1FJQVJBQVFBRlZxN29DUDIwZmU3NC0SuAIKzwESzAEKjAFBTGt0X3ZFWFc0RzIyMkc0eEJ4bk5wM1l2NUxtYWNrYTZrMXN3X01GZ0NlbzJyODN4MmYwR21ycHZjcWtHWDBHb01JelRXaXg5WjRvX2tpQjF3ZVI1TndZVFlTQVp2b2IwLWJOLWlFaTAyUDg5NTZuWUY2ZjFROGR5RlVERnBBdDZXUkl1R3Z5cV9oZRIXTmRqVGFPbTFCc0hXMWU4UGl2WEh1QW8aIkFGTUFHR3BjdFBVNGcyNVhJcmQweVJzNnFBWXRQWFg2cGcSBDQ2OTgaATMiGAoGaW1nZGlpEg5VU2FFeWIySkI1aHVfTSIXCgVkb2NpZBIOLTVqMVpsc0JDYnBkUk0iKAoEZXFsZBIgQ2dJSUFCQUFPZ1FJQVJBQVFBRlZxN29DUDIwZmU3NC0qEGUtVVNhRXliMkpCNWh1X00gBCoXCgFzEhBlLVVTYUV5YjJKQjVodV9NGAEwARgHIMiP5JACMAFKCggCEAIYAiACKAI",
+      "source": "safari",
+      "source_path": "Safari links.md:344",
+      "id": 1403,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "03 Datasets And Problem Setting"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "\"Prior Semantic Information Guided Change Detection\" arxiv - Google Search",
+      "url": "https://www.google.com/search?q=%22Prior+Semantic+Information+Guided+Change+Detection%22+arxiv&rlz=1C1TMBY_enJP1152JP1152&oq=%22Prior+Semantic+Information+Guided+Change+Detection%22+arxiv&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIKCAEQABiABBiiBDIHCAIQABjvBTIHCAMQABjvBTIHCAQQABjvBdIBBzE5M2owajSoAgCwAgE&sourceid=chrome&ie=UTF-8",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 332,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "semantic change detection - Google Search",
+      "url": "https://www.google.com/search?q=semantic+change+detection&oq=semantic+change+detexgtio&gs_lcrp=EgZjaHJvbWUqCQgBEAAYDRiABDIGCAAQRRg5MgkIARAAGA0YgAQyCQgCEAAYDRiABDIICAMQABgNGB4yCAgEEAAYDRgeMggIBRAAGA0YHjIICAYQABgNGB4yCggHEAAYBRgNGB4yCggIEAAYBRgNGB4yCggJEAAYBRgNGB7SAQg0ODIyajBqOagCBrACAfEFv5EGMm_2gcE&sourceid=chrome&ie=UTF-8#sv=CAMSWBozKhFpYy1XcktrekdLeG1iSUVmTTIOV3JLa3pHS3htYklFZk06DllnbDRGbm5EUjNVbHFNIAQqGwoEc3ZpbRIRaWMtV3JLa3pHS3htYklFZk0YATABOAAYByD_oML3ATACOgA",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 315,
+      "tree_path": [
+        "Research",
+        "01 Read First - Thesis Core",
+        "05 Spatial And Semantic Change Questions"
+      ],
+      "read_priority_rank": 50
+    },
+    {
+      "title": "A geometric approach to subspace tracking | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/680551",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 343,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Clustering Complex Subspaces in Large Dimensions | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/abstract/document/9747627",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 317,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Dynamic Subspace Estimation with Grassmannian Geodesics | Request PDF",
+      "url": "https://www.researchgate.net/publication/369557353_Dynamic_Subspace_Estimation_with_Grassmannian_Geodesics",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 342,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Efficient Malware Analysis Using Subspace-Based Methods on Representative Image Patterns | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/10244023",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 321,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Krylov Subspace Methods for Quantum Dynamics with Time-Dependent Generators",
+      "url": "https://arxiv.org/html/2408.08383v1",
+      "source": "safari",
+      "source_path": "Safari links.md:389",
+      "id": 1448,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Robust data-driven online learning algorithm for precise structural damage localization using stochastic subspace identification - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0263224124024217",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 232,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Slow Feature Subspace for Action Recognition | Pattern Recognition. ICPR International Workshops and Challenges",
+      "url": "https://dl.acm.org/doi/10.1007/978-3-030-68796-0_51",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 249,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Slow feature subspace: A video representation based on slow feature analysis for action recognition - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S2666827023000464",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 234,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Sparse Subspace Clustering: Algorithm, Theory, and Applications | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/6482137",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 239,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Subspace Tracking with Dynamical Models on the Grassmannian This work was supported in part by COGNISENSE, one of seven centers in JUMP 2.0, a Semiconductor Research Corporation (SRC) program sponsored by DARPA.",
+      "url": "https://arxiv.org/html/2402.10352v1#:~:text=Tracking%20signals%20in%20dynamic%20environments,by%20motion%20on%20the%20Grassmannian.",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 344,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Subspaces",
+      "url": "https://textbooks.math.gatech.edu/ila/subspaces.html",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Math/Statistics/LA",
+      "id": 527,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Text classification based on the word subspace representation | Pattern Analysis and Applications",
+      "url": "https://link.springer.com/article/10.1007/s10044-021-00960-6",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 237,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "The use of subspace-based methods for damage detection in civili structures: a machine learning approach",
+      "url": "https://tesidottorato.depositolegale.it/handle/20.500.14242/92916",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 291,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "[1811.09025] An Introduction to Krylov Subspace Methods",
+      "url": "https://arxiv.org/abs/1811.09025",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Math/Statistics/LA",
+      "id": 529,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "[2111.04352] Grassmannian learning mutual subspace method for image set recognition",
+      "url": "https://arxiv.org/abs/2111.04352",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 250,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "[2407.07421] Federated PCA on Grassmann Manifold for IoT Anomaly Detection",
+      "url": "https://arxiv.org/abs/2407.07421",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research2",
+      "id": 5,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "[2503.21984] Differential Evolution for Grassmann Manifold Optimization: A Projection Approach",
+      "url": "https://arxiv.org/abs/2503.21984",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 197,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "wtlab.iis.u-tokyo.ac.jp/wataru/publication/pdf/subspace_sensitivity.pdf#page=6.49",
+      "url": "https://wtlab.iis.u-tokyo.ac.jp/wataru/publication/pdf/subspace_sensitivity.pdf#page=6.49",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Math/Statistics/LA",
+      "id": 523,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "www2.umbc.edu/rssipl/people/aplaza/Papers/Journals/2017.GRSL.Clustering.pdf",
+      "url": "https://www2.umbc.edu/rssipl/people/aplaza/Papers/Journals/2017.GRSL.Clustering.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 22,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Agricultural drought forecasting using remote sensing: A hybrid modeling framework by integrating wavelet transformation and machine learning techniques - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0378377425006365",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 244,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "03 Optional Green Learning Wavelets Compression"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "Green learning: Introduction, examples and outlook - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S104732032200205X",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 362,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "03 Optional Green Learning Wavelets Compression"
+      ],
+      "read_priority_rank": 100
+    },
+    {
+      "title": "(131) Linear Algebra, Krylov subspace Methods, and Multigrid Solvers for the Discovery of New Physics - YouTube",
+      "url": "https://www.youtube.com/watch?v=aOgggjfzc9s&t=976s",
+      "source": "chrome",
+      "source_path": "Bookmarks bar",
+      "id": 1047,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 125
+    },
+    {
+      "title": "(131) Understanding Krylov Subspace Methods - YouTube",
+      "url": "https://www.youtube.com/watch?v=UgyLaAXqlQ4",
+      "source": "chrome",
+      "source_path": "Bookmarks bar",
+      "id": 1041,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 125
+    },
+    {
+      "title": "Grassmannian learning mutual subspace method for image set recognition - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0925231222013133?utm_source=chatgpt.com#f0030",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 320,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "Subspace Methods",
+      "url": "https://www.researchgate.net/publication/300468954_Subspace_Methods?utm_source=chatgpt.com",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 160,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "Subspace Methods | SpringerLink",
+      "url": "https://link.springer.com/rwe/10.1007/978-0-387-31439-6_708?utm_source=chatgpt.com",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 159,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "geodesic change detection method - Google Search",
+      "url": "https://www.google.com/search?q=geodesic+change+detextion+method&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#sbfbu=0&pi=geodesic%20change%20detection%20method",
+      "source": "safari",
+      "source_path": "Safari links.md:349",
+      "id": 1408,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "geodesic change detection method - Google Search",
+      "url": "https://www.google.com/search?q=geodesic+change+detextion+method&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari#sbfbu=1&pi=geodesic%20change%20detection%20method",
+      "source": "safari",
+      "source_path": "Safari links.md:22",
+      "id": 1081,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "geodesic flow paper kobayashi lincoln   - Google Search",
+      "url": "https://www.google.com/search?q=geodesic+flow+paper+kobayashi+loncoln%C2%A0&client=safari&sca_esv=c0c5f8a9bbcfecc7&hl=en-jp&sxsrf=AE3TifOCyH2R5y876hZswb2nep49X6ujlA%3A1759471723531&ei=a2jfaL6aILSdvr0PwrziuQo&oq=geodesic+flow+paper+kobayashi+loncoln%C2%A0&gs_lp=EhNtb2JpbGUtZ3dzLXdpei1zZXJwIidnZW9kZXNpYyBmbG93IHBhcGVyIGtvYmF5YXNoaSBsb25jb2xuwqAyBxAhGKABGAoyBxAhGKABGAoyBxAhGKABGApInzdQpQZY0i9wAHgAkAEAmAHRAaABhRuqAQYxLjI0LjK4AQPIAQD4AQGYAhqgAqkawgILEAAYgAQYsAMYogTCAggQABiwAxjvBcICBBAjGCfCAgUQIRigAcICCBAAGIAEGKIEwgIFEAAY7wXCAgUQIRifBcICBBAhGBWYAwCIBgGQBgSSBwYxLjI0LjGgB6VrsgcGMS4yNC4xuAepGsIHBjAuMy4yM8gHaQ&sclient=mobile-gws-wiz-serp",
+      "source": "safari",
+      "source_path": "Safari links.md:354",
+      "id": 1413,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "principal component subspace - Google Search",
+      "url": "https://www.google.com/search?q=principal+component+subspace&sca_esv=d2103c24cb9566f2&sxsrf=AE3TifPllUzCC5_Z8GoIh_wkqkDWP42sYg%3A1749542319678&ei=r-VHaJ6ZKcXW2roP_dueyQ4&oq=principal+component+su&gs_lp=Egxnd3Mtd2l6LXNlcnAiFnByaW5jaXBhbCBjb21wb25lbnQgc3UqAggBMgQQIxgnMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yCBAAGBYYChgeMgYQABgWGB5IjA1Q3wNY3wNwAXgAkAEAmAHpAaAB6QGqAQMyLTG4AQPIAQD4AQGYAgKgAvwBwgILEAAYsAMYogQYiQXCAggQABiwAxjvBcICCxAAGIAEGLADGKIEmAMAiAYBkAYEkgcFMS4wLjGgB4cKsgcDMi0xuAfxAcIHBTItMS4xyAcP&sclient=gws-wiz-serp",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 154,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "sequential grid point subspace - Google Search",
+      "url": "https://www.google.com/search?q=sequential+grid+point+subspace&sca_esv=813765718ccf2407&sxsrf=AE3TifOMythHXhBZ2Y2EOc1wYRfcTd8G_Q%3A1749543168438&ei=AOlHaMXEGoqc0-kPmun70Aw&ved=0ahUKEwjFxMuYtOaNAxUKzjQHHZr0HsoQ4dUDCBA&uact=5&oq=sequential+grid+point+subspace&gs_lp=Egxnd3Mtd2l6LXNlcnAiHnNlcXVlbnRpYWwgZ3JpZCBwb2ludCBzdWJzcGFjZTIFECEYoAEyBRAhGKABMgUQIRigATIFECEYnwUyBRAhGJ8FMgUQIRifBUjXI1CLA1jEInABeAGQAQGYAaACoAGOBqoBBTAuMi4yuAEDyAEA-AEBmAIEoAKPBMICChAAGLADGNYEGEfCAgQQIRgVmAMAiAYBkAYIkgcFMS4yLjGgB64csgcFMC4yLjG4B4AEwgcFMi0zLjHIBxY&sclient=gws-wiz-serp",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 155,
+      "tree_path": [
+        "Research",
+        "02 Methods - Subspace Geometry",
+        "01 General Subspace Geometry And Toolboxes"
+      ],
+      "read_priority_rank": 140
+    },
+    {
+      "title": "wgcban/Metric-CD: Official PyTorch implementation of Deep Metric Learning for Unsupervised Change Detection in Remote Sensing Images",
+      "url": "https://github.com/wgcban/Metric-CD",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 338,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "03 Remote Sensing Deep Learning"
+      ],
+      "read_priority_rank": 145
+    },
+    {
+      "title": "A multi-source change detection algorithm supporting user customization and near real-time deforestation detections - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S003442572400213X",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 23,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Change Detection Method - an overview | ScienceDirect Topics",
+      "url": "https://www.sciencedirect.com/topics/computer-science/change-detection-method",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 347,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Change Detection Techniques Based on Multispectral Images for Investigating Land Cover Dynamics",
+      "url": "https://www.mdpi.com/2072-4292/12/11/1781",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 351,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "ChangeMamba: Remote Sensing Change Detection With Spatiotemporal State Space Model | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/10565926",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 140,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Changedetection.net: A new change detection benchmark dataset | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/6238919",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 187,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Evaluating the Potentiality of Sentinel-2 for Change Detection Analysis Associated to LULUCF in Wallonia, Belgium",
+      "url": "https://www.mdpi.com/2073-445X/10/1/55",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 309,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Machine-Learning-Based Change Detection of Newly Constructed Areas from GF-2 Imagery in Nanjing, China",
+      "url": "https://www.mdpi.com/2072-4292/14/12/2874",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 348,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Paper page - PeftCD: Leveraging Vision Foundation Models with Parameter-Efficient Fine-Tuning for Remote Sensing Change Detection",
+      "url": "https://huggingface.co/papers/2509.09572",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 371,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "SIGNet: A Siamese Graph Convolutional Network for Multi-Class Urban Change Detection",
+      "url": "https://www.mdpi.com/2072-4292/15/9/2464",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 34,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Supervised Deep-Learning Models for Multispectral Change Detection | Encyclopedia MDPI",
+      "url": "https://encyclopedia.pub/entry/43438",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 328,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Urban Change Detection for Multispectral Earth Observation Using Convolutional Neural Networks | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/abstract/document/8518015",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 293,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "[1810.08468] Urban Change Detection for Multispectral Earth Observation Using Convolutional Neural Networks",
+      "url": "https://arxiv.org/abs/1810.08468",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 294,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "[2206.11892] DDPM-CD: Denoising Diffusion Probabilistic Models as Feature Extractors for Change Detection",
+      "url": "https://arxiv.org/abs/2206.11892",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 264,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "[2303.17859] MapFormer: Boosting Change Detection by Using Pre-change Information",
+      "url": "https://arxiv.org/abs/2303.17859",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 334,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "wgcban/ddpm-cd: Remote Sensing Change Detection using Denoising Diffusion Probabilistic Models",
+      "url": "https://github.com/wgcban/ddpm-cd",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 265,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "01 Binary And Unsupervised Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "(PDF) MS4D-Net: Multitask-Based Semi-Supervised Semantic Segmentation Framework with Perturbed Dual Mean Teachers for Building Damage Assessment from High-Resolution Remote Sensing Imagery",
+      "url": "https://www.researchgate.net/publication/367115873_MS4D-Net_Multitask-Based_Semi-Supervised_Semantic_Segmentation_Framework_with_Perturbed_Dual_Mean_Teachers_for_Building_Damage_Assessment_from_High-Resolution_Remote_Sensing_Imagery",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 303,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "A Hybrid Model for Disaster Damage Detection Using Satellite Images | IEEE Conference Publication | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/10537666",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 67,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Benchmarking attention mechanisms and consistency regularization semi-supervised learning for post-flood building damage assessment - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S2212420925004881",
+      "source": "safari",
+      "source_path": "Safari links.md:422",
+      "id": 1481,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Building damage assessment for rapid disaster response with a deep object-based semantic change detection framework: From natural disasters to man-made disasters - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0034425721003564?via%3Dihub",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 228,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Building damage assessment for rapid disaster response with a deep object-based semantic change detection framework: From natural disasters to man-made disasters - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0034425721003564?via%3Dihub#fig0040",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 235,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Convolutional Neural Network-Based Rapid Post-Earthquake Structural Damage Detection: Case Study",
+      "url": "https://www.mdpi.com/1424-8220/22/17/6426",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 243,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Creating xBD: A Dataset for Assessing Building Damage from Satellite Imagery",
+      "url": "https://openaccess.thecvf.com/content_CVPRW_2019/papers/cv4gc/Gupta_Creating_xBD_A_Dataset_for_Assessing_Building_Damage_from_Satellite_CVPRW_2019_paper.pdf",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 103,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Efficient building damage assessment from post-disaster aerial video using lightweight deep learning models: International Journal of Remote Sensing: Vol 44, No 22",
+      "url": "https://www.tandfonline.com/doi/abs/10.1080/01431161.2023.2277163",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 273,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Improving Operational Use of Post-Disaster Damage Assessment for Urban Search and Rescue by Integrated Graph-Based Multimodal Remote Sensing Data Analysis by S. Selvakumaran, Iain Rolland, Luke Cullen, Rob Davis, Joshua Macabuag, Charbel Abou Chakra, Nanor Karageozian, Amir S. J. Gilani, Christian Geiβ, Miguel Bravo Haro, Andrea Marinoni :: SSRN",
+      "url": "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4809772",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 213,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "MS4D-Net: Multitask-Based Semi-Supervised Semantic Segmentation Framework with Perturbed Dual Mean Teachers for Building Damage Assessment from High-Resolution Remote Sensing Imagery",
+      "url": "https://www.mdpi.com/2072-4292/15/2/478",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 304,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "On Transfer Learning for Building Damage Assessment from Satellite Imagery in Emergency Contexts",
+      "url": "https://www.mdpi.com/2072-4292/14/11/2532",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 333,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Pyramid Pooling Module-Based Semi-Siamese Network: A Benchmark Model for Assessing Building Damage from xBD Satellite Imagery Datasets | MDPI",
+      "url": "https://www.mdpi.com/2072-4292/12/24/4055",
+      "source": "safari",
+      "source_path": "Safari links.md:423",
+      "id": 1482,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
+    },
+    {
+      "title": "Z-Zheng/ChangeOS: ChangeOS: Building damage assessment via Deep Object-based Semantic Change Detection - (RSE 2021)",
+      "url": "https://github.com/Z-Zheng/ChangeOS",
+      "source": "chrome",
+      "source_path": "Bookmarks bar/Research",
+      "id": 229,
+      "tree_path": [
+        "Research",
+        "03 Methods - Change Detection",
+        "02 Semantic And Damage Change Detection"
+      ],
+      "read_priority_rank": 150
     }
   ],
   "classification_policy": "Bookmarks are organized by concept first, then by function. Research relevance is the primary placement when a link is a paper, dataset, benchmark, method reference, research code/tool, venue, or project-relevant technical resource. Shared links get one primary folder to avoid duplicate clutter; original duplicate URL entries are preserved.",
   "last_quality_pass": {
     "date": "2026-06-12",
-    "research_rescue_moves": 400,
-    "single_child_generic_folder_flatten_operations": 415,
-    "manual_regression_fixes": 4,
-    "second_research_rescue_moves": 91,
-    "final_manual_moves": "Moved Tsukuba Conference to Research; JPort Journal to Career because it appears to be Japan-career media, not academic literature.",
-    "research_bucket_refine_moves": 463,
-    "research_bucket_flatten_moves": 0,
-    "content_only_refine_moves": 229,
-    "classifier_note": "Latest classifier uses title+URL for topic rules; source_path is provenance only to avoid matching the word Bookmarks.",
-    "priority_research_reorganization_moves": 608,
-    "final_deoveraggregation_moves": 280,
-    "final_priority_rescue_moves": 56
+    "action": "Removed obvious non-research false positives from Research while preserving every URL.",
+    "fixes": [
+      {
+        "path": "Learning/Machine Learning and AI/Roadmaps and Study Plans",
+        "count": 1,
+        "reason": "generic ML roadmap, not project research"
+      },
+      {
+        "path": "Learning/Machine Learning and AI/Classic Papers",
+        "count": 1,
+        "reason": "foundational ML reading, not thesis-core research"
+      },
+      {
+        "path": "Learning/Machine Learning and AI/LLMs and Modern AI",
+        "count": 2,
+        "reason": "voice AI research, not remote-sensing research"
+      },
+      {
+        "path": "Life Admin/Health Fitness",
+        "count": 1,
+        "reason": "personal health search"
+      },
+      {
+        "path": "Life Admin/Shopping",
+        "count": 1,
+        "reason": "personal shopping search"
+      },
+      {
+        "path": "Personal Notes and Culture/Religion",
+        "count": 1,
+        "reason": "religion app search"
+      },
+      {
+        "path": "Personal Notes and Culture/Politics Society/Palestine Resources",
+        "count": 1,
+        "reason": "personal humanitarian link"
+      },
+      {
+        "path": "Learning/Math/Linear Algebra",
+        "count": 1,
+        "reason": "math learning resource"
+      },
+      {
+        "path": "Learning/Machine Learning and AI/Deep Learning Visuals",
+        "count": 2,
+        "reason": "general DL tutorial/visual"
+      },
+      {
+        "path": "Programming and Tools/Mobile App Development/Flutter Firebase",
+        "count": 2,
+        "reason": "old app-development examples"
+      },
+      {
+        "path": "Learning/General Learning/Reading and Note Taking",
+        "count": 1,
+        "reason": "productivity/Zotero device discussion"
+      }
+    ],
+    "input_entries_preserved": 1556,
+    "unique_urls_preserved": 1537,
+    "research_entries_after_pass": 459,
+    "manual_review_entries_after_pass": 150,
+    "additional_fix_landslide_lstm_to_lower_priority": 1
   },
   "research_priority_policy": {
     "01 Read First - Thesis Core": "Directly read/cite first: DS/KDS/GDS, OSCD/classical baselines, current datasets, reviews, spatial/semantic-change questions.",

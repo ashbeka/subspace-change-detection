@@ -245,6 +245,22 @@ Acceptance checks:
    - For a few cities, verify prior-map shape, city name, split, and spatial alignment against OSCD pre/post tiles and masks.
    - This is needed because smoke checks only proved one patch/channel load, not full prior alignment.
 
+14. Object-level descriptor feasibility audit:
+   - Define the object unit first: building polygon, greenhouse polygon, connected component, proposal mask, local patch, or tile.
+   - Candidate datasets/use cases: xBD/xBD-S12 for buildings/damage, greenhouse mapping data for agricultural structures, or ChangeOS/object-level semantic change resources.
+   - For each object, test whether a descriptor/subspace should represent pre state, post state, or pre-to-post change.
+   - Required before implementation: available labels/proposals, evaluation unit, baseline object classifier/change detector, and a reason this is better than pixel-level OSCD.
+
+15. Research reset decision gate:
+   - After the spatial DS audit, decide whether the thesis is:
+     - spatially aware DS for binary multispectral change;
+     - interpretable classical priors for supervised CD;
+     - pseudo-change diagnosis;
+     - multi-date GDS/KGDS;
+     - object-level/greenhouse/building pivot;
+     - or an empirical benchmark showing where subspace priors help or fail.
+   - Do not run another long U-Net sweep until this decision is made.
+
 14. MultiSenGE pairing and seasonality audit:
    - Compare earliest/latest pairing against within-season pairings and date-windowed pairings.
    - Add snow/cloud/invalid-scene checks before DS/PCA-diff map generation.

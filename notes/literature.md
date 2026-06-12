@@ -10,6 +10,7 @@
 - [6. Bookmark-Backed Concept Map](#6-bookmark-backed-concept-map)
 - [7. Literature Leads](#7-literature-leads)
 - [8. Reference Leads](#8-reference-leads)
+- [9. Reset Literature Problem Map](#9-reset-literature-problem-map)
 
 ## 1. Must-Cite Core Sources
 
@@ -248,3 +249,32 @@ Additional references and code leads from old archive notes:
 | MATLAB Subspace Toolbox | Useful for PCA, KPCA, CCA, and Kernel CCA implementation cross-checks. |
 
 Keep these as citation or implementation-reference leads. Do not cite old archive prose itself as evidence.
+
+## 9. Reset Literature Problem Map
+
+This section connects the refined `Research` bookmark tree and the online reset scan to concrete reading priorities. It is not a complete bibliography. It is the minimum map needed to stop forcing subspaces onto change detection without a field-grounded reason.
+
+| Concept | Read first | Why it matters | Thesis use | Bookmark location |
+|---|---|---|---|---|
+| Current field map for remote-sensing CD | Wang et al. 2024, "Advances and Challenges in Deep Learning-Based Change Detection for Remote Sensing Images" | Shows that CD is now dominated by supervised, semi-supervised, weakly supervised, unsupervised, and foundation-model DL paradigms. | Use to define the real field and avoid pretending DS is competing only with simple PCA/CVA. | `Research / 01 Read First - Thesis Core / 04 Review Papers And Reality Checks` |
+| Label-efficient CD | "Toward Label-Efficient Deep Learning Change Detection for Remote Sensing Imagery" and sample-efficient CD survey | Confirms that label cost is a real field problem; divides methods into semi-supervised, weakly supervised, self-supervised, active, few-shot, and unsupervised tracks. | Supports a label-efficiency motivation, but also raises strong comparison pressure from modern methods. | `Research / 01 Read First - Thesis Core / 04 Review Papers And Reality Checks` |
+| OSCD binary benchmark | Daudt OSCD and FC-Siamese papers/resources | Defines the current benchmark: 24 Sentinel-2 pairs, 13 bands, urban change labels. | Use only for binary changed-area detection, not disaster damage. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines` |
+| Classical multivariate CD | CVA, PCA-diff/Celik, MAD/IR-MAD, CCA/MAD references | Classical methods are already established and interpretable; DS must beat or explain itself against them. | Required baselines and paper-to-code verification targets. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines` and `Research / 03 Methods - Change Detection / 01 Binary And Unsupervised Change Detection` |
+| KPCA/KDS | Nielsen and Canty KPCA for change detection; Fukui/Maki TPAMI KDS/KGDS | KPCA is already used for nonlinear remote-sensing CD; KDS is lab-aligned but not automatically novel. | Future nonlinear experiment; must be framed as adaptation/verification, not invention. | `Research / 02 Methods - Subspace Geometry / 02 Kernel PCA And Kernel Subspace` |
+| Spatial information loss | Sensei feedback plus spatial/semantic CD resources | The current global pixel subspace ignores position during PCA fitting; this is the strongest methodological gap. | Justifies the immediate global-pixel vs patch-vector vs local-window DS audit. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
+| Pseudo-change vs meaningful change | CD surveys, OSCD label policy, IR-MAD/GEE cautions | Numeric change includes shadows, clouds, seasonality, registration, sensor effects, and real land-cover changes. | A defensible problem framing if experiments show DS/local subspaces help diagnose or reduce false changes. | `Research / 03 Methods - Change Detection / 04 Preprocessing Multitemporal And Sensor Issues` |
+| Open-vocabulary/foundation-model CD | TDCD, Weak Temporal Supervision, Seg2Change, ChangeVFM/Semantic-CD leads | Newer work moves toward object/class-specific and semantic change without paired labels. | Comparison pressure and possible pivot, not immediate implementation. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` |
+| Multi-date DS/GDS/KGDS | Second-order DS, GDS, RTW, SFA/SSA, Harmonized Sentinel-2, MultiSenGE | GDS/KGDS need more than two subspaces; OSCD does not naturally support that beyond pre/post. | Future stronger research path if a multi-date dataset and evaluation proxy are defined. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` and `Research / 04 Datasets - Current Candidate Future / 01 Sentinel OSCD MultiSenGE And EO Datasets` |
+| Abandoned greenhouse mapping | Global-PCG-10, Sentinel-2 greenhouse index, two-temporal Sentinel-2 greenhouse mapping | Greenhouse mapping is real and Sentinel-2-relevant, but the task may be object mapping/classification rather than generic change detection. | Use as application motivation or future dataset only after labels/evaluation exist. | `Research / 05 Applications - Use Cases And Problem Framing / 01 Greenhouses Agriculture Environmental Monitoring` |
+| xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | Future pivot/warm extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
+| Object/building-level descriptors | xBD, ChangeOS, object-level CD and greenhouse resources | Object units may preserve spatial/semantic information better than global pixel subspaces. | Candidate pivot if pixel/patch DS is too weak or if an object-labeled dataset is chosen. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` and `Research / 05 Applications` |
+
+New external reset sources to keep active:
+
+- Wang et al. 2024, DL-based CD review: CD applications include urban planning, disaster management, and national security; challenges include incomplete supervision, self-supervision, foundation models, and multimodal data.
+- Parelius 2023 CD review: distinguishes relevant changes from apparent/irrelevant changes and emphasizes co-registration, spectral bands, and method families.
+- Label-efficient/sample-efficient CD surveys: label scarcity is real, but the field has many modern alternatives.
+- Weak Temporal Supervision / ChangeStar-style work: change labels can be avoided by exploiting single-temporal annotations or newly acquired images.
+- Open-vocabulary CD / Seg2Change / TDCD: class-specific or text-driven change is now a serious alternative path for semantic/object-level research.
+- Nielsen and Canty KPCA/MAD work: nonlinear PCA and CCA/MAD are already part of remote-sensing CD history, so KPCA/KDS novelty must be specific.
+- Global-PCG-10 and plastic greenhouse index resources: greenhouse monitoring is legitimate but needs a separate task definition and validation plan.

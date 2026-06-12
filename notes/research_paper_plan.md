@@ -119,6 +119,13 @@ Research reset rule:
 Do not solve a problem we invented. Identify a real remote-sensing change-detection problem first, then test whether subspace methods help.
 ```
 
+Current reset stance:
+
+- The project is salvageable only if it becomes problem-driven.
+- The strongest immediate problem is not "make DS work"; it is whether subspace construction can preserve spatially meaningful change evidence in multispectral images.
+- A valid thesis can still exist if DS does not outperform deep learning, but only if the experiments explain when global pixel subspaces fail and whether patch/local/object/temporal subspaces address a real weakness.
+- If corrected DS and spatial variants fail against raw L2, PCA-diff, and raw U-Net, the thesis should pivot toward an empirical negative/diagnostic study or a better-defined application such as multi-date monitoring or object-level greenhouse/building change.
+
 Candidate real problems to evaluate before locking the thesis:
 
 - pseudo-change versus meaningful change;

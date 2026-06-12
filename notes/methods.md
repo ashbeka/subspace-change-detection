@@ -544,6 +544,7 @@ Reference-code method expansion backlog:
   - patch samples: one column is one flattened `k x k x 13` patch;
   - local-window subspaces: one subspace is built per image region;
   - date subspaces: one subspace is built per Sentinel-2 date in a multi-temporal sequence;
+  - object-level samples: one column is a building, greenhouse, connected component, polygon, or object-proposal descriptor;
   - deep-feature samples: one column is an encoder feature, patch embedding, or tile/date embedding.
 - Candidate method families to screen:
   - KPCA/KDS: nonlinear version of the current PCA/DS idea, likely requiring sampling, Nyström prototypes, or local windows;
@@ -558,6 +559,8 @@ Reference-code method expansion backlog:
   - show a small city-level smoke result with runtime and memory;
   - compare against raw L2, PCA-diff, canonical/eig DS, and a modern neural baseline when relevant;
   - record whether the method preserves spatial position, temporal order, both, or neither.
+
+Object-level descriptors are a possible pivot, not current OSCD evidence. They may fit greenhouse monitoring, building change, or damage mapping better than unordered global pixel DS because the sample unit carries semantic/spatial identity. They require object labels, polygons, or reliable object proposals before they can become a defensible experiment.
 
 ### Deep-feature subspace gap
 

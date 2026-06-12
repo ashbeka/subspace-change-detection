@@ -62,7 +62,7 @@ A later granular quality pass also rechecked research-like links outside `Resear
 | Organized output bookmark entries | 1556 |
 | Unique URLs | 1537 |
 | Duplicate URL entries preserved | 19 |
-| Research entries | 473 |
+| Research entries | 459 |
 | Manual review entries | 150 |
 | Missing entries after organization | 0 |
 | Extra entries after organization | 0 |
@@ -80,7 +80,14 @@ Machine-readable summary:
 - `To Review` contains `150` unclear or personal/search links that still need human judgment.
 - `final_organizing_task_patch/` remains untracked and undeleted until the user approves deletion.
 - The organized bookmark HTML is ready to import into Chrome, but importing itself was not performed.
-- Zotero import remains manual. Start with `Research / 00 Must Read and Zotero First`, then the most relevant method and dataset folders under `Research`.
+- Zotero import remains manual. Start with `Research / 01 Read First - Thesis Core`, then the most relevant method and dataset folders under `Research`.
+
+2026-06-12 final QA update:
+
+- The organized import file still contains `1556` bookmark entries and `1537` unique URLs.
+- A QA pass moved obvious non-research false positives out of `Research` while preserving all URLs: personal searches, app-development examples, voice-AI links, generic LSTM tutorials, generic ML-roadmap material, and Zotero-device discussion.
+- The `Research` tree now contains `459` entries and should be treated as the literature/resource reading map, not as a perfect citation database.
+- The active concept-to-reading bridge is maintained in `notes/literature.md` and `notes/reference_bookmarks.md`.
 
 ## 6. Conclusion
 
