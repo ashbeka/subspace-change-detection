@@ -49,6 +49,7 @@ These files are preserved as provenance. They are not the active project truth. 
 The active thinking files are:
 
 - `../notes/feedback.md`
+- `../notes/my_notes.md`
 - `../notes/methods.md`
 - `../notes/literature.md`
 - `../notes/experiments.md`

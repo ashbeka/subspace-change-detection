@@ -73,6 +73,15 @@ This question is also draft. If a better research gap is found, update the frami
 
 The user has strong research-note FOMO: do not casually discard ideas, advisor feedback, old decisions, failed experiments, or possible future research directions. At the same time, do not preserve them by creating many scattered files.
 
+`notes/my_notes.md` is the user's rough personal note intake. When the user has a raw thought, unclear idea, half-formed research doubt, or copied personal note, it should go there first. Codex should then translate the useful content into the functional notes without pretending the rough note is already verified truth.
+
+When processing `notes/my_notes.md`:
+
+- preserve the user's intent and wording style enough that the note remains recognizable;
+- extract actionable implications into `feedback.md`, `methods.md`, `literature.md`, `experiments.md`, or `research_paper_plan.md`;
+- avoid inventing a neat narrative that the user did not actually decide;
+- do not erase rough notes merely because they have been translated unless the user explicitly asks for cleanup.
+
 When ingesting archives, old docs, pasted notes, Apple Notes exports, bookmarks, or `research-notes/`:
 
 - Read broadly enough to understand each file's purpose before moving information.
@@ -147,6 +156,7 @@ docs/  = project-facing documentation
 Active notes:
 
 - `notes/feedback.md`: Sensei, senpai, seminar, and self-critique feedback translated into tasks.
+- `notes/my_notes.md`: personal rough-note intake before ideas are translated into functional notes.
 - `notes/methods.md`: method and pipeline understanding.
 - `notes/literature.md`: papers, datasets, code references, and why they matter.
 - `notes/experiments.md`: experiment evidence, open tests, decision gates, and next actions.
