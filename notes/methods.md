@@ -251,7 +251,7 @@ Signal Latent Subspace:
 
 ## Future Method Hooks
 
-Source: `research-notes/` ingestion on 2026-06-07. These are preserved as method hooks, not active evidence.
+These are preserved as method hooks, not active evidence. They come from prior notes, advisor/senpai feedback, reference code, and the final organization source batch.
 
 Multi-date subspace methods:
 
@@ -272,6 +272,19 @@ Spatial and interpretability variants:
 - Band-group DS and per-band attribution can help explain whether DS is driven by visible, red-edge, NIR, SWIR, or atmospheric bands.
 - PCA reconstruction error can be a baseline or diagnostic: fit a pre/no-change PCA model and use post reconstruction residuals as change/anomaly evidence.
 - Coordinate- or patch-aware variants are method candidates only if they improve spatial meaning without turning into arbitrary feature engineering.
+
+Green Learning / PixelHop / wavelet route:
+
+- Green Learning and PixelHop/PixelHop++ were suggested as possible ways to preserve multi-scale spatial information through successive subspace-style local transforms.
+- A satellite version would treat local patch responses or multiscale components as the samples/features for DS, KDS, CCA, or SSC rather than using unordered raw pixels.
+- Wavelet and image-compression intuition is relevant because it decomposes image content into scale/frequency components. This may help separate local structure from broad radiometric change.
+- This is a future feature-construction route, not implemented evidence. It should be tested only after the global-vs-spatial DS audit defines what spatial information is missing.
+
+Fukui subspace-set overview:
+
+- The 2024 "Geometry of subspace set and its application to machine learning" PDF is a lab overview tying together subspace method, mutual subspace method, canonical angles, DS, GDS, GDS projection, kernel variants, and Grassmann representation.
+- Use it as a conceptual map for explaining how this project relates to the lab's broader subspace family.
+- Do not cite it as the primary source for a claim when a peer-reviewed DS/GDS/KDS/MSM paper is the actual source.
 
 SSC and sparse modeling:
 
@@ -513,6 +526,16 @@ OSCD KDS is possible but not yet specified enough to claim:
 - a patch-vector KDS would need explicit patch extraction and border/mask handling.
 
 CCA/S3CCA and KCCA are separate future routes. They matter because they can preserve or compare structured sample relationships, while current global PCA treats pixels as exchangeable columns. Do not present CCA, KCCA, or S3CCA as implemented in the active OSCD pipeline.
+
+Possible satellite CCA views:
+
+- pre-date features versus post-date features;
+- spectral-band vectors versus patch/context vectors;
+- raw Sentinel-2 features versus encoder/deep features;
+- earlier date-window subspaces versus later date-window subspaces;
+- DS/PCA-diff features versus semantic or pseudo-label features.
+
+CCA/KCCA/S3CCA/TRCCA should be considered if the chosen problem is structured matching, partial correspondence, or temporal alignment. They should not be added just because reference code exists.
 
 Reference-code method expansion backlog:
 

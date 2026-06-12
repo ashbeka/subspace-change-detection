@@ -36,6 +36,19 @@ The revised question is: can DS-based representations help detect changed areas 
 Action:
 
 - Run the spatially aware OSCD subspace audit before any more long U-Net sweeps.
+- Treat the next research reset as problem clarification, not only method debugging.
+
+Recent Sensei direction from the final source batch:
+
+- Try time-sequential satellite imagery such as Harmonized Sentinel-2 L2A.
+- Before applying temporal DS/GDS ideas, report practical sequence facts: number of image frames, date spacing, cloud/no-data rate, and whether the time step is regular.
+- First/second DS and geodesic projection may be meaningful when there are multiple temporally ordered observations, not just one pre/post pair.
+- Discuss adequate subspace construction with lab members who have worked on related multi-channel or temporal subspace problems.
+
+Actions:
+
+- Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.
+- Prepare concrete questions for Jang/Suto/Pedro/Santos about sample definition, spatial preservation, rank choice, and reference-code behavior.
 
 ## Subspace Construction Feedback
 
@@ -108,6 +121,7 @@ Current danger:
 
 - The project can become "I have DS, so I force it onto OSCD."
 - That is not a good research gap.
+- The stronger warning from the final notes batch is: do not solve a problem we invented.
 
 Better framing:
 
@@ -118,6 +132,7 @@ Better framing:
 
 Action:
 
+- Start the next research re-grounding with real remote-sensing change-detection problems, then decide whether DS/subspace tools answer one of them.
 - Do not claim DS superiority unless experiments prove it.
 - Treat negative results as valid evidence.
 - Focus on what subspace construction is appropriate for satellite imagery.

@@ -207,74 +207,95 @@ Acceptance checks:
    - Then test local/windowed or patch-vector KDS.
    - Track memory and runtime carefully.
 
-5. Reference-code method family screen:
+5. Spatial feature-construction screen:
+   - Test whether Green Learning / PixelHop-style local transforms, wavelet components, or patch-compression features preserve spatial information better than raw global pixel samples.
+   - Do not implement a full new framework at first. Start with a small feature extraction audit on one OSCD city and compare maps against raw L2, PCA-diff, and corrected DS.
+   - Record whether the feature construction improves pseudo-change behavior, spatial continuity, or interpretability.
+
+6. Reference-code method family screen:
    - Review the bundled DS, MagTool, and MATLAB Subspace Toolbox code as an implementation menu, not as runtime dependencies.
    - Candidate families: KPCA/KDS, CCA/KCCA, S3CCA/TRCCA/KOTRCCA, MSM/KMSM/CMSM/KCMSM, RTW/SFA/temporal tensor methods, and Grassmann magnitude/decomposition tools.
    - For each family, define which satellite object it operates on: global 13-band pixels, `k x k x 13` patches, local windows, date subspaces, or deep-feature embeddings.
    - Produce a one-city smoke result before promoting any family to the main research path.
    - Required comparison floor: raw L2, PCA-diff, corrected canonical/eig DS, and the current best supervised baseline when applicable.
 
-6. MultiSenGE GDS/KGDS prototype:
+7. Harmonized Sentinel-2 sequence feasibility audit:
+   - Use Sensei's recent suggestion as a concrete dataset check.
+   - Count frames, date spacing, cloud/no-data rate, available bands, and spatial alignment for a small region.
+   - Decide whether it supports first-order DS only, second-order DS, GDS/KGDS, or geodesic projection.
+   - Do not run a full temporal method before this dataset audit.
+
+8. MultiSenGE GDS/KGDS prototype:
    - Build one subspace per date.
    - Use GDS/KGDS to extract multi-date difference directions.
    - Interpret through clustering, temporal grouping, or weak labels.
 
-7. Phase 2 follow-up after spatial audit:
+9. Pseudo-change vs real-change audit:
+   - Explicitly sample or annotate cases such as shadows, seasonal vegetation, registration differences, clouds, sensor effects, construction, and land-cover conversion.
+   - Compare which methods highlight each type: raw L2, PCA-diff, canonical/eig DS, local/window DS, KDS/KPCA, and possible SSC clusters.
+   - This is a candidate problem-driven thesis direction if it produces clearer evidence than generic "DS improves segmentation."
+
+10. Phase 2 follow-up after spatial audit:
    - E0 raw-only.
    - raw + global canonical DS.
    - raw + best spatially aware DS prior.
 
-8. DS scalar change-map construction:
+11. DS scalar change-map construction:
    - Current DS prior is `||D^T (x_post - x_pre)||^2`.
    - Compare squared projection norm, unsquared norm, normalized projection energy, residual energy, and ratios such as `||D^T delta||^2 / ||delta||^2`.
    - Compare per-city vs global normalization.
    - Compare Otsu thresholding, validation-selected thresholds, and no thresholding before supervised U-Net input.
    - Check whether the scalar score map agrees with the reconstructed DS norm map from the projection-visualization task.
 
-9. Phase 1 score-normalization audit:
+12. Phase 1 score-normalization audit:
    - Compare raw scores, percentile-clipped scores, and min-max-normalized scores.
    - Report whether normalization changes AUROC/PR-AUC, Otsu thresholds, best F1/IoU, and Phase 2 prior behavior.
    - Keep the wording clear: score normalization is an engineering step, not DS theory.
 
-10. Saved-prior alignment audit:
+13. Saved-prior alignment audit:
    - For a few cities, verify prior-map shape, city name, split, and spatial alignment against OSCD pre/post tiles and masks.
    - This is needed because smoke checks only proved one patch/channel load, not full prior alignment.
 
-11. MultiSenGE pairing and seasonality audit:
+14. MultiSenGE pairing and seasonality audit:
    - Compare earliest/latest pairing against within-season pairings and date-windowed pairings.
    - Add snow/cloud/invalid-scene checks before DS/PCA-diff map generation.
    - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
-12. IR-MAD fair-comparison audit:
+15. IR-MAD fair-comparison audit:
    - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
    - Do not claim IR-MAD is weak from old runs unless this audit supports it.
 
-13. Multi-date / period-subspace DS feasibility audit:
+16. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.
    - Compare earliest/latest, adjacent, same-season, and period-window pairings.
    - Test first-order DS before second-order DS, GDS, or KGDS.
    - Do not use unlabeled MultiSenGE visuals as performance evidence without an evaluation proxy.
 
-14. Band-group attribution audit:
+17. Band-group attribution audit:
    - Compute DS basis energy by Sentinel-2 band or band group.
    - Compare VIS, red-edge, NIR, SWIR, and atmospheric bands.
    - Use this to explain whether maps are likely surface change, vegetation/soil moisture, or atmospheric artifact.
 
-15. SSC change-type clustering pilot:
+18. SSC change-type clustering pilot:
    - Only after the spatial DS audit.
    - Input candidates: raw delta, DS projection coefficients, PCA-diff features, patch/deep features.
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
    - Must define cluster count selection and validation before implementation.
 
-15. Deep-feature subspace pilot:
+19. Greenhouse application feasibility audit:
+   - Treat abandoned greenhouse mapping as a possible application, not current evidence.
+   - Define the task first: object mapping, abandonment classification, change detection, or temporal condition scoring.
+   - Check whether labels, dates, and evaluation metrics exist before connecting it to DS/KDS/GDS.
+
+20. Deep-feature subspace pilot:
    - Inspired by Mahyub et al. 2024 Signal Latent Subspace, not currently implemented.
    - Extract latent features from a remote-sensing CNN, U-Net encoder, or foundation model.
    - Build subspaces from patch/tile/date latent features instead of raw 13-band pixel vectors.
    - Compare latent-feature DS/GDS against raw spectral DS, local/window DS, PCA-diff, and the neural baseline.
    - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
 
-16. Temporal subspace literature pilots:
+21. Temporal subspace literature pilots:
    - RTW/Deep RTW pilot: for MultiSenGE or Harmonized Sentinel-2 L2A sequences, randomly sample ordered date subsequences, build sequence-hypothesis subspaces, and compare them to same-season or event-window references.
    - SFA/SFS pilot: learn slowly varying temporal components from aligned date sequences, then test whether residuals or slow-feature subspaces separate seasonal drift from abrupt land-cover change.
    - Product-Grassmann/Hankel pilot: represent one patch as multiple subspace factors, such as spectral, spatial, and temporal/Hankel factors, then use geodesic distances for clustering or anomaly ranking.
@@ -282,7 +303,7 @@ Acceptance checks:
    - Shape-subspace attribution pilot: adapt the human-motion DS idea by reporting which bands, patch regions, or date windows contribute most to the difference subspace.
    - Do not start these before the spatial OSCD audit; these are method-expansion tracks, not current evidence.
 
-17. xBD-S12 metric protocol audit:
+22. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.

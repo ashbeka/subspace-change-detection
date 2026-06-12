@@ -198,6 +198,8 @@ Negative results are valuable. If DS, KDS, or priors do not help, report that ho
 
 For external novelty or literature claims, use online research and cite sources. Do not search only for confirmation.
 
+Do not solve a problem that the project invented only to justify a preferred method. Start from real remote-sensing change-detection problems, advisor feedback, benchmark limitations, and literature gaps; then decide whether DS, GDS, KDS, KGDS, CCA/KCCA, SSC, Green Learning, neural methods, or another tool actually helps.
+
 ## Paper-To-Code Verification
 
 The project is still being reframed, so do not build a large brittle test suite around every old code path. However, keep and prioritize small formula-verification tests for methods translated from papers.

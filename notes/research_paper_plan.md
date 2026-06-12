@@ -113,6 +113,20 @@ Does a subspace-based prior provide useful and interpretable evidence for OSCD-s
 
 The key gap is not "invent DS." The key gap is empirical and methodological: how to adapt subspace representations to multispectral satellite images without losing the spatial structure needed for change maps.
 
+Research reset rule:
+
+```text
+Do not solve a problem we invented. Identify a real remote-sensing change-detection problem first, then test whether subspace methods help.
+```
+
+Candidate real problems to evaluate before locking the thesis:
+
+- pseudo-change versus meaningful change;
+- spatially meaningful subspace construction for multispectral imagery;
+- label-efficient/interpretable priors for supervised change segmentation;
+- multi-date temporal change/recovery analysis;
+- domain-specific monitoring such as abandoned greenhouses, only if data and labels support it.
+
 ## 6. Current Method
 
 Current global OSCD subspace construction:
@@ -173,17 +187,23 @@ Variants to compare:
    - future nonlinear extension
    - should use sampling, Nyström/prototypes, or local windows because full pixel KPCA is too expensive
 
-5. Reference-code method family screen
+5. Spatial feature construction
+   - future route using Green Learning, PixelHop/PixelHop++, wavelet components, or compression-style multiscale features
+   - useful only if it preserves spatial information better than global pixel samples
+   - should be tested as feature construction before DS/KDS/SSC, not presented as a solved method
+
+6. Reference-code method family screen
    - use bundled DS, MagTool, and MATLAB Subspace Toolbox code as a menu of possible method families
    - candidates include KPCA/KDS, CCA/KCCA, structured/temporal CCA, mutual-subspace methods, RTW/SFA/temporal tensor methods, and Grassmann magnitude/decomposition tools
    - each candidate must first be adapted to a specific satellite sample type: pixel, patch, local window, date subspace, or deep-feature embedding
    - do not promote any candidate into the thesis argument without a one-city smoke result and a comparison against simple baselines
 
-6. MultiSenGE GDS/KGDS
+7. Harmonized Sentinel-2 / MultiSenGE GDS/KGDS
    - future multi-date extension
    - useful for temporal difference spaces, but semantic interpretation needs clustering, labels, or weak supervision
+   - must first answer practical dataset questions: frame count, time step, cloud/no-data filtering, and evaluation proxy
 
-7. Deep-feature latent subspaces
+8. Deep-feature latent subspaces
    - future method bridge inspired by Mahyub et al. 2024 Signal Latent Subspace
    - one sample could be a patch/tile/date embedding from a remote-sensing model rather than a raw 13-band pixel
    - useful only if it answers the spatial-information problem better than raw pixel DS

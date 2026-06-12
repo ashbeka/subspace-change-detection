@@ -31,6 +31,10 @@ This file is the paper and reference-code matrix. Keep entries short and useful.
 | Hiraoka et al., Attention Mechanism in Randomized Time Warping, arXiv:2508.16366 | Concrete RTW lead from Sensei; accepted to the ICIP Learning Beyond Deep Learning workshop according to archived advisor notes. | Future temporal/subspace literature, not current implementation evidence. |
 | Mahyub et al. 2024, Signal Latent Subspace | Uses DNN latent features as subspaces, combines factor subspaces with product Grassmann manifold, and applies GDS for class separability. | Future deep-feature subspace bridge only; not remote-sensing evidence. |
 | SSA/SFA/RTW-related Sensei leads | Alternative temporal/subspace dynamics suggested by Sensei. | Future temporal literature, not current implementation. |
+| Fukui 2024, Geometry of subspace set and its application to machine learning | Lab overview of subspace method, MSM, canonical angles, DS/GDS, GDS projection, kernel variants, and Grassmann views. | Use as local conceptual guide for explaining where DS/GDS/KDS fit; cite underlying peer-reviewed papers for formal claims. |
+| Green Learning / PixelHop / PixelHop++ | Senpai-suggested spatial-feature route related to successive subspace learning. | Future feature-construction route for preserving local structure before DS/KDS/SSC. |
+| Wavelet transform / image compression resources | Senpai-suggested intuition for multiscale decomposition and information-preserving representations. | Future explanatory and feature-engineering lead; not current evidence. |
+| Harmonized Sentinel-2 L2A | Sensei-supported candidate for time-sequential satellite experiments. | Dataset feasibility audit before first/second DS, GDS/KGDS, or geodesic claims. |
 
 ## Subspace And Kernel References
 
@@ -50,12 +54,19 @@ Temporally Regularized CCA / KOTRCCA:
 
 - Relevant for temporal sequences.
 - More relevant to MultiSenGE than two-date OSCD.
+- Also relevant to Harmonized Sentinel-2 sequence experiments if date spacing and frame count are adequate.
 
 KCCA / Kernel CCA:
 
 - Appears in the archived reference-code leads.
 - Keep it as a future structured/kernel matching route, not as current OSCD evidence.
 - Do not let KPCA/KCCA/S3CCA/TRCCA become the thesis core unless a specific experiment and comparison justify that pivot.
+
+Green Learning / PixelHop / wavelets:
+
+- Apple Notes and senpai feedback suggest Green Learning, PixelHop/PixelHop++, wavelet transforms, and image-compression intuition as spatial-preservation leads.
+- Their possible value is not "another method to add" but a way to build local/multiscale features before subspace comparison.
+- Treat them as literature to read only if the spatial DS audit shows raw global pixel subspaces are insufficient.
 
 Signal Latent Subspace:
 
@@ -145,6 +156,12 @@ Abandoned greenhouses:
 - Useful future application.
 - Can be mentioned as motivation/use case only.
 - Not current evidence unless a dataset, labels, and evaluation protocol are added.
+
+Harmonized Sentinel-2 L2A:
+
+- Sensei recently approved trying this as a time-sequential satellite source and asked about frame count and time step.
+- This should be audited before using first/second DS, GDS/KGDS, or geodesic projection on it.
+- Important checks: available bands, date cadence, cloud/no-data filtering, same-region alignment, and whether there is any evaluation signal.
 
 ## Bookmark Triage Rules
 
