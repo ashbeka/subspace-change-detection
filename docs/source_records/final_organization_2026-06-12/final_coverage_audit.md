@@ -51,7 +51,7 @@ The following source themes are represented in active notes:
 A concept/function bookmark hierarchy pass was run on 2026-06-12 after the user requested more granular folders and clearer handling of links that could fit multiple categories. The organized HTML was rebuilt from the original Chrome export and the explicit Markdown links in `Safari links.md`, with HTML-escaped `href` values so query strings containing `&copy`, `&currency`, and similar sequences are preserved correctly by browsers.
 
 Classification policy: one primary folder per bookmark, with research relevance taking priority over programming/ML/tooling when a link is useful to the thesis. This avoids artificial duplicate clutter while keeping research resources amassed under `Research`.
-A later granular quality pass also rechecked research-like links outside `Research`, rescued paper/venue/dataset/method/research-code links, and flattened single-child generic folders such as `Green Learning Compression Wavelets / Methods`. Topic rules use bookmark title and URL rather than source paths like `Bookmarks bar`, which avoids false book/reference matches.
+A later granular quality pass also rechecked research-like links outside `Research`, rescued paper/venue/dataset/method/research-code links, and flattened single-child generic folders such as `Green Learning Compression Wavelets / Methods`. Topic rules use bookmark title and URL rather than source paths like `Bookmarks bar`, which avoids false book/reference matches. A priority pass then reordered the `Research` tree with numbered folders: `01 Read First - Thesis Core`, `02 Methods - Subspace Geometry`, `03 Methods - Change Detection`, `04 Datasets - Current Candidate Future`, and lower-priority support folders.
 
 
 | check | result |
