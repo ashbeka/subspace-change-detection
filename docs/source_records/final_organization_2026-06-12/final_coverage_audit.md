@@ -48,7 +48,9 @@ The following source themes are represented in active notes:
 
 ## 4. Bookmark Coverage
 
-A final bookmark categorization pass was run on 2026-06-12 after the user requested a more functional tree and pointed out that research links such as `https://captain-whu.github.io/SCD/` were misplaced. The organized HTML was rebuilt from the original Chrome export and the explicit Markdown links in `Safari links.md`, with HTML-escaped `href` values so query strings containing `&copy`, `&currency`, and similar sequences are preserved correctly by browsers. Targeted rescue passes moved clear research, learning, programming, university, career, and life/admin links out of `To Review`, then tightened the UI/UX folder so random query-string matches no longer pull unrelated bookmarks into design.
+A concept/function bookmark hierarchy pass was run on 2026-06-12 after the user requested more granular folders and clearer handling of links that could fit multiple categories. The organized HTML was rebuilt from the original Chrome export and the explicit Markdown links in `Safari links.md`, with HTML-escaped `href` values so query strings containing `&copy`, `&currency`, and similar sequences are preserved correctly by browsers.
+
+Classification policy: one primary folder per bookmark, with research relevance taking priority over programming/ML/tooling when a link is useful to the thesis. This avoids artificial duplicate clutter while keeping research resources amassed under `Research`.
 
 | check | result |
 |---|---:|
@@ -58,12 +60,10 @@ A final bookmark categorization pass was run on 2026-06-12 after the user reques
 | Organized output bookmark entries | 1556 |
 | Unique URLs | 1537 |
 | Duplicate URL entries preserved | 19 |
-| Research entries | 491 |
-| Manual review entries | 134 |
+| Research entries | 454 |
+| Manual review entries | 133 |
 | Missing entries after organization | 0 |
 | Extra entries after organization | 0 |
-
-The revised hierarchy avoids overly broad buckets such as combined math/statistics/foundations or university/career/Japan. It uses separate top-level roots for `Research`, `Learning`, `Programming and Tools`, `University`, `Career and Scholarships`, `Language Study`, `Projects`, `Life Admin`, and `To Review`, with research organized by function first and concept second.
 
 Generated import file:
 
@@ -75,7 +75,7 @@ Machine-readable summary:
 
 ## 5. Remaining Review Work
 
-- `To Review` contains `134` unclear or personal/search links that still need human judgment.
+- `To Review` contains `133` unclear or personal/search links that still need human judgment.
 - `final_organizing_task_patch/` remains untracked and undeleted until the user approves deletion.
 - The organized bookmark HTML is ready to import into Chrome, but importing itself was not performed.
 - Zotero import remains manual. Start with `Research / 00 Must Read and Zotero First`, then the most relevant method and dataset folders under `Research`.
