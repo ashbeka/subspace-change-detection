@@ -454,9 +454,9 @@
     </p>
     <div class="status-strip">
       <div class="status-card"><strong>Current concrete task</strong><span>Spatial DS on OSCD: global pixels vs patches vs local windows.</span></div>
-      <div class="status-card"><strong>Best first result</strong><span>Beirut patch-vector DS improved over global DS, but PCA-diff remains stronger.</span></div>
-      <div class="status-card"><strong>Thesis risk</strong><span>Do not claim DS is useful until multi-city evidence supports it.</span></div>
-      <div class="status-card"><strong>Next decision</strong><span>Run multi-city spatial DS and rank/normalization ablations.</span></div>
+      <div class="status-card"><strong>Core5 result</strong><span>Patch-vector DS beats global DS on average, but PCA-diff/raw L2 remain stronger.</span></div>
+      <div class="status-card"><strong>Thesis risk</strong><span>Do not claim DS improves OSCD; current evidence is diagnostic and mixed.</span></div>
+      <div class="status-card"><strong>Next decision</strong><span>Inspect failure modes and test patch-score normalization/ratio ablations.</span></div>
     </div>
   </header>
 
@@ -605,13 +605,13 @@
     <section id="next" class="section">
       <div class="section-title">
         <h2>Immediate Work Plan</h2>
-        <p>Start with evidence. Do not jump to KDS, GDS, U-Net, or new datasets until the spatial-construction question has a multi-city answer.</p>
+        <p>Start with evidence. Do not jump to KDS, GDS, U-Net, or new datasets until the patch-DS failure modes and score definitions are understood.</p>
       </div>
       <div class="cards">
         <article class="exp-card">
-          <h3><span class="priority">1</span>Multi-City Spatial DS</h3>
-          <p>Run the current comparison on several OSCD cities. Goal: check whether patch-vector DS is consistently better than global pixel DS.</p>
-          <pre>.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5 --no-save-npy</pre>
+          <h3><span class="priority">1</span>Failure-Mode Inspection</h3>
+          <p>The core5 sweep is done. Goal: inspect why patch-vector DS helps relative to global DS but still loses to PCA-diff/raw L2 overall.</p>
+          <pre>.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy</pre>
         </article>
         <article class="exp-card">
           <h3><span class="priority">2</span>Rank And Normalization</h3>
@@ -725,7 +725,7 @@
         summary: "OSCD gives pre/post Sentinel-2 imagery and a binary changed/unchanged label. It is the current benchmark, not the final thesis boundary.",
         read: [links.oscd, links.fcSiam],
         code: ["phase1/data/oscd_dataset.py", "phase2/data/oscd_seg_dataset.py"],
-        experiment: "All current one-city and future multi-city DS comparisons."
+        experiment: "All current one-city and core5 spatial DS comparisons."
       },
       "global-ds": {
         title: "Global Pixel DS",
@@ -743,7 +743,7 @@
         summary: "Compare global pixel DS, local-window DS, and patch-vector DS to test whether spatial support makes DS more useful.",
         read: ["notes/experiments.md: Immediate Next Research Task", links.spatialHs],
         code: ["phase1/scripts/compare_oscd_spatial_subspaces.py"],
-        experiment: "Beirut first run: patch5 improved over global DS but did not beat PCA-diff."
+        experiment: "Core5 sweep: patch-vector DS improved over global DS on average, but PCA-diff/raw L2 remained stronger overall."
       },
       "metrics": {
         title: "Meaningful Score Criteria",
@@ -761,7 +761,7 @@
         summary: "If patch/window DS is unstable across cities or weaker than PCA-diff, stop selling DS as an improvement and reframe as a diagnostic/negative study.",
         read: ["docs/RESEARCH_RESET_AUDIT.md: recommended framing and failure value"],
         code: ["No code; this is thesis decision logic."],
-        experiment: "Requires multi-city spatial DS before Phase 2 reruns."
+        experiment: "Requires patch-score ablations and failure-mode inspection before Phase 2 reruns."
       },
       "subspace-basis": {
         title: "What Is A Subspace Here?",
@@ -857,7 +857,7 @@
         title: "PCA Difference",
         type: "baseline",
         tags: ["baseline", "strong pressure"],
-        summary: "PCA on the difference image is a classical baseline and currently stronger than DS on Beirut.",
+        summary: "PCA on the difference image is a classical baseline and currently stronger than DS-family maps on the core5 sweep.",
         read: [links.celik],
         code: ["phase1/baselines/pca_diff.py"],
         experiment: "Must remain a baseline for all OSCD DS claims."
@@ -914,7 +914,7 @@
         summary: "Fit a DS model inside sliding windows and aggregate scores. Preserves regional context but still uses pixel vectors inside each window.",
         read: ["notes/methods.md: local-window DS construction card"],
         code: ["phase1/scripts/compare_oscd_spatial_subspaces.py: local_window_ds_score"],
-        experiment: "Currently slower and mixed on Beirut; needs multi-city check."
+        experiment: "Core5 rank6 result was weak as configured; only revisit with different window sizes/aggregation if patch-score ablations fail."
       },
       "patch-ds": {
         title: "Patch-Vector DS",
@@ -923,7 +923,7 @@
         summary: "Flatten a local 13-band patch into one sample vector. This explicitly preserves local neighborhood layout in the feature vector.",
         read: ["notes/methods.md: patch-vector DS construction card", links.celik],
         code: ["phase1/scripts/compare_oscd_spatial_subspaces.py: patch_vector_ds_score"],
-        experiment: "Best DS-family method on Beirut so far, still weaker than PCA-diff."
+        experiment: "Best DS-family path in the core5 sweep, but still weaker than PCA-diff/raw L2 overall."
       },
       "projection-viz": {
         title: "Projection / Attribution Visuals",
@@ -941,7 +941,7 @@
         summary: "Whole image -> 2x2 -> 4x4 -> finer cells. This may preserve both coarse and local spatial structure, inspired by wavelet/Green Learning notes.",
         read: ["Search: PixelHop, Green Learning, wavelet multiresolution image representation"],
         code: ["not implemented"],
-        experiment: "Only after patch/window DS has a multi-city result."
+        experiment: "Only after patch-score ablations and failure-mode analysis."
       },
       "tensor-mode": {
         title: "Tensor / N-mode Subspace",
@@ -1047,12 +1047,12 @@
     const experiments = [
       {
         p: 1,
-        title: "Multi-City Spatial DS Comparison",
+        title: "Patch DS Failure-Mode And Score Ablation",
         status: "next",
-        why: "Directly tests Sensei's spatial-information critique across more than Beirut.",
-        command: ".\\.venv\\Scripts\\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5 --no-save-npy",
+        why: "Core5 shows patch DS is better than global DS but not competitive with PCA-diff; the next question is why.",
+        command: ".\\.venv\\Scripts\\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy",
         reads: [links.tpami, links.celik, links.oscd],
-        output: "spatial_subspace_metrics.csv, comparison_grid.png, score_maps/*.png"
+        output: "comparison grids, per-city false-positive notes, score-definition ablation table"
       },
       {
         p: 2,
@@ -1068,7 +1068,7 @@
         title: "Score Definition And Normalization Ablation",
         status: "queued",
         why: "Projection energy, residual energy, percentile normalization, and Otsu thresholding can change conclusions.",
-        command: "Add CLI flags after current multi-city result identifies useful method candidates.",
+        command: "Add CLI flags after score-definition ablation identifies useful method candidates.",
         reads: [links.cva, links.sklearnRoc],
         output: "score-definition comparison table"
       },
@@ -1122,7 +1122,7 @@
         title: "Pseudo-Change Diagnostics",
         status: "future",
         why: "Pre/post satellite changes include seasonal and sensor effects; this is a real field problem.",
-        command: "Future after multi-city spatial results.",
+        command: "Future after patch-score ablations and failure-mode inspection.",
         reads: [links.survey1, links.sampleEff],
         output: "false-positive taxonomy and examples"
       },

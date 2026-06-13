@@ -373,6 +373,47 @@ score_maps/patch5.png
 comparison_grid.png
 ```
 
+Multi-city/multi-config sweep command:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --no-save-npy
+```
+
+Completed reference sweep:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy
+```
+
+Tracked report:
+
+```text
+docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
+```
+
+Default sweep design:
+
+```text
+cities: beirut,dubai,lasvegas,milano,norcia
+rank4_core: rank 4, methods global_pixel,patch3,patch5
+rank6_spatial: rank 6, methods global_pixel,window128,patch3,patch5
+rank8_core: rank 8, methods global_pixel,patch3,patch5
+```
+
+Sweep outputs:
+
+```text
+phase1/outputs/oscd_spatial_subspace_sweep_<timestamp>/
+  sweep_manifest.json
+  sweep_metrics_all.csv
+  sweep_summary_by_config_method.csv
+  sweep_best_ap_by_city_config.csv
+  sweep_best_ds_ap_by_city_config.csv
+  sweep_report.md
+  logs/
+  runs/<config>__<city>/
+```
+
 Validation meaning:
 
 - `AUROC`: threshold-free ranking check; higher means OSCD changed pixels usually receive higher scores than unchanged pixels.

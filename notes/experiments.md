@@ -80,6 +80,53 @@ Interpretation:
 - Local-window DS with `128x128` windows does not help in this run.
 - This justifies multi-city spatial DS comparison; it is not yet a thesis-level claim.
 
+Spatial subspace core5 sweep, 2026-06-14:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --no-save-npy --continue-on-error
+```
+
+Tracked report:
+
+```text
+docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
+```
+
+Ignored output:
+
+```text
+phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823/
+```
+
+Design:
+
+```text
+cities: beirut,dubai,lasvegas,milano,norcia
+rank4_core: global_pixel,patch3,patch5
+rank6_spatial: global_pixel,window128,patch3,patch5
+rank8_core: global_pixel,patch3,patch5
+baselines included in each run: raw_l2,pca_diff
+```
+
+Mean results across the five cities:
+
+| config | method | mean AUROC | mean AP | mean Otsu F1 | mean best F1 |
+|---|---|---:|---:|---:|---:|
+| rank8_core | pca_diff | 0.8733 | 0.3953 | 0.3403 | 0.4112 |
+| all configs | raw_l2 | 0.8263 | 0.3550 | 0.2707 | 0.3849 |
+| rank8_core | patch5 | 0.7783 | 0.1966 | 0.0998 | 0.2586 |
+| rank8_core | patch3 | 0.7920 | 0.1897 | 0.0815 | 0.2572 |
+| rank4_core | global_pixel | 0.6633 | 0.1162 | 0.0762 | 0.1761 |
+| rank6_spatial | window128s64mean | 0.6434 | 0.0802 | 0.0396 | 0.1431 |
+
+Interpretation:
+
+- Patch-vector DS is better than global pixel DS on average.
+- Local-window DS with `128x128` windows is weak as configured.
+- PCA-diff and raw L2 are still much stronger than the DS-family maps overall.
+- The result supports "spatial sample construction changes DS behavior," not "DS beats classical baselines."
+- Do not spend time on long Phase 2 raw+spatial-prior training until the score definition and failure modes are better understood.
+
 ## 3. Main Completed Sweep
 
 Run:
@@ -131,100 +178,41 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not a blind coding task. It must be implemented as a source-linked audit so the student can trace every step:
+The next experiment is not another blind sweep. The core5 sweep already showed that patch-vector DS is the only DS-family candidate worth studying immediately, but it is still weaker than PCA-diff/raw L2 overall.
+
+Immediate next task:
+
+```text
+Inspect why patch DS helps in some cities and fails in others, then test whether the score definition is the bottleneck.
+```
+
+Source-linked rule for the next code change:
 
 ```text
 source material -> mathematical object -> satellite adaptation -> code path -> toy check -> one-city map -> thesis claim
 ```
 
-Minimum source material before coding:
-
-- TPAMI 2015 DS/GDS/KDS/KGDS paper for DS terminology and projection logic.
-- Current repaired DS code in `phase1/ds/pca_utils.py` and `phase1/ds/ds_scores.py`.
-- Spatial/subspace related-work anchors such as Wu-Du-Zhang HSI subspace CD, LRSD_SS, and n-mode GDS, to avoid claiming that spatial subspaces are entirely new.
-
-Implementation note:
-
-- Record the exact sample definition for every variant.
-- Record whether the variant preserves no position, local neighborhood position, regional context, object context, or tensor modes.
-- Add toy/shape checks before full-city outputs.
-- For each method variant, fill the subspace construction card from `notes/methods.md` before running more than one city. The card must explain sample unit, input matrix/tensor, basis shape, fitting method, comparison score, spatial information preserved/lost, code path, and verification.
-
-Implement:
-
-```text
-phase1/scripts/compare_oscd_spatial_subspaces.py
-```
-
-Compare:
-
-- global pixel DS: one sample is one 13-band pixel.
-- patch-vector DS: one sample is a `3x3x13` or `5x5x13` patch.
-- local-window DS: one subspace per local image region such as `128x128`.
-
-Initial local-window grid:
-
-- window sizes: `64`, `128`, `256`.
-- strides: `32`, `64`, `128`.
-- aggregation: `mean`, `max`.
-- inspect boundary artifacts from overlapping-window aggregation.
-
-Start with:
-
-```text
-beirut
-one dense urban city
-one difficult/low-change city
-```
-
-Metrics:
-
-- AUROC.
-- PR-AUC.
-- best F1 and IoU over thresholds.
-- Otsu-threshold F1 and IoU.
-- correlation with raw spectral L2.
-- valid-mask exclusion rate for changed pixels.
-- runtime.
-- visual maps beside pre RGB, post RGB, and ground truth.
-
-Decision:
-
-- If global pixel DS is stable and competitive, keep it as a spectral-distribution baseline.
-- If patch/window DS improves maps or metrics, pivot to spatially aware DS.
-- If corrected DS variants remain weaker than raw/PCA-diff, stop claiming DS superiority.
-
-Research interpretation:
-
-- This experiment tests a strong hypothesis, not a proven claim.
-- A positive result supports "spatial support matters for DS-style satellite change priors."
-- A negative result is still useful because it shows that global/patch/window DS is not the right tool under this setup.
-- The goal is not to beat modern deep learning directly; the first goal is to produce interpretable geometric change evidence that can later be used alone, as a prior channel, as a diagnostic feature, or as a label-efficient aid.
-
-Suggested first command shape:
+Near-term implementation:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --configs "rank8_core:8:global_pixel+patch3+patch5" --resume --no-save-npy
 ```
 
-Expected outputs:
+That command is mainly a reproducibility/inspection entry point. The next new script should add score-definition ablations for patch DS:
 
-- `spatial_subspace_metrics.csv`
-- `run_metadata.json`
-- `score_maps/global_pixel.png`
-- `score_maps/patch3.png`
-- `score_maps/patch5.png`
-- `score_maps/window128s64mean.png`
-- `score_maps/raw_l2.png`
-- `score_maps/pca_diff.png`
-- side-by-side comparison figure with pre RGB, post RGB, ground truth, and all tested maps.
+```text
+score = ||D^T delta||^2
+score = ||D^T delta||
+score = ||D^T delta||^2 / (||delta||^2 + eps)
+score = normalized patch score after per-city robust scaling
+```
 
 Acceptance checks:
 
-- canonical/eig DS maps are not near-identical to raw L2;
-- rank sensitivity does not show rank 6 was arbitrary or unstable;
-- valid-mask exclusions are negligible or explained;
-- global pixel DS is either competitive with patch/window variants or its weakness is explicitly reported.
+- each score definition has an explicit formula and code path;
+- patch scores are compared against raw L2, PCA-diff, and Celik-style patch PCA-kmeans;
+- maps are inspected for false positives from water, shadows, vegetation, registration, and city-specific artifacts;
+- the thesis claim remains diagnostic unless DS-family maps beat or explain baselines consistently.
 
 ## 6. Other Important Experiments To Queue
 

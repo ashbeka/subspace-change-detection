@@ -93,6 +93,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-oscd-geodesic", "phase1", "Generate OSCD local geodesic prior maps.", ["phase1-oscd-geodesic"]),
     CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
+    CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
     CommandInfo("phase1-viz-examples", "visualization", "Draw OSCD pre/post/GT/diff/DS example figures.", ["phase1-viz-examples", "--cities", "test"]),
@@ -405,6 +406,43 @@ def cmd_phase1_spatial_subspace_compare(args: argparse.Namespace) -> int:
     if not args.save_npy:
         cmd.append("--no-save-npy")
     return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/oscd_spatial_subspace_sweep_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/sweep_oscd_spatial_subspaces.py",
+        "--oscd_root",
+        args.oscd_root,
+        "--stats_path",
+        args.stats_path,
+        "--cities",
+        args.cities,
+        "--configs",
+        args.configs,
+        "--split",
+        args.split,
+        "--output_dir",
+        out,
+        "--seed",
+        str(args.seed),
+        "--max_fit_samples",
+        str(args.max_fit_samples),
+        "--score_chunk_size",
+        str(args.score_chunk_size),
+    ]
+    if args.save_npy:
+        cmd.append("--save-npy")
+    else:
+        cmd.append("--no-save-npy")
+    if args.resume:
+        cmd.append("--resume")
+    if args.continue_on_error:
+        cmd.append("--continue-on-error")
+    if args.dry_run:
+        cmd.append("--dry-run")
+    return run_command(cmd, dry_run=False)
 
 
 def cmd_phase1_multisenge_manifest(args: argparse.Namespace) -> int:
@@ -1040,6 +1078,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=True)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spatial_subspace_compare)
+
+    p = sub.add_parser("phase1-spatial-subspace-sweep", help="Run spatial DS comparison across multiple OSCD cities/configs.")
+    p.add_argument("--oscd-root", default="data/OSCD")
+    p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
+    p.add_argument("--cities", default="core5", help="Comma list, or 'core5' for beirut,dubai,lasvegas,milano,norcia.")
+    p.add_argument(
+        "--configs",
+        default="rank4_core:4:global_pixel+patch3+patch5;rank6_spatial:6:global_pixel+window128+patch3+patch5;rank8_core:8:global_pixel+patch3+patch5",
+        help="Semicolon-separated configs as name:rank:method+method.",
+    )
+    p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-fit-samples", type=int, default=20000)
+    p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=False)
+    p.add_argument("--resume", action="store_true")
+    p.add_argument("--continue-on-error", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spatial_subspace_sweep)
 
     p = sub.add_parser("phase1-subspace-audit", help="Compatibility alias for phase1-subspace-inspect.")
     p.add_argument("--oscd-root", default="data/OSCD")

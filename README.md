@@ -70,39 +70,42 @@ Not implemented as a completed claim:
 
 ## 3. Current Most Important Result
 
-First spatial DS comparison on Beirut:
+Spatial DS comparison has moved from a one-city check to a five-city core sweep:
 
 ```text
-phase1/outputs/oscd_spatial_subspace_compare_beirut_20260613_192736/
+phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823/
+docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
 ```
 
 Short interpretation:
 
-- Global pixel DS performed poorly.
-- Patch-vector DS was clearly better than global pixel DS.
-- Patch5 beat raw L2 on AUROC and Otsu F1.
-- PCA-diff still outperformed DS-family maps on Beirut.
-- This is one-city evidence only; it is not a thesis claim yet.
+- Patch-vector DS is better than global pixel DS on average.
+- Local-window DS with `128x128` windows is weak as configured.
+- PCA-diff and raw L2 still outperform the DS-family maps overall.
+- Best DS-family mean AP was `0.1966` (`rank8_core / patch5`).
+- Best PCA-diff mean AP was `0.3953`.
+- This is useful diagnostic evidence, not a claim that DS improves OSCD.
 
-The next experiment must check whether this holds across more OSCD cities.
+The next experiment must inspect failure modes and score definitions before any long Phase 2 training.
 
 ## 4. What To Do Next
 
-Immediate command for the current experiment on one city:
+Reproduce or resume the completed core5 sweep:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5 --no-save-npy
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy
 ```
 
-After that, repeat for several cities, then compare the CSV outputs. Do not start another long U-Net sweep until spatial DS has stable multi-city evidence.
+Do not start another long U-Net sweep yet. The DS-family maps need analysis and ablations first.
 
 Current priority order:
 
-1. Multi-city spatial DS comparison.
-2. PCA rank sensitivity: ranks 2, 4, 6, 8, 10, 12.
-3. Score-definition and normalization ablation.
-4. Projection/band/patch visual explanation.
-5. Phase 2 raw vs raw+best-spatial-prior only if the prior survives the previous checks.
+1. Inspect comparison grids and failure modes for the five core cities.
+2. Score-definition and normalization ablation for patch DS.
+3. Compare against Celik-style patch PCA-kmeans.
+4. PCA rank sensitivity: ranks 2, 4, 6, 8, 10, 12.
+5. Projection/band/patch visual explanation.
+6. Phase 2 raw vs raw+best-spatial-prior only if the prior survives the previous checks.
 
 ## 5. Central CLI
 
@@ -119,6 +122,7 @@ Relevant current commands:
 ```powershell
 .\.venv\Scripts\python.exe project_cli.py phase1-subspace-inspect --city beirut --rank 6
 .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5 --no-save-npy
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --no-save-npy
 ```
 
 Running `project_cli.py` with no subcommand opens the interactive command center.
@@ -201,4 +205,3 @@ Safe current phrasing:
 ```text
 The project is testing whether spatially supported DS constructions provide useful, interpretable prior maps for multispectral satellite change detection.
 ```
-

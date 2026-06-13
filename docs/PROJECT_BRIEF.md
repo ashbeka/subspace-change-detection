@@ -86,27 +86,28 @@ Subspace correction:
 - It is now treated as legacy.
 - Canonical/eig DS are the cleaner linear DS paths.
 
-First spatial-subspace result, Beirut, 2026-06-13:
+Spatial-subspace core5 result, 2026-06-14:
 
-- `patch5` DS outperformed current global pixel DS on AUROC, AP, best F1, and Otsu F1.
-- `patch5` also beat raw L2 on AUROC and Otsu F1.
-- `patch5` remained weaker than PCA-diff.
-- `window128s64mean` did not improve over global pixel DS.
-- This is one-city evidence only; it supports continuing the spatial DS comparison, not a thesis claim yet.
+- Patch-vector DS outperformed current global pixel DS on mean AP.
+- `window128s64mean` was weak as configured.
+- PCA-diff and raw L2 still outperformed the DS-family maps overall.
+- Best DS-family mean AP was `0.1966` (`rank8_core / patch5`).
+- Best PCA-diff mean AP was `0.3953`.
+- This supports the claim that spatial sample construction changes DS behavior, not the claim that DS improves OSCD change detection.
 
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, expand the spatial subspace comparison:
+Before more long U-Net sweeps, inspect why patch-vector DS helps relative to global pixel DS but still loses to PCA-diff/raw L2:
 
 ```text
-global pixel DS vs patch-vector DS vs local-window DS
+failure-mode maps -> patch score definitions -> Celik-style patch baseline
 ```
 
 This directly answers Sensei's concern about breaking spatial information.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 
-The experiment should report AUROC, PR-AUC, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusion rate, runtime, and visual maps.
+The next ablation should report AUROC, PR-AUC, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusion rate, runtime, and visual maps.
 
 ## 6. Forbidden Overclaims
 
