@@ -1,11 +1,17 @@
 """
-Siamese U-Net baseline for change detection (FC-Siamese family).
+Siamese U-Net baseline for change detection.
 
-This model expects input arranged as a pre/post stack:
-  x = concat([pre_bands, post_bands]) with shape (B, 2*n_bands, H, W).
+Source/provenance:
+- Inspired by the FC-Siamese family used for OSCD change detection by Daudt et
+  al.: pre and post images are encoded with shared weights and feature
+  differences are decoded into a binary change map.
+- This implementation uses absolute differences between matching encoder
+  feature maps, then a U-Net-like decoder.
 
-It encodes pre and post with shared weights, then decodes the absolute
-difference of the feature maps.
+Project adaptation:
+- The model expects exactly a pre/post Sentinel-2 stack with shape
+  (B, 2*n_bands, H, W). Prior channels are intentionally rejected here because
+  this baseline is meant to isolate a Siamese raw-image comparison.
 """
 from __future__ import annotations
 
@@ -78,4 +84,3 @@ class SiameseUNet2D(nn.Module):
       skip = diffs[-(i + 2)]
       x_cur = up(x_cur, skip)
     return self.out_conv(x_cur)
-

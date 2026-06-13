@@ -1,8 +1,21 @@
 """
-PCA helpers for DS (spec Section 4.1).
+PCA and linear Difference Subspace helpers.
 
-Functions here handle rank selection by variance retention, orthonormalization,
-and projector utilities used by DS scoring.
+Source/provenance:
+- PCA basis fitting uses the standard samples-by-features convention implemented
+  by scikit-learn PCA, then returns bases as feature-by-rank matrices.
+- `difference_subspace_canonical` follows the first-order Difference Subspace
+  principal-vector construction described by Fukui and Maki, TPAMI 2015.
+- `difference_subspace_eig` is a projector-eigen equivalent used as an
+  implementation cross-check for the canonical span.
+- `legacy_residual_stack_difference_subspace` is the old project construction
+  retained only for reproducibility; it is not the preferred paper-faithful DS
+  path for new experiments.
+
+Satellite adaptation:
+- Callers decide the sample definition: one 13-band pixel, one local patch, or
+  another vectorized object. This module only receives matrices shaped (d, n)
+  and returns subspace bases shaped (d, r).
 """
 from __future__ import annotations
 

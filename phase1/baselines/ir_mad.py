@@ -1,12 +1,19 @@
 """
-IR-MAD baseline (stretch goal).
+Lightweight IR-MAD baseline.
 
-Implements a lightweight Iteratively Reweighted Multivariate Alteration Detection:
-1) Estimate canonical directions via eigen-decomposition of a generalized covariance matrix.
-2) Compute MAD variates and reweight observations based on chi-square distances.
-3) Repeat for a small number of iterations.
+Source/provenance:
+- Iteratively Reweighted Multivariate Alteration Detection (IR-MAD) is a
+  classical canonical-correlation-based remote-sensing change detector
+  associated with Nielsen's MAD/IR-MAD work.
+- The mathematical idea is to find canonical variates between two multiband
+  images, compute MAD variate differences, and iteratively reweight likely
+  unchanged observations.
 
-This implementation supports optional subsampling for stability on large tiles.
+Project adaptation and caution:
+- This file is a compact Sentinel-2 implementation with optional subsampling for
+  large OSCD tiles. It is useful for comparison pressure and CCA intuition, but
+  it should be formula-checked against Nielsen/reference implementations before
+  making strong IR-MAD performance claims.
 """
 from __future__ import annotations
 

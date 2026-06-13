@@ -1,5 +1,18 @@
 """
-Plain 2D U-Net for segmentation (spec Phase 2 Section 4.1).
+Plain 2D U-Net segmentation baseline.
+
+Source/provenance:
+- Architecture follows the standard U-Net encoder/decoder pattern introduced by
+  Ronneberger et al. for dense segmentation: repeated double convolutions,
+  downsampling, skip connections, upsampling, and a 1x1 output head.
+- This project adapts the first layer to accept arbitrary channel counts:
+  raw Sentinel-2 pre/post stacks, optional prior channels, or other configured
+  feature stacks.
+
+Allowed claim:
+- This is a supervised segmentation baseline/fusion model. It does not by
+  itself validate DS; it tests whether adding a prior helps a U-Net under a
+  controlled configuration.
 """
 from __future__ import annotations
 
@@ -86,5 +99,4 @@ class UNet2D(nn.Module):
       x = up(x, skip)
     logits = self.out_conv(x)
     return logits
-
 

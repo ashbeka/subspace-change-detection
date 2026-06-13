@@ -1,10 +1,19 @@
 """
-Difference-Subspace scoring utilities (spec Section 4.1).
+Difference Subspace scoring utilities for image-shaped Sentinel-2 tiles.
 
-Implements:
-- Global DS projection and cross-residual scores for a tile.
-- Optional sliding-window DS with aggregation.
-- Per-tile score normalization (min-max or percentile clipping).
+Source/provenance:
+- Linear DS construction is delegated to `phase1.ds.pca_utils`; canonical DS is
+  the Fukui/Maki TPAMI 2015 principal-vector formulation.
+- Per-pixel projection energy uses the project-specific scoring adaptation
+  `||D^T (x_post - x_pre)||^2`, where `D` is the DS basis and `x_*` is the
+  selected sample vector.
+- Sliding-window scoring is a spatial adaptation introduced for this project to
+  test Sensei's concern that global pixel DS breaks spatial information. It is
+  not claimed as the original TPAMI DS setting.
+
+Implementation role:
+- `compute_ds_scores` is the global pixel construction used by older prior runs.
+- New spatial comparisons live in `phase1/scripts/compare_oscd_spatial_subspaces.py`.
 """
 from __future__ import annotations
 

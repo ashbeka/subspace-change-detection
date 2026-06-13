@@ -1,5 +1,14 @@
 """
-Pixel differencing baseline (spec Section 4.2.1).
+Raw spectral pixel-difference baseline.
+
+Source/provenance:
+- This is the simplest form of multiband change scoring: subtract pre/post
+  spectral vectors and take the L2 magnitude per pixel.
+- It is intentionally close to CVA and is used to check whether DS-like scores
+  are doing anything beyond naive spectral difference.
+
+Verification status:
+- Generic baseline; no paper-specific novelty claim.
 """
 from __future__ import annotations
 

@@ -1,5 +1,17 @@
 """
-PCA-diff baseline (spec Section 4.2.3).
+PCA-on-difference baseline.
+
+Source/provenance:
+- This is a classical PCA-difference baseline: compute the multiband pre/post
+  difference image, fit PCA on valid pixel-difference vectors, and score pixels
+  by the magnitude of retained PCA coefficients.
+- It is related to PCA-based unsupervised change-detection baselines such as
+  Celik 2009, but this file is the simpler global difference-vector version,
+  not Celik's local patch + k-means algorithm.
+
+Verification status:
+- Strong baseline pressure for DS. Current Beirut evidence shows it outperforms
+  DS-family spatial maps, so thesis claims must compare against it honestly.
 """
 from __future__ import annotations
 

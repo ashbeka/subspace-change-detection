@@ -1,10 +1,26 @@
 """
-Compare spatial DS constructions on one OSCD city.
+Compare spatial Difference Subspace constructions on one OSCD city.
 
-This script treats OSCD change detection as binary pixel segmentation with
-continuous prior scores. Each method produces a score map. The script compares
-those maps against OSCD labels using threshold-free ranking metrics, thresholded
-segmentation metrics, simple baselines, and construction metadata.
+Source/provenance:
+- Canonical linear DS comes from the Fukui/Maki first-order DS formulation
+  implemented in `phase1.ds.pca_utils`.
+- OSCD binary change detection follows the Sentinel-2 before/after benchmark
+  introduced by Daudt et al. for fully convolutional/Siamese change detection.
+- Raw L2/CVA and PCA-diff are included as classical baseline pressure; PCA-diff
+  is related to PCA-based unsupervised change detection such as Celik 2009.
+- AUROC and average precision use scikit-learn definitions; Otsu thresholding
+  is used only as an unsupervised threshold diagnostic.
+
+Project adaptation under test:
+- global_pixel: one 13-band pixel is one sample, so spatial position is not used
+  while fitting PCA.
+- local_window: fit a pre/post DS pair inside sliding spatial windows.
+- patch_vector: flatten a local 13-band patch into one sample vector so local
+  neighborhood layout enters the subspace.
+
+Allowed claim:
+- This script can test whether spatial support improves DS score maps on OSCD.
+  It cannot by itself prove a general satellite-specific subspace method.
 """
 from __future__ import annotations
 

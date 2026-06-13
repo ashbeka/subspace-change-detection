@@ -1,5 +1,17 @@
 """
-Celik 2009 local PCA + k-means baseline (spec Section 4.2.4).
+Celik-style local PCA + k-means change-detection baseline.
+
+Source/provenance:
+- Based on the unsupervised PCA + k-means change-detection idea in Celik 2009:
+  extract local difference-image patches, reduce them with PCA, and cluster
+  projected patch features into changed/unchanged groups.
+- This implementation adapts the idea to multiband Sentinel-2 tensors and
+  optionally downsamples large tiles for runtime stability.
+
+Verification status:
+- Useful spatial baseline pressure for patch-vector DS because both methods use
+  local patch structure. It should be treated as an implementation of the Celik
+  family, not a line-by-line reproduction of a specific public codebase.
 """
 from __future__ import annotations
 

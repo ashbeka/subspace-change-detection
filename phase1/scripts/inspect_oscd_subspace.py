@@ -1,9 +1,17 @@
 """
 Inspect how OSCD subspaces are built and how DS variants behave.
 
-This script is intentionally read-only: it loads one OSCD city, builds the
-pre/post PCA subspaces, and compares legacy/eig/canonical DS projection scores
-against raw spectral L2 difference on a pixel sample.
+Source/provenance:
+- Uses the same OSCD Sentinel-2 sample definition as the current global-pixel
+  DS path: each valid pixel becomes one 13-dimensional sample vector.
+- Compares the old residual-stack project variant with projector-eig and
+  canonical DS variants implemented in `phase1.ds.pca_utils`.
+- Raw spectral L2 correlation is included to detect whether a DS score behaves
+  like naive pixel differencing.
+
+Purpose:
+- Read-only explanation and sanity check. Use this before claiming that a
+  subspace construction is paper-faithful or meaningfully different from raw L2.
 """
 from __future__ import annotations
 

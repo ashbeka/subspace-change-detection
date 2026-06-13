@@ -222,6 +222,8 @@ For every new method implementation, preserve a source-to-code trail:
 source material -> math object -> satellite adaptation -> code path -> test -> one-city output -> thesis claim
 ```
 
+For every niche method file, include a concise top-level source/provenance docstring. It should say which paper, reference code, or established method family guided the implementation; what was adapted for this project; and what verification status the implementation has. Do not over-comment generic utilities, but do document DS/GDS/KDS/KGDS, PCA-diff, Celik, IR-MAD, CCA/KCCA/S3CCA, CVA, spatial DS variants, U-Net/Siamese baselines, and future paper-derived methods.
+
 Before coding a paper-derived or reference-code-derived method, identify the paper section/equation or reference file, the exact satellite sample definition, input/output dimensions, projection or scoring equation, code files/functions to edit, and the toy or smoke check that will prove the implementation is at least shape- and formula-consistent.
 
 When reporting an implemented experiment to the user, explain what source material guided it, what was adapted for Sentinel-2 or another dataset, and what remains an implementation choice rather than paper theory.
