@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DS Satellite Change Detection Learning Map</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #5c6670;
+      --line: #c8d0d8;
+      --paper: #fbfbf8;
+      --panel: #ffffff;
+      --blue: #276fbf;
+      --green: #2f855a;
+      --orange: #c05621;
+      --red: #b83232;
+      --violet: #5f4bb6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.45;
+    }
+    header {
+      padding: 28px 34px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #eef3f7;
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .subtitle { max-width: 980px; color: var(--muted); font-size: 15px; }
+    main { padding: 24px 34px 42px; }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 8px 0;
+      background: var(--paper);
+    }
+    .tab {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab.active { color: #fff; background: var(--blue); border-color: var(--blue); }
+    .section { display: none; }
+    .section.active { display: block; }
+    .grid { display: grid; grid-template-columns: repeat(4, minmax(210px, 1fr)); gap: 16px; align-items: start; }
+    .lane {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      min-height: 240px;
+    }
+    .lane h2 { margin: 0 0 10px; font-size: 16px; }
+    .node {
+      width: 100%;
+      text-align: left;
+      border: 1px solid var(--line);
+      background: #f9fbfd;
+      border-left: 5px solid var(--blue);
+      border-radius: 7px;
+      padding: 9px 10px;
+      margin: 8px 0;
+      cursor: pointer;
+    }
+    .node small { display: block; color: var(--muted); margin-top: 2px; }
+    .node.method { border-left-color: var(--violet); }
+    .node.experiment { border-left-color: var(--orange); }
+    .node.future { border-left-color: var(--green); }
+    .node.risk { border-left-color: var(--red); }
+    .detail {
+      margin-top: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      max-width: 1100px;
+    }
+    .detail h2 { margin: 0 0 8px; font-size: 20px; }
+    .detail p { margin: 8px 0; }
+    .route {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: 10px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    .route strong { color: var(--muted); }
+    .cards { display: grid; grid-template-columns: repeat(3, minmax(260px, 1fr)); gap: 14px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 16px; }
+    .tag {
+      display: inline-block;
+      padding: 2px 7px;
+      margin: 3px 4px 3px 0;
+      border-radius: 999px;
+      background: #edf2f7;
+      color: #354052;
+      font-size: 12px;
+    }
+    code {
+      background: #edf2f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    pre {
+      white-space: pre-wrap;
+      background: #111827;
+      color: #eef2ff;
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; background: var(--panel); }
+    .table-wrap { width: 100%; overflow-x: auto; }
+    th, td { border: 1px solid var(--line); padding: 9px; text-align: left; vertical-align: top; }
+    th { background: #eef3f7; }
+    @media (max-width: 1050px) {
+      .grid, .cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      main, header { padding-left: 18px; padding-right: 18px; }
+      h1 { font-size: 23px; }
+      .subtitle { font-size: 14px; }
+      .grid, .cards { grid-template-columns: 1fr; }
+      .tab { flex: 1 1 calc(50% - 8px); padding: 10px 8px; }
+      .route { grid-template-columns: 1fr; gap: 3px; }
+      th, td { min-width: 190px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Interpretable Subspace Change Detection: Learning Map</h1>
+    <div class="subtitle">
+      A local guide for understanding the project from concepts to experiments. It is intentionally practical:
+      each experiment lists what to learn, what code implements it, what command runs it, and what result would matter.
+    </div>
+  </header>
+
+  <main>
+    <nav class="tabs" aria-label="Learning map sections">
+      <button class="tab active" data-tab="skill-tree">Skill Tree</button>
+      <button class="tab" data-tab="experiments">Experiment Paths</button>
+      <button class="tab" data-tab="validation">Validation Meaning</button>
+      <button class="tab" data-tab="code-flow">Code Flow</button>
+    </nav>
+
+    <section id="skill-tree" class="section active">
+      <div class="grid">
+        <div class="lane">
+          <h2>1. Mathematical Base</h2>
+          <button class="node" data-detail="linear-algebra">Linear Algebra <small>vectors, matrices, basis, projection</small></button>
+          <button class="node" data-detail="pca">PCA <small>rank-r basis from samples</small></button>
+          <button class="node" data-detail="canonical-angles">Canonical Angles <small>compare two subspaces</small></button>
+        </div>
+        <div class="lane">
+          <h2>2. Subspace Methods</h2>
+          <button class="node method" data-detail="ds">Difference Subspace <small>DS from two PCA bases</small></button>
+          <button class="node method" data-detail="kds">KDS / KPCA <small>nonlinear kernel version</small></button>
+          <button class="node method" data-detail="gds">GDS / KGDS <small>three or more subspaces</small></button>
+        </div>
+        <div class="lane">
+          <h2>3. Satellite Adaptation</h2>
+          <button class="node experiment" data-detail="oscd-task">OSCD Task <small>binary pixel-level change map</small></button>
+          <button class="node experiment" data-detail="global-pixel">Global Pixel DS <small>current baseline construction</small></button>
+          <button class="node experiment" data-detail="spatial-ds">Spatial DS Variants <small>window and patch support</small></button>
+        </div>
+        <div class="lane">
+          <h2>4. Future Branches</h2>
+          <button class="node future" data-detail="pyramid">Multiscale Pyramid <small>wavelet / Green Learning lead</small></button>
+          <button class="node future" data-detail="temporal">Temporal GDS <small>MultiSenGE or Harmonized S2</small></button>
+          <button class="node risk" data-detail="risk">Research Risk <small>do not force DS if evidence is weak</small></button>
+        </div>
+      </div>
+      <div id="detail" class="detail">
+        <h2>Click a node</h2>
+        <p>Select a concept or experiment above to see what to learn, what source material matters, and which code path connects to it.</p>
+      </div>
+    </section>
+
+    <section id="experiments" class="section">
+      <div class="cards">
+        <article class="card">
+          <h3>Current Step: Spatial DS Comparison</h3>
+          <p><span class="tag">priority 1</span><span class="tag">OSCD</span><span class="tag">binary segmentation</span></p>
+          <p>Compare global pixel DS, local-window DS, and patch-vector DS against raw L2 and PCA-diff.</p>
+          <pre>.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5</pre>
+        </article>
+        <article class="card">
+          <h3>Next If Positive: Multi-City Expansion</h3>
+          <p><span class="tag">decision gate</span><span class="tag">reproducibility</span></p>
+          <p>Run the same method set on several OSCD cities to see whether gains are stable or city-specific.</p>
+        </article>
+        <article class="card">
+          <h3>Next If Mixed: Rank And Score Ablation</h3>
+          <p><span class="tag">rank 2-12</span><span class="tag">score semantics</span></p>
+          <p>Test whether results depend on PCA rank, normalization, projection-energy definition, or thresholding.</p>
+        </article>
+        <article class="card">
+          <h3>Future: Multiscale Subspace Pyramid</h3>
+          <p><span class="tag">spatial hierarchy</span><span class="tag">wavelet-inspired</span></p>
+          <p>Build subspaces at whole-image, 2x2, 4x4, and finer cells. Treat this as a future experiment until the exact Green Learning / PixelHop source is verified.</p>
+        </article>
+        <article class="card">
+          <h3>Future: KDS / KPCA</h3>
+          <p><span class="tag">nonlinear</span><span class="tag">kernel trick</span></p>
+          <p>Use KPCA/KDS when the linear DS variants are understood and a computationally feasible Sentinel-2 kernel design is specified.</p>
+        </article>
+        <article class="card">
+          <h3>Future: Temporal GDS</h3>
+          <p><span class="tag">multi-date</span><span class="tag">Harmonized S2</span></p>
+          <p>Only after data cadence, cloud filtering, labels/proxies, and temporal subspace construction are clear.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="validation" class="section">
+      <div class="table-wrap"><table>
+        <thead>
+          <tr><th>Question</th><th>Metric / Evidence</th><th>Why It Is Used</th><th>Important Caveat</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Do changed pixels receive higher scores?</td><td>AUROC</td><td>Threshold-free ranking check from binary classification.</td><td>Can look good even if thresholded maps are poor.</td></tr>
+          <tr><td>Does the method work under class imbalance?</td><td>Average precision / PR-AUC</td><td>Change pixels are rare, so precision-recall behavior matters.</td><td>Still threshold-free; does not itself produce a binary mask.</td></tr>
+          <tr><td>Can the score become a mask without labels?</td><td>Otsu F1 and IoU</td><td>Otsu gives an unsupervised histogram threshold.</td><td>Otsu can fail if score histograms are not bimodal.</td></tr>
+          <tr><td>What is the optimistic upper bound?</td><td>Best F1 / best IoU</td><td>Shows whether the score contains useful signal at any threshold.</td><td>Uses labels to choose threshold; not deployable.</td></tr>
+          <tr><td>Is DS just raw difference again?</td><td>Correlation with raw L2</td><td>Detects redundancy with naive spectral-difference magnitude.</td><td>Low correlation is not automatically good; it must still match labels/maps.</td></tr>
+          <tr><td>Does spatial support help?</td><td>Maps + metrics across global/window/patch</td><td>Directly tests Sensei's spatial-information concern.</td><td>Patch/window choices are adaptations, not original DS theory.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Source anchors: OSCD / FC-Siamese work reports change-class precision, recall, and F1; scikit-learn defines AUROC and average precision; Otsu thresholding is the standard histogram-based unsupervised threshold check.</p>
+    </section>
+
+    <section id="code-flow" class="section">
+      <div class="table-wrap"><table>
+        <thead>
+          <tr><th>Stage</th><th>File / Function</th><th>What To Read</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Load Sentinel-2 bands</td><td><code>phase1/data/oscd_dataset.py</code></td><td><code>_stack_bands</code>, <code>load_city</code></td></tr>
+          <tr><td>Normalize and vectorize</td><td><code>phase1/data/preprocessing.py</code></td><td><code>apply_normalization</code>, <code>vectorize_cube</code></td></tr>
+          <tr><td>PCA basis</td><td><code>phase1/ds/pca_utils.py</code></td><td><code>fit_pca_basis</code></td></tr>
+          <tr><td>Canonical DS</td><td><code>phase1/ds/pca_utils.py</code></td><td><code>difference_subspace_canonical</code></td></tr>
+          <tr><td>Global DS score</td><td><code>phase1/ds/ds_scores.py</code></td><td><code>compute_ds_scores</code></td></tr>
+          <tr><td>Spatial comparison</td><td><code>phase1/scripts/compare_oscd_spatial_subspaces.py</code></td><td><code>global_pixel_ds_score</code>, <code>local_window_ds_score</code>, <code>patch_vector_ds_score</code></td></tr>
+          <tr><td>One-line runner</td><td><code>project_cli.py</code></td><td><code>phase1-spatial-subspace-compare</code></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <script>
+    const details = {
+      "linear-algebra": ["Linear Algebra", "You need basis vectors, orthogonal projection, residual projection, and matrix shapes. In this project, the key object is a data matrix X where columns are samples and rows are features.", "Read first: basis/projection/PCA notes in any linear algebra ML text.", "Code link: phase1/data/preprocessing.py::vectorize_cube shows how image pixels become columns."],
+      "pca": ["PCA", "PCA turns a sample matrix into a rank-r orthonormal basis. For current OSCD global DS, X_pre and X_post are in R^(13 x N), and rank 6 returns a 13 x 6 basis per date.", "Read first: PCA sections, then phase1/ds/pca_utils.py::fit_pca_basis.", "Experiment link: rank sensitivity is the next check after spatial comparison."],
+      "canonical-angles": ["Canonical Angles", "Canonical angles compare two subspaces. DS uses principal/canonical vector ideas to extract directions that differ between subspaces.", "Read first: Fukui/Maki TPAMI 2015 DS section and Sensei subspace overview notes.", "Code link: phase1/ds/pca_utils.py::difference_subspace_canonical."],
+      "ds": ["Difference Subspace", "Current paper-faithful linear DS path uses canonical/principal vectors. The code path is phase1.ds.pca_utils.difference_subspace_canonical.", "Read first: TPAMI 2015 first-order DS, then inspect_oscd_subspace.py.", "Experiment link: phase1-spatial-subspace-compare compares DS sample definitions."],
+      "kds": ["KDS / KPCA", "KDS is the kernel/nonlinear extension. Sensei's Venus files are the learning reference. Do not use KDS as OSCD evidence until a feasible kernel design is implemented.", "Read first: TPAMI 2015 nonlinear KDS/KGDS and Venus demo notes.", "Code link: phase1/scripts/venus_kds_demo.py and phase1/subspace/kernel_difference_subspace.py."],
+      "gds": ["GDS / KGDS", "GDS compares three or more subspaces. It is more natural for multi-date data such as MultiSenGE or Harmonized Sentinel-2 than for two-date OSCD.", "Read first: TPAMI 2015 GDS/KGDS and second-order DS leads.", "Experiment link: future Harmonized Sentinel-2 or MultiSenGE temporal feasibility check."],
+      "oscd-task": ["OSCD Task", "Machine-learning task: binary pixel-level change segmentation. Input is pre/post 13-band Sentinel-2 images. Output is a changed/unchanged pixel map.", "Read first: OSCD / Daudt et al. and docs/PROJECT_BRIEF.md.", "Code link: phase1/data/oscd_dataset.py and phase2/data loaders."],
+      "global-pixel": ["Global Pixel DS", "One valid pixel is one 13-D sample. This is simple and implemented, but it ignores pixel location while fitting PCA.", "Read first: notes/methods.md global pixel construction card.", "Run first: project_cli.py phase1-subspace-inspect --city beirut --rank 6."],
+      "spatial-ds": ["Spatial DS Variants", "Local-window DS fits a subspace per region. Patch-vector DS makes each sample a local 3x3x13 or 5x5x13 patch. These directly test the spatial-information concern.", "Read first: notes/experiments.md immediate next experiment.", "Run now: project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5."],
+      "pyramid": ["Multiscale Subspace Pyramid", "Future idea: whole image -> 2x2 cells -> 4x4 cells -> finer cells, inspired by multiscale/wavelet/Green Learning notes. Must verify source before naming it Green Learning.", "Read first: PixelHop/Green Learning/wavelet notes after spatial DS results.", "Experiment link: future multiscale_subspace_pyramid, not implemented yet."],
+      "temporal": ["Temporal GDS", "Future idea: one subspace per date or time segment, then DS/GDS/second-order DS/geodesic analysis across time. Needs multi-date data and evaluation proxy.", "Read first: MultiSenGE/Harmonized Sentinel-2 notes and temporal subspace references.", "Experiment link: future temporal feasibility audit before GDS/KGDS claims."],
+      "risk": ["Research Risk", "If spatial DS does not beat raw L2/PCA-diff or produce clearer maps, stop claiming DS superiority. A negative diagnostic thesis is still possible if the evidence is rigorous.", "Read first: docs/RESEARCH_RESET_AUDIT.md critique sections.", "Decision rule: compare against raw L2, PCA-diff, and U-Net before making thesis claims."]
+    };
+    document.querySelectorAll(".tab").forEach(button => {
+      button.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+        button.classList.add("active");
+        document.getElementById(button.dataset.tab).classList.add("active");
+      });
+    });
+    document.querySelectorAll(".node").forEach(button => {
+      button.addEventListener("click", () => {
+        const [title, body, read, action] = details[button.dataset.detail];
+        document.getElementById("detail").innerHTML = `<h2>${title}</h2><p>${body}</p><div class="route"><strong>Learn / read</strong><span>${read}</span><strong>Use / run</strong><span>${action}</span></div>`;
+        document.getElementById("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+      });
+    });
+  </script>
+</body>
+</html>
