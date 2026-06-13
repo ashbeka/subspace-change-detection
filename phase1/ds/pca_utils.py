@@ -38,8 +38,12 @@ def fit_pca_basis(
     # sklearn expects samples x features, so transpose
     samples = x.T
     solver = "randomized" if use_randomized else "full"
-    # Fit full PCA once, then truncate to desired rank/energy
-    pca_full = PCA(n_components=min(samples.shape), svd_solver=solver, random_state=random_state)
+    if variance_threshold is None and rank is not None:
+        n_components = max(1, min(int(rank), min(samples.shape)))
+    else:
+        # Fit full PCA once, then truncate to desired energy.
+        n_components = min(samples.shape)
+    pca_full = PCA(n_components=n_components, svd_solver=solver, random_state=random_state)
     pca_full.fit(samples)
 
     if variance_threshold is not None:

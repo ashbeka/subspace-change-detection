@@ -302,7 +302,7 @@ geodesic_dist
 
 Phase 2 prior loading expects exactly this structure.
 
-## 5A. Phase 1: Spatial Subspace Audit Workflow
+## 5A. Phase 1: Spatial Subspace Comparison Workflow
 
 Current research priority:
 
@@ -316,19 +316,19 @@ Source-linked implementation rule:
 source material -> math object -> satellite adaptation -> code path -> toy check -> one-city map -> thesis claim
 ```
 
-Existing command for current global subspace correctness audit:
+Existing command for current global subspace construction inspection:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-subspace-audit --city beirut --rank 6 --split auto
+.\.venv\Scripts\python.exe project_cli.py phase1-subspace-inspect --city beirut --rank 6 --split auto
 ```
 
 Equivalent raw command:
 
 ```powershell
-.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_subspace.py --city beirut --rank 6 --split auto
+.\.venv\Scripts\python.exe phase1/scripts/inspect_oscd_subspace.py --city beirut --rank 6 --split auto
 ```
 
-What this existing audit proves:
+What this inspection proves:
 
 - OSCD loads correctly for one city.
 - The data matrix is `X_pre, X_post in R^(13 x N)`.
@@ -342,36 +342,45 @@ What it does not yet prove:
 - multiscale subspace pyramid;
 - city-level metric maps and visual outputs for the spatial variants.
 
-Next code task:
+Spatial comparison command:
 
-```text
-implement phase1/scripts/audit_oscd_spatial_subspace.py
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5
 ```
 
-Planned first command after that script exists:
+Equivalent raw command:
 
 ```powershell
 $tag = Get-Date -Format "yyyyMMdd_HHmmss"
-.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_spatial_subspace.py `
+.\.venv\Scripts\python.exe phase1/scripts/compare_oscd_spatial_subspaces.py `
   --city beirut `
   --rank 6 `
   --methods global_pixel,window128,patch3,patch5 `
-  --output_dir "phase1/outputs/oscd_spatial_subspace_audit_$tag"
+  --output_dir "phase1/outputs/oscd_spatial_subspace_compare_$tag"
 ```
 
-Planned outputs:
+Outputs:
 
 ```text
-metrics.csv
+spatial_subspace_metrics.csv
 run_metadata.json
-global_pixel_ds.png
-window128_ds.png
-patch3_ds.png
-patch5_ds.png
-raw_l2.png
-pca_diff.png
+score_maps/raw_l2.png
+score_maps/pca_diff.png
+score_maps/global_pixel.png
+score_maps/window128s64mean.png
+score_maps/patch3.png
+score_maps/patch5.png
 comparison_grid.png
 ```
+
+Validation meaning:
+
+- `AUROC`: threshold-free ranking check; higher means OSCD changed pixels usually receive higher scores than unchanged pixels.
+- `average_precision`: precision-recall ranking check; more informative than accuracy when changed pixels are rare.
+- `best F1/IoU`: oracle diagnostic threshold chosen with labels. Useful for upper-bound diagnosis, not deployable evidence.
+- `Otsu F1/IoU`: unsupervised threshold check based only on the score histogram.
+- `raw_l2_corr`: redundancy check; if a DS score is almost perfectly correlated with raw spectral L2, it is probably not adding a distinct geometric signal.
+- `raw_l2` and `pca_diff`: baseline pressure so DS is not compared only against itself.
 
 Queued later variant:
 

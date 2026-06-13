@@ -1,5 +1,5 @@
 """
-Audit how OSCD subspaces are built and how DS variants behave.
+Inspect how OSCD subspaces are built and how DS variants behave.
 
 This script is intentionally read-only: it loads one OSCD city, builds the
 pre/post PCA subspaces, and compares legacy/eig/canonical DS projection scores
@@ -29,7 +29,7 @@ VARIANTS = ["legacy_residual_stack", "eig", "canonical"]
 
 
 def parse_args() -> argparse.Namespace:
-    ap = argparse.ArgumentParser(description="Audit OSCD PCA/DS construction for one city.")
+    ap = argparse.ArgumentParser(description="Inspect OSCD PCA/DS construction for one city.")
     ap.add_argument("--oscd_root", type=Path, default=Path("data/OSCD"))
     ap.add_argument("--stats_path", type=Path, default=Path("phase1/data/oscd_band_stats.json"))
     ap.add_argument("--city", default="beirut")
@@ -102,7 +102,7 @@ def main() -> None:
     diff = (x2_mat[:, sel] - x1_mat[:, sel]).astype(np.float32, copy=False)
     raw_l2 = np.sum(diff * diff, axis=0)
 
-    print("OSCD subspace audit")
+    print("OSCD subspace inspection")
     print(f"  city/split: {sample.city}/{split}")
     print(f"  cube shape: pre={sample.x_pre.shape}, post={sample.x_post.shape}")
     print(f"  matrix shape: X_pre={x1_mat.shape}, X_post={x2_mat.shape}")

@@ -91,7 +91,9 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("list", "inventory", "List commands, configs, scripts, outputs, or everything.", ["list", "all"]),
     CommandInfo("phase1-oscd-priors", "phase1", "Generate OSCD unsupervised prior maps.", ["phase1-oscd-priors", "--config", "canonical"]),
     CommandInfo("phase1-oscd-geodesic", "phase1", "Generate OSCD local geodesic prior maps.", ["phase1-oscd-geodesic"]),
-    CommandInfo("phase1-subspace-audit", "phase1", "Audit OSCD PCA/DS construction for one city.", ["phase1-subspace-audit", "--city", "beirut"]),
+    CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
+    CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
+    CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
     CommandInfo("phase1-viz-examples", "visualization", "Draw OSCD pre/post/GT/diff/DS example figures.", ["phase1-viz-examples", "--cities", "test"]),
     CommandInfo("phase1-viz-method-grid", "visualization", "Draw saved Phase 1 prior maps side by side.", ["phase1-viz-method-grid", "--prior-root", "full"]),
@@ -107,7 +109,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase2-viz-predictions", "visualization", "Visualize segmentation predictions for one checkpoint.", ["phase2-viz-predictions", "--config", "e1-ds", "--checkpoint", "<best.ckpt>"]),
     CommandInfo("phase2-viz-combined", "visualization", "Visualize Phase 1 priors plus Phase 2 predictions.", ["phase2-viz-combined", "--config", "e3-ds-pca", "--checkpoint", "<best.ckpt>"]),
     CommandInfo("cleanup", "maintenance", "Preview or apply generated-output cleanup.", ["cleanup"], "Preview by default; --apply is destructive."),
-    CommandInfo("run-python-script", "escape hatch", "Run any repo Python script through the project venv.", ["run-python-script", "phase1/scripts/audit_oscd_subspace.py"]),
+    CommandInfo("run-python-script", "escape hatch", "Run any repo Python script through the project venv.", ["run-python-script", "phase1/scripts/inspect_oscd_subspace.py"]),
     CommandInfo("run-module", "escape hatch", "Run any Python module through the project venv.", ["run-module", "phase2.eval.analyze_sweep_results"]),
     CommandInfo("run-ps1", "escape hatch", "Run any repo PowerShell script.", ["run-ps1", "phase2/scripts/run_phase2_sweep.ps1"]),
 ]
@@ -354,10 +356,10 @@ def cmd_phase1_oscd_geodesic(args: argparse.Namespace) -> int:
     return run_command(cmd, dry_run=args.dry_run)
 
 
-def cmd_phase1_subspace_audit(args: argparse.Namespace) -> int:
+def cmd_phase1_subspace_inspect(args: argparse.Namespace) -> int:
     cmd = [
         str(venv_python()),
-        "phase1/scripts/audit_oscd_subspace.py",
+        "phase1/scripts/inspect_oscd_subspace.py",
         "--oscd_root",
         args.oscd_root,
         "--city",
@@ -371,6 +373,37 @@ def cmd_phase1_subspace_audit(args: argparse.Namespace) -> int:
         "--seed",
         str(args.seed),
     ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spatial_subspace_compare(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/oscd_spatial_subspace_compare_{args.city}_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/compare_oscd_spatial_subspaces.py",
+        "--oscd_root",
+        args.oscd_root,
+        "--stats_path",
+        args.stats_path,
+        "--city",
+        args.city,
+        "--split",
+        args.split,
+        "--rank",
+        str(args.rank),
+        "--methods",
+        args.methods,
+        "--output_dir",
+        out,
+        "--seed",
+        str(args.seed),
+        "--max_fit_samples",
+        str(args.max_fit_samples),
+        "--score_chunk_size",
+        str(args.score_chunk_size),
+    ]
+    if not args.save_npy:
+        cmd.append("--no-save-npy")
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -983,7 +1016,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_oscd_geodesic)
 
-    p = sub.add_parser("phase1-subspace-audit", help="Audit OSCD PCA/DS construction for one city.")
+    p = sub.add_parser("phase1-subspace-inspect", help="Inspect OSCD PCA/DS construction for one city.")
     p.add_argument("--oscd-root", default="data/OSCD")
     p.add_argument("--city", default="beirut")
     p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
@@ -991,7 +1024,32 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--sample-pixels", type=int, default=200000)
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--dry-run", action="store_true")
-    p.set_defaults(func=cmd_phase1_subspace_audit)
+    p.set_defaults(func=cmd_phase1_subspace_inspect)
+
+    p = sub.add_parser("phase1-spatial-subspace-compare", help="Compare global/window/patch DS score maps on one OSCD city.")
+    p.add_argument("--oscd-root", default="data/OSCD")
+    p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
+    p.add_argument("--city", default="beirut")
+    p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
+    p.add_argument("--rank", type=int, default=6)
+    p.add_argument("--methods", default="global_pixel,window128,patch3,patch5")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-fit-samples", type=int, default=20000)
+    p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=True)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spatial_subspace_compare)
+
+    p = sub.add_parser("phase1-subspace-audit", help="Compatibility alias for phase1-subspace-inspect.")
+    p.add_argument("--oscd-root", default="data/OSCD")
+    p.add_argument("--city", default="beirut")
+    p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
+    p.add_argument("--rank", type=int, default=6)
+    p.add_argument("--sample-pixels", type=int, default=200000)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_subspace_inspect)
 
     p = sub.add_parser("phase1-multisenge-manifest", help="Build a small MultiSenGE temporal manifest.")
     p.add_argument("--multisenge-root", default="data/MultiSenGE")

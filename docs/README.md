@@ -24,6 +24,9 @@ Read these first:
 4. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the current major OSCD 3-seed sweep.
 
+5. `research_learning_map.html`
+   - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
+
 ## 2. Source Records
 
 `source_records/` preserves original human-facing project records:

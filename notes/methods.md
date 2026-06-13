@@ -568,7 +568,7 @@ Do not jump from source directly to large experiments. Do not promote a method t
 
 Use this order when re-checking the DS/KDS implementation:
 
-1. `phase1/scripts/audit_oscd_subspace.py`
+1. `phase1/scripts/inspect_oscd_subspace.py`
    - Load one city, normalize, vectorize, fit PCA, compare legacy/eig/canonical DS.
 2. `phase1/data/preprocessing.py`
    - Focus on `vectorize_cube` and `devectorize_cube`.

@@ -64,6 +64,7 @@ This question is also draft. If a better research gap is found, update the frami
 - Do not create new files unless the file has a clear responsibility and cannot fit into the existing structure.
 - Avoid "AI slop": redundant documents, vague names, repeated summaries, or inflated claims.
 - When a terminal command is useful for the user, provide the exact command.
+- Prefer one-line copy-paste commands for user-facing execution. Multi-line PowerShell commands are acceptable for readability in docs, but always provide a one-line equivalent when the user is expected to run it.
 - Prefer `project_cli.py` for common project checks, run listings, formula tests, wrapped sweeps, and cleanup previews. Use raw script commands when debugging or when the CLI does not expose the needed option.
 - If an action is destructive, broad, or expensive, propose the plan first and wait.
 - Do not run long training, large sweeps, large cleanup, or major restructuring without explicit approval.
@@ -229,7 +230,7 @@ For subspace experiments, always explain subspace construction first. Use the co
 
 ## Current Priority
 
-Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace audit:
+Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace comparison:
 
 ```text
 global pixel DS vs patch-vector DS vs local-window DS
@@ -237,4 +238,4 @@ global pixel DS vs patch-vector DS vs local-window DS
 
 This directly answers Sensei's concern that the current global pixel-based subspace may break spatial information.
 
-The audit should compare metrics and maps against OSCD labels and simple baselines such as raw spectral L2 and PCA-diff.
+The comparison should report metrics and maps against OSCD labels and simple baselines such as raw spectral L2 and PCA-diff.

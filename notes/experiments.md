@@ -32,7 +32,7 @@ Code and smoke evidence:
 - CUDA is available in the local `.venv`.
 - Phase 1 and Phase 2 output CSV/JSON artifacts can be read.
 
-Subspace audit evidence:
+Subspace inspection evidence:
 
 ```text
 legacy residual-stack DS: almost raw L2 on Beirut
@@ -51,6 +51,34 @@ Interpretation:
 
 - Paper-faithful global canonical DS is weaker than simple baselines on OSCD in that run.
 - This pushes the project toward spatial/local/kernel variants or toward a narrower diagnostic interpretation.
+
+Spatial subspace first run, Beirut, 2026-06-13:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5 --no-save-npy
+```
+
+Output:
+
+```text
+phase1/outputs/oscd_spatial_subspace_compare_beirut_20260613_192736/
+```
+
+| method | AUROC | AP | best F1 | Otsu F1 | raw-L2 corr |
+|---|---:|---:|---:|---:|---:|
+| raw_l2 | 0.8327 | 0.4054 | 0.4335 | 0.1740 | 1.0000 |
+| pca_diff | 0.9183 | 0.5284 | 0.5105 | 0.4910 | 0.8667 |
+| global_pixel | 0.7287 | 0.0754 | 0.1376 | 0.0000 | 0.1408 |
+| window128s64mean | 0.7135 | 0.0781 | 0.1300 | 0.0000 | 0.2102 |
+| patch3 | 0.8413 | 0.1887 | 0.2722 | 0.1767 | 0.4280 |
+| patch5 | 0.8923 | 0.2729 | 0.3473 | 0.3429 | 0.4962 |
+
+Interpretation:
+
+- Patch-vector DS is clearly better than current global pixel DS on Beirut in this first run.
+- Patch5 is stronger than raw L2 on AUROC and Otsu F1, but still weaker than PCA-diff.
+- Local-window DS with `128x128` windows does not help in this run.
+- This justifies multi-city spatial DS comparison; it is not yet a thesis-level claim.
 
 ## 3. Main Completed Sweep
 
@@ -125,7 +153,7 @@ Implementation note:
 Implement:
 
 ```text
-phase1/scripts/audit_oscd_spatial_subspace.py
+phase1/scripts/compare_oscd_spatial_subspaces.py
 ```
 
 Compare:
@@ -176,24 +204,19 @@ Research interpretation:
 Suggested first command shape:
 
 ```powershell
-$tag = Get-Date -Format "yyyyMMdd_HHmmss"
-.\.venv\Scripts\python.exe phase1/scripts/audit_oscd_spatial_subspace.py `
-  --city beirut `
-  --rank 6 `
-  --methods global_pixel,patch3,patch5,window128 `
-  --output_dir "phase1/outputs/oscd_spatial_subspace_audit_$tag"
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5
 ```
 
 Expected outputs:
 
-- `metrics.csv`
+- `spatial_subspace_metrics.csv`
 - `run_metadata.json`
-- `global_pixel_ds.png`
-- `patch3_ds.png`
-- `patch5_ds.png`
-- `window128_ds.png`
-- `raw_l2.png`
-- `pca_diff.png`
+- `score_maps/global_pixel.png`
+- `score_maps/patch3.png`
+- `score_maps/patch5.png`
+- `score_maps/window128s64mean.png`
+- `score_maps/raw_l2.png`
+- `score_maps/pca_diff.png`
 - side-by-side comparison figure with pre RGB, post RGB, ground truth, and all tested maps.
 
 Acceptance checks:

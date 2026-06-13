@@ -86,9 +86,17 @@ Subspace correction:
 - It is now treated as legacy.
 - Canonical/eig DS are the cleaner linear DS paths.
 
+First spatial-subspace result, Beirut, 2026-06-13:
+
+- `patch5` DS outperformed current global pixel DS on AUROC, AP, best F1, and Otsu F1.
+- `patch5` also beat raw L2 on AUROC and Otsu F1.
+- `patch5` remained weaker than PCA-diff.
+- `window128s64mean` did not improve over global pixel DS.
+- This is one-city evidence only; it supports continuing the spatial DS comparison, not a thesis claim yet.
+
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, run a spatial subspace audit:
+Before more long U-Net sweeps, expand the spatial subspace comparison:
 
 ```text
 global pixel DS vs patch-vector DS vs local-window DS

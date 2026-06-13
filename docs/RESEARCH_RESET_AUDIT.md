@@ -59,7 +59,7 @@ Main active entry points:
 
 - `python project_cli.py doctor`
 - `python project_cli.py list`
-- `python project_cli.py phase1-subspace-audit --city beirut`
+- `python project_cli.py phase1-subspace-inspect --city beirut`
 - `python project_cli.py phase1-oscd-priors --config canonical`
 - `python project_cli.py phase1-venus`
 - `python project_cli.py phase2-sweep --preset core --progress-bars`
@@ -670,7 +670,7 @@ Acceptable negative result:
 
 Immediate:
 
-- implement or finish `audit_oscd_spatial_subspace.py`. [recommendation]
+- implement or finish `compare_oscd_spatial_subspaces.py`. [recommendation]
 - compare global pixel DS, patch-vector DS, and local-window DS. [recommendation]
 - include raw L2/CVA and PCA-diff. [recommendation]
 - run on Beirut plus two contrasting cities. [recommendation]
@@ -754,7 +754,7 @@ Day 1:
 
 Day 2:
 
-- implement `phase1/scripts/audit_oscd_spatial_subspace.py`. [recommendation]
+- implement `phase1/scripts/compare_oscd_spatial_subspaces.py`. [recommendation]
 - start with global pixel DS, patch `3x3`, patch `5x5`, local window `128`. [recommendation]
 
 Day 3:
