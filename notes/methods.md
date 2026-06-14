@@ -103,6 +103,42 @@ phase1/outputs/<run>/oscd_change_maps/<split>/<method>/<city>_score.npy
 
 Phase 2 can load those maps as extra input channels.
 
+### Feature-Extraction-Like Role
+
+The project does not currently have one single learned feature extractor whose purpose is "understand the raw data" before change detection.
+
+Instead, it has several feature-extraction-like transforms:
+
+1. Raw spectral stack:
+   - Input is still raw data: `pre 13 bands + post 13 bands`.
+   - This is not feature extraction; it is the baseline representation given directly to the model or classical methods.
+
+2. PCA/subspace construction:
+   - This is the main classical feature-extraction-like step.
+   - It converts many sample vectors into a lower-dimensional basis.
+   - For global OSCD DS, samples are `13-D` pixel vectors and PCA produces a `13 x r` basis.
+   - For patch DS, samples are `k x k x 13` patch vectors and PCA produces a basis in patch-feature space.
+
+3. DS projection score:
+   - This is not a generic feature extractor; it is a change-specific transform.
+   - It uses the pre/post subspace relationship to turn each pixel or patch difference into a scalar change score.
+   - The output is an interpretable prior/change map, not a learned representation.
+
+4. Other classical transforms:
+   - PCA-diff, Celik PCA-kmeans, raw L2/CVA, and IR-MAD also act like handcrafted feature/change extractors.
+   - They summarize pre/post multispectral differences into score maps or transformed variables.
+
+5. Neural feature extraction:
+   - U-Net/Siamese U-Net learn internal convolutional features during Phase 2.
+   - Those learned features are currently used for supervised segmentation, not for explaining the raw data.
+   - A future deep-feature subspace experiment could explicitly extract CNN/remote-sensing encoder features and build subspaces from them, but that is not the current implemented core.
+
+Short answer:
+
+```text
+The current "feature extraction" layer is classical PCA/subspace-derived prior-map generation, especially DS/PCA-diff/Celik/IR-MAD. It is used to turn raw 13-band pre/post Sentinel-2 data into interpretable change-score maps. The U-Net also learns features internally, but that is not the project's main explanatory feature-extraction method yet.
+```
+
 ## 4. Spectral Change Versus Semantic Change
 
 DS, PCA-diff, pixel difference, CVA, Celik, and IR-MAD are unsupervised spectral/radiometric change methods.
