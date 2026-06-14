@@ -25,6 +25,7 @@
   - [Paper-to-code verification](#paper-to-code-verification)
   - [Prior folder naming](#prior-folder-naming)
   - [Baseline interpretation](#baseline-interpretation)
+  - [IR-MAD versus DS](#ir-mad-versus-ds)
   - [Phase 1 thresholding vs Phase 2 priors](#phase-1-thresholding-vs-phase-2-priors)
   - [Phase 1 engineering details](#phase-1-engineering-details)
   - [Split and evaluation caveats](#split-and-evaluation-caveats)
@@ -620,6 +621,34 @@ priors_oscd_classical_full
 - `pixel_diff` and CVA are effectively the same spectral L2 magnitude in the current code. Do not present them as independent methods unless the implementation is changed or the duplication is explicitly stated.
 - Runtime claims from old Phase 1 summaries are unsafe unless timing is instrumented per method. Do not claim one prior is faster/slower from mixed old logs alone.
 - Geodesic-prior smoke logs contain `NotGeoreferencedWarning`; do not assume real geospatial coordinates from those rasters unless metadata is separately verified.
+
+### IR-MAD versus DS
+
+IR-MAD should be treated as a required classical comparison baseline, not a side option.
+
+Relationship to DS:
+
+| point | DS / patch DS | IR-MAD |
+|---|---|---|
+| data object | pre/post multispectral images | pre/post multispectral images |
+| linear algebra family | PCA subspaces, principal vectors, Difference Subspace | CCA, MAD variates, iteratively reweighted CCA |
+| sample pairing | current score uses `x_post - x_pre`; global subspace fitting treats pixels as unordered samples | paired pre/post pixels are central to the MAD variates |
+| background/no-change model | implicit through PCA basis and DS score | explicit through iterative reweighting of likely unchanged observations |
+| spatial information | global version loses position during fitting; patch/window variants add local support | standard IR-MAD is also mostly spectral/global unless localized or patched |
+| thesis role | proposed/adapted method family | established remote-sensing baseline and CCA pressure test |
+
+Why it matters:
+
+- IR-MAD is close enough to DS to pressure the project fairly: both are multivariate linear representations of pre/post change.
+- It is different enough that beating or complementing it would mean something: IR-MAD uses CCA/MAD and iterative reweighting, while DS uses PCA subspaces and difference directions.
+- If IR-MAD outperforms DS, the project should not hide that. It would push the thesis toward spatial DS, KDS/KPCA, temporal GDS/KGDS, or an interpretability/diagnostic framing.
+- If patch DS and IR-MAD fail in different places, that may support a hybrid-prior or false-positive-diagnosis contribution.
+
+Current implementation caution:
+
+- `phase1/baselines/ir_mad.py` is a compact implementation, not yet a paper-faithful trusted baseline.
+- Before strong claims, check the generalized eigenproblem, covariance regularization, iterative weights, chi-square weighting, convergence, normalization, and threshold policy against Nielsen/MAD/iMAD references.
+- Until this audit is done, old weak IR-MAD numbers are not evidence that IR-MAD is weak.
 
 ### Phase 1 thresholding vs Phase 2 priors
 

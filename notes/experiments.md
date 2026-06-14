@@ -214,6 +214,30 @@ Acceptance checks:
 - maps are inspected for false positives from water, shadows, vegetation, registration, and city-specific artifacts;
 - the thesis claim remains diagnostic unless DS-family maps beat or explain baselines consistently.
 
+Concrete near-term checklist:
+
+1. Inspect core5 comparison grids:
+   - Open every `comparison_grid.png` under `phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823/runs/`.
+   - Record where patch5 helps and where it fails.
+   - Specifically check Beirut, Dubai, Las Vegas, Milan, and Norcia for water, vegetation, shadows, registration offsets, city texture, and low-change-label effects.
+   - Outcome: short failure-mode table before more code changes.
+
+2. Patch-score definition ablation:
+   - Compare squared projection norm, unsquared projection norm, normalized projection ratio, residual energy, and per-city robust scaling.
+   - Keep the sample definition fixed first: patch3 and patch5 at rank 8.
+   - Baselines in the same table: raw L2/CVA and PCA-diff.
+   - Outcome: decide whether DS is weak because of sample construction or because the scalar score is poorly calibrated.
+
+3. Celik pressure baseline:
+   - Compare patch-vector DS directly against Celik PCA-kmeans because Celik already uses local difference-image patches.
+   - This is the closest classical spatial-patch pressure baseline, not just another optional method.
+   - Outcome: if Celik beats patch DS clearly, the thesis cannot claim patch DS is a strong spatial classical detector without a narrower interpretability argument.
+
+4. IR-MAD fair-comparison audit:
+   - Treat IR-MAD as a required classical multivariate baseline because it is established in remote-sensing change detection and is CCA-related.
+   - Do not trust the current lightweight implementation until it is checked against Nielsen/MAD/iMAD references.
+   - Outcome: either a paper-faithful IR-MAD score map in the same Phase 1 comparison table, or a clearly documented reason it is not yet fair to compare.
+
 ## 6. Other Important Experiments To Queue
 
 1. Valid-mask audit:
@@ -315,8 +339,27 @@ Acceptance checks:
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
 17. IR-MAD fair-comparison audit:
-   - Recheck band selection, normalization, covariance regularization, subsampling seed, and threshold calibration.
-   - Do not claim IR-MAD is weak from old runs unless this audit supports it.
+   - Sources:
+     - Nielsen 2007 regularized IR-MAD paper;
+     - Nielsen/Conradsen MAD/CCA formulation;
+     - Google Earth Engine MAD/iMAD tutorial and Mort Canty reference material if used.
+   - Why it matters:
+     - IR-MAD is a mature multivariate remote-sensing change detector.
+     - It is based on CCA/MAD variates and is therefore close enough to DS to be a serious comparison pressure baseline.
+     - Sensei and seminar feedback already pushed toward CCA, so ignoring IR-MAD would weaken the thesis.
+   - Audit before claims:
+     - Check whether `phase1/baselines/ir_mad.py` solves the correct CCA/generalized eigenproblem.
+     - Verify whether iterative reweighting emphasizes likely unchanged observations correctly.
+     - Recheck band selection, normalization, covariance regularization, subsampling seed, convergence behavior, chi-square weighting, and threshold calibration.
+     - Test equal-image/no-change toy behavior and a simple synthetic changed-pixel case.
+   - Fair comparison:
+     - Compare against raw L2/CVA, PCA-diff, Celik PCA-kmeans, global canonical DS, patch3 DS, and patch5 DS.
+     - Use the same OSCD cities, valid masks, score normalization policy, AUROC, PR-AUC/AP, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, and visual grids.
+     - Inspect whether IR-MAD reduces pseudo-change from radiometric/background effects better than DS or PCA-diff.
+   - Decision:
+     - If IR-MAD beats DS, use that as honest evidence that DS needs a spatial, nonlinear, temporal, or interpretability-specific justification.
+     - If patch DS complements IR-MAD on specific false-positive/false-negative modes, that may support an interpretable hybrid-prior framing.
+     - Do not claim IR-MAD is weak from old runs unless this audit supports it.
 
 18. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.

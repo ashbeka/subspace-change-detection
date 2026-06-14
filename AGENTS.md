@@ -66,6 +66,7 @@ This question is also draft. If a better research gap is found, update the frami
 - When a terminal command is useful for the user, provide the exact command.
 - Prefer one-line copy-paste commands for user-facing execution. Multi-line PowerShell commands are acceptable for readability in docs, but always provide a one-line equivalent when the user is expected to run it.
 - Prefer `project_cli.py` for common project checks, run listings, formula tests, wrapped sweeps, and cleanup previews. Use raw script commands when debugging or when the CLI does not expose the needed option.
+- When suggesting a concrete next step, experiment, audit, reading task, code task, or decision gate, persist it in the appropriate active note during the same turn whenever it is more than a one-off answer. Do not leave important future work only in chat.
 - If an action is destructive, broad, or expensive, propose the plan first and wait.
 - Do not run long training, large sweeps, large cleanup, or major restructuring without explicit approval.
 - Lightweight smoke tests, inspections, and audits are allowed when useful.
@@ -126,6 +127,25 @@ Use lightweight labels instead of large templates:
 Do not make a new "gap file" by default. Create one only if gap tracking across the project becomes too large for the functional notes.
 
 Research-gap tracking should be dataset-agnostic when possible. For example, state "Do subspace priors preserve spatial structure in multispectral change detection?" before narrowing to "Does this hold on OSCD?" This keeps the project flexible when Sensei suggests new datasets such as Harmonized Sentinel-2 L2A.
+
+## Suggestion Persistence
+
+Chat is not durable enough for research planning. If Codex recommends something that the project may need later, it must either:
+
+- update the relevant active note immediately; or
+- explicitly say why it is only a transient answer and does not need persistence.
+
+Default locations:
+
+- `notes/experiments.md`: experiment/audit/backlog tasks, metrics, commands, decision gates, and "do not run X until Y" constraints.
+- `notes/methods.md`: method relationships, formulas, implementation caveats, source-to-code interpretation, and subspace construction details.
+- `notes/literature.md`: papers, baselines, datasets, reference code, citations, and novelty/comparison pressure.
+- `notes/feedback.md`: advisor/senpai/seminar questions and unanswered concerns.
+- `notes/research_paper_plan.md`: thesis framing, safe claims, forbidden claims, and argument structure.
+- `docs/RUNBOOK.md`: commands the user is expected to rerun.
+- `docs/PROJECT_BRIEF.md`: only major status changes that affect the current project truth.
+
+When reviewing recent chat for missed tasks, convert only actionable items into notes. Avoid copying conversational wording or creating new files. If the task already exists, strengthen the existing entry instead of duplicating it.
 
 ## Reference Code Discovery
 
