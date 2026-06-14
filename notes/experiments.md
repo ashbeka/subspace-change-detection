@@ -454,12 +454,47 @@ Concrete near-term checklist:
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
    - Must define cluster count selection and validation before implementation.
 
-22. Greenhouse application feasibility audit:
+22. SOTA-change-front-end plus GDS semantic clustering pilot:
+   - Idea:
+     - Use a strong modern change detector to localize likely changed regions first.
+     - Preserve the original spectral/spatial/multitemporal channel data for those changed regions.
+     - Apply DS/GDS/KGDS/subspace clustering to interpret or cluster the changed content into change types.
+   - Why this is interesting:
+     - It avoids forcing DS to solve the full changed/not-changed localization task alone.
+     - It gives subspace methods a clearer role: semantic or structural interpretation of already-detected change.
+     - It may fit unlabeled or weakly labeled datasets better, because the first stage supplies candidate change areas and the second stage groups their properties.
+   - Candidate front-end detectors:
+     - `S0_raw_l2_or_pca_frontend`: simple high-recall classical detector used as a cheap first pass.
+     - `S1_audited_irmad_frontend`: IR-MAD detects candidate changed areas, then GDS/SSC clusters them.
+     - `S2_unet_frontend`: supervised OSCD U-Net/Siamese detects change, then GDS clusters changed-region spectral/patch features.
+     - `S3_modern_cd_frontend`: use a strong external/SOTA CD model if reproducible, then run subspace interpretation on its changed mask.
+     - `S4_foundation_or_semantic_frontend`: use a foundation/semantic/open-vocabulary CD model as candidate-region generator, then apply subspace clustering for local spectral/temporal explanation.
+   - Candidate subspace back-ends:
+     - `G0_region_raw_spectral`: build one subspace per connected changed component from 13-band pixel vectors.
+     - `G1_region_patch`: build one subspace per changed component from `k x k x 13` patch vectors.
+     - `G2_date_region_gds`: for multi-date data, build one subspace per date inside the changed region and apply GDS/geodesic quantities.
+     - `G3_band_group_product`: build separate subspaces for VIS/red-edge/NIR/SWIR groups and combine or compare them.
+     - `G4_deep_feature_region`: extract encoder features inside changed regions and build latent subspaces.
+   - Output options:
+     - unsupervised semantic/change-type clusters;
+     - changed-region descriptors for later classification;
+     - attribution: which bands, regions, or dates define the change;
+     - pseudo-labels for change type, not just changed/not-changed.
+   - Evaluation options:
+     - On OSCD: evaluate only changed/not-changed localization with labels, then inspect clusters qualitatively because OSCD lacks change-type labels.
+     - On MultiSenGE/Harmonized Sentinel-2: use temporal consistency, seasonality checks, or manual interpretation because labels may be absent.
+     - On xBD/xBD-S12 or greenhouse data: only if object/type labels exist; otherwise treat as exploratory.
+   - Risks:
+     - If the SOTA front-end already solves the useful task, the subspace back-end must add interpretation, clustering, or weak-label value, not just another score.
+     - If clusters are not externally validated, do not call them semantic classes; call them change-type clusters or exploratory groups.
+     - Do not cite SOTA front-end performance as our method's contribution unless the contribution is explicitly the GDS interpretation layer.
+
+23. Greenhouse application feasibility audit:
    - Treat abandoned greenhouse mapping as a possible application, not current evidence.
    - Define the task first: object mapping, abandonment classification, change detection, or temporal condition scoring.
    - Check whether labels, dates, and evaluation metrics exist before connecting it to DS/KDS/GDS.
 
-23. Deep-feature subspace pilot:
+24. Deep-feature subspace pilot:
    - Inspired by Mahyub et al. 2024 Signal Latent Subspace, not currently implemented.
    - Extract latent features from a remote-sensing CNN, U-Net encoder, or foundation model.
    - Build subspaces from patch/tile/date latent features instead of raw 13-band pixel vectors.
@@ -467,7 +502,7 @@ Concrete near-term checklist:
    - Consider product-Grassmann fusion only if there are clearly defined feature factors, such as spectral, spatial, temporal, and prior-map factors.
    - This is the more explicit hybrid route: geometrical representation over learned features instead of only raw bands.
 
-24. Multiscale subspace pyramid pilot:
+25. Multiscale subspace pyramid pilot:
    - Run only after global/window/patch DS gives a baseline.
    - Source status: Senpai idea inspired by wavelets/JPEG/Green Learning; exact formal source still needs verification.
    - Initial levels: `1x1`, `2x2`, `4x4`; add `8x8` only if runtime is manageable.
@@ -475,7 +510,7 @@ Concrete near-term checklist:
    - Output: per-level maps, weighted map, runtime, block-artifact inspection, and metrics against OSCD.
    - Baselines: global canonical DS, local-window DS, raw L2/CVA, PCA-diff.
 
-25. Temporal subspace literature pilots:
+26. Temporal subspace literature pilots:
    - RTW/Deep RTW pilot: for MultiSenGE or Harmonized Sentinel-2 L2A sequences, randomly sample ordered date subsequences, build sequence-hypothesis subspaces, and compare them to same-season or event-window references.
    - SFA/SFS pilot: learn slowly varying temporal components from aligned date sequences, then test whether residuals or slow-feature subspaces separate seasonal drift from abrupt land-cover change.
    - Product-Grassmann/Hankel pilot: represent one patch as multiple subspace factors, such as spectral, spatial, and temporal/Hankel factors, then use geodesic distances for clustering or anomaly ranking.
@@ -483,7 +518,7 @@ Concrete near-term checklist:
    - Shape-subspace attribution pilot: adapt the human-motion DS idea by reporting which bands, patch regions, or date windows contribute most to the difference subspace.
    - Do not start these before the spatial OSCD audit; these are method-expansion tracks, not current evidence.
 
-26. xBD-S12 metric protocol audit:
+27. xBD-S12 metric protocol audit:
    - Only if xBD-S12 is promoted from warm extension.
    - Check whether to use xBD-S12-style `F1loc`, `F1dmg`, and `F1comp` with invalid masks/building buffers, or standard pixel IoU/F1.
    - Do not mix OSCD binary pixel metrics with damage-localization metrics without explaining the task difference.
