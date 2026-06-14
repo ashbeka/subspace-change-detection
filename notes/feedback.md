@@ -49,10 +49,12 @@ Sensei-priority task order as of 2026-06-14:
    - Reason: Sensei explicitly recommended this after hearing that the current multi-channel satellite adaptation may not match the original code/data setting.
    - Ask specifically about multi-channel data, because Jang has related work on multi-channel EEG.
    - Bring concrete options: global 13-band pixel subspace, patch-vector subspace, local-window subspace, and time-sequential date subspaces.
+   - Status 2026-06-14: discussed the implementation difficulty with Jang. This helped clarify the issue, but did not remove the need to choose and verify the satellite-specific subspace construction ourselves.
 
 2. Talk to Aono-kun about first/second DS and geodesic decomposition theory/implementation.
    - Reason: Sensei explicitly recommended Aono for theoretical aspects and later for implementation of first/second DS and geodesic decomposition.
    - Ask for the analysis tool used in human-motion analysis and what inputs it expects.
+   - Status 2026-06-14: discussed the implementation difficulty with Aono. Treat this as helpful orientation, not as complete validation of the current project implementation.
 
 3. Generate a set of time-sequential satellite subspaces from Harmonized Sentinel-2 or another valid multi-date dataset.
    - Reason: Sensei repeatedly asked whether a time-sequential satellite dataset had been obtained, and asked for the Google dataset frame count and time step.

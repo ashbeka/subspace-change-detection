@@ -206,6 +206,28 @@ Audit one Harmonized Sentinel-2 area/date sequence and report: date count, time 
 
 After that audit, implement first/second DS and geodesic-decomposition measurements on the generated date subspaces, preferably after asking Jang/Aono about the expected input format and reference implementation.
 
+Status 2026-06-14:
+
+- Jang and Aono were consulted about the difficulty of adapting subspace methods to this satellite-image project.
+- The remaining responsibility is now ours: define the satellite sample object, generate a sequence of subspaces, and produce a small measurable first/second DS/geodesic result.
+
+Next artifact to create:
+
+```text
+Harmonized Sentinel-2 sequence feasibility report:
+  area/date selection -> downloaded or queried frames -> valid-frame table -> per-date subspace construction -> first/second DS/geodesic readiness verdict
+```
+
+This artifact should answer Sensei's concrete questions before any new model training:
+
+- What area is used?
+- How many time frames are available?
+- What is the time step or date spacing?
+- Which Sentinel-2 bands are used?
+- What cloud/no-data filtering is applied?
+- What is one subspace in this setting?
+- Are first/second DS and geodesic decomposition ready to run on the resulting sequence?
+
 Source-linked rule for the next code change:
 
 ```text
