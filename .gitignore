@@ -54,9 +54,6 @@ references/reference_papers/*.pdf
 *.pt
 *.pth
 
-# Generated context packs / archives
-prompt_stuff/
-
 ########
 # Logs
 ########
