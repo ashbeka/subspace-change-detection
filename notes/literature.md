@@ -142,6 +142,7 @@ Use these as reference points, not unquestioned ground truth.
 Pending reference-code reminder:
 
 - The user has at least three additional senpai-provided reference codebases that should be added later under `references/reference_code/` or another agreed reference-code location.
+- Reminder 2026-06-14: ask the user to supply these remaining reference codebases before any major new DS/GDS/KDS/KGDS, geodesic, CCA/KCCA, or spatial-subspace implementation.
 - When they are supplied, inventory them before cleanup or implementation:
   - implemented method families;
   - language/dependencies;
