@@ -43,6 +43,33 @@ Recent Sensei direction from the final source batch:
 - First/second DS and geodesic projection may be meaningful when there are multiple temporally ordered observations, not just one pre/post pair.
 - Discuss adequate subspace construction with lab members who have worked on related multi-channel or temporal subspace problems.
 
+Sensei-priority task order as of 2026-06-14:
+
+1. Talk to Jang about how to generate an adequate subspace for this problem.
+   - Reason: Sensei explicitly recommended this after hearing that the current multi-channel satellite adaptation may not match the original code/data setting.
+   - Ask specifically about multi-channel data, because Jang has related work on multi-channel EEG.
+   - Bring concrete options: global 13-band pixel subspace, patch-vector subspace, local-window subspace, and time-sequential date subspaces.
+
+2. Talk to Aono-kun about first/second DS and geodesic decomposition theory/implementation.
+   - Reason: Sensei explicitly recommended Aono for theoretical aspects and later for implementation of first/second DS and geodesic decomposition.
+   - Ask for the analysis tool used in human-motion analysis and what inputs it expects.
+
+3. Generate a set of time-sequential satellite subspaces from Harmonized Sentinel-2 or another valid multi-date dataset.
+   - Reason: Sensei repeatedly asked whether a time-sequential satellite dataset had been obtained, and asked for the Google dataset frame count and time step.
+   - Minimum facts to report: area, dates, number of valid frames, nominal revisit interval, cloud/no-data filtering, bands used, and whether the images are spatially aligned.
+
+4. Calculate first DS magnitude, second DS magnitude, and geodesic-decomposition/projection quantities on the time-sequential subspaces.
+   - Reason: Sensei specifically asked whether the changes in magnitudes of the first and second DSs can be calculated soon.
+   - Treat this as a lab-aligned exploratory result even if it does not beat modern change-detection baselines.
+
+5. Keep the OSCD spatial-information experiment as the verification track.
+   - Reason: Sensei warned that the current global pixel subspace can break spatial information.
+   - Use OSCD labels to compare global pixel DS, patch-vector DS, local-window DS, PCA-diff, raw L2/CVA, Celik, and IR-MAD.
+
+6. Keep Venus nonlinear DS/KDS/KGDS as the method-understanding proof.
+   - Reason: Sensei explicitly gave Venus data and recommended running nonlinear DS from TPAMI2015.
+   - The goal is to show that the original image-set setting is understood before claiming a satellite adaptation.
+
 Actions:
 
 - Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.

@@ -180,11 +180,31 @@ Interpretation:
 
 The next experiment is not another blind sweep. The core5 sweep already showed that patch-vector DS is the only DS-family candidate worth studying immediately, but it is still weaker than PCA-diff/raw L2 overall.
 
+There are now two parallel tracks:
+
+```text
+Sensei-first track:
+  generate time-sequential satellite subspaces -> first/second DS magnitude -> geodesic decomposition/projection
+
+OSCD verification track:
+  explain whether spatially aware DS fixes the spatial-information weakness on a labeled benchmark
+```
+
+The Sensei-first track has priority for advisor alignment. The OSCD track remains important because it provides labels and lets the project verify whether the subspace maps correspond to changed areas.
+
 Immediate next task:
 
 ```text
 Inspect why patch DS helps in some cities and fails in others, then test whether the score definition is the bottleneck.
 ```
+
+Immediate Sensei-first task:
+
+```text
+Audit one Harmonized Sentinel-2 area/date sequence and report: date count, time step, cloud/no-data filtering, band stack shape, alignment assumptions, and candidate subspace construction.
+```
+
+After that audit, implement first/second DS and geodesic-decomposition measurements on the generated date subspaces, preferably after asking Jang/Aono about the expected input format and reference implementation.
 
 Source-linked rule for the next code change:
 
