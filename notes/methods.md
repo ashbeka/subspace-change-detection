@@ -188,6 +188,42 @@ Main active comparison:
 E0_raw_unet vs prior-channel variants
 ```
 
+### Post-Classification Change Detection
+
+Post-classification change detection means:
+
+```text
+pre image -> classify each pixel/object/state
+post image -> classify each pixel/object/state
+change map = compare pre class/state with post class/state
+```
+
+This is different from the current direct-change setup:
+
+```text
+pre image + post image -> score or segment changed areas directly
+```
+
+Project interpretation:
+
+- PCCD is useful when the research question is semantic or state-based, for example `vegetation -> urban`, `active greenhouse -> abandoned greenhouse`, or `undamaged building -> damaged building`.
+- PCCD is less natural for current OSCD because OSCD provides binary changed-area labels, not full pre/post land-cover class maps.
+- PCCD can compound classification errors: a wrong pre class or wrong post class can create a false change.
+- PCCD could become important if the project pivots to semantic change, object-level greenhouse/building monitoring, or xBD/xBD-S12 damage states.
+
+How it could connect to subspaces:
+
+- Use subspace/DS/KDS/IR-MAD/Celik maps as features for a per-date classifier.
+- Build per-object or per-patch subspace descriptors, classify each date state, then compare states.
+- Use post-classification outputs as a semantic interpretation layer after geometric change scoring.
+
+Near-term decision:
+
+```text
+Do not make PCCD the immediate OSCD core.
+Keep it as a semantic/object-level pivot and as a possible baseline if we adopt a dataset with pre/post class or state labels.
+```
+
 ## 6. DS In The Current OSCD Adaptation
 
 Current global OSCD DS:
