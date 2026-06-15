@@ -459,6 +459,27 @@ Concrete near-term checklist:
      - Do not require DS/GDS to beat a neural detector at the full changed/not-changed localization task.
      - Use neural networks where they are strong: spatial localization, feature extraction, or object proposals.
      - Use subspace/geometric methods where they are defensible: interpretable evidence, region descriptors, temporal trajectories, clustering, label efficiency, and error diagnostics.
+   - Contribution lanes and evidence gates:
+     - Interpretability:
+       - Meaning: DS/GDS should say something about the structure of the change, such as which spectral bands, local spatial patterns, dates, regions, or subspace directions define it.
+       - Experiment path: `H5_neural_frontend_gds_clustering`, `H7_error_subspace_diagnostics`, `H9_object_or_region_subspace_descriptors`, `H12_band_group_product_hybrid`.
+       - Evidence gate: produce region descriptors, band/date attribution, component visual grids, and cluster/error explanations. If no semantic labels exist, call the output exploratory interpretation, not semantic classification.
+     - Label efficiency:
+       - Meaning: geometric methods produce priors, pseudo-labels, candidate regions, auxiliary targets, or active-learning scores without dense labels.
+       - Experiment path: `H2_prior_pseudo_label_pretrain`, `H3_auxiliary_prior_head`, `H8_active_learning_from_geometry`, plus reduced-label `H1_prior_channel_fusion`.
+       - Evidence gate: compare 10%, 25%, 50%, and 100% label budgets against raw-only training. The claim requires equal or better performance/stability at lower label budgets.
+     - Temporal/multi-date analysis:
+       - Meaning: GDS/geodesic methods track evolution across three or more date subspaces, not just binary pre/post segmentation.
+       - Experiment path: `H10_multidate_neural_mask_then_gds`, temporal subspace pilots in item 26, and only after a MultiSenGE/Harmonized Sentinel-2 data audit.
+       - Evidence gate: show coherent temporal trajectories, date-window clusters, seasonality checks, or external/manual validation. Do not claim semantic temporal classes from unlabeled data.
+     - Hybrid role:
+       - Meaning: NN handles strong localization or feature extraction; subspace/GDS handles interpretation, clustering, diagnostics, temporal geometry, or label-efficient supervision.
+       - Experiment path: start with `H5` or `H6`; use `H11` only if a foundation/semantic proposal source is reproducible.
+       - Evidence gate: geometry must add a measurable or inspectable value beyond the NN mask alone: better low-label performance, clearer error modes, useful region grouping, or temporal explanation.
+     - Negative/diagnostic study:
+       - Meaning: failure can still be useful if it identifies exactly why subspace methods fail or when they complement baselines.
+       - Experiment path: compare global/patch/local DS against raw L2, PCA-diff, IR-MAD, and U-Net; inspect city-specific false positives and false negatives.
+       - Evidence gate: report a failure taxonomy tied to pseudo-change, spatial-information loss, rank/sample construction, registration, vegetation/water/shadow, or OSCD label policy.
    - Reliable first pilots:
      - `H1_prior_channel_fusion`: concatenate DS, patch-DS, PCA-diff, CVA, or IR-MAD score maps as extra channels to U-Net/Siamese input. Test whether priors improve IoU/F1/AUROC over raw bands and whether gains survive city-wise splits.
      - `H2_prior_pseudo_label_pretrain`: threshold or soft-normalize DS/PCA/IR-MAD maps, pretrain a segmentation model to imitate them, then fine-tune on OSCD labels. Test low-label curves: 10%, 25%, 50%, 100% labels.
