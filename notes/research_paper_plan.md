@@ -96,6 +96,30 @@ Working interpretation:
 - Patch-vector or local-window DS asks the same question while preserving local spatial context.
 - A DS prior can still hurt fixed-threshold F1 if it highlights real spectral changes that OSCD does not label as target changes. Therefore report both ranking metrics such as AUROC/PR-AUC and threshold metrics such as IoU/F1.
 
+### Why geometric methods still matter beside neural networks
+
+Neural networks are the stronger default when dense labels, matched training/test domains, and pure segmentation accuracy are the only goals. The thesis should not argue that a hand-built DS map will generally beat modern CNN, Siamese, Transformer, or foundation-model change detectors.
+
+The justification for subspace/geometric methods is different:
+
+- Interpretability: subspaces, canonical angles, projections, DS/GDS magnitudes, and geodesic quantities can be inspected as geometric evidence instead of only as learned filters.
+- Label efficiency: DS, PCA-diff, CVA, IR-MAD, and KDS-style maps can act as priors, pseudo-label candidates, auxiliary targets, or region proposals when dense labels are scarce.
+- Temporal structure: GDS, second-order DS, geodesic analysis, and tensor/product-Grassmann variants are more naturally tied to multi-date subspace sequences than to a single pre/post segmentation output.
+- Diagnostics: if DS fails against raw L2, PCA-diff, IR-MAD, or U-Net, the failure can still reveal pseudo-change, spatial-information loss, poor sample construction, or dataset-label mismatch.
+- Hybrid use: geometry can happen before learning as a prior map, during learning as an auxiliary/attention signal, or after learning as a deep-feature subspace, prediction-error subspace, or SOTA-detector-plus-GDS interpretation layer.
+
+Literature anchor:
+
+- Asokan and Anitha 2019 survey: remote-sensing change detection remains a broad multi-temporal spatial-change problem with many method families and persistent practical challenges.
+- Wang et al. 2024 deep-learning CD review: deep learning dominates current CD research, but incomplete supervision, self-supervision/few-shot learning, foundation models, and multimodal data remain active challenges.
+- Sample-efficient CD surveys: label scarcity is a real field problem, so interpretable or unsupervised priors are worth testing if they are compared honestly against modern alternatives.
+
+Safe sentence:
+
+```text
+The goal is not to replace neural change detectors, but to test whether subspace-based geometric representations provide interpretable, label-efficient, or temporal change evidence that can complement them.
+```
+
 ## 5. Research Gap
 
 Established facts:

@@ -292,6 +292,24 @@ This section connects the refined `Research` bookmark tree and the online reset 
 | xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | Future pivot/warm extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
 | Object/building-level descriptors | xBD, ChangeOS, object-level CD and greenhouse resources | Object units may preserve spatial/semantic information better than global pixel subspaces. | Candidate pivot if pixel/patch DS is too weak or if an object-labeled dataset is chosen. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` and `Research / 05 Applications` |
 
+### 9.1 Geometry Versus Neural-Network Framing
+
+This is the literature-backed reason to keep subspace/geometric methods in the project without pretending they are the strongest standalone supervised change detector.
+
+| Claim to support | Read first | What it allows us to say | What it does not allow us to say |
+|---|---|---|---|
+| Remote-sensing CD is still a broad practical problem, not a solved benchmark exercise. | Asokan and Anitha 2019, "Change detection techniques for remote sensing applications: a survey" ([Springer](https://link.springer.com/article/10.1007/s12145-019-00380-5)) | Classical/geometric methods can still be discussed as part of a broader method family, especially when interpretability and practical artifacts matter. | It does not prove DS is novel or better than deep learning. |
+| Deep learning is the current dominant performance direction. | Wang et al. 2024, "Advances and Challenges in Deep Learning-Based Change Detection for Remote Sensing Images" ([MDPI Remote Sensing](https://www.mdpi.com/2072-4292/16/5/804)) | The thesis must compare against neural baselines or at least acknowledge modern DL comparison pressure. | It does not mean every useful contribution must be a new neural architecture. |
+| Label scarcity and incomplete supervision remain active research problems. | Sample-efficient / label-efficient remote-sensing CD surveys and papers. | Subspace maps can be tested as priors, pseudo-label candidates, auxiliary targets, or low-label aids. | A prior map is not automatically a good pseudo-label; it must be evaluated against labels or useful downstream behavior. |
+| Geometry can complement learning. | Lab subspace literature, DS/GDS/KDS/KGDS, Grassmann/neural-subspace hybrids, and current experiment backlog. | The defensible framing is geometry-only diagnostics first, then geometry-plus-learning if the maps show value. | Do not claim "geometric methods beat neural networks" unless controlled experiments actually show it. |
+
+Project use:
+
+- In the thesis introduction, state that neural networks are strong but often label-hungry and opaque.
+- In the method section, present DS-style maps as interpretable geometric evidence, not as a guaranteed superior detector.
+- In experiments, compare geometry-only outputs against raw L2, PCA-diff, IR-MAD, and at least one neural baseline.
+- In discussion, treat negative DS results as evidence about sample construction and spatial information loss, not as project failure.
+
 New external reset sources to keep active:
 
 - Wang et al. 2024, DL-based CD review: CD applications include urban planning, disaster management, and national security; challenges include incomplete supervision, self-supervision, foundation models, and multimodal data.
