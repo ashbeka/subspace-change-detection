@@ -24,7 +24,7 @@
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
-Primary environment: Windows PowerShell, repo root `E:\research_projects\DS_damage_segmentation`
+Primary environment: Windows PowerShell, repo root `E:\research_projects\subspace-change-detection`
 
 This is the operational cheat sheet for reproducing the current project. It is deliberately practical: commands, expected paths, outputs, and failure checks. The project's truthful current scope is OSCD Sentinel-2 binary change segmentation with optional unsupervised prior channels. It is not yet an end-to-end xBD/xBD-S12 damage segmentation system.
 
@@ -75,7 +75,7 @@ git push origin main
 Activate the root virtual environment:
 
 ```powershell
-cd E:\research_projects\DS_damage_segmentation
+cd E:\research_projects\subspace-change-detection
 .\.venv\Scripts\Activate.ps1
 $py=".\.venv\Scripts\python.exe"
 ```
@@ -565,7 +565,7 @@ powershell -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Pr
 Interactive one-command version with live `tqdm` batch progress bars. Prefer PowerShell 7 (`pwsh`) for clean terminal rendering:
 
 ```powershell
-cd E:\research_projects\DS_damage_segmentation; .\.venv\Scripts\Activate.ps1; pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
+cd E:\research_projects\subspace-change-detection; .\.venv\Scripts\Activate.ps1; pwsh -NoProfile -ExecutionPolicy Bypass -File phase2/scripts/run_phase2_sweep.ps1 -Preset core -Epochs 150 -Seeds "1234,1235,1236" -OutputTag "core_150ep_$(Get-Date -Format 'yyyyMMdd_HHmmss')" -Retention full -ProgressBars
 ```
 
 `-ProgressBars` disables transcript/per-run console capture and lets Python render native `tqdm` bars directly in the terminal. Current training bars are labeled with the run folder, for example `E1_raw_ds__seed1234 ep 27/150`, and completed bars are cleared by default to reduce terminal overflow. The durable evidence is still `train_log.json`, `run_metadata.json`, and eval CSV/JSON.
@@ -592,7 +592,7 @@ Do not run `full+eig` until eig priors exist and have been smoke-checked.
 Watch a running sweep from another PowerShell window:
 
 ```powershell
-cd E:\research_projects\DS_damage_segmentation
+cd E:\research_projects\subspace-change-detection
 powershell -ExecutionPolicy Bypass -File phase2/scripts/watch_phase2_sweep.ps1
 ```
 

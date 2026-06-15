@@ -980,7 +980,7 @@ def interactive_command_catalog() -> int:
 
 
 def cmd_interactive(args: argparse.Namespace) -> int:
-    print("DS Damage Segmentation command center")
+    print("Subspace Change Detection command center")
     print(f"Repo: {REPO_ROOT}")
     print("Use this as the main interactive surface. Every action prints the exact command before it runs.")
     while True:
@@ -1016,7 +1016,7 @@ def cmd_interactive(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Central CLI for DS damage segmentation research workflows.",
+        description="Central CLI for subspace-based satellite change-detection research workflows.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     sub = parser.add_subparsers(dest="command", required=True)

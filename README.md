@@ -1,4 +1,4 @@
-# DS Damage Segmentation
+# Subspace Change Detection
 
 This repository is a research codebase for:
 
@@ -43,7 +43,7 @@ Read in this order:
    Exact setup, check, training, evaluation, and cleanup commands.
 
 7. [docs/research_learning_map.html](docs/research_learning_map.html)  
-   Interactive local research map. Public mobile version: [GitHub Pages research map](https://ashbeka.github.io/ds_damage_segmentation/).
+   Interactive local research map. Public mobile version after the GitHub repo rename: [GitHub Pages research map](https://ashbeka.github.io/subspace-change-detection/).
 
 ## 2. Current Truthful Scope
 
