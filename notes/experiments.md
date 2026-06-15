@@ -454,40 +454,41 @@ Concrete near-term checklist:
    - Output candidates: unsupervised change-type clusters, pseudo-labels, auxiliary channels, or a strong unsupervised baseline.
    - Must define cluster count selection and validation before implementation.
 
-22. SOTA-change-front-end plus GDS semantic clustering pilot:
-   - Idea:
-     - Use a strong modern change detector to localize likely changed regions first.
-     - Preserve the original spectral/spatial/multitemporal channel data for those changed regions.
-     - Apply DS/GDS/KGDS/subspace clustering to interpret or cluster the changed content into change types.
-   - Why this is interesting:
-     - It avoids forcing DS to solve the full changed/not-changed localization task alone.
-     - It gives subspace methods a clearer role: semantic or structural interpretation of already-detected change.
-     - It may fit unlabeled or weakly labeled datasets better, because the first stage supplies candidate change areas and the second stage groups their properties.
-   - Candidate front-end detectors:
-     - `S0_raw_l2_or_pca_frontend`: simple high-recall classical detector used as a cheap first pass.
-     - `S1_audited_irmad_frontend`: IR-MAD detects candidate changed areas, then GDS/SSC clusters them.
-     - `S2_unet_frontend`: supervised OSCD U-Net/Siamese detects change, then GDS clusters changed-region spectral/patch features.
-     - `S3_modern_cd_frontend`: use a strong external/SOTA CD model if reproducible, then run subspace interpretation on its changed mask.
-     - `S4_foundation_or_semantic_frontend`: use a foundation/semantic/open-vocabulary CD model as candidate-region generator, then apply subspace clustering for local spectral/temporal explanation.
-   - Candidate subspace back-ends:
-     - `G0_region_raw_spectral`: build one subspace per connected changed component from 13-band pixel vectors.
-     - `G1_region_patch`: build one subspace per changed component from `k x k x 13` patch vectors.
-     - `G2_date_region_gds`: for multi-date data, build one subspace per date inside the changed region and apply GDS/geodesic quantities.
-     - `G3_band_group_product`: build separate subspaces for VIS/red-edge/NIR/SWIR groups and combine or compare them.
-     - `G4_deep_feature_region`: extract encoder features inside changed regions and build latent subspaces.
-   - Output options:
-     - unsupervised semantic/change-type clusters;
-     - changed-region descriptors for later classification;
-     - attribution: which bands, regions, or dates define the change;
-     - pseudo-labels for change type, not just changed/not-changed.
-   - Evaluation options:
-     - On OSCD: evaluate only changed/not-changed localization with labels, then inspect clusters qualitatively because OSCD lacks change-type labels.
-     - On MultiSenGE/Harmonized Sentinel-2: use temporal consistency, seasonality checks, or manual interpretation because labels may be absent.
-     - On xBD/xBD-S12 or greenhouse data: only if object/type labels exist; otherwise treat as exploratory.
+22. Hybrid geometry-learning experiment family:
+   - Core framing:
+     - Do not require DS/GDS to beat a neural detector at the full changed/not-changed localization task.
+     - Use neural networks where they are strong: spatial localization, feature extraction, or object proposals.
+     - Use subspace/geometric methods where they are defensible: interpretable evidence, region descriptors, temporal trajectories, clustering, label efficiency, and error diagnostics.
+   - Reliable first pilots:
+     - `H1_prior_channel_fusion`: concatenate DS, patch-DS, PCA-diff, CVA, or IR-MAD score maps as extra channels to U-Net/Siamese input. Test whether priors improve IoU/F1/AUROC over raw bands and whether gains survive city-wise splits.
+     - `H2_prior_pseudo_label_pretrain`: threshold or soft-normalize DS/PCA/IR-MAD maps, pretrain a segmentation model to imitate them, then fine-tune on OSCD labels. Test low-label curves: 10%, 25%, 50%, 100% labels.
+     - `H3_auxiliary_prior_head`: train one shared encoder with two heads: one for OSCD labels and one for prior-map prediction or prior consistency. Test whether the auxiliary geometric task improves generalization.
+     - `H4_geometry_guided_attention_or_loss`: use a geometric prior map as an attention/gating signal or loss weight so the neural model focuses on likely change regions. Compare against ordinary class-balanced loss and focal loss.
+     - `H5_neural_frontend_gds_clustering`: use U-Net/Siamese/SOTA CD to localize changed pixels, then build DS/GDS/SSC descriptors from changed connected components and cluster them into change-type groups. This is the clearest "NN localizes, geometry interprets" route.
+     - `H6_deep_feature_ds`: extract pre/post encoder features from a trained U-Net, Siamese CNN, or foundation model; build subspaces from patch/tile/date feature vectors; compare deep-feature DS/GDS against raw spectral DS and patch DS.
+     - `H7_error_subspace_diagnostics`: collect false positives and false negatives from the neural model, build subspaces over their raw/patch/deep features, and inspect whether errors form separable geometric modes such as vegetation, water, shadow, registration, or urban texture.
+     - `H8_active_learning_from_geometry`: rank unlabeled patches by disagreement between neural probability and DS/IR-MAD/geometric scores. Manually inspect or label high-disagreement samples first. Test whether this selects more informative samples than random.
+     - `H9_object_or_region_subspace_descriptors`: after neural or classical change localization, build one subspace per connected component, superpixel, building, field, or greenhouse object. Use the subspace descriptor for clustering, retrieval, or later classification.
+     - `H10_multidate_neural_mask_then_gds`: on MultiSenGE or Harmonized Sentinel-2, use a neural/classical detector to propose candidate regions over time, then build one subspace per date or date-window and apply GDS/geodesic quantities to summarize temporal change progression.
+     - `H11_foundation_or_semantic_proposals_then_subspace`: use a foundation/semantic/open-vocabulary model to propose objects or semantic regions, then run DS/GDS/KDS on the original Sentinel-2 band data inside those regions. This separates "what object/area is this?" from "how did its spectral/spatial state change?"
+     - `H12_band_group_product_hybrid`: build separate geometric priors for VIS, red-edge, NIR, SWIR, and full-band groups, then give either all maps or a learned fusion of them to the neural model. Evaluate whether band-group priors improve interpretability or performance.
+     - `H13_cascade_triage`: run a cheap classical/geometric detector first to reject obvious unchanged regions, then run the neural model only on uncertain/high-change areas. Evaluate runtime, recall loss, and whether this is useful for large-area screening.
+     - `H14_model_residual_geometry`: after neural prediction, compute residual/error maps against labels or high-confidence pseudo-labels, then recompute local DS/KDS only in residual-heavy regions to diagnose which spatial/spectral patterns the model misses.
+   - Evaluation requirements:
+     - Localization: IoU, F1, precision/recall, AUROC, AP/PR-AUC, per-city breakdown, and threshold sensitivity.
+     - Label efficiency: performance versus percentage of labeled OSCD patches or cities.
+     - Clustering/interpretation: if labels exist, use ARI/NMI/purity or class-wise agreement; if labels do not exist, call outputs exploratory clusters and use visual grids, temporal consistency, and manual inspection.
+     - Complementarity: measure whether geometry helps where NN fails, not only whether it increases one average score.
+     - Ablations: compare raw bands only, neural only, geometry only, early fusion, auxiliary loss, and post-hoc geometry.
+   - Most promising order:
+     - First: `H5_neural_frontend_gds_clustering`, because it gives subspace methods a clear interpretation role instead of forcing them to localize all change alone.
+     - Second: `H6_deep_feature_ds`, because it matches lab-style geometric operations on learned representations.
+     - Third: `H2_prior_pseudo_label_pretrain` or `H3_auxiliary_prior_head`, because these test label-efficient complementarity.
+     - Fourth: `H10_multidate_neural_mask_then_gds`, if a multi-date dataset and evaluation proxy are ready.
    - Risks:
-     - If the SOTA front-end already solves the useful task, the subspace back-end must add interpretation, clustering, or weak-label value, not just another score.
-     - If clusters are not externally validated, do not call them semantic classes; call them change-type clusters or exploratory groups.
-     - Do not cite SOTA front-end performance as our method's contribution unless the contribution is explicitly the GDS interpretation layer.
+     - Hybrid methods can become unfocused if the neural part does all the work and geometry only decorates the result.
+     - Do not call region clusters semantic classes unless validated with semantic/damage/object labels or credible manual interpretation.
+     - Keep the contribution explicit: localization improvement, label-efficiency improvement, interpretable region clustering, temporal trajectory description, or error diagnosis.
 
 23. Greenhouse application feasibility audit:
    - Treat abandoned greenhouse mapping as a possible application, not current evidence.

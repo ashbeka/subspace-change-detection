@@ -213,6 +213,13 @@ Layer 2: geometry plus learning.
 
 This matches the lab style of mixing geometrical representations and deep learning, while avoiding the unrealistic claim that a simple hand-built prior should outperform modern neural methods by itself.
 
+Important hybrid framing:
+
+- Strong localization can come from a neural model.
+- Subspace/GDS methods can then interpret changed regions, cluster change types, describe temporal trajectories, diagnose model errors, or provide low-label priors.
+- This may be stronger than asking DS alone to solve the full pixel-level localization problem.
+- The contribution must be named precisely: better localization, label efficiency, interpretable clustering, temporal description, or error diagnosis. Do not let the neural model do all useful work while calling the whole result a subspace contribution.
+
 ## 7. Proposed Research Path
 
 Immediate method question:
@@ -263,6 +270,11 @@ Variants to compare:
    - future method bridge inspired by Mahyub et al. 2024 Signal Latent Subspace
    - one sample could be a patch/tile/date embedding from a remote-sensing model rather than a raw 13-band pixel
    - useful only if it answers the spatial-information problem better than raw pixel DS
+
+9. Hybrid NN + subspace/GDS paths
+   - use neural methods for localization, representation, or proposals;
+   - use subspace methods for interpretation, clustering, temporal geometry, pseudo-labels, auxiliary losses, or error diagnosis;
+   - see `notes/experiments.md` section 6, item 22 for the concrete `H1`-`H14` experiment menu.
 
 Current main candidate:
 
