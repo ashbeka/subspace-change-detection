@@ -372,6 +372,9 @@ Concrete near-term checklist:
      - Report pseudo-label precision/recall/F1, changed-pixel rate, and city-wise bias before using them as targets.
      - Compare hard Otsu threshold, validation-selected threshold, percentile threshold, and soft-label variants.
      - Keep raw supervised baseline in every table.
+     - Related-work pressure:
+       - Compare the framing against prior-guided fusion papers such as MapFormer and CGNet; do not claim novelty from "adding a prior map" alone.
+       - Compare pseudo-label framing against semi-supervised CD work such as AdaSemiCD / mean-teacher methods; the DS-specific question is whether geometric pseudo-labels are useful or interpretable enough after quality filtering.
    - Decision:
      - If pseudo-label pretraining helps under low-label settings, it supports a label-efficient prior framing.
      - If it hurts, that is evidence that current priors are useful only as diagnostics or require better spatial/temporal construction.
