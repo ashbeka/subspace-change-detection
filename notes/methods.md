@@ -5,6 +5,8 @@
 - [1. Current Project Scope](#1-current-project-scope)
 - [2. Data](#2-data)
 - [3. Phase 1: Prior Maps](#3-phase-1-prior-maps)
+  - [Feature-Extraction-Like Role](#feature-extraction-like-role)
+  - [Subspace Feature Isolation Route](#subspace-feature-isolation-route)
 - [4. Spectral Change Versus Semantic Change](#4-spectral-change-versus-semantic-change)
 - [5. Phase 2: Supervised Segmentation](#5-phase-2-supervised-segmentation)
 - [6. DS In The Current OSCD Adaptation](#6-ds-in-the-current-oscd-adaptation)
@@ -138,6 +140,38 @@ Short answer:
 ```text
 The current "feature extraction" layer is classical PCA/subspace-derived prior-map generation, especially DS/PCA-diff/Celik/IR-MAD. It is used to turn raw 13-band pre/post Sentinel-2 data into interpretable change-score maps. The U-Net also learns features internally, but that is not the project's main explanatory feature-extraction method yet.
 ```
+
+### Subspace Feature Isolation Route
+
+A separate possible role for subspace methods is not to directly output the final change map. It is to isolate useful multispectral characteristics before another change method uses them.
+
+In this route, the subspace basis is treated as a feature-isolation tool:
+
+- PCA/subspace directions can separate dominant variation patterns in the 13 Sentinel-2 bands.
+- DS/KDS/GDS projections can isolate directions where pre/post or multi-date subspaces differ.
+- Band-group subspaces can separate visible, red-edge, NIR, SWIR, and atmospheric-band behavior.
+- Local, patch, object, or date-window subspaces can isolate spatially or temporally localized characteristics.
+- Latent-feature subspaces can isolate learned characteristics from a U-Net, Siamese network, or remote-sensing encoder.
+
+The potential research question is:
+
+```text
+Can subspace projections isolate multispectral characteristics that make downstream change detection more interpretable, robust, or label-efficient than using raw bands alone?
+```
+
+Important caution:
+
+- An unsupervised subspace direction is not automatically a semantic feature like "building," "vegetation," or "water."
+- It is first a direction of variance, difference, correlation, or discriminative separation depending on the method.
+- To call it a meaningful characteristic, verify it through band attribution, region examples, correlation with known indices/classes, downstream metrics, or expert/manual inspection.
+
+Possible outputs:
+
+- projection coefficient maps;
+- reconstructed band-wise contribution maps;
+- residual/background-separated maps;
+- band-group attribution tables;
+- feature channels passed to PCA-diff, IR-MAD, U-Net, clustering, or another change detector.
 
 ## 4. Spectral Change Versus Semantic Change
 

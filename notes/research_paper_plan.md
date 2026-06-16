@@ -125,6 +125,7 @@ Contribution lanes to keep explicit:
 | Lane | What it means | Experiment path | Evidence needed |
 |---|---|---|---|
 | Interpretability | DS/GDS should explain a change direction through spectral, spatial, date, component, or subspace differences rather than only outputting a mask. | Band-group attribution, region subspace descriptors, neural-front-end plus GDS clustering, error-subspace diagnostics. | Visual maps plus band/date/component attributions; if labels exist, cluster agreement or class-wise error analysis. |
+| Feature isolation | Subspace methods may isolate dominant or discriminative multispectral characteristics before change detection, such as vegetation-like variation, built-up/soil/water-sensitive directions, band-group factors, temporal background drift, or neural latent factors. | Band-group DS, PCA/DS projection visualizations, low-rank/background versus residual maps, CCA/KCCA feature views, Signal Latent Subspace-style deep-feature DS. | Evidence that the isolated factors are stable, interpretable, and improve or explain a downstream change method beyond raw bands or simple PCA-diff. |
 | Label efficiency | Subspace methods may generate priors, pseudo-labels, candidate regions, or auxiliary targets without dense human labels. | Prior pseudo-label pretraining, auxiliary prior head, active learning from geometry, prior-channel fusion under reduced-label settings. | Low-label curves showing better or more stable performance than raw-only training at the same label budget. |
 | Temporal or multi-date analysis | GDS/geodesic methods can describe how subspaces evolve across many dates, which is different from ordinary binary pre/post segmentation. | MultiSenGE or Harmonized Sentinel-2 date-window GDS, second-order DS, geodesic trajectory plots, temporal clustering. | Coherent temporal trajectories, seasonality checks, manual/weak-label validation, or labels if a dataset supports them. |
 | Hybrid NN + geometry | Neural models localize or produce features; subspace/GDS methods interpret, cluster, diagnose, or summarize changed regions. | `H5`, `H6`, `H7`, `H9`, `H10`, `H11` in `notes/experiments.md`. | Evidence that geometry adds interpretation, label-efficiency, error insight, or temporal structure beyond the neural mask alone. |
@@ -164,6 +165,7 @@ Candidate real problems to evaluate before locking the thesis:
 
 - pseudo-change versus meaningful change;
 - spatially meaningful subspace construction for multispectral imagery;
+- subspace-based feature isolation for multispectral imagery before or alongside change detection;
 - label-efficient/interpretable priors for supervised change segmentation;
 - multi-date temporal change/recovery analysis;
 - domain-specific monitoring such as abandoned greenhouses, only if data and labels support it.

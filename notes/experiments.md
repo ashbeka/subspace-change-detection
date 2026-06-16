@@ -450,6 +450,10 @@ Concrete near-term checklist:
    - Compute DS basis energy by Sentinel-2 band or band group.
    - Compare VIS, red-edge, NIR, SWIR, and atmospheric bands.
    - Use this to explain whether maps are likely surface change, vegetation/soil moisture, or atmospheric artifact.
+   - Feature-isolation extension:
+     - Treat subspace bases/projections as candidate feature isolators before downstream change detection.
+     - Compare raw bands, PCA coefficients, DS projection coefficients, band-group DS coefficients, residual/background components, and optional encoder-feature subspaces as inputs to a simple downstream detector or classifier.
+     - Evaluation gate: the isolated features must either improve change metrics, reduce a known pseudo-change mode, or give clearer band/region explanations. Otherwise keep them as diagnostics, not a main method.
 
 21. SSC change-type clustering pilot:
    - Only after the spatial DS audit.
