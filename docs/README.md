@@ -21,10 +21,13 @@ Read these first:
 3. `RUNBOOK.md`
    - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
 
-4. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+4. `SECOND_OPINION_RESEARCH_CONTEXT.md`
+   - Neutral context package for Claude/Gemini/another reviewer. Use it when asking an external model or person to challenge the project direction.
+
+5. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the current major OSCD 3-seed sweep.
 
-5. `research_learning_map.html`
+6. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

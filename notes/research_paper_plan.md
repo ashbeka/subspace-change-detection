@@ -553,6 +553,7 @@ Use these files when expanding this plan:
 - `notes/experiments.md`: current evidence and planned audits.
 - `notes/reference_bookmarks.md`: Zotero-first reading queue and organized bookmark map.
 - `docs/PROJECT_BRIEF.md`: concise current truth.
+- `docs/SECOND_OPINION_RESEARCH_CONTEXT.md`: neutral prompt/context for external critique of the research direction.
 - `docs/RUNBOOK.md`: exact commands.
 - `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep summary.
 - `docs/source_records/qa_report_response_2025-11-20.pdf`: submitted QA answers; useful for spectral-vs-semantic explanation, MultiSenGE pairing caveats, seasonal-risk framing, and IR-MAD caution.
