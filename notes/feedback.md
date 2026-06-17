@@ -83,6 +83,8 @@ Actions:
 - Treat Jang's channel-wise flattening suggestion as a concrete experiment candidate:
   - current OSCD DS: one pixel is one 13-D spectral vector;
   - Jang-style candidate: one band/channel image is flattened into a spatial vector, then subspaces compare spatial band patterns.
+  - Interpret this as advice to test, not ground truth. The key matrix flip is `13 x N_pixels` versus `N_pixels x 13`.
+  - The advantage is spatial layout preservation inside each band vector; the risk is that Sentinel-2 supplies only 13 band-image samples.
 - Treat Aono/geodesic/first-second DS work as the Sensei-aligned temporal track:
   - first build a real multi-date Harmonized Sentinel-2 sequence;
   - then define one subspace per date;

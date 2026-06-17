@@ -224,6 +224,15 @@ Minimum fair comparisons:
 - flattened-band spatial-subspace candidate;
 - multiscale subspace pyramid.
 
+Flattened-band spatial-subspace pilot:
+
+- Motivation: Senpai suggested testing the opposite sample definition from current global pixel DS.
+- Current global pixel DS uses `X in R^(13 x N_pixels)`, where one sample is one pixel's 13-band value vector.
+- Flattened-band candidate uses `X in R^(N_pixels x 13)`, where one sample is one full band image flattened into a spatial vector.
+- First implementation should be one-city only and should answer shape, rank, score-map definition, runtime, and correlation with raw L2/PCA-diff.
+- Required caution: with Sentinel-2 there are only 13 band samples, so rank is limited; do not call this better or more faithful until it produces interpretable maps and metrics.
+- Hyperspectral extension: the idea may be more natural for hyperspectral images with hundreds of bands, where the number of band-image samples is much larger.
+
 Minimum reporting:
 
 - AUROC;

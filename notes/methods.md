@@ -186,7 +186,41 @@ The updated Apple Notes and Jang discussion introduced a second possible meaning
 | flattened-band spatial subspace | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
 | band-group/product subspace | VIS/red-edge/NIR/SWIR groups | multiple group-specific matrices | separates physical band families | needs careful fusion and attribution |
 
-The flattened-band spatial variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands. This is closer to "one image/channel as a spatial vector," but it has few samples and must be tested with toy data, rank sensitivity, and fair baselines before being named as a method.
+The flattened-band spatial variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands:
+
+```text
+current global pixel DS:
+  one sample vector = one pixel location
+  vector dimension  = 13 Sentinel-2 band values
+  matrix shape      = 13 x N_pixels
+
+flattened-band spatial candidate:
+  one sample vector = one Sentinel-2 band image
+  vector dimension  = H x W pixel positions
+  matrix shape      = N_pixels x 13
+```
+
+For Beirut, this would be roughly:
+
+```text
+X_pre_flat_bands in R^(1,262,600 x 13)
+```
+
+where each of the 13 columns is one full flattened band image. This is closer to "one channel image as one high-dimensional spatial vector." It gives PCA a high-dimensional ambient space, but it also gives PCA only 13 samples. Therefore the maximum useful centered PCA rank is at most `12`, and practical rank may be unstable. This is not automatically more correct than pixel-vector DS; it is a different sample definition that should be tested.
+
+Why Senpai's suggestion is worth testing:
+
+- It preserves spatial layout inside each band vector instead of discarding pixel position during fitting.
+- It is closer to classical image-set language: each sample is a whole image-like object, not one pixel.
+- It may become more natural for hyperspectral imagery, where `B` could be hundreds of channels rather than 13.
+- It can answer a seminar question clearly: "What happens if each band is the vector, instead of each pixel?"
+
+Risks:
+
+- With Sentinel-2, 13 samples is very small for robust PCA in a million-dimensional space.
+- The learned subspace may describe band-to-band spatial similarity more than changed-area evidence.
+- Projection/scoring back to a pixel map must be defined carefully; otherwise it may become a global image-level score, not a local change map.
+- It must be compared against patch-vector, local-window, PCA-diff, raw L2/CVA, and IR-MAD before being promoted.
 
 Do not use "spectral subspace" as a thesis term until the sample unit, matrix shape, rank rule, scoring equation, and expected output map are fixed.
 
