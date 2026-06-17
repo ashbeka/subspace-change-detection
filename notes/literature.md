@@ -325,6 +325,12 @@ New external reset sources to keep active:
 - Nielsen and Canty KPCA/MAD work: nonlinear PCA and CCA/MAD are already part of remote-sensing CD history, so KPCA/KDS novelty must be specific.
 - Global-PCG-10 and plastic greenhouse index resources: greenhouse monitoring is legitimate but needs a separate task definition and validation plan.
 
+Reference-resource indexes:
+
+- Paper/resource index: `references/reference_papers/REFERENCE_RESOURCE_INDEX.md`.
+- Reference-code inventory: `references/REFERENCE_CODE_INVENTORY.md`.
+- Use these indexes as navigation aids only. The source papers and formula checks still decide whether an implementation is correct.
+
 ### 9.2 New Source Leads From 2026-06-17
 
 These leads came from the updated Apple/Slack notes and new bookmark source. Treat them as reading and verification targets, not established project evidence yet.

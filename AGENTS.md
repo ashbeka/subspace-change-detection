@@ -252,10 +252,16 @@ For subspace experiments, always explain subspace construction first. Use the co
 
 ## Current Priority
 
-Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace comparison:
+Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial subspace comparison guided by this working problem:
 
 ```text
-global pixel DS vs patch-vector DS vs local-window DS
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
+```
+
+The immediate experiment track is:
+
+```text
+global pixel DS -> patch-vector DS -> local-window DS -> multiscale spatial subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
 ```
 
 This directly answers Sensei's concern that the current global pixel-based subspace may break spatial information.
