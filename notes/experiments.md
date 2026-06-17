@@ -135,7 +135,7 @@ Interpretation:
 - The result supports "spatial sample construction changes DS behavior," not "DS beats classical baselines."
 - Do not spend time on long Phase 2 raw+spatial-prior training until the score definition and failure modes are better understood.
 
-Flattened-band spatial DS all-city sweep, 2026-06-18:
+Band-Image DS all-city sweep, 2026-06-18:
 
 ```powershell
 $cities = 'abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,cupertino,dubai,hongkong,lasvegas,milano,montpellier,mumbai,nantes,norcia,paris,pisa,rennes,rio,saclay_e,saclay_w,valencia'; $tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities $cities --configs "rank6_flatbands:6:global_pixel+patch3+patch5+window128s64mean+flatbands;rank8_flatbands:8:global_pixel+patch3+patch5+window128s64mean+flatbands" --output-dir "phase1/outputs/spatial_ds_allcities_flatbands_$tag" --continue-on-error
@@ -153,7 +153,7 @@ Ignored output:
 phase1/outputs/spatial_ds_allcities_flatbands_20260618_001408/
 ```
 
-Design:
+Historical design:
 
 ```text
 cities: all 24 local OSCD cities
@@ -161,6 +161,12 @@ rank6_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
 rank8_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
 baselines included in each run: raw_l2,pca_diff
 ```
+
+Naming update 2026-06-18:
+
+- `flatbands` is now a legacy alias only.
+- Active method name: `band_image_ds`.
+- Reason: the method treats each Sentinel-2 band image as one flattened spatial vector; `band_image_ds` is clearer and seminar-safe.
 
 Mean results across 24 cities:
 
@@ -190,12 +196,12 @@ DS-family only by AP across 48 city/rank runs:
 
 Interpretation:
 
-- Flattened-band DS is now the strongest DS-family candidate by a large margin.
+- Band-Image DS is now the strongest DS-family candidate by a large margin.
 - It is much better than global pixel DS, patch DS, and local-window DS on mean AP.
 - It does **not** beat PCA-diff on mean AP, so the thesis cannot claim this construction is a better detector overall.
 - It slightly beats PCA-diff on mean AUROC (`0.8412` vs `0.8392`), which suggests useful ranking signal, but Otsu F1 is weak (`0.1129`) and score calibration/pseudo-change remain problems.
 - Its raw-L2 correlation is lower than PCA-diff's (`0.6596` vs `0.8588`), so it is not just a raw-L2 duplicate.
-- This is the first strong evidence that Senpai's flattened-band sample definition is worth studying further.
+- This is the first strong evidence that Senpai's band-image sample definition is worth studying further.
 
 ## 3. Main Completed Sweep
 
@@ -248,7 +254,7 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not another blind sweep. The all-city flattened-band sweep showed that `flatbands` is the strongest DS-family candidate, but it is still weaker than PCA-diff on mean AP and weak under Otsu thresholding.
+The next experiment is not another blind sweep. The all-city Band-Image DS sweep showed that `band_image_ds` is the strongest DS-family candidate, but it is still weaker than PCA-diff on mean AP and weak under Otsu thresholding.
 
 There are now two parallel tracks:
 
@@ -265,13 +271,13 @@ The Sensei-first track has priority for advisor alignment. The OSCD track remain
 Immediate next task:
 
 ```text
-Inspect why flattened-band DS ranks changed pixels reasonably but calibrates poorly, then test whether the score definition and thresholding are the bottleneck.
+Inspect why Band-Image DS ranks changed pixels reasonably but calibrates poorly, then test whether the score definition and thresholding are the bottleneck.
 ```
 
 Immediate experiment track to keep in order:
 
 ```text
-global pixel DS -> patch-vector DS -> local-window DS -> flattened-band spatial subspace -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
+global pixel DS -> patch-vector DS -> local-window DS -> Band-Image DS -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
 ```
 
 Minimum fair comparisons:
@@ -283,14 +289,14 @@ Minimum fair comparisons:
 - global canonical DS;
 - patch3 and patch5 DS;
 - local-window DS;
-- flattened-band spatial-subspace candidate;
+- Band-Image DS spatial-subspace candidate;
 - multiscale subspace pyramid.
 
-Flattened-band spatial-subspace pilot:
+Band-Image DS spatial-subspace pilot:
 
 - Motivation: Senpai suggested testing the opposite sample definition from current global pixel DS.
 - Current global pixel DS uses `X in R^(13 x N_pixels)`, where one sample is one pixel's 13-band value vector.
-- Flattened-band candidate uses `X in R^(N_pixels x 13)`, where one sample is one full band image flattened into a spatial vector.
+- Band-Image candidate uses `X in R^(N_pixels x 13)`, where one sample is one full band image flattened into a spatial vector.
 - First implementation should be one-city only and should answer shape, rank, score-map definition, runtime, and correlation with raw L2/PCA-diff.
 - Required caution: with Sentinel-2 there are only 13 band samples, so rank is limited; do not call this better or more faithful until it produces interpretable maps and metrics.
 - Hyperspectral extension: the idea may be more natural for hyperspectral images with hundreds of bands, where the number of band-image samples is much larger.
@@ -312,24 +318,39 @@ Minimum reporting:
 - qualitative pre/post/GT/score maps;
 - city-wise failure table.
 
-Next `flatbands` ablation:
+Band-Image DS score-ablation result, 2026-06-18:
 
-1. Add score definitions:
-   - squared projected energy, current default;
-   - unsquared projected norm;
-   - normalized projection ratio `||D^T delta||^2 / (||delta||^2 + eps)`;
-   - per-band projected energy maps for attribution.
-2. Add threshold/calibration checks:
-   - Otsu;
-   - percentile thresholds;
-   - validation-calibrated city threshold;
-   - top-k changed-area budget if class prevalence is known.
-3. Add pressure baselines:
-   - verify Celik PCA-kmeans implementation;
-   - verify IR-MAD formula/path and run it on the same city set.
-4. Inspect qualitative failure modes:
-   - where flatbands wins by AP: Aguas Claras rank6, Bordeaux, Chongqing rank8, Cupertino rank6, Milano rank8, Paris, Saclay;
-   - where PCA-diff still wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio.
+- Tracked report: `docs/experiment_reports/oscd_band_image_ds_score_ablation_2026-06-18.md`.
+- Core5 output: `phase1/outputs/spatial_ds_band_image_score_ablation_core5_20260618_021813/`.
+- All-city output: `phase1/outputs/spatial_ds_band_image_score_ablation_allcities_20260618_022314/`.
+- Attribution outputs: `phase1/outputs/spatial_ds_band_image_attribution_{city}_20260618_022904/` for `chongqing`, `nantes`, `bordeaux`, and `norcia`.
+
+All-city mean result:
+
+| method | mean AUROC | mean AP | mean Otsu F1 | mean best F1 | mean raw-L2 corr |
+|---|---:|---:|---:|---:|---:|
+| `pca_diff` | 0.8392 | 0.2541 | 0.2160 | 0.3076 | 0.8588 |
+| `band_image_ds` | 0.8412 | 0.2340 | 0.1129 | 0.2928 | 0.6596 |
+| `band_image_norm` | 0.8412 | 0.2340 | 0.2007 | 0.2928 | 0.7775 |
+| `raw_l2` | 0.7717 | 0.2261 | 0.1802 | 0.2873 | 1.0000 |
+| `band_image_ratio` | 0.7037 | 0.0586 | 0.0773 | 0.1170 | -0.0510 |
+| `band_image_residual` | 0.5766 | 0.0712 | 0.0555 | 0.1203 | 0.5147 |
+
+Interpretation:
+
+- `band_image_norm` is the better active Band-Image DS thresholding score because it keeps the same AUROC/AP as `band_image_ds` but raises all-city Otsu F1 from `0.1129` to `0.2007`.
+- The score reduction was part of the thresholding problem, but PCA-diff still wins mean AP and still has slightly better Otsu F1.
+- `band_image_ratio` and `band_image_residual` should be treated as diagnostics, not primary scores.
+
+Next pressure-baseline task:
+
+1. Verify Celik PCA-kmeans implementation against its paper/reference behavior.
+2. Verify IR-MAD formula and code path.
+3. Run Celik and IR-MAD on the same 24-city OSCD comparison if implementation checks pass.
+4. Inspect qualitative failure modes for:
+   - Band-Image DS wins: Bordeaux, Chongqing, Milano, Paris, selected Saclay cases;
+   - PCA-diff wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio;
+   - patch/local-window wins: Norcia and Saclay-e style cases.
 
 Immediate Sensei-first task:
 

@@ -17,7 +17,7 @@ Project adaptation under test:
 - local_window: fit a pre/post DS pair inside sliding spatial windows.
 - patch_vector: flatten a local 13-band patch into one sample vector so local
   neighborhood layout enters the subspace.
-- flattened_band: flatten each Sentinel-2 band image into one high-dimensional
+- band_image_ds: flatten each Sentinel-2 band image into one high-dimensional
   spatial sample vector, then score projected band-difference images.
 
 Allowed claim:
@@ -70,6 +70,7 @@ class MethodSpec:
     stride: int | None = None
     patch_size: int | None = None
     aggregator: str = "mean"
+    score_mode: str = "energy_sq"
 
 
 @dataclass
@@ -89,7 +90,7 @@ class ConstructionCard:
 
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(
-        description="Compare global, window-local, and patch-vector DS score maps on one OSCD city.",
+        description="Compare global, window-local, patch-vector, and band-image DS score maps on one OSCD city.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     ap.add_argument("--oscd_root", "--oscd-root", type=Path, default=Path("data/OSCD"))
@@ -97,12 +98,21 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--city", default="beirut")
     ap.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     ap.add_argument("--rank", type=int, default=6)
-    ap.add_argument("--methods", default=DEFAULT_METHODS, help="Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, flatbands.")
+    ap.add_argument(
+        "--methods",
+        default=DEFAULT_METHODS,
+        help=(
+            "Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, "
+            "band_image_ds, band_image_norm, band_image_ratio, band_image_residual. "
+            "Legacy aliases such as flatbands are still accepted."
+        ),
+    )
     ap.add_argument("--output_dir", "--output-dir", type=Path, required=True)
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--max_fit_samples", "--max-fit-samples", type=int, default=20000, help="Maximum pixel/patch samples used to fit patch PCA subspaces.")
     ap.add_argument("--score_chunk_size", "--score-chunk-size", type=int, default=25000, help="Patch scoring chunk size.")
     ap.add_argument("--score_percentile", "--score-percentile", type=float, default=99.0, help="Percentile used for display normalization.")
+    ap.add_argument("--save_band_attribution", "--save-band-attribution", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=True)
     return ap.parse_args()
 
@@ -133,8 +143,14 @@ def parse_method_spec(text: str) -> MethodSpec:
     if key == "global" or key == "global_pixel":
         return MethodSpec(name="global_pixel", family="global_pixel")
 
-    if key in {"flatbands", "flat_bands", "flattened_band", "flattened_bands", "band_image", "band_images"}:
-        return MethodSpec(name="flatbands", family="flattened_band")
+    if key in {"band_image_ds", "band_image", "band_images", "band_image_energy", "flatbands", "flat_bands", "flattened_band", "flattened_bands"}:
+        return MethodSpec(name="band_image_ds", family="band_image", score_mode="energy_sq")
+    if key in {"band_image_norm", "band_image_magnitude"}:
+        return MethodSpec(name="band_image_norm", family="band_image", score_mode="energy_norm")
+    if key in {"band_image_ratio", "band_image_projection_ratio"}:
+        return MethodSpec(name="band_image_ratio", family="band_image", score_mode="energy_ratio")
+    if key in {"band_image_residual", "band_image_residual_energy"}:
+        return MethodSpec(name="band_image_residual", family="band_image", score_mode="residual_energy")
 
     m = re.fullmatch(r"window(?P<size>\d+)(?:s(?P<stride>\d+))?(?P<agg>max|mean)?", key)
     if m:
@@ -386,7 +402,7 @@ def patch_vector_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray
     return out, card, pv
 
 
-def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+def band_image_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace, spec: MethodSpec) -> tuple[np.ndarray, ConstructionCard, dict[str, np.ndarray]]:
     """Score change by treating each band image as one spatial vector.
 
     Matrix convention:
@@ -394,8 +410,8 @@ def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarr
 
     PCA therefore learns a basis in pixel-position space from 13 band-image
     samples. To turn the result back into a change map, each band-difference
-    image is projected into the spatial DS and pixel-wise projected energy is
-    summed across bands.
+    image is projected into the spatial DS and pixel-wise projected evidence is
+    reduced across bands.
     """
     c, h, w = x1.shape
     if c != len(BAND_ORDER):
@@ -403,7 +419,7 @@ def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarr
 
     rows, cols = np.where(valid_mask)
     if rows.size == 0:
-        raise RuntimeError("No valid pixels available for flattened-band DS.")
+        raise RuntimeError("No valid pixels available for band-image DS.")
 
     # d = valid spatial positions, n = band-image samples.
     x1_mat = x1[:, rows, cols].T.astype(np.float32, copy=False)
@@ -433,12 +449,38 @@ def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarr
         coeff = d_basis.T @ diff
         projected = d_basis @ coeff
 
-    energy = np.sum(projected * projected, axis=1).astype(np.float32)
+    projected_energy = np.sum(projected * projected, axis=1).astype(np.float32)
+    raw_energy = np.sum(diff * diff, axis=1).astype(np.float32)
+    residual = diff - projected
+    residual_energy = np.sum(residual * residual, axis=1).astype(np.float32)
+
+    if spec.score_mode == "energy_sq":
+        score_values = projected_energy
+        score_definition = "per pixel: sum_bands (P_D delta_band)^2"
+    elif spec.score_mode == "energy_norm":
+        score_values = np.sqrt(np.maximum(projected_energy, 0.0)).astype(np.float32)
+        score_definition = "per pixel: sqrt(sum_bands (P_D delta_band)^2)"
+    elif spec.score_mode == "energy_ratio":
+        eps = np.float32(1e-8)
+        score_values = np.divide(projected_energy, raw_energy + eps, out=np.zeros_like(projected_energy), where=raw_energy > eps).astype(np.float32)
+        score_definition = "per pixel: sum_bands (P_D delta_band)^2 / (sum_bands delta_band^2 + 1e-8)"
+    elif spec.score_mode == "residual_energy":
+        score_values = residual_energy
+        score_definition = "diagnostic per pixel: sum_bands (delta_band - P_D delta_band)^2"
+    else:
+        raise ValueError(f"Unknown band-image score mode: {spec.score_mode!r}")
+
     out = np.zeros((h, w), dtype=np.float32)
-    out[rows, cols] = energy
+    out[rows, cols] = score_values
+
+    band_maps: dict[str, np.ndarray] = {}
+    for idx, band in enumerate(BAND_ORDER):
+        one = np.zeros((h, w), dtype=np.float32)
+        one[rows, cols] = (projected[:, idx] * projected[:, idx]).astype(np.float32)
+        band_maps[band] = one
 
     card = ConstructionCard(
-        method="flatbands",
+        method=spec.name,
         source_reference=(
             "Senpai/Jang-style spatial-band sample-definition test; uses the same canonical first-order DS formula "
             "but changes the sample from one pixel vector to one full flattened band image."
@@ -451,12 +493,12 @@ def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarr
             f"rank-r PCA in valid-pixel spatial ambient space; requested rank={args.rank}, "
             f"actual rank={pre.rank}, centered-sample cap={max_centered_rank}"
         ),
-        score_definition="project each 13-column band-difference image matrix into spatial DS, then per pixel sum projected energy across bands",
+        score_definition=score_definition,
         spatial_information="preserves spatial layout inside each band-image vector, but has only 13 band samples on Sentinel-2",
-        code_path="phase1/scripts/compare_oscd_spatial_subspaces.py::flattened_band_ds_score",
+        code_path="phase1/scripts/compare_oscd_spatial_subspaces.py::band_image_ds_score",
         verification="compared against global/patch/window DS, raw L2, PCA-diff, OSCD labels, raw-L2 correlation, runtime, and visual maps",
     )
-    return out, card
+    return out, card, band_maps
 
 
 def rgb_preview(cube: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
@@ -505,6 +547,42 @@ def save_comparison_grid(path: Path, x_pre: np.ndarray, x_post: np.ndarray, targ
     plt.close(fig)
 
 
+def save_band_attribution_grid(path: Path, band_maps: dict[str, np.ndarray], valid_mask: np.ndarray, percentile: float) -> None:
+    panels = [(band, band_maps[band]) for band in BAND_ORDER if band in band_maps]
+    cols = 4
+    rows = int(np.ceil(len(panels) / cols))
+    fig, axes = plt.subplots(rows, cols, figsize=(3.8 * cols, 3.5 * rows), squeeze=False)
+    for ax in axes.ravel():
+        ax.axis("off")
+    for ax, (band, score) in zip(axes.ravel(), panels):
+        ax.imshow(normalize_for_display(score, valid_mask, percentile), cmap="viridis", vmin=0, vmax=1)
+        ax.set_title(band, fontsize=10)
+    fig.suptitle("Band-Image DS projected-energy attribution by Sentinel-2 band", fontsize=12)
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
+def write_band_attribution_csv(path: Path, band_maps: dict[str, np.ndarray], valid_mask: np.ndarray) -> None:
+    totals = []
+    for band in BAND_ORDER:
+        score = band_maps.get(band)
+        total = float(np.sum(score[valid_mask], dtype=np.float64)) if score is not None else 0.0
+        totals.append((band, total))
+    denom = sum(total for _, total in totals)
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["band", "projected_energy_sum", "projected_energy_fraction"])
+        writer.writeheader()
+        for band, total in totals:
+            writer.writerow(
+                {
+                    "band": band,
+                    "projected_energy_sum": total,
+                    "projected_energy_fraction": total / denom if denom > 0.0 else 0.0,
+                }
+            )
+
+
 def main() -> None:
     suppress_rasterio_warnings()
     args = parse_args()
@@ -531,6 +609,7 @@ def main() -> None:
     rows: list[dict[str, object]] = []
     cards: list[ConstructionCard] = []
     map_outputs: list[tuple[str, np.ndarray]] = []
+    band_attribution_outputs: list[dict[str, str]] = []
 
     raw_l2 = raw_l2_score(x1_norm, x2_norm, eval_mask)
     pca_diff = pca_diff_score(x1_norm, x2_norm, eval_mask, rank_S=args.rank, variance_threshold=None, random_state=args.seed)
@@ -550,8 +629,14 @@ def main() -> None:
         method_mask = eval_mask
         if spec.family == "global_pixel":
             score, card = global_pixel_ds_score(x1_norm, x2_norm, eval_mask, args)
-        elif spec.family == "flattened_band":
-            score, card = flattened_band_ds_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family == "band_image":
+            score, card, band_maps = band_image_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
+            if args.save_band_attribution:
+                grid_path = args.output_dir / f"band_attribution_{spec.name}.png"
+                csv_attr_path = args.output_dir / f"band_attribution_{spec.name}.csv"
+                save_band_attribution_grid(grid_path, band_maps, eval_mask, args.score_percentile)
+                write_band_attribution_csv(csv_attr_path, band_maps, eval_mask)
+                band_attribution_outputs.append({"method": spec.name, "grid": str(grid_path), "csv": str(csv_attr_path)})
         elif spec.family == "local_window":
             score, card = local_window_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "patch_vector":
@@ -609,6 +694,7 @@ def main() -> None:
             "metrics_csv": str(csv_path),
             "comparison_grid": str(args.output_dir / "comparison_grid.png"),
             "score_maps_dir": str(maps_dir),
+            "band_attribution": band_attribution_outputs,
         },
         "meaningful_criteria": {
             "label_alignment": "AUROC and average precision test whether changed pixels receive higher scores than unchanged pixels across thresholds.",

@@ -4,7 +4,7 @@ Run a controlled multi-city, multi-configuration OSCD spatial DS sweep.
 Source/provenance:
 - Wraps `compare_oscd_spatial_subspaces.py`, which implements canonical
   Fukui/Maki DS with three Sentinel-2 sample definitions: global pixels,
-  local windows, flattened local patches, and flattened band images.
+  local windows, flattened local patches, and band-image vectors.
 - This file adds experiment management only: repeated city/config runs,
   aggregate CSV summaries, and a human-readable report.
 
@@ -30,6 +30,11 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CITIES = "beirut,dubai,lasvegas,milano,norcia"
+ALL_CITIES = (
+    "abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,"
+    "cupertino,dubai,hongkong,lasvegas,milano,montpellier,mumbai,nantes,"
+    "norcia,paris,pisa,rennes,rio,saclay_e,saclay_w,valencia"
+)
 DEFAULT_CONFIGS = (
     "rank4_core:4:global_pixel+patch3+patch5;"
     "rank6_spatial:6:global_pixel+window128+patch3+patch5;"
@@ -79,7 +84,7 @@ def parse_args() -> argparse.Namespace:
     )
     ap.add_argument("--oscd_root", "--oscd-root", default="data/OSCD")
     ap.add_argument("--stats_path", "--stats-path", default="phase1/data/oscd_band_stats.json")
-    ap.add_argument("--cities", default=DEFAULT_CITIES, help="Comma-separated city list, or 'core5'.")
+    ap.add_argument("--cities", default=DEFAULT_CITIES, help="Comma-separated city list, 'core5', or 'all'.")
     ap.add_argument(
         "--configs",
         default=DEFAULT_CONFIGS,
@@ -315,7 +320,13 @@ def write_report(
 
 def main() -> None:
     args = parse_args()
-    cities = parse_csv_list(DEFAULT_CITIES if args.cities.lower() == "core5" else args.cities)
+    city_key = args.cities.lower()
+    if city_key == "core5":
+        cities = parse_csv_list(DEFAULT_CITIES)
+    elif city_key == "all":
+        cities = parse_csv_list(ALL_CITIES)
+    else:
+        cities = parse_csv_list(args.cities)
     configs = parse_configs(args.configs)
     output_dir = Path(args.output_dir) if args.output_dir else ROOT / "phase1" / "outputs" / f"oscd_spatial_subspace_sweep_{timestamp()}"
     if not output_dir.is_absolute():

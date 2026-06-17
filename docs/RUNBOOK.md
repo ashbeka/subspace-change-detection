@@ -307,7 +307,7 @@ Phase 2 prior loading expects exactly this structure.
 Current research priority:
 
 ```text
-global pixel DS vs patch-vector DS vs local-window DS vs flattened-band DS
+global pixel DS vs patch-vector DS vs local-window DS vs Band-Image DS
 ```
 
 Source-linked implementation rule:
@@ -339,7 +339,7 @@ What it does not yet prove:
 
 - patch-vector DS;
 - local-window DS as a controlled comparison;
-- flattened-band DS, where each Sentinel-2 band image is one flattened spatial vector;
+- Band-Image DS, where each Sentinel-2 band image is one flattened spatial vector;
 - multiscale subspace pyramid;
 - city-level metric maps and visual outputs for the spatial variants.
 
@@ -349,10 +349,10 @@ Spatial comparison command:
 .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5
 ```
 
-Spatial comparison with the current flattened-band candidate:
+Spatial comparison with the current Band-Image DS candidate:
 
 ```powershell
-$tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,patch3,patch5,window128s64mean,flatbands --output-dir "phase1/outputs/spatial_ds_beirut_flatbands_$tag" --no-save-npy
+$tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 8 --methods global_pixel,patch3,patch5,window128s64mean,band_image_ds,band_image_norm --output-dir "phase1/outputs/spatial_ds_beirut_band_image_$tag" --no-save-npy
 ```
 
 Equivalent raw command:
@@ -377,7 +377,8 @@ score_maps/global_pixel.png
 score_maps/window128s64mean.png
 score_maps/patch3.png
 score_maps/patch5.png
-score_maps/flatbands.png
+score_maps/band_image_ds.png
+score_maps/band_image_norm.png
 comparison_grid.png
 ```
 
@@ -399,16 +400,16 @@ Tracked report:
 docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
 ```
 
-Completed all-city flattened-band sweep:
+Completed all-city Band-Image DS score-ablation sweep:
 
 ```powershell
-$cities = 'abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,cupertino,dubai,hongkong,lasvegas,milano,montpellier,mumbai,nantes,norcia,paris,pisa,rennes,rio,saclay_e,saclay_w,valencia'; $tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities $cities --configs "rank6_flatbands:6:global_pixel+patch3+patch5+window128s64mean+flatbands;rank8_flatbands:8:global_pixel+patch3+patch5+window128s64mean+flatbands" --output-dir "phase1/outputs/spatial_ds_allcities_flatbands_$tag" --continue-on-error
+$tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank8_band_image_scores:8:global_pixel+patch3+patch5+window128s64mean+band_image_ds+band_image_norm+band_image_ratio+band_image_residual" --output-dir "phase1/outputs/spatial_ds_band_image_score_ablation_allcities_$tag" --continue-on-error --no-save-npy
 ```
 
 Tracked report:
 
 ```text
-docs/experiment_reports/oscd_spatial_flatbands_allcities_2026-06-18.md
+docs/experiment_reports/oscd_band_image_ds_score_ablation_2026-06-18.md
 ```
 
 Default sweep design:

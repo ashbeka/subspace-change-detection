@@ -101,18 +101,20 @@ Spatial-subspace core5 result, 2026-06-14:
 - Best PCA-diff mean AP was `0.3953`.
 - This supports the claim that spatial sample construction changes DS behavior, not the claim that DS improves OSCD change detection.
 
-Flattened-band spatial-subspace all-city result, 2026-06-18:
+Band-Image DS all-city result, 2026-06-18:
 
 - Tested all 24 local OSCD cities with ranks 6 and 8.
-- `flatbands` treats each Sentinel-2 band image as one flattened spatial vector: `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)`.
+- `band_image_ds` treats each Sentinel-2 band image as one flattened spatial vector: `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)`.
+- `flatbands` is retained only as a legacy alias.
 - It was the best DS-family method in 44/48 city/rank runs.
-- Mean rank-8 `flatbands`: AUROC `0.8412`, AP `0.2340`, best F1 `0.2928`, Otsu F1 `0.1129`.
+- Mean rank-8 `band_image_ds`: AUROC `0.8412`, AP `0.2340`, best F1 `0.2928`, Otsu F1 `0.1129`.
+- Mean rank-8 `band_image_norm`: AUROC `0.8412`, AP `0.2340`, best F1 `0.2928`, Otsu F1 `0.2007`.
 - Mean rank-8 `pca_diff`: AUROC `0.8392`, AP `0.2541`, best F1 `0.3076`, Otsu F1 `0.2160`.
-- This supports the claim that flattened-band spatial DS is worth studying; it does **not** support the claim that it beats PCA-diff overall.
+- This supports the claim that Band-Image DS is worth studying and that score scaling affects thresholdability; it does **not** support the claim that it beats PCA-diff overall.
 
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, inspect why flattened-band DS ranks changed pixels reasonably but still loses to PCA-diff on AP and Otsu F1:
+Before more long U-Net sweeps, inspect why Band-Image DS ranks changed pixels reasonably but still loses to PCA-diff on AP and slightly loses on Otsu F1:
 
 ```text
 failure-mode maps -> score/threshold ablations -> Celik and IR-MAD pressure baselines

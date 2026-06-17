@@ -183,10 +183,10 @@ The updated Apple Notes and Jang discussion introduced a second possible meaning
 | global pixel spectral subspace | one pixel location | `13 x N` | joint 13-band values at many pixels | ignores pixel position during PCA fitting |
 | patch-vector spectral-spatial subspace | one local patch | `(k*k*13) x N_patches` | local neighborhood around each pixel | high dimensional and slower |
 | local-window spectral subspace | all pixels inside one window | `13 x N_window` per window | local distribution without mixing whole city | block/window artifacts and runtime |
-| flattened-band spatial subspace | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
+| Band-Image DS | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
 | band-group/product subspace | VIS/red-edge/NIR/SWIR groups | multiple group-specific matrices | separates physical band families | needs careful fusion and attribution |
 
-The flattened-band spatial variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands:
+The Band-Image DS variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands:
 
 ```text
 current global pixel DS:
@@ -194,7 +194,7 @@ current global pixel DS:
   vector dimension  = 13 Sentinel-2 band values
   matrix shape      = 13 x N_pixels
 
-flattened-band spatial candidate:
+Band-Image DS spatial candidate:
   one sample vector = one Sentinel-2 band image
   vector dimension  = H x W pixel positions
   matrix shape      = N_pixels x 13
@@ -226,11 +226,14 @@ Do not use "spectral subspace" as a thesis term until the sample unit, matrix sh
 
 2026-06-18 evidence update:
 
-- `flatbands` was implemented in `phase1/scripts/compare_oscd_spatial_subspaces.py::flattened_band_ds_score`.
+- `flatbands` was renamed to `band_image_ds`; `flatbands` remains a compatibility alias only.
+- `band_image_ds` is implemented in `phase1/scripts/compare_oscd_spatial_subspaces.py::band_image_ds_score`.
 - It was swept over all 24 local OSCD cities at ranks 6 and 8.
 - It became the strongest DS-family method by AP in 44 of 48 city/rank runs.
 - It still did not beat PCA-diff on mean AP, so it is a promising sample-definition candidate, not a proven detector.
 - The score map is produced by projecting the 13-column band-difference matrix into the spatial DS and summing projected energy per pixel across bands.
+- A follow-up score ablation showed that `band_image_norm` keeps the same AUROC/AP as `band_image_ds` but improves all-city Otsu F1 from `0.1129` to `0.2007`.
+- Per-band projected-energy attribution maps are available for selected cities to inspect which Sentinel-2 bands drive the projected score.
 
 ## 4. Spectral Change Versus Semantic Change
 
@@ -700,7 +703,7 @@ Current variant cards:
 | global pixel DS | one valid pixel | `X_pre, X_post in R^(13 x N)` | PCA on all valid 13-band pixels per date, giving `Phi, Psi in R^(13 x r)` | canonical/eig DS basis `D`, score `||D^T(x_post - x_pre)||^2` | loses pixel position during fitting; restores scores to map afterward |
 | local-window DS | one valid pixel inside a window | for each window, `X_pre_w, X_post_w in R^(13 x N_w)` | PCA per pre/post window | score pixels inside that window with the window's DS basis; aggregate overlaps | preserves regional context; may create boundary/block artifacts |
 | patch-vector DS | one local patch centered on a pixel | `3x3x13 = 117-D` or `5x5x13 = 325-D` sample vectors | PCA on flattened patch samples per date | score center pixel using DS in patch-feature space | preserves local layout inside each sample; higher dimensional |
-| flattened-band DS | one full Sentinel-2 band image | `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)` | PCA in pixel-position space from 13 band-image samples per date | project the `13` band-difference images into spatial DS, then sum projected energy per pixel | preserves global spatial layout inside each band vector; sample-limited on Sentinel-2 because there are only 13 bands |
+| Band-Image DS | one full Sentinel-2 band image | `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)` | PCA in pixel-position space from 13 band-image samples per date | project the `13` band-difference images into spatial DS, then reduce projected evidence per pixel | preserves global spatial layout inside each band vector; sample-limited on Sentinel-2 because there are only 13 bands |
 | multiscale subspace pyramid | one cell or pixel inside a pyramid cell | whole image, `2x2`, `4x4`, `8x8` grid cells | PCA/DS per spatial cell and date | combine per-scale DS scores into one map | preserves coarse and fine spatial support; weights and block artifacts must be audited |
 | tensor / n-mode GDS | tensor sample or tensor mode | e.g. `bands x height x width x time` | mode-wise subspaces instead of full flattening | n-mode GDS / tensor comparison | preserves explicit modes; future method track |
 | deep-feature subspace | encoder feature vector or patch embedding | feature matrix from CNN/foundation model | PCA/subspace over learned features | DS/GDS over latent feature subspaces | preserves whatever the encoder learned; source of interpretability is weaker unless audited |
