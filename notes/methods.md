@@ -521,6 +521,23 @@ road pixel, sea pixel, building pixel, vegetation pixel -> all columns in one ma
 
 This is not automatically wrong, but it may be too weak for spatial change detection.
 
+Working definition:
+
+```text
+A change map is spatially meaningful if high scores form coherent image regions
+that correspond to plausible changed objects or changed land-cover areas, while
+avoiding scores that are only scattered pixel noise, window/block artifacts, or
+global radiometric/seasonal shifts unrelated to the target change labels.
+```
+
+For this project, "spatially meaningful" is not a vague visual compliment. It means the method passes several checks:
+
+- Metric check: the map ranks OSCD changed pixels above unchanged pixels using AUROC/AP and improves or complements raw L2/PCA-diff.
+- Region check: high-score areas are spatially connected around actual changed regions, not isolated speckles.
+- Boundary check: the map is not dominated by artificial patch/window/grid boundaries.
+- Pseudo-change check: high scores are not mainly clouds, shadows, seasonal vegetation, water brightness, or registration artifacts.
+- Interpretation check: we can explain what sample unit produced the score, such as pixel spectra, patches, windows, or flattened band images.
+
 Spatial alternatives to test:
 
 - Patch-vector DS: one sample is a `3x3x13` or `5x5x13` local patch.
