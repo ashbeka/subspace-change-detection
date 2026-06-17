@@ -1,0 +1,621 @@
+{
+  "base_file": "docs\\source_records\\final_organization_2026-06-12\\chrome_bookmarks_organized_all_2026-06-12.html",
+  "new_source_file": "docs\\source_records\\final_organization_2026-06-12\\bookmarks_6_17_26_with_research_uningested_bookmarks.html",
+  "output_file": "docs\\source_records\\final_organization_2026-06-12\\chrome_bookmarks_organized_all_2026-06-17.html",
+  "base_url_count": 1556,
+  "new_research_uningested_bookmark_count": 186,
+  "new_unique_url_count": 186,
+  "added_new_urls": 186,
+  "duplicates_already_in_base": 0,
+  "duplicates_within_new_source": 0,
+  "final_url_count": 1742,
+  "expected_final_url_count": 1742,
+  "counts_match": true,
+  "added_by_category": {
+    "Learning/Computer Science/Foundations and Curricula": 1,
+    "Learning/Machine Learning and AI/General Resources": 1,
+    "Research/01 Read First - Thesis Core/01 Subspace DS KDS GDS And CCA": 2,
+    "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines": 6,
+    "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks": 13,
+    "Research/02 Methods - Subspace Geometry/03 Optional Green Learning Wavelets Compression": 1,
+    "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection": 9,
+    "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection": 9,
+    "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning": 23,
+    "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues": 2,
+    "Research/04 Datasets - Current Candidate Future/01 Sentinel OSCD MultiSenGE And EO Datasets": 17,
+    "Research/04 Datasets - Current Candidate Future/03 Disaster Damage And Semantic Datasets": 2,
+    "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background": 13,
+    "Research/05 Applications - Use Cases And Problem Framing/01 Greenhouses Agriculture Environmental Monitoring": 1,
+    "Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment": 1,
+    "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls": 4,
+    "Research/07 Literature Workflow - Search Venues Writing/02 Search And Reference Management": 2,
+    "Research/08 Tools And Code - Implementation Support/01 Reference Implementations": 7,
+    "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling": 5,
+    "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links": 67
+  },
+  "duplicates_existing_sample": [],
+  "duplicates_within_new_sample": [],
+  "added_sample": [
+    {
+      "title": "[2211.11592] Guided Depth Super-Resolution by Deep Anisotropic Diffusion",
+      "url": "https://arxiv.org/abs/2211.11592",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "CVPR 2023 Open Access Repository",
+      "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Metzger_Guided_Depth_Super-Resolution_by_Deep_Anisotropic_Diffusion_CVPR_2023_paper.html",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "prs-eth/Diffusion-Super-Resolution: [CVPR 2023] Guided Depth Super-Resolution by Deep Anisotropic Diffusion",
+      "url": "https://github.com/prs-eth/Diffusion-Super-Resolution",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Urban Change Detection for Multispectral Earth Observation Using Convolutional Neural Networks - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/publication/2018-08-22-urban-change-detection",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "Multitask Learning for Large-scale Semantic Change Detection - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/publication/2018-11-01-cviu18-hrscd",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "Learning to Understand Earth Observation Images with Weak and Unreliable Ground Truth - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/publication/2019igarss-learning-to-understand",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "Convolutional Neural Networks for Change Analysis in Earth Observation Images with Noisy Labels and Domain Shifts - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/publication/2020-11-06-thesis",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "Guided Depth Super-Resolution by Deep Anisotropic Diffusion - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/dada/",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "arxiv.org/pdf/2206.01466",
+      "url": "https://arxiv.org/pdf/2206.01466",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "FiLM-Ensemble: Probabilistic Deep Learning via Feature-wise Linear Modulation",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2022/hash/8bd31288ad8e9a31d519fdeede7ee47d-Abstract-Conference.html",
+      "category": "Learning/Machine Learning and AI/General Resources"
+    },
+    {
+      "title": "Fine-grained population mapping from coarse census counts and open geodata | Scientific Reports",
+      "url": "https://www.nature.com/articles/s41598-022-24495-w",
+      "category": "Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment"
+    },
+    {
+      "title": "Homepage - Photogrammetry and Remote Sensing – Photogrammetry and Remote Sensing | ETH Zurich",
+      "url": "https://prs.igp.ethz.ch/",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "arxiv.org/pdf/2312.02145",
+      "url": "https://arxiv.org/pdf/2312.02145",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "[2311.17643] Thera: Aliasing-Free Arbitrary-Scale Super-Resolution with Neural Heat Fields",
+      "url": "https://arxiv.org/abs/2311.17643",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Snow depth estimation at country-scale with high spatial and temporal resolution - ScienceDirect",
+      "url": "https://www.sciencedirect.com/science/article/pii/S0924271623000230",
+      "category": "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues"
+    },
+    {
+      "title": "CVPR 2023 Open Access Repository",
+      "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Kalischek_BiasBed_-_Rigorous_Texture_Bias_Evaluation_CVPR_2023_paper.html",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Publications - Rodrigo Caye Daudt",
+      "url": "https://rcdaudt.github.io/publications/",
+      "category": "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines"
+    },
+    {
+      "title": "IEEE Xplore Full-Text PDF:",
+      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10158495",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Self-Supervised Representation Learning for Remote Sensing Image Change Detection Based on Temporal Prediction",
+      "url": "https://www.mdpi.com/2072-4292/12/11/1868",
+      "category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+    },
+    {
+      "title": "Spatially Selective Self-Training for Unsupervised Building Change Detection",
+      "url": "https://arxiv.org/html/2606.10775",
+      "category": "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection"
+    },
+    {
+      "title": "(IMPORTANT! request the change detection baselines benchmarks from this)dase.grss-ieee.org",
+      "url": "http://dase.grss-ieee.org/",
+      "category": "Research/07 Literature Workflow - Search Venues Writing/02 Search And Reference Management"
+    },
+    {
+      "title": "Toward Label‐Efficient Deep Learning Change Detection for Remote Sensing Imagery: A Comprehensive Review - Peng - 2025 - The Photogrammetric Record - Wiley Online Library",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1111/phor.70021",
+      "category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+    },
+    {
+      "title": "Mapping Plastic Greenhouses with Two-Temporal Sentinel-2 Images and 1D-CNN Deep Learning",
+      "url": "https://www.mdpi.com/2072-4292/13/14/2820",
+      "category": "Research/05 Applications - Use Cases And Problem Framing/01 Greenhouses Agriculture Environmental Monitoring"
+    },
+    {
+      "title": "Advances and Challenges in Deep Learning-Based Change Detection for Remote Sensing Images: A Review through Various Learning Paradigms",
+      "url": "https://www.mdpi.com/2072-4292/16/5/804",
+      "category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+    },
+    {
+      "title": "Spectrally-Spatially Regularized Low-Rank and Sparse Decomposition: A Novel Method for Change Detection in Multitemporal Hyperspectral Images",
+      "url": "https://www.mdpi.com/2072-4292/9/10/1044",
+      "category": "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background"
+    },
+    {
+      "title": "An Integrated Change Detection Method Based on Spectral Unmixing and the CNN for Hyperspectral Imagery",
+      "url": "https://www.mdpi.com/2072-4292/14/11/2523",
+      "category": "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background"
+    },
+    {
+      "title": "arxiv.org/pdf/2305.05813",
+      "url": "https://arxiv.org/pdf/2305.05813",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Strivers A2Z DSA Course/Sheet - Crack Any FAANG or PBCs",
+      "url": "https://takeuforward.org/dsa/strivers-a2z-sheet-learn-dsa-a-to-z",
+      "category": "Learning/Computer Science/Foundations and Curricula"
+    },
+    {
+      "title": "arxiv.org/pdf/2312.12222",
+      "url": "https://arxiv.org/pdf/2312.12222",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "arxiv.org/pdf/2507.16228",
+      "url": "https://arxiv.org/pdf/2507.16228",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "[2505.21089] DisasterM3: A Remote Sensing Vision-Language Dataset for Disaster Damage Assessment and Response",
+      "url": "https://arxiv.org/abs/2505.21089",
+      "category": "Research/04 Datasets - Current Candidate Future/03 Disaster Damage And Semantic Datasets"
+    },
+    {
+      "title": "Service Specifications - Multi Mission Mapper - mCube",
+      "url": "https://docs.mcube.terradue.com/services/irmad/service-specs/",
+      "category": "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection"
+    },
+    {
+      "title": "Change Detection in Google Earth Engine - The MAD Transformation (Part 1)  |  Google for Developers",
+      "url": "https://developers.google.com/earth-engine/tutorials/community/imad-tutorial-pt1",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "The regularized iteratively reweighted MAD method for change detection in multi- and hyperspectral data - PubMed",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/17269639/",
+      "category": "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background"
+    },
+    {
+      "title": "IEEE Xplore Full-Text PDF:",
+      "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=11146768",
+      "category": "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links"
+    },
+    {
+      "title": "Detect Change Using Deep Learning (Image Analyst Tools) | ArcGIS Pro documentation",
+      "url": "https://doc.esri.com/en/arcgis-pro/latest/tool-reference/image-analyst/detect-change-using-deep-learning.html?tabs=dialog",
+      "category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+    },
+    {
+      "title": "Deep-Learning for Change Detection Using Multi-Modal Fusion of Remote Sensing Images: A Review",
+      "url": "https://www.mdpi.com/2072-4292/16/20/3852",
+      "category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+    },
+    {
+      "title": "Exploring Foundation Models in Remote Sensing Image Change Detection: A Comprehensive Survey",
+      "url": "https://arxiv.org/html/2410.07824v1",
+      "category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+    },
+    {
+      "title": "Machine Learning in Epilepsy Detection: A Review | Proceedings of the 2025 6th International Symposium on Artificial Intelligence for Medical Sciences",
+      "url": "https://dl.acm.org/doi/10.1145/3777577.3777601",
+      "category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+    },
+    {
+      "title": "A Siamese Network Based U-Net for Change Detection in High Resolution Remote Sensing Images | IEEE Journals & Magazine | IEEE Xplore",
+      "url": "https://ieeexplore.ieee.org/document/9733219",
+      "category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+    }
+  ],
+  "parking_reclassification": {
+    "moved_from_parking": 54,
+    "remaining_parking": 14,
+    "moved": [
+      {
+        "title": "[2211.11592] Guided Depth Super-Resolution by Deep Anisotropic Diffusion",
+        "url": "https://arxiv.org/abs/2211.11592",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "CVPR 2023 Open Access Repository",
+        "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Metzger_Guided_Depth_Super-Resolution_by_Deep_Anisotropic_Diffusion_CVPR_2023_paper.html",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "prs-eth/Diffusion-Super-Resolution: [CVPR 2023] Guided Depth Super-Resolution by Deep Anisotropic Diffusion",
+        "url": "https://github.com/prs-eth/Diffusion-Super-Resolution",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "[2311.17643] Thera: Aliasing-Free Arbitrary-Scale Super-Resolution with Neural Heat Fields",
+        "url": "https://arxiv.org/abs/2311.17643",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "CVPR 2023 Open Access Repository",
+        "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Kalischek_BiasBed_-_Rigorous_Texture_Bias_Evaluation_CVPR_2023_paper.html",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "Change Detection in Google Earth Engine - The MAD Transformation (Part 1)  |  Google for Developers",
+        "url": "https://developers.google.com/earth-engine/tutorials/community/imad-tutorial-pt1",
+        "new_category": "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling"
+      },
+      {
+        "title": "Multi-scale Semantic Representation and Supervision for Remote Sensing Change Detection",
+        "url": "https://dl.acm.org/doi/fullHtml/10.1145/3512388.3512394",
+        "new_category": "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection"
+      },
+      {
+        "title": "DEFIF-Net: A lightweight dual-encoding feature interaction fusion network for medical image segmentation - PMC",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12122036/",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "SegChange-R1: LLM-Augmented Remote Sensing Change Detection",
+        "url": "https://arxiv.org/html/2506.17944v2",
+        "new_category": "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection"
+      },
+      {
+        "title": "Remote Sensing | March-2 2026 - Browse Articles",
+        "url": "https://www.mdpi.com/2072-4292/18/6",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "Revisiting Change Detection Methods for their Application to Serac Fall Time-Lapse Monitoring",
+        "url": "https://arxiv.org/html/2605.28100v1",
+        "new_category": "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection"
+      },
+      {
+        "title": "Change Detection Based on Artificial Intelligence: State-of-the-Art and Challenges",
+        "url": "https://www.mdpi.com/2072-4292/12/10/1688",
+        "new_category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+      },
+      {
+        "title": "[2512.11719] Referring Change Detection in Remote Sensing Imagery",
+        "url": "https://arxiv.org/abs/2512.11719",
+        "new_category": "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection"
+      },
+      {
+        "title": "Change detection in ArcGIS Pro | ArcGIS Pro documentation",
+        "url": "https://doc.esri.com/en/arcgis-pro/latest/help/analysis/image-analyst/change-detection-in-arcgis-pro.html",
+        "new_category": "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling"
+      },
+      {
+        "title": "Change Detection in Satellite Images Using a Genetic Algorithm Approach | IEEE Journals & Magazine | IEEE Xplore",
+        "url": "https://ieeexplore.ieee.org/document/5395684?denied=",
+        "new_category": "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection"
+      },
+      {
+        "title": "Object-Based Change Detection of Very High Resolution Images by Fusing Pixel-Based Change Detection Results Using Weighted Dempster–Shafer Theory",
+        "url": "https://www.mdpi.com/2072-4292/12/6/983",
+        "new_category": "Research/01 Read First - Thesis Core/05 Spatial And Semantic Change Questions"
+      },
+      {
+        "title": "openaccess.thecvf.com/content/ICCV2023/papers/Bernhard_MapFormer_Boosting_Change_Detection_by_Using_Pre-change_Information_ICCV_2023_paper.pdf",
+        "url": "https://openaccess.thecvf.com/content/ICCV2023/papers/Bernhard_MapFormer_Boosting_Change_Detection_by_Using_Pre-change_Information_ICCV_2023_paper.pdf",
+        "new_category": "Research/01 Read First - Thesis Core/05 Spatial And Semantic Change Questions"
+      },
+      {
+        "title": "[2309.01429] Adapting Segment Anything Model for Change Detection in HR Remote Sensing Images",
+        "url": "https://arxiv.org/abs/2309.01429",
+        "new_category": "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling"
+      },
+      {
+        "title": "Conditional generation via Bayesian optimization in latent space - Martin Krasser",
+        "url": "https://krasserm.github.io/2018/04/07/latent-space-optimization/",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "The 2026 Guide to Prompt Engineering | IBM",
+        "url": "https://www.ibm.com/think/prompt-engineering?lnk=thinkhphub5us",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "The 2026 Guide to AI Agents | IBM",
+        "url": "https://www.ibm.com/think/ai-agents?lnk=thinkhphub2us",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "Think Topics | IBM",
+        "url": "https://www.ibm.com/think/topics",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "What is Machine Learning? | IBM",
+        "url": "https://www.ibm.com/think/topics/machine-learning",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "The PASCAL Visual Object Classes Homepage",
+        "url": "https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/",
+        "new_category": "Learning/Machine Learning and AI/General Resources"
+      },
+      {
+        "title": "What Is Computer Vision? | IBM",
+        "url": "https://www.ibm.com/think/topics/computer-vision",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "What Are Machine Learning Algorithms? | IBM",
+        "url": "https://www.ibm.com/think/topics/machine-learning-algorithms",
+        "new_category": "Learning/Machine Learning and AI/LLMs and Modern AI"
+      },
+      {
+        "title": "Search | NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/search?keys=EMIT",
+        "new_category": "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs"
+      },
+      {
+        "title": "EOWEB GeoPortal",
+        "url": "https://eoweb.dlr.de/egp/",
+        "new_category": "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs"
+      },
+      {
+        "title": "ASI|Agenzia Spaziale Italiana",
+        "url": "https://www.asi.it/en/earth-science/prisma/",
+        "new_category": "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs"
+      },
+      {
+        "title": "EarthExplorer",
+        "url": "https://earthexplorer.usgs.gov/",
+        "new_category": "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs"
+      },
+      {
+        "title": "Your Gateway to NASA Earth Observation Data | NASA Earthdata",
+        "url": "https://www.earthdata.nasa.gov/",
+        "new_category": "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs"
+      },
+      {
+        "title": "Change Detection: Monitoring Earth's Transformations | Mapular",
+        "url": "https://mapular.com/glossary/change-detection",
+        "new_category": "Research/06 Background - Read As Needed/01 Remote Sensing Books And Guides"
+      },
+      {
+        "title": "Satellite Imagery: Earth Observation from Space | Mapular",
+        "url": "https://mapular.com/glossary/satellite-imagery",
+        "new_category": "Research/06 Background - Read As Needed/01 Remote Sensing Books And Guides"
+      },
+      {
+        "title": "Different change detection techniques  | Download Scientific Diagram",
+        "url": "https://www.researchgate.net/figure/Different-change-detection-techniques_fig1_323185561",
+        "new_category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+      },
+      {
+        "title": "(PDF) Analysis of different Models for Land-use and Land-cover Change Detection",
+        "url": "https://www.researchgate.net/publication/323185561_Analysis_of_different_Models_for_Land-use_and_Land-cover_Change_Detection",
+        "new_category": "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks"
+      },
+      {
+        "title": "Deep Block now offers change detection for remote sensing imagery.",
+        "url": "https://www.deepblock.net/blog/change-detection-launch",
+        "new_category": "Research/08 Tools And Code - Implementation Support/01 Reference Implementations"
+      },
+      {
+        "title": "The Deep Dive",
+        "url": "https://www.deepblock.net/blog",
+        "new_category": "Research/08 Tools And Code - Implementation Support/01 Reference Implementations"
+      },
+      {
+        "title": "Why Fine-Tuning Still Matters for Change Detection: A Deep Block Case Study on Rural Orthophoto Data",
+        "url": "https://www.deepblock.net/blog/fine-tuning-change-detection",
+        "new_category": "Research/08 Tools And Code - Implementation Support/01 Reference Implementations"
+      },
+      {
+        "title": "Homepage - GRSS-IEEE",
+        "url": "https://www.grss-ieee.org/",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "An adaptive image fusion method for Sentinel-2 images and high-resolution images with long-time intervals - ScienceDirect",
+        "url": "https://www.sciencedirect.com/science/article/pii/S1569843223002054",
+        "new_category": "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues"
+      },
+      {
+        "title": "Cross-sensor super-resolution of irregularly sampled Sentinel-2 time series",
+        "url": "https://hal.science/hal-04552850v1/file/main.pdf",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "Primary Modality Guided Multimodal Change Detection | IEEE Conference Publication | IEEE Xplore",
+        "url": "https://ieeexplore.ieee.org/document/10640769?denied=",
+        "new_category": "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues"
+      },
+      {
+        "title": "ITD Contest, 2025",
+        "url": "https://www2.isprs.org/commissions/comm3/wg1/contest/itd-contest-2025/",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "WG III/1",
+        "url": "https://www2.isprs.org/commissions/comm3/wg1/",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "ITD Contest, 2026",
+        "url": "https://www2.isprs.org/commissions/comm3/wg1/contest/itd-contest-2026/",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "WG II/4",
+        "url": "https://www2.isprs.org/commissions/comm2/wg4/",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "IEEE IGARSS 2024 || Athens, Greece || 7 - 12 July, 2024",
+        "url": "https://www.2024.ieeeigarss.org/tutorials.php",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      },
+      {
+        "title": "LDGNet: A Lightweight Difference Guiding Network for Remote Sensing Change Detection",
+        "url": "https://arxiv.org/html/2504.05062v1",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "(REALLY IMPORTANT, look at how they had comparisions and methods clearly compared and laid out, look at their schematics and detials) LDGNet: A Lightweight Difference Guiding Network for Remote Sensing Change Detection",
+        "url": "https://arxiv.org/html/2504.05062v1#bib.bib13",
+        "new_category": "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning"
+      },
+      {
+        "title": "AI and ML for Wetlands: Remote Sensing-Driven Solutions for Climate-Resilient Ecosystem Management",
+        "url": "https://think.taylorandfrancis.com/article_collections/ai-and-ml-for-wetlands-remote-sensing-driven-solutions-for-climate-resilient-ecosystem-management/",
+        "new_category": "Research/05 Applications - Use Cases And Problem Framing/04 Ecology And Wildlife Monitoring"
+      },
+      {
+        "title": "(really interesting research)UniChange: Unifying Change Detection with Multimodal Large Language Model",
+        "url": "https://arxiv.org/html/2511.02607v1#bib.bib9",
+        "new_category": "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection"
+      },
+      {
+        "title": "(very interesting and close to what other senpais in my lab do)Changes in Real Time: Online Scene Change Detection with Multi-View Fusion",
+        "url": "https://arxiv.org/html/2511.12370v1",
+        "new_category": "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection"
+      },
+      {
+        "title": "(PDF) Change Guiding Network: Incorporating Change Prior to Guide Change Detection in Remote Sensing Imagery",
+        "url": "https://www.researchgate.net/publication/373532229_Change_Guiding_Network_Incorporating_Change_Prior_to_Guide_Change_Detection_in_Remote_Sensing_Imagery",
+        "new_category": "Research/01 Read First - Thesis Core/05 Spatial And Semantic Change Questions"
+      },
+      {
+        "title": "Home | The Visual Computer | Springer Nature Link",
+        "url": "https://link.springer.com/journal/371",
+        "new_category": "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls"
+      }
+    ],
+    "remaining_sample": [
+      {
+        "title": "maot famus satellites accuracy - Google Search",
+        "url": "https://www.google.com/search?q=maot+famus+satellites+accuracy&ie=UTF-8&oe=UTF-8&hl=en-jp&client=safari"
+      },
+      {
+        "title": "arxiv.org/pdf/2206.01466",
+        "url": "https://arxiv.org/pdf/2206.01466"
+      },
+      {
+        "title": "Homepage - Photogrammetry and Remote Sensing – Photogrammetry and Remote Sensing | ETH Zurich",
+        "url": "https://prs.igp.ethz.ch/"
+      },
+      {
+        "title": "arxiv.org/pdf/2312.02145",
+        "url": "https://arxiv.org/pdf/2312.02145"
+      },
+      {
+        "title": "IEEE Xplore Full-Text PDF:",
+        "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=10158495"
+      },
+      {
+        "title": "arxiv.org/pdf/2305.05813",
+        "url": "https://arxiv.org/pdf/2305.05813"
+      },
+      {
+        "title": "arxiv.org/pdf/2312.12222",
+        "url": "https://arxiv.org/pdf/2312.12222"
+      },
+      {
+        "title": "arxiv.org/pdf/2507.16228",
+        "url": "https://arxiv.org/pdf/2507.16228"
+      },
+      {
+        "title": "IEEE Xplore Full-Text PDF:",
+        "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=11146768"
+      },
+      {
+        "title": "arxiv.org/pdf/2208.06293",
+        "url": "https://arxiv.org/pdf/2208.06293"
+      },
+      {
+        "title": "arxiv.org/pdf/2602.09529",
+        "url": "https://arxiv.org/pdf/2602.09529"
+      },
+      {
+        "title": "arxiv.org/pdf/2506.07925",
+        "url": "https://arxiv.org/pdf/2506.07925"
+      },
+      {
+        "title": "(highly relevent and important)",
+        "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=9627707"
+      },
+      {
+        "title": "IEEE Xplore Full-Text PDF:",
+        "url": "https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=11146768&tag=1"
+      }
+    ]
+  },
+  "final_folder_counts_selected": {
+    "Learning/Computer Science/Foundations and Curricula": 17,
+    "Learning/General Learning/Courses Books Tutorials": 28,
+    "Learning/General Learning/Reading and Note Taking": 1,
+    "Learning/Machine Learning and AI/Books and References": 33,
+    "Learning/Machine Learning and AI/Classic Papers": 1,
+    "Learning/Machine Learning and AI/Courses": 37,
+    "Learning/Machine Learning and AI/Datasets and Benchmarks": 3,
+    "Learning/Machine Learning and AI/Deep Learning Visuals": 2,
+    "Learning/Machine Learning and AI/General Resources": 20,
+    "Learning/Machine Learning and AI/LLMs and Modern AI": 33,
+    "Learning/Machine Learning and AI/Roadmaps and Study Plans": 1,
+    "Learning/Math/Calculus Geometry Manifolds": 16,
+    "Learning/Math/Linear Algebra": 14,
+    "Learning/Statistics/Causality Probabilistic Inference": 1,
+    "Learning/Statistics/Experimental Design": 5,
+    "Learning/Statistics/Probability Inference": 30,
+    "Research/01 Read First - Thesis Core/01 Subspace DS KDS GDS And CCA": 27,
+    "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines": 17,
+    "Research/01 Read First - Thesis Core/03 Datasets And Problem Setting": 21,
+    "Research/01 Read First - Thesis Core/04 Review Papers And Reality Checks": 27,
+    "Research/01 Read First - Thesis Core/05 Spatial And Semantic Change Questions": 15,
+    "Research/02 Methods - Subspace Geometry/01 General Subspace Geometry And Toolboxes": 30,
+    "Research/02 Methods - Subspace Geometry/02 Kernel PCA And Kernel Subspace": 1,
+    "Research/02 Methods - Subspace Geometry/03 Optional Green Learning Wavelets Compression": 6,
+    "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection": 27,
+    "Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection": 35,
+    "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning": 59,
+    "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues": 44,
+    "Research/04 Datasets - Current Candidate Future/01 Sentinel OSCD MultiSenGE And EO Datasets": 29,
+    "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs": 21,
+    "Research/04 Datasets - Current Candidate Future/03 Disaster Damage And Semantic Datasets": 12,
+    "Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background": 35,
+    "Research/05 Applications - Use Cases And Problem Framing/01 Greenhouses Agriculture Environmental Monitoring": 3,
+    "Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment": 22,
+    "Research/05 Applications - Use Cases And Problem Framing/03 Humanitarian And Conflict Mapping": 11,
+    "Research/05 Applications - Use Cases And Problem Framing/04 Ecology And Wildlife Monitoring": 9,
+    "Research/06 Background - Read As Needed/01 Remote Sensing Books And Guides": 4,
+    "Research/06 Background - Read As Needed/02 ML CV Foundation Papers": 16,
+    "Research/07 Literature Workflow - Search Venues Writing/01 Conferences Journals And Calls": 50,
+    "Research/07 Literature Workflow - Search Venues Writing/02 Search And Reference Management": 16,
+    "Research/07 Literature Workflow - Search Venues Writing/03 Writing Posters And Presentation": 10,
+    "Research/08 Tools And Code - Implementation Support/01 Reference Implementations": 15,
+    "Research/08 Tools And Code - Implementation Support/03 Geospatial Tools And Labeling": 13,
+    "Research/09 Parking Lot - Lower Priority/02 Nonproject Papers To Triage Later": 46,
+    "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links": 14
+  }
+}

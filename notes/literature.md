@@ -329,6 +329,13 @@ New external reset sources to keep active:
 
 These leads came from the updated Apple/Slack notes and new bookmark source. Treat them as reading and verification targets, not established project evidence yet.
 
+Bookmark integration:
+
+- Importable file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`.
+- Merge summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-17.json`.
+- The new `Research (un-ingested)` source contributed `186` unique URLs; all were preserved in the organized output.
+- Only `14` ambiguous research-like links remain parked because their titles/URLs do not identify the resource safely.
+
 | Concept | New lead | Why it matters | Immediate action |
 |---|---|---|---|
 | BCD versus SCD | binary change detection, semantic change detection, and post-classification change detection resources | Clarifies that OSCD is binary changed-area detection, while many attractive ideas require semantic/object labels. | Keep OSCD experiments binary; read SCD/PCCD only if pivoting to semantic or object/state change. |
