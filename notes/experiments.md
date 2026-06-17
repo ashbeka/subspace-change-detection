@@ -20,6 +20,14 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 
 The active benchmark is OSCD binary change detection.
 
+Final working problem statement as of 2026-06-17:
+
+```text
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
+```
+
+This is the problem to experiment on right now. It is not a claim that DS will win. It is a measurable question tied to Sensei's spatial-information criticism.
+
 ## 2. Trusted Evidence
 
 Code and smoke evidence:
@@ -197,6 +205,35 @@ Immediate next task:
 ```text
 Inspect why patch DS helps in some cities and fails in others, then test whether the score definition is the bottleneck.
 ```
+
+Immediate experiment track to keep in order:
+
+```text
+global pixel DS -> patch-vector DS -> local-window DS -> flattened-band spatial subspace -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
+```
+
+Minimum fair comparisons:
+
+- raw spectral L2 / CVA;
+- PCA-diff;
+- Celik PCA-kmeans if the implementation is verified;
+- IR-MAD after formula audit;
+- global canonical DS;
+- patch3 and patch5 DS;
+- local-window DS;
+- flattened-band spatial-subspace candidate;
+- multiscale subspace pyramid.
+
+Minimum reporting:
+
+- AUROC;
+- PR-AUC/AP;
+- best F1/IoU over thresholds;
+- Otsu F1/IoU;
+- raw-L2 correlation;
+- runtime;
+- qualitative pre/post/GT/score maps;
+- city-wise failure table.
 
 Immediate Sensei-first task:
 

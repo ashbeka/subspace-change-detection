@@ -7,6 +7,7 @@
 - [3. Phase 1: Prior Maps](#3-phase-1-prior-maps)
   - [Feature-Extraction-Like Role](#feature-extraction-like-role)
   - [Subspace Feature Isolation Route](#subspace-feature-isolation-route)
+  - [Spectral And Spatial-Band Subspace Candidate](#spectral-and-spatial-band-subspace-candidate)
 - [4. Spectral Change Versus Semantic Change](#4-spectral-change-versus-semantic-change)
 - [5. Phase 2: Supervised Segmentation](#5-phase-2-supervised-segmentation)
 - [6. DS In The Current OSCD Adaptation](#6-ds-in-the-current-oscd-adaptation)
@@ -172,6 +173,22 @@ Possible outputs:
 - residual/background-separated maps;
 - band-group attribution tables;
 - feature channels passed to PCA-diff, IR-MAD, U-Net, clustering, or another change detector.
+
+### Spectral And Spatial-Band Subspace Candidate
+
+The updated Apple Notes and Jang discussion introduced a second possible meaning of "spectral subspace." Keep these variants separate:
+
+| Variant | Sample unit | Matrix shape idea | What it preserves | Main risk |
+|---|---|---|---|---|
+| global pixel spectral subspace | one pixel location | `13 x N` | joint 13-band values at many pixels | ignores pixel position during PCA fitting |
+| patch-vector spectral-spatial subspace | one local patch | `(k*k*13) x N_patches` | local neighborhood around each pixel | high dimensional and slower |
+| local-window spectral subspace | all pixels inside one window | `13 x N_window` per window | local distribution without mixing whole city | block/window artifacts and runtime |
+| flattened-band spatial subspace | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
+| band-group/product subspace | VIS/red-edge/NIR/SWIR groups | multiple group-specific matrices | separates physical band families | needs careful fusion and attribution |
+
+The flattened-band spatial variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands. This is closer to "one image/channel as a spatial vector," but it has few samples and must be tested with toy data, rank sensitivity, and fair baselines before being named as a method.
+
+Do not use "spectral subspace" as a thesis term until the sample unit, matrix shape, rank rule, scoring equation, and expected output map are fixed.
 
 ## 4. Spectral Change Versus Semantic Change
 

@@ -77,6 +77,18 @@ Actions:
 - Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.
 - Prepare concrete questions for Jang/Suto/Pedro/Santos about sample definition, spatial preservation, rank choice, and reference-code behavior.
 
+2026-06-17 source-batch update:
+
+- Treat Sensei's spatial-information concern as the central immediate research problem, not a side concern.
+- Treat Jang's channel-wise flattening suggestion as a concrete experiment candidate:
+  - current OSCD DS: one pixel is one 13-D spectral vector;
+  - Jang-style candidate: one band/channel image is flattened into a spatial vector, then subspaces compare spatial band patterns.
+- Treat Aono/geodesic/first-second DS work as the Sensei-aligned temporal track:
+  - first build a real multi-date Harmonized Sentinel-2 sequence;
+  - then define one subspace per date;
+  - then calculate first DS, second DS, and geodesic projection/decomposition quantities.
+- Do not let semantic change, greenhouse mapping, hyperspectral anomaly detection, or foundation-model ideas replace the Sensei-first tasks until their datasets and evaluation protocols are real.
+
 ## 2. Subspace Construction Feedback
 
 Questions raised by Sensei/senpais:

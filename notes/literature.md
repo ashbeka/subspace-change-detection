@@ -324,3 +324,19 @@ New external reset sources to keep active:
 - Open-vocabulary CD / Seg2Change / TDCD: class-specific or text-driven change is now a serious alternative path for semantic/object-level research.
 - Nielsen and Canty KPCA/MAD work: nonlinear PCA and CCA/MAD are already part of remote-sensing CD history, so KPCA/KDS novelty must be specific.
 - Global-PCG-10 and plastic greenhouse index resources: greenhouse monitoring is legitimate but needs a separate task definition and validation plan.
+
+### 9.2 New Source Leads From 2026-06-17
+
+These leads came from the updated Apple/Slack notes and new bookmark source. Treat them as reading and verification targets, not established project evidence yet.
+
+| Concept | New lead | Why it matters | Immediate action |
+|---|---|---|---|
+| BCD versus SCD | binary change detection, semantic change detection, and post-classification change detection resources | Clarifies that OSCD is binary changed-area detection, while many attractive ideas require semantic/object labels. | Keep OSCD experiments binary; read SCD/PCCD only if pivoting to semantic or object/state change. |
+| Spatial support for subspaces | Jang's channel-wise flattening idea plus spatial-spectral HSI references | Gives a concrete alternative to unordered pixel samples. | Add a flattened-band spatial-subspace pilot after global/patch/window DS comparisons. |
+| Temporal GDS/KGDS | Harmonized Sentinel-2 L2A and multi-date sequence notes | GDS/KGDS require multiple subspaces; OSCD has only two dates. | First produce a sequence feasibility report: frames, dates, bands, cloud/no-data, alignment. |
+| Prior versus pseudo-label | pseudo-label / teacher-student CD papers and prior-guided CD resources | Prevents vague claims that a DS map is automatically a training label. | Evaluate prior-map quality before pseudo-label pretraining. |
+| Classical comparison pressure | Celik, IR-MAD, CVA, PCA-diff, post-classification CD | Spatial DS must be compared against established classical methods, not only against itself. | Keep Celik and IR-MAD as required fair baselines after formula audits. |
+| Hybrid geometry plus neural methods | Siamese networks, U-Net/DeepLab/PSPNet-style segmentation, foundation models, deep-feature subspaces | A stronger route may use neural models for localization/features and subspaces for interpretation, clustering, or low-label priors. | Do not start large models yet; keep as follow-up if spatial DS maps show useful signal. |
+| Hyperspectral/anomaly/data fusion route | MNF/PCA dimensionality reduction, hyperspectral anomaly detection, IEEE Data Fusion Contest | Richer-band imagery may be a more natural subspace application than Sentinel-2 OSCD. | Treat as pivot/future route; verify datasets and labels before implementation. |
+| Application framing | abandoned greenhouse mapping, urban/infrastructure monitoring, disaster screening | These are possible motivations but not current evidence. | Use only as future application unless data and evaluation are available. |
+| Research trend scans | awesome remote-sensing CD list, recent arXiv resources, SiROC, foundation/open-vocabulary CD leads | Helps prevent missing modern baselines and overclaiming novelty. | Add high-priority papers/repos to bookmark/literature triage, then verify externally before citing. |

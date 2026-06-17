@@ -146,6 +146,20 @@ Open question for this project:
 Does a subspace-based prior provide useful and interpretable evidence for OSCD-style Sentinel-2 change segmentation, and does that require spatially aware subspace construction?
 ```
 
+Final working problem statement as of 2026-06-17:
+
+```text
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
+```
+
+This is the problem to follow right now because it is:
+
+- directly connected to Sensei's warning that the current global pixel subspace can break spatial information;
+- measurable on the existing OSCD benchmark with labels;
+- compatible with a negative-result thesis if DS fails;
+- narrow enough to run experiments immediately;
+- broad enough to leave future pivots toward temporal GDS, object-level change, semantic change, or neural/geometric hybrids.
+
 The key gap is not "invent DS." The key gap is empirical and methodological: how to adapt subspace representations to multispectral satellite images without losing the spatial structure needed for change maps.
 
 Research reset rule:
@@ -305,6 +319,13 @@ Possible sharper thesis question:
 ```text
 Can spatial support in DS-style subspace construction make geometric change priors more useful and interpretable for multispectral Sentinel-2 change detection?
 ```
+
+Decision logic:
+
+- If patch/local/flattened-band/multiscale DS improves metrics or explains false positives better than global pixel DS, keep spatially aware DS as the thesis core.
+- If DS variants remain weaker than raw L2, PCA-diff, Celik, and IR-MAD, reframe as a diagnostic/negative study: global and simple spatial DS are insufficient unless paired with stronger feature construction or learning.
+- If neural/foundation methods dominate but subspace descriptors explain regions, clusters, temporal progression, or errors, pivot to a hybrid geometry-plus-learning contribution.
+- If OSCD's binary artificialization labels conflict too strongly with spectral/geometric change, consider semantic/object-level or multi-date datasets rather than forcing OSCD.
 
 ## 8. Experiment Plan
 

@@ -16,6 +16,7 @@
   - [3.9 Experiment Ideas To Keep Alive](#39-experiment-ideas-to-keep-alive)
   - [3.10 Paper And Presentation Warnings](#310-paper-and-presentation-warnings)
   - [3.11 Latest Research Reset Decisions](#311-latest-research-reset-decisions)
+  - [3.12 Final Reset Additions From 2026-06-17 Sources](#312-final-reset-additions-from-2026-06-17-sources)
 - [4. Notes To Translate Later](#4-notes-to-translate-later)
 
 ## 1. Purpose
@@ -184,6 +185,17 @@ These notes are distilled from Apple Notes, Slack notes, Sensei messages, the up
 - Geometry-only means DS/PCA-diff/CVA/patch DS/local DS produce interpretable change evidence without labels.
 - Geometry plus learning means a useful map can become a prior channel, attention cue, pseudo-label, diagnostic feature, or label-efficient aid for U-Net/Siamese/future models.
 - For future implementation, I want to understand every method from source material to code. The working chain should be: source -> math object -> satellite adaptation -> code path -> test -> one-city output -> thesis claim.
+
+### 3.12 Final Reset Additions From 2026-06-17 Sources
+
+- The current computer-vision task is binary remote-sensing change segmentation from bi-temporal multispectral satellite images. Damage segmentation, semantic change detection, greenhouse mapping, and hyperspectral anomaly detection are possible routes, but not current evidence.
+- The final working problem for right now is: can spatially aware Difference Subspace construction preserve spatial structure well enough to produce interpretable changed-area evidence, and where does it help or fail against raw L2/CVA, PCA-diff, Celik/IR-MAD, and neural baselines?
+- A possible stronger route is to flip the pipeline: use a strong change detector or semantic/object proposal model to localize changed regions, then use DS/GDS/KDS or clustering to explain, group, or describe those regions. This should be treated as a hybrid route, not a replacement for the spatial DS audit.
+- The phrase "spectral subspace" should be kept as a candidate method label, but it must be defined before use. Possible meanings include subspaces over 13-band pixel vectors, band-group subspaces, or subspaces where each flattened band image is a spatial vector.
+- Jang's channel-wise flattening suggestion is important: instead of one pixel = one 13-D sample, test a variant where each band image is flattened into a spatial vector. This may preserve spatial layout inside each band, but it has only 13 band-samples, so rank, robustness, and interpretation need care.
+- Post-classification change detection may become useful if the project becomes semantic or object/state change. It is not the immediate OSCD core unless we first have reliable pre/post class maps or object labels.
+- Hyperspectral or richer-band satellite imagery could make subspace methods more natural because dimensionality reduction, MNF/PCA, and band-feature isolation are already common there. Treat this as a possible future pivot, not current OSCD evidence.
+- The Data Fusion Contest and multimodal/foundation-model change-detection resources are valuable for field awareness and future benchmarks, but they should not derail the immediate spatial DS experiments.
 
 ## 4. Notes To Translate Later
 
