@@ -1,0 +1,291 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080" role="img" aria-labelledby="title desc">
+  <title id="title">First-order and second-order Difference Subspace explanation</title>
+  <desc id="desc">A two-panel diagram showing first-order Difference Subspace between two subspaces and second-order Difference Subspace between a middle subspace and the mean of surrounding subspaces, with a Sentinel-2-style change-map workflow example.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #d8dee9; stroke-width: 2; rx: 10; }
+      .subpanel { fill: #fbfcfe; stroke: #e3e8ef; stroke-width: 1.5; rx: 8; }
+      .title { font-family: "Segoe UI", Arial, sans-serif; font-size: 34px; font-weight: 700; fill: #172033; }
+      .subtitle { font-family: "Segoe UI", Arial, sans-serif; font-size: 18px; fill: #485466; }
+      .panel-title { font-family: "Segoe UI", Arial, sans-serif; font-size: 25px; font-weight: 700; fill: #172033; }
+      .section-title { font-family: "Segoe UI", Arial, sans-serif; font-size: 20px; font-weight: 700; fill: #172033; }
+      .label { font-family: "Segoe UI", Arial, sans-serif; font-size: 17px; fill: #263244; }
+      .small { font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; fill: #536173; }
+      .formula { font-family: Consolas, "Courier New", monospace; font-size: 16px; fill: #1f2937; }
+      .formula-strong { font-family: Consolas, "Courier New", monospace; font-size: 19px; font-weight: 700; fill: #111827; }
+      .axis { stroke: #9aa5b1; stroke-width: 1.6; }
+      .gridline { stroke: #e9edf3; stroke-width: 1; }
+      .pre { stroke: #128a8a; fill: #128a8a; }
+      .post { stroke: #db6a1f; fill: #db6a1f; }
+      .blue { stroke: #2f6fbd; fill: #2f6fbd; }
+      .green { stroke: #2d8b57; fill: #2d8b57; }
+      .mean { stroke: #697586; fill: #697586; }
+      .ds { stroke: #7c3aed; fill: #7c3aed; }
+      .diff { stroke: #a855f7; fill: #a855f7; }
+      .muted-line { stroke: #aeb7c3; }
+      .changed { fill: #c2410c; }
+      .unchanged { fill: #d7eef2; }
+      .score-low { fill: #d8e8f7; }
+      .score-mid { fill: #9cc7e3; }
+      .score-high { fill: #5d8fc3; }
+      .score-hot { fill: #b23b7f; }
+      .callout { fill: #f6f0ff; stroke: #c4b5fd; stroke-width: 1.3; rx: 8; }
+      .note { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1.3; rx: 8; }
+    </style>
+    <marker id="arrow-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#263244"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#db6a1f"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f6fbd"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1080"/>
+
+  <text class="title" x="60" y="58">Difference Subspace: first order vs second order</text>
+  <text class="subtitle" x="60" y="88">Toy 2D geometry for explanation only. In the project, Sentinel-2 subspaces live in 13-D spectral space or patch-feature space.</text>
+
+  <!-- Left panel: first-order DS -->
+  <rect class="panel" x="55" y="120" width="700" height="520"/>
+  <text class="panel-title" x="85" y="160">1) First-order DS: compare two subspaces</text>
+  <text class="formula-strong" x="85" y="193">D(S_pre, S_post)</text>
+  <text class="small" x="85" y="220">Example: one pre-image PCA line and one post-image PCA line.</text>
+
+  <g transform="translate(370 392)">
+    <!-- grid -->
+    <line class="gridline" x1="-220" y1="-180" x2="220" y2="-180"/>
+    <line class="gridline" x1="-220" y1="-90" x2="220" y2="-90"/>
+    <line class="gridline" x1="-220" y1="90" x2="220" y2="90"/>
+    <line class="gridline" x1="-220" y1="180" x2="220" y2="180"/>
+    <line class="gridline" x1="-180" y1="-220" x2="-180" y2="220"/>
+    <line class="gridline" x1="-90" y1="-220" x2="-90" y2="220"/>
+    <line class="gridline" x1="90" y1="-220" x2="90" y2="220"/>
+    <line class="gridline" x1="180" y1="-220" x2="180" y2="220"/>
+
+    <!-- axes -->
+    <line class="axis" x1="-240" y1="0" x2="240" y2="0" marker-end="url(#arrow-dark)"/>
+    <line class="axis" x1="0" y1="210" x2="0" y2="-230" marker-end="url(#arrow-dark)"/>
+    <text class="small" x="205" y="25">feature 1</text>
+    <text class="small" x="10" y="-210">feature 2</text>
+
+    <!-- subspaces as lines through origin; negative angle because SVG y-axis points down -->
+    <line class="mean" x1="-205" y1="0" x2="205" y2="0" stroke-width="3" stroke-dasharray="7 7" transform="rotate(-37.5)" opacity="0.72"/>
+    <line class="pre" x1="-205" y1="0" x2="205" y2="0" stroke-width="6" transform="rotate(-20)"/>
+    <line class="post" x1="-205" y1="0" x2="205" y2="0" stroke-width="6" transform="rotate(-55)"/>
+    <line class="ds" x1="-205" y1="0" x2="205" y2="0" stroke-width="5" transform="rotate(-127.5)" stroke-dasharray="12 8"/>
+
+    <!-- principal angle arc from pre to post -->
+    <path d="M 82 -30 A 88 88 0 0 1 51 -72" fill="none" stroke="#374151" stroke-width="2"/>
+    <text class="small" x="86" y="-67">theta</text>
+
+    <!-- sample difference vector and projection -->
+    <line x1="0" y1="0" x2="-65" y2="-113" stroke="#a855f7" stroke-width="4" marker-end="url(#arrow-purple)"/>
+    <line x1="-65" y1="-113" x2="-78" y2="-102" stroke="#7c3aed" stroke-width="2.2" stroke-dasharray="5 5"/>
+    <line x1="0" y1="0" x2="-78" y2="-102" stroke="#7c3aed" stroke-width="7" opacity="0.42"/>
+    <text class="small" x="-155" y="-120">delta x = x_post - x_pre</text>
+    <text class="small" x="-185" y="-82">projection onto D</text>
+  </g>
+
+  <g>
+    <rect class="callout" x="95" y="515" width="610" height="92"/>
+    <text class="formula" x="115" y="543">D = (Phi U - Psi V) [2(I - Sigma)]^(-1/2)</text>
+    <text class="formula" x="115" y="571">score_i = || D^T (x_post_i - x_pre_i) ||^2</text>
+    <text class="small" x="115" y="596">Interpretation: high score when a pixel/patch difference aligns with directions that separate the two subspaces.</text>
+  </g>
+
+  <text class="label pre" x="515" y="334">S_pre</text>
+  <text class="label post" x="474" y="263">S_post</text>
+  <text class="label ds" x="172" y="280">D basis</text>
+  <text class="small mean" x="500" y="295">average direction</text>
+
+  <!-- Right panel: second-order DS -->
+  <rect class="panel" x="845" y="120" width="700" height="520"/>
+  <text class="panel-title" x="875" y="160">2) Second-order DS: actual middle vs expected mean</text>
+  <text class="formula-strong" x="875" y="193">D2(S1, S2, S3) = D(S2, M(S1, S3))</text>
+  <text class="small" x="875" y="220">Example: early and late dates define the expected middle subspace M; S2 is the observed middle date.</text>
+
+  <g transform="translate(1150 392)">
+    <!-- grid -->
+    <line class="gridline" x1="-220" y1="-180" x2="220" y2="-180"/>
+    <line class="gridline" x1="-220" y1="-90" x2="220" y2="-90"/>
+    <line class="gridline" x1="-220" y1="90" x2="220" y2="90"/>
+    <line class="gridline" x1="-220" y1="180" x2="220" y2="180"/>
+    <line class="gridline" x1="-180" y1="-220" x2="-180" y2="220"/>
+    <line class="gridline" x1="-90" y1="-220" x2="-90" y2="220"/>
+    <line class="gridline" x1="90" y1="-220" x2="90" y2="220"/>
+    <line class="gridline" x1="180" y1="-220" x2="180" y2="220"/>
+
+    <!-- axes -->
+    <line class="axis" x1="-240" y1="0" x2="240" y2="0" marker-end="url(#arrow-dark)"/>
+    <line class="axis" x1="0" y1="210" x2="0" y2="-230" marker-end="url(#arrow-dark)"/>
+    <text class="small" x="205" y="25">feature 1</text>
+    <text class="small" x="10" y="-210">feature 2</text>
+
+    <!-- surrounding subspaces, mean, middle, D2 -->
+    <line class="blue" x1="-205" y1="0" x2="205" y2="0" stroke-width="5" transform="rotate(-20)"/>
+    <line class="green" x1="-205" y1="0" x2="205" y2="0" stroke-width="5" transform="rotate(-60)"/>
+    <line class="mean" x1="-205" y1="0" x2="205" y2="0" stroke-width="6" stroke-dasharray="7 7" transform="rotate(-40)"/>
+    <line class="post" x1="-205" y1="0" x2="205" y2="0" stroke-width="6" transform="rotate(-75)"/>
+    <line class="ds" x1="-205" y1="0" x2="205" y2="0" stroke-width="5" transform="rotate(-147.5)" stroke-dasharray="12 8"/>
+
+    <!-- deviation arc from expected mean to actual middle -->
+    <path d="M 84 -70 A 110 110 0 0 1 28 -106" fill="none" stroke="#374151" stroke-width="2"/>
+    <text class="small" x="60" y="-120">deviation</text>
+
+    <!-- timeline guide -->
+    <line x1="-150" y1="182" x2="150" y2="182" stroke="#8a94a3" stroke-width="2.2" marker-end="url(#arrow-dark)"/>
+    <circle cx="-130" cy="182" r="7" fill="#2f6fbd"/>
+    <circle cx="0" cy="182" r="7" fill="#db6a1f"/>
+    <circle cx="130" cy="182" r="7" fill="#2d8b57"/>
+    <text class="small" x="-144" y="207">t1</text>
+    <text class="small" x="-13" y="207">t2</text>
+    <text class="small" x="116" y="207">t3</text>
+    <text class="small" x="-100" y="163">M comes from t1 and t3</text>
+  </g>
+
+  <g>
+    <rect class="callout" x="880" y="515" width="630" height="92"/>
+    <text class="formula" x="900" y="543">M = PCS/Karcher-style mean from projection matrices P1 + P3</text>
+    <text class="formula" x="900" y="571">D2 = D(S2, M); magnitude = Mag(S2, M)</text>
+    <text class="small" x="900" y="596">Interpretation: high D2 means S2 departs from the expected middle between S1 and S3.</text>
+  </g>
+
+  <text class="label blue" x="1304" y="338">S1 early</text>
+  <text class="label green" x="1265" y="242">S3 late</text>
+  <text class="label mean" x="1290" y="282">M(S1,S3)</text>
+  <text class="label post" x="1216" y="250">S2 actual</text>
+  <text class="label ds" x="968" y="300">D2 basis</text>
+
+  <!-- Bottom workflow example -->
+  <rect class="panel" x="55" y="680" width="1490" height="365"/>
+  <text class="panel-title" x="85" y="722">Concrete change-detection example</text>
+  <text class="small" x="85" y="750">Use this as a teaching figure: the grids are stylized examples, not real OSCD results.</text>
+
+  <!-- Step 1 card -->
+  <rect class="subpanel" x="85" y="775" width="420" height="225"/>
+  <text class="section-title" x="110" y="808">First-order pre/post map</text>
+  <text class="small" x="110" y="835">Two images produce two fitted subspaces.</text>
+
+  <g transform="translate(115 855) scale(0.75)">
+    <text class="small" x="0" y="-10">pre</text>
+    <g>
+      <rect class="unchanged" x="0" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="72" width="22" height="22"/>
+    </g>
+    <text class="small" x="125" y="43">PCA</text>
+    <line x1="100" y1="44" x2="160" y2="44" stroke="#263244" stroke-width="2" marker-end="url(#arrow-dark)"/>
+    <text class="formula" x="172" y="43">S_pre</text>
+  </g>
+
+  <g transform="translate(115 925) scale(0.75)">
+    <text class="small" x="0" y="-10">post</text>
+    <g>
+      <rect class="unchanged" x="0" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="0" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="24" width="22" height="22"/>
+      <rect class="changed" x="24" y="24" width="22" height="22"/>
+      <rect class="changed" x="48" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="24" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="48" width="22" height="22"/>
+      <rect class="changed" x="24" y="48" width="22" height="22"/>
+      <rect class="changed" x="48" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="48" width="22" height="22"/>
+      <rect class="unchanged" x="0" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="24" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="48" y="72" width="22" height="22"/>
+      <rect class="unchanged" x="72" y="72" width="22" height="22"/>
+    </g>
+    <text class="small" x="125" y="43">PCA</text>
+    <line x1="100" y1="44" x2="160" y2="44" stroke="#263244" stroke-width="2" marker-end="url(#arrow-dark)"/>
+    <text class="formula" x="172" y="43">S_post</text>
+  </g>
+  <text class="formula" x="350" y="887">D = D(S_pre, S_post)</text>
+  <text class="formula" x="350" y="916">score map from</text>
+  <text class="formula" x="350" y="943">D^T delta x_i</text>
+
+  <!-- Step 2 card -->
+  <rect class="subpanel" x="540" y="775" width="420" height="225"/>
+  <text class="section-title" x="565" y="808">Score-map intuition</text>
+  <text class="small" x="565" y="835">Changed pixels or patches have large projection energy.</text>
+  <g transform="translate(578 858)">
+    <rect class="score-low" x="0" y="0" width="24" height="24"/>
+    <rect class="score-low" x="26" y="0" width="24" height="24"/>
+    <rect class="score-mid" x="52" y="0" width="24" height="24"/>
+    <rect class="score-low" x="78" y="0" width="24" height="24"/>
+    <rect class="score-low" x="104" y="0" width="24" height="24"/>
+    <rect class="score-low" x="0" y="26" width="24" height="24"/>
+    <rect class="score-mid" x="26" y="26" width="24" height="24"/>
+    <rect class="score-hot" x="52" y="26" width="24" height="24"/>
+    <rect class="score-hot" x="78" y="26" width="24" height="24"/>
+    <rect class="score-mid" x="104" y="26" width="24" height="24"/>
+    <rect class="score-low" x="0" y="52" width="24" height="24"/>
+    <rect class="score-mid" x="26" y="52" width="24" height="24"/>
+    <rect class="score-hot" x="52" y="52" width="24" height="24"/>
+    <rect class="score-hot" x="78" y="52" width="24" height="24"/>
+    <rect class="score-mid" x="104" y="52" width="24" height="24"/>
+    <rect class="score-low" x="0" y="78" width="24" height="24"/>
+    <rect class="score-low" x="26" y="78" width="24" height="24"/>
+    <rect class="score-mid" x="52" y="78" width="24" height="24"/>
+    <rect class="score-mid" x="78" y="78" width="24" height="24"/>
+    <rect class="score-low" x="104" y="78" width="24" height="24"/>
+    <rect class="score-low" x="0" y="104" width="24" height="24"/>
+    <rect class="score-low" x="26" y="104" width="24" height="24"/>
+    <rect class="score-low" x="52" y="104" width="24" height="24"/>
+    <rect class="score-low" x="78" y="104" width="24" height="24"/>
+    <rect class="score-low" x="104" y="104" width="24" height="24"/>
+  </g>
+  <text class="formula" x="735" y="880">One scalar</text>
+  <text class="formula" x="735" y="907">per pixel/patch:</text>
+  <text class="formula" x="735" y="936">large = aligned with D</text>
+
+  <!-- Step 3 card -->
+  <rect class="subpanel" x="995" y="775" width="515" height="225"/>
+  <text class="section-title" x="1020" y="808">Second-order temporal example</text>
+  <text class="small" x="1020" y="835">Needs at least three subspaces: early, middle, late.</text>
+  <text class="formula" x="1020" y="863">M = M(S1,S3)</text>
+  <text class="formula" x="1020" y="889">D2 = D(S2,M); flags t2 departing from expected trend</text>
+  <g transform="translate(1035 912) scale(0.8)">
+    <rect x="0" y="0" width="78" height="78" fill="#d7eef2"/>
+    <rect x="12" y="12" width="18" height="18" fill="#b6dfe8"/>
+    <rect x="42" y="42" width="20" height="20" fill="#b6dfe8"/>
+    <text class="small" x="25" y="103">t1</text>
+
+    <line x1="92" y1="39" x2="135" y2="39" stroke="#263244" stroke-width="2" marker-end="url(#arrow-dark)"/>
+    <rect x="148" y="0" width="78" height="78" fill="#d7eef2"/>
+    <rect x="12" y="12" width="18" height="18" fill="#b6dfe8" transform="translate(148 0)"/>
+    <rect x="42" y="42" width="20" height="20" fill="#c2410c" transform="translate(148 0)"/>
+    <text class="small" x="174" y="103">t2</text>
+
+    <line x1="240" y1="39" x2="283" y2="39" stroke="#263244" stroke-width="2" marker-end="url(#arrow-dark)"/>
+    <rect x="296" y="0" width="78" height="78" fill="#d7eef2"/>
+    <rect x="12" y="12" width="18" height="18" fill="#b6dfe8" transform="translate(296 0)"/>
+    <rect x="42" y="42" width="20" height="20" fill="#b6dfe8" transform="translate(296 0)"/>
+    <text class="small" x="322" y="103">t3</text>
+  </g>
+  <!-- Caution note -->
+  <rect class="note" x="85" y="1009" width="1425" height="0" opacity="0"/>
+  <text class="small" x="85" y="1028">Caution: first-order DS is the current OSCD pre/post fit. Second-order DS is a temporal/multi-date construction; it should not be claimed as validated on OSCD without a separate experiment.</text>
+</svg>
