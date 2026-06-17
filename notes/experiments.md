@@ -135,6 +135,68 @@ Interpretation:
 - The result supports "spatial sample construction changes DS behavior," not "DS beats classical baselines."
 - Do not spend time on long Phase 2 raw+spatial-prior training until the score definition and failure modes are better understood.
 
+Flattened-band spatial DS all-city sweep, 2026-06-18:
+
+```powershell
+$cities = 'abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,cupertino,dubai,hongkong,lasvegas,milano,montpellier,mumbai,nantes,norcia,paris,pisa,rennes,rio,saclay_e,saclay_w,valencia'; $tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities $cities --configs "rank6_flatbands:6:global_pixel+patch3+patch5+window128s64mean+flatbands;rank8_flatbands:8:global_pixel+patch3+patch5+window128s64mean+flatbands" --output-dir "phase1/outputs/spatial_ds_allcities_flatbands_$tag" --continue-on-error
+```
+
+Tracked report:
+
+```text
+docs/experiment_reports/oscd_spatial_flatbands_allcities_2026-06-18.md
+```
+
+Ignored output:
+
+```text
+phase1/outputs/spatial_ds_allcities_flatbands_20260618_001408/
+```
+
+Design:
+
+```text
+cities: all 24 local OSCD cities
+rank6_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
+rank8_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
+baselines included in each run: raw_l2,pca_diff
+```
+
+Mean results across 24 cities:
+
+| config | method | mean AUROC | mean AP | mean Otsu F1 | mean best F1 | mean raw-L2 corr |
+|---|---|---:|---:|---:|---:|---:|
+| rank8_flatbands | pca_diff | 0.8392 | 0.2541 | 0.2160 | 0.3076 | 0.8588 |
+| rank6_flatbands | pca_diff | 0.8370 | 0.2535 | 0.2140 | 0.3068 | 0.8564 |
+| rank8_flatbands | flatbands | 0.8412 | 0.2340 | 0.1129 | 0.2928 | 0.6596 |
+| rank6_flatbands | flatbands | 0.8313 | 0.2317 | 0.1093 | 0.2913 | 0.6634 |
+| all configs | raw_l2 | 0.7717 | 0.2261 | 0.1802 | 0.2873 | 1.0000 |
+| rank8_flatbands | patch5 | 0.7119 | 0.1331 | 0.0663 | 0.1952 | 0.4614 |
+| rank6_flatbands | patch5 | 0.7002 | 0.1293 | 0.0811 | 0.1884 | 0.4686 |
+| rank8_flatbands | patch3 | 0.7021 | 0.1185 | 0.0465 | 0.1797 | 0.4682 |
+| rank6_flatbands | patch3 | 0.6896 | 0.1184 | 0.0602 | 0.1818 | 0.4639 |
+| rank6_flatbands | global_pixel | 0.6310 | 0.0725 | 0.0272 | 0.1251 | 0.3717 |
+| rank6_flatbands | window128s64mean | 0.6300 | 0.0658 | 0.0345 | 0.1184 | 0.3600 |
+
+Winner counts:
+
+```text
+all methods by AP across 48 city/rank runs:
+  pca_diff 30, flatbands 11, raw_l2 3, patch5 2, patch3 1, window128s64mean 1
+
+DS-family only by AP across 48 city/rank runs:
+  flatbands 44, patch5 2, patch3 1, window128s64mean 1
+```
+
+Interpretation:
+
+- Flattened-band DS is now the strongest DS-family candidate by a large margin.
+- It is much better than global pixel DS, patch DS, and local-window DS on mean AP.
+- It does **not** beat PCA-diff on mean AP, so the thesis cannot claim this construction is a better detector overall.
+- It slightly beats PCA-diff on mean AUROC (`0.8412` vs `0.8392`), which suggests useful ranking signal, but Otsu F1 is weak (`0.1129`) and score calibration/pseudo-change remain problems.
+- Its raw-L2 correlation is lower than PCA-diff's (`0.6596` vs `0.8588`), so it is not just a raw-L2 duplicate.
+- This is the first strong evidence that Senpai's flattened-band sample definition is worth studying further.
+
 ## 3. Main Completed Sweep
 
 Run:
@@ -186,7 +248,7 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not another blind sweep. The core5 sweep already showed that patch-vector DS is the only DS-family candidate worth studying immediately, but it is still weaker than PCA-diff/raw L2 overall.
+The next experiment is not another blind sweep. The all-city flattened-band sweep showed that `flatbands` is the strongest DS-family candidate, but it is still weaker than PCA-diff on mean AP and weak under Otsu thresholding.
 
 There are now two parallel tracks:
 
@@ -203,7 +265,7 @@ The Sensei-first track has priority for advisor alignment. The OSCD track remain
 Immediate next task:
 
 ```text
-Inspect why patch DS helps in some cities and fails in others, then test whether the score definition is the bottleneck.
+Inspect why flattened-band DS ranks changed pixels reasonably but calibrates poorly, then test whether the score definition and thresholding are the bottleneck.
 ```
 
 Immediate experiment track to keep in order:
@@ -233,6 +295,12 @@ Flattened-band spatial-subspace pilot:
 - Required caution: with Sentinel-2 there are only 13 band samples, so rank is limited; do not call this better or more faithful until it produces interpretable maps and metrics.
 - Hyperspectral extension: the idea may be more natural for hyperspectral images with hundreds of bands, where the number of band-image samples is much larger.
 
+Status 2026-06-18:
+
+- Implemented and swept on all 24 local OSCD cities at ranks 6 and 8.
+- Strongest DS-family method in 44/48 city/rank runs.
+- Still below PCA-diff on mean AP, so the next task is diagnostic score/threshold/failure-mode work, not Phase 2 training.
+
 Minimum reporting:
 
 - AUROC;
@@ -243,6 +311,25 @@ Minimum reporting:
 - runtime;
 - qualitative pre/post/GT/score maps;
 - city-wise failure table.
+
+Next `flatbands` ablation:
+
+1. Add score definitions:
+   - squared projected energy, current default;
+   - unsquared projected norm;
+   - normalized projection ratio `||D^T delta||^2 / (||delta||^2 + eps)`;
+   - per-band projected energy maps for attribution.
+2. Add threshold/calibration checks:
+   - Otsu;
+   - percentile thresholds;
+   - validation-calibrated city threshold;
+   - top-k changed-area budget if class prevalence is known.
+3. Add pressure baselines:
+   - verify Celik PCA-kmeans implementation;
+   - verify IR-MAD formula/path and run it on the same city set.
+4. Inspect qualitative failure modes:
+   - where flatbands wins by AP: Aguas Claras rank6, Bordeaux, Chongqing rank8, Cupertino rank6, Milano rank8, Paris, Saclay;
+   - where PCA-diff still wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio.
 
 Immediate Sensei-first task:
 

@@ -4,7 +4,7 @@ Run a controlled multi-city, multi-configuration OSCD spatial DS sweep.
 Source/provenance:
 - Wraps `compare_oscd_spatial_subspaces.py`, which implements canonical
   Fukui/Maki DS with three Sentinel-2 sample definitions: global pixels,
-  local windows, and flattened local patches.
+  local windows, flattened local patches, and flattened band images.
 - This file adds experiment management only: repeated city/config runs,
   aggregate CSV summaries, and a human-readable report.
 

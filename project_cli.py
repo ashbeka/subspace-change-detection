@@ -92,7 +92,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-oscd-priors", "phase1", "Generate OSCD unsupervised prior maps.", ["phase1-oscd-priors", "--config", "canonical"]),
     CommandInfo("phase1-oscd-geodesic", "phase1", "Generate OSCD local geodesic prior maps.", ["phase1-oscd-geodesic"]),
     CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
-    CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
+    CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch/flatbands DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
@@ -1064,13 +1064,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_subspace_inspect)
 
-    p = sub.add_parser("phase1-spatial-subspace-compare", help="Compare global/window/patch DS score maps on one OSCD city.")
+    p = sub.add_parser("phase1-spatial-subspace-compare", help="Compare global/window/patch/flatbands DS score maps on one OSCD city.")
     p.add_argument("--oscd-root", default="data/OSCD")
     p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
     p.add_argument("--city", default="beirut")
     p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     p.add_argument("--rank", type=int, default=6)
-    p.add_argument("--methods", default="global_pixel,window128,patch3,patch5")
+    p.add_argument("--methods", default="global_pixel,window128,patch3,patch5", help="Comma list, e.g. global_pixel,patch3,patch5,window128s64mean,flatbands.")
     p.add_argument("--output-dir", default="")
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--max-fit-samples", type=int, default=20000)
@@ -1086,7 +1086,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--configs",
         default="rank4_core:4:global_pixel+patch3+patch5;rank6_spatial:6:global_pixel+window128+patch3+patch5;rank8_core:8:global_pixel+patch3+patch5",
-        help="Semicolon-separated configs as name:rank:method+method.",
+        help="Semicolon-separated configs as name:rank:method+method. Method names can include flatbands.",
     )
     p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     p.add_argument("--output-dir", default="")

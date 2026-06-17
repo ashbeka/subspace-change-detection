@@ -17,6 +17,8 @@ Project adaptation under test:
 - local_window: fit a pre/post DS pair inside sliding spatial windows.
 - patch_vector: flatten a local 13-band patch into one sample vector so local
   neighborhood layout enters the subspace.
+- flattened_band: flatten each Sentinel-2 band image into one high-dimensional
+  spatial sample vector, then score projected band-difference images.
 
 Allowed claim:
 - This script can test whether spatial support improves DS score maps on OSCD.
@@ -95,7 +97,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--city", default="beirut")
     ap.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     ap.add_argument("--rank", type=int, default=6)
-    ap.add_argument("--methods", default=DEFAULT_METHODS, help="Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5.")
+    ap.add_argument("--methods", default=DEFAULT_METHODS, help="Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, flatbands.")
     ap.add_argument("--output_dir", "--output-dir", type=Path, required=True)
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--max_fit_samples", "--max-fit-samples", type=int, default=20000, help="Maximum pixel/patch samples used to fit patch PCA subspaces.")
@@ -130,6 +132,9 @@ def parse_method_spec(text: str) -> MethodSpec:
     key = text.strip().lower().replace("-", "_")
     if key == "global" or key == "global_pixel":
         return MethodSpec(name="global_pixel", family="global_pixel")
+
+    if key in {"flatbands", "flat_bands", "flattened_band", "flattened_bands", "band_image", "band_images"}:
+        return MethodSpec(name="flatbands", family="flattened_band")
 
     m = re.fullmatch(r"window(?P<size>\d+)(?:s(?P<stride>\d+))?(?P<agg>max|mean)?", key)
     if m:
@@ -381,6 +386,79 @@ def patch_vector_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray
     return out, card, pv
 
 
+def flattened_band_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+    """Score change by treating each band image as one spatial vector.
+
+    Matrix convention:
+      X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)
+
+    PCA therefore learns a basis in pixel-position space from 13 band-image
+    samples. To turn the result back into a change map, each band-difference
+    image is projected into the spatial DS and pixel-wise projected energy is
+    summed across bands.
+    """
+    c, h, w = x1.shape
+    if c != len(BAND_ORDER):
+        raise ValueError(f"Expected {len(BAND_ORDER)} bands, got {c}.")
+
+    rows, cols = np.where(valid_mask)
+    if rows.size == 0:
+        raise RuntimeError("No valid pixels available for flattened-band DS.")
+
+    # d = valid spatial positions, n = band-image samples.
+    x1_mat = x1[:, rows, cols].T.astype(np.float32, copy=False)
+    x2_mat = x2[:, rows, cols].T.astype(np.float32, copy=False)
+    max_centered_rank = max(1, min(int(args.rank), x1_mat.shape[1] - 1))
+
+    pre = pca_utils.fit_pca_basis(
+        x1_mat,
+        rank=max_centered_rank,
+        variance_threshold=None,
+        random_state=args.seed,
+        use_randomized=True,
+    )
+    post = pca_utils.fit_pca_basis(
+        x2_mat,
+        rank=max_centered_rank,
+        variance_threshold=None,
+        random_state=args.seed,
+        use_randomized=True,
+    )
+    d_basis = pca_utils.build_difference_subspace(pre.basis, post.basis, variant="canonical")
+
+    diff = x2_mat - x1_mat
+    if d_basis.shape[1] == 0:
+        projected = np.zeros_like(diff, dtype=np.float32)
+    else:
+        coeff = d_basis.T @ diff
+        projected = d_basis @ coeff
+
+    energy = np.sum(projected * projected, axis=1).astype(np.float32)
+    out = np.zeros((h, w), dtype=np.float32)
+    out[rows, cols] = energy
+
+    card = ConstructionCard(
+        method="flatbands",
+        source_reference=(
+            "Senpai/Jang-style spatial-band sample-definition test; uses the same canonical first-order DS formula "
+            "but changes the sample from one pixel vector to one full flattened band image."
+        ),
+        sample_unit="one full Sentinel-2 band image flattened over valid pixel positions",
+        input_object=f"X_pre_flat, X_post_flat in R^({rows.size} x {c}); columns are flattened band images",
+        subspace_count="one PCA subspace from the 13 pre-date band images and one PCA subspace from the 13 post-date band images",
+        basis_shape=f"Phi, Psi in R^({rows.size} x {pre.rank}); D in R^({rows.size} x {d_basis.shape[1]})",
+        fitting_method=(
+            f"rank-r PCA in valid-pixel spatial ambient space; requested rank={args.rank}, "
+            f"actual rank={pre.rank}, centered-sample cap={max_centered_rank}"
+        ),
+        score_definition="project each 13-column band-difference image matrix into spatial DS, then per pixel sum projected energy across bands",
+        spatial_information="preserves spatial layout inside each band-image vector, but has only 13 band samples on Sentinel-2",
+        code_path="phase1/scripts/compare_oscd_spatial_subspaces.py::flattened_band_ds_score",
+        verification="compared against global/patch/window DS, raw L2, PCA-diff, OSCD labels, raw-L2 correlation, runtime, and visual maps",
+    )
+    return out, card
+
+
 def rgb_preview(cube: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
     rgb = np.stack([cube[i] for i in RGB_INDICES], axis=-1).astype(np.float32)
     out = np.zeros_like(rgb, dtype=np.float32)
@@ -472,6 +550,8 @@ def main() -> None:
         method_mask = eval_mask
         if spec.family == "global_pixel":
             score, card = global_pixel_ds_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family == "flattened_band":
+            score, card = flattened_band_ds_score(x1_norm, x2_norm, eval_mask, args)
         elif spec.family == "local_window":
             score, card = local_window_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "patch_vector":
