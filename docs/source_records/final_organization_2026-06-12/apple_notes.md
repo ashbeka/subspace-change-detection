@@ -264,3 +264,135 @@ For your research, PCA is:
 * A dimensionality-reduction step before SSC or other methods.
 * A baseline / interpretability tool to relate your fancy subspace + U-Net methods to something classical and easy to explain.
 
+- The field of Change Detection (CD) is broadly divided into two sub-fields: Binary Change Detection (BCD) and the more complex Semantic Change Detection (SCD). The latter is more challenging as it requires identifying the ”from-to” semantic information, not just the presence of change.
+- I GOT IT! Do a sliding windows change detection (but a new method here), where we, say have 10 images of the same patch taken at 10 dates, we perform Subspace methods on each image, then GDS on image 1 with image 2, then image 2 with image 3, then image 3 with image 4, so one so forth until we get to image 9 with image 10 (alternatively we get play with this we we do GDS on image 1 with image 2 then get the output, and USE THAT OUTPUT  and continue merging change images!! could use different sources as in different satellite imagery (adjust rotation and geo data for all the images to match), or use multiple dates depending on what we want to know.
+- “Self-Supervised Learning: The AI generates its own labels by hiding parts of the training data (like masking a word in a sentence) and trying to predict it.” We could use the same idea for GDS
+- DGM (difference guiding model)
+- From the OSCD guys "The networks should ideally be able to learn to differentiate between artificialization [man-made] changes and natural changes, given that only artificialization changes are labelled as changes on the dataset."
+- SERIOUSLY we could target contests like Data Fusion contest https://www.grss-ieee.org/community/technical-committees/2026-data-fusion-contest/ and use our methods.
+- We could target the task of “data fusion” like https://ieeexplore.ieee.org/document/9246669 
+- Use geometrical/subspace methods where neural networks are strong but insufficient: interpretability, low-label settings, temporal structure, diagnostic analysis, pseudo-change filtering, and hybrid pipelines.
+- Understand if the difference is related to change or due to other factors such as radiometric calibration of an image, faulty data, etc..
+- “If labels are abundant and the only goal is highest IoU/F1: use a strong neural network. If the goal includes interpretation, limited labels, temporal/geometric structure, diagnosing change types, or complementing neural models:  geometrical/subspace methods still have a role.”
+- “DS/GDS can say something like: this change direction is caused by these spectral/spatial/date subspace differences. A neural network may give a good mask but not explain the geometric structure of the change”
+- Look for and play with rich high band satellite imagery that captures a lot more data than the measly (but still great) Sentinel-2 satellite. 
+- Important: why don’t we extract the change with SOTA methods, then use GDS to make sense of the change (add semantics to it)?
+- Learn how “Siamese Networks” work.
+- “Pseudo-labels are common in semi-supervised remote-sensing change detection because dense change labels are expensive.” So we can target getting pseudo-labeling as s goal (Recent semi-supervised CD papers explicitly use pseudo-labels or teacher-student pseudo-label frameworks for unlabeled image pairs).
+- AI said: “In this project, DS/PCA/IR-MAD maps are first treated as unsupervised geometric priors: continuous evidence maps that may guide or diagnose change detection. They become pseudo-labels only if we threshold or otherwise convert them into training targets for a neural model.” So maybe?
+- “The same difference map can be either a prior or a pseudo-label depending on how we use it.”
+- From Google: “Training change detection deep learning models involves taking two time-sequenced images, extracting spatio-temporal features, and outputting a pixel-level change mask.”
+- Identify the exact computer vision task, some but not all:
+    * Image recognition
+    * Image classification
+    * Object detection
+    * Image segmentation
+    * Object tracking
+    * Scene understanding
+    * Facial recognition
+    * Pose estimation
+    * Optical character recognition
+    * Image generation
+    * Visual inspection-
+- What people say is: “Use multispectral when you need:
+    * High spatial resolution (sub-metre)
+    * Frequent revisit for time-series monitoring
+    * Standard index calculations (NDVI, NDWI, NDMI)
+    * Land cover classification and change detection
+    * Cost-effective coverage of large areas
+    * Quick turnaround and simple processing
+Use hyperspectral when you need to:
+    * Identify specific minerals in mining exploration or environmental assessment
+    * Discriminate between similar plant species for biodiversity mapping or invasive species detection
+    * Map soil properties like organic carbon, clay content, or contamination levels
+    * Detect subtle crop stress before it shows up in standard NDVI
+    * Monitor specific water pollutants or algal species
+    * Quantify atmospheric gas concentrations“
+- Hyperspectral processing needs “Dimensionality reduction using Principal Component Analysis (PCA) or Minimum Noise Fraction (MNF) transforms to identify the most information-rich band combinations “ So this could be our debut to introduce SM into the mix
+- GREAT IDEA! We can use Google Earth Engine Apps like “https://sat-io.earthengine.app/view/tanager” to demonstrate our idea and research project when its done being implemented along comparison to our methods and why our win!
+- “The common challenges identified from the literature are the difficulty in image acquisition, the large image sizes, computational complexity and the effect of noise on the satellite images. The main problems encountered as part of change detection is the poor accuracy and kappa coefficient values obtained as part of some misclassifications.” WHICH MEANS maybe we can target de-noising? Or accuracy?
+- Something to do with the ES below to utilize Hyper-spectral Satellite images with SM would be really cool.
+- Some approached I came across: “Siamese Networks: Two parallel identical subnetworks extract features from Time 1 and Time 2 independently before fusing them. Early Fusion (Image Stacking): Concatenating bi-temporal images along the channel dimension at the input layer.“
+- It is binary remote-sensing change detection / binary change segmentation from bi-temporal multispectral satellite images. It is not: damage segmentation, damage severity classification, semantic change detection, building-level damage assessment, greenhouse mapping, multi-class land-cover change classification. YET.
+- FLOW: If you are developing a new AI model, you use a dataset to train your system. You first test it against your own simple baseline (e.g., your previous version) to see if it works. Finally, you run it through a standardized benchmark to see how it compares to industry standards or competing models
+- Like how U-Net and DeepLab and PSPNet are improvements for FCNs (which is an improvement for CNN) at least in the field of semantic segmentation, we can create our own NN method built on the state-of-the-art semantic segmentation but incorporate GDS in the middle of it (or before it?) 
+- Why not use GDS for the task of image segmentation? It could work seeing how it produces the differences and we can do processing to make out these differences as segments (segmentation)
+- Panoptic segmentation
+- Latent space
+- From google “Framework Optimization: Implement using platforms like TorchGeo (PyTorch) or Esri's arcgis.learn.”
+- What is the action space permitted within our project? (Preferably the latest most relevant action space)
+- Could re-orientate the project around Hyper-spectral Satellite images Anomaly detection (Maybe with GDS?)
+- Learn how to preserve key information in spatial representation (satellite)
+- What I just discussed with Jang: doing the 13-D channel flattening, could be better to flatten each channel by itself to preserve its own spatial information. What I thought of is, it could be interesting to flatten each of the 13 channels to get 13 (256x256-D vectors), then do PCA on them or GDS to get the spatial information on those data (all from the pre-data), then do the same thing for the post- data, and then do something in-between them? Anyways Jang told me to try flattening on the Z-axis i.e. 13 vectors (each vector has x-dimension)
+- Focus on satellite images semantic segmentation
+- Ask for the Full schematic of the method
+- Using GDS for Anti-aliasing/aliasing (the thing in video games with they AAA/AA “Anti-Aliasing”). Anti-Aliasing baed SM for RS imagery (or whatnot), DS for Anti-Aliasing
+- priors means: extra information we give to a model before or alongside learning, to guide it toward likely change areas.
+- The answer lies within using GDS change pseudo-labels are training and utilizing the different the different channels to do better in depth clustering of (change/no change) of the change maps or better yet utilize the special characteristics of objects to cluster the objects in change maps to their own category (houses, waterbodies, sand, whatever) based on how each of them have special charachteristics in the satellite images.
+- “In machine learning, latent means "hidden" or "underlying". It refers to variables, features, or representations that are not explicitly labeled or directly observed in the raw data, but are instead discovered and learned by the AI model.”, Raw data (like a high-resolution image or a long paragraph of text) is incredibly complex and takes up a massive amount of data. Instead of dealing with massive, raw data points (like every pixel in an image), algorithms compress this information into a smaller, abstract format. These condensed, "hidden" characteristics are the latent variables. ANALOGY: If you describe a close friend to someone, you don't list their DNA sequence or a pixel-by-pixel photo. You use abstract, meaningful coordinates like height, hair type, and personality. These descriptors are the "latent" features—the hidden, distilled essence of the massive amount of raw data that makes up your friend. latent variables and latent features mean the exact same thing.
+- Why don’t we flip the pipeline? Use the best state of the art change detection method to get change while preserving the other channels data, then use GDS to make semantic segmentation/clustering of the data?
+- Understand the feature extraction done in our project
+- Maybe Foundation Models are the move
+- The band(s) selected for the change detection process will depend on the project’s goal and the exact features preferred for evaluating the change.
+- Modern satellite pipelines often merge both techniques:
+    1. Clustering groups raw pixels into small, uniform vector shapes based on color and texture (often called "superpixels").
+    2. Segmentation rules or classifiers then label those clustered shapes into actual semantic categories like "building" or "highway."
+- To detect change, a developer uses segment-geospatial to extract vectors of structures at Time 1 and Time 2, and then uses rasterio to mathematically subtract or intersect those vector masks to flag exactly where structures appeared, grew, or vanished.
+- OMG IM STUPID!!! Look at the note above this, to extract meaningful change, we could SEMANTICALLY SEGMENT IT (the pre- or post- or both images) BEFOREHAND THEN RUN THE CHANGE DETECTION METHOD THRU IT TO UNDERSTAND HOW A (Thing) that we know what it is changed. Contextual Tracking: Instead of seeing that "pixels turned gray," your system sees that a "Forest" object turned into a "Building" object. This gives you semantic meaning (urbanization/deforestation).
+- Run SAM on your whole greenhouses patch on a date (segment it) then on another date (segment it) then run a CD method and ask it to give you visual tinder style slides of the specific object level (or at least some hyper parameter Meter level like 25x25 meter patch or whatever available patch) and decide which is a greenhouse (or ask SAM to get you what it think a greenhouse is) and see which has been abandoned or not.
+- How the Process Actually Flows in Code
+    1. Segment and Label (Pre-Image): Run segment-geospatial on your "Before" image to find boundaries, and label those polygons (e.g., Object A = Wetland).
+    2. Overlay and Compare (Post-Image): You project those exact same "Before" object boundaries directly onto your "After" image.
+    3. Extract the Change: You use rasterio to analyze what the pixels inside those specific boundaries look like now. If the pixels inside the "Wetland" boundary now match the spectral signature of dry soil, you instantly extract a meaningful change: Wetland Loss.
+- MAYBE see if GDS can do the segment part? (And after the CD part)
+- OSCD was manually labeled, they also say The paper clearly states that the dataset uses a simple "Change / No Change" binary format, and that the labelers intentionally tracked urban construction (artificialization) while ignoring nature. On the focus of the labels:"The dataset is focused on urban areas, labelling as Change only urban growth and changes and ignoring natural changes (e.g. vegetation growth or sea tides)." On the binary format:"A label is assigned to each pixel: change or no change." On what algorithms are supposed to learn:"The networks should ideally be able to learn to differentiate between artificialization [man-made] changes and natural changes, given that only artificialization changes are labelled as changes on the dataset."
+- Really good figures:
+Do this now:
+Pick one small Harmonized Sentinel-2 area.
+Build/query a time sequence for it.
+Report: number of frames, dates, spacing, bands, cloud/no-data filtering, alignment assumptions.
+Define exactly what “one subspace per date” means.
+Then run first DS, second DS, and geodesic decomposition on that sequence.
+
+Really informative search when I searched “state of the art current change detection benchmarks” I got:
+
+“
+The State-of-the-Art (SOTA) benchmarks for Change Detection (CD) evaluate how effectively machine learning models identify structural, environmental, or semantic alterations over time. While LEVIR-CD and WHU-CD remain the primary foundational standards for remote sensing, modern benchmarks have evolved toward multimodal data, vision-language context, and unconstrained 3D/viewpoint scene changes. [1, 2, 3]
+
+
+
+Foundational Remote Sensing Benchmarks
+These benchmarks represent the traditional, widely cited standards used to evaluate standard Deep Learning (CNN, Transformer, and Mamba-based) models. [1, 2, 3, 4]
+* LEVIR-CD: Consists of high-resolution bitemporal Google Earth images focusing on long-term urban building changes like new construction and villa developments. [1, 2, 3, 4, 5]
+* WHU-CD: A high-resolution satellite and aerial dataset centered on precise building extraction and geometric change tracking. [1]
+* SECOND: A multiclass benchmark tailored for Semantic Change Detection (SCD), analyzing 6 different land-cover categories to track transitions like vegetation-to-concrete. [1, 2, 3, 4]
+* S2Looking: Specializes in rural and side-looking satellite imagery, presenting major perspective distortion challenges. [1, 2, 3]
+
+
+
+Next-Generation Vision-Language & Multi-Modal Benchmarks
+Recent SOTA models leverage Multimodal Large Language Models (MLLMs) and Vision-Language Architectures (like UniChange or Seg2Change) to combine visual difference maps with linguistic context. [1, 2]
+
+Benchmark Dataset [1, 2, 3, 4]	Primary Data Modalities	Focus and Core Task
+NYC-CD (2026)	Street-View Images + Natural Language	Multiclass change tracking using visual-linguistic reasoning.
+DVL-Suite (2025)	High-Res Temporal Images + Instructions	42 U.S. megacities over 18 years; tests regional urban narratives and pixel segmentation.
+LSMD (2026)	Bitemporal RGB + Near-Infrared (NIR)	Focuses on very small structural building changes using spectral complementarity.
+LEVIR-CC / DUBAI-CC	Satellite Imagery + Descriptive Text	Generates complex natural language sentences describing urbanization shifts (Change Captioning).
+
+
+Real-World Scene & 3D Change Detection
+Moving beyond strict top-down satellite views, these benchmarks test models on viewpoint variations, unconstrained camera poses, and egocentric video streams.
+* SceneDiff Benchmark (2025): The first multiview change detection dataset providing instance-level object annotations across 50 real-world scenes extracted from egocentric and video pairs. [1]
+* ChangeVPR / GeSCD (2024): Designed to test the generalizability zero-shot capabilities of models across unseen domains, including urban, suburban, and rural environments. [1]
+* O-SCD Baseline Framework: Evaluates online, pose-agnostic scene change detection from continuous multi-view streams, frequently utilizing 3D Gaussian Splatting updating. [1]
+
+
+
+Domain-Specific & Environmental Benchmarks
+* EuroMineNet (2025): A continental-scale benchmark spanning 133 European mining sites over a 9-year span (2015-2024) to track gradual and abrupt land-use destruction.
+* MineNetCD: A global mining benchmark featuring 70k paired high-resolution image patches across 100 global mine locations.
+* RB-SCD (2025): Formulated explicitly for Road and Bridge Semantic Change Detection, charting 11 unique structural and infrastructure alterations across diverse international cities.
+* xBD: The prominent gold standard for building damage assessment following natural disasters, using 4 distinct categorical severity levels. [1, 2, 3, 4, 5]
+To help tailor this to your requirements, are you looking to test algorithms for satellite remote sensing, autonomous driving/street views, or 3D indoor environments? Let me know if you would also like to see the current leaderboards or metric frameworks (e.g., F1, IoU, CA-TIoU) for any of these specific datasets. [1, 2]
+
+”

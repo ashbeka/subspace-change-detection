@@ -394,4 +394,21 @@ The outcome will be a hybrid, lightweight, and scalable model deployable in real
 [2:51 PM]I plan to investigate disaster-prone urban regions in Japan, such as coastal areas affected by earthquakes and tsunamis. These locations offer rich temporal satellite data and present real-world challenges in damage assessment and urban resilience, making them ideal for testing and applying the proposed framework.
 
 Is this helpful so far?
-- 
+- Notion MCP research discovery and methods prompt:
+I plan to have a certain workflow as the following: I migrate my personal notes (along all the ingested information) into a Notion page, use that page from now on to take notes personally whenever, have codex connect to that Notion page through MCP, have codex perform at least one pull a day where it: take in the whole notion page, reads what new notes have been added, ingests the new notes into our noting structure by firstly noting them efficiently then translating them into actionable insights (potential experiments, literature to research, potential method to explore, and other ideas that can be ingested in the project noting structure) so on so forth. secondly, I want to implement this really neat feature where you codex do the same thing (a daily pull of the notion page, ingestion of the information, exploration of potential ideas, paths, so one so forth) AND (here it comes) you will start doing theme based deep researches!, once a day, before you do that, you will make a new file in the noting structure with a name such as "deep research paths/themes/topic" where you will scan all the documents in the "notes" and "docs" folders, read and understand the information, take notes of the relevant literature , and group similarly themed topic in the project to launch a deep research per idea/topic/theme a day! in addition to the notes, idea, references, literature , and information already organized by you, you will take a singular idea and do a deep research in the internet where you lookup at least 500 resources (if possible) per idea (you can do things like scan new review papers, look for research gaps, see where we can contribute, see what potential is there to discover, so on so forth (don't get restricted to these ideas alone, be creative! remember you are my co-researcher and co-developer). after you do all of that you get the result of your daily deep research, make a file for each date and idea you explored and show me what you got to, this could be very interesting for discovering research gaps and methods and experiments to try out.Abood/アブド  [4:51 PM]
+make a method called spectral subspace
+Abood/アブド  [3:26 PM]
+follow how papers like this one compared against other methods/datasets/benchmarks and had thier schematics and novelty clearly laid out
+[3:26 PM]https://arxiv.org/html/2504.05062v1#bib.bib13
+Abood/アブド  [3:40 PM]
+https://arxiv.org/html/2502.13407v4#bib.bib2
+Abood/アブド  [4:35 PM]
+https://arxiv.org/html/2411.07758
+[4:36 PM]Analyze future trend in CD
+[4:37 PM]whether BCD, SCD, multi-temporal, satellite based, scene based, real-time, lightweight, or whatever (edited) 
+Abood/アブド  [5:07 PM]
+this is highly relevant https://github.com/wenhwu/awesome-remote-sensing-change-detection especially the "traditional methods" part, could be our competitors? especially with the spatial awareness? https://github.com/lukaskondmann/SiROC
+[5:07 PM]building some "spatial-temporal awareness model" in our project?
+[5:09 PM]we could target noise "Noise-Resistant" (edited) 
+[5:11 PM]"Experimental results on LEVIR-CD, SYSU-CD and WHU-CD datasets demonstrate superior performance, with [METHOD] outperforming state-of-the-art methods both visually and quantitatively."
+[5:13 PM]for example: "Unsupervised change detection (UCD) from heterogeneous bitemporal optical–SAR imagery is challenging due to modality discrepancy, speckle/illumination variations, and the absence of change annotations."
