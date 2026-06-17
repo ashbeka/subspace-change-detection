@@ -92,3 +92,70 @@ Machine-readable summary:
 ## 6. Conclusion
 
 The batch is preserved, its useful research knowledge has been consolidated into active notes/docs, and the Chrome/Safari URL set has been reorganized without URL loss. It is safe to review the organized notes and importable bookmark file; deletion of the original source folder should still wait for explicit user approval.
+
+## 7. 2026-06-17 Research Resource Reset Update
+
+This update covers the later research-resource reset pass.
+
+Preservation:
+
+- Legacy implementation branch exists locally and remotely: `legacy/oscd-subspace-priors-unet-implementation`.
+- Legacy implementation tag exists locally and remotely: `pre-research-resource-reset-20260617`.
+- `phase1/`, `phase2/`, and source records remain on `main`; no cleanup deletion was performed.
+- The tracked local PDF `references/reference_papers/MVA_2025_human_motion_analysis.pdf` was restored and preserved.
+
+New or updated source records:
+
+| source | status |
+|---|---|
+| updated `apple_notes.md` | preserved and distilled into active notes |
+| updated `slack_notes_to_myself.md` | preserved and distilled into active notes |
+| `bookmarks_6_17_26_with_research_uningested_bookmarks.html` | preserved and merged into organized Chrome bookmarks |
+| `some_helpful_inspiring_visuals/` | preserved as support visuals/source records |
+| `prompt.md` mentioned in the user prompt | not present in the workspace at execution time; no fabricated copy was created |
+
+2026-06-17 bookmark merge:
+
+| check | result |
+|---|---:|
+| base organized URLs | 1556 |
+| new research-uningested bookmarks | 186 |
+| new unique URLs | 186 |
+| final output URLs | 1742 |
+| expected final URLs | 1742 |
+| count match | true |
+| ambiguous research parking after second pass | 14 |
+
+Generated import file:
+
+`docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`
+
+Machine-readable summary:
+
+`docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-17.json`
+
+New durable reference/context files:
+
+- `references/reference_papers/REFERENCE_RESOURCE_INDEX.md`
+- `references/REFERENCE_CODE_INVENTORY.md`
+- `docs/SECOND_OPINION_RESEARCH_CONTEXT.md`
+
+Reference-code coverage:
+
+- Every top-level folder under `references/reference_code/` has an inventory entry.
+- Large ignored reference-code folders remain local/ignored and were not force-added to Git.
+- Reference code is explicitly treated as verification material, not ground truth.
+
+Active research direction persisted:
+
+```text
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
+```
+
+Verification:
+
+- `project_cli.py doctor` passed.
+- Bookmark URL counts matched.
+- Reference-code inventory coverage passed.
+- Markdown heading sanity check passed for the main updated docs/notes.
+- Git status was clean after the final pushed checkpoints.
