@@ -228,12 +228,16 @@ Do not use "spectral subspace" as a thesis term until the sample unit, matrix sh
 
 - `flatbands` was renamed to `band_image_ds`; `flatbands` remains a compatibility alias only.
 - `band_image_ds` is implemented in `phase1/scripts/compare_oscd_spatial_subspaces.py::band_image_ds_score`.
-- It was swept over all 24 local OSCD cities at ranks 6 and 8.
+- It was swept over all 24 local OSCD cities at ranks 6, 8, 10, and 12, with additional core-city checks at ranks 2-5.
 - It became the strongest DS-family method by AP in 44 of 48 city/rank runs.
 - It still did not beat PCA-diff on mean AP, so it is a promising sample-definition candidate, not a proven detector.
 - The score map is produced by projecting the 13-column band-difference matrix into the spatial DS and summing projected energy per pixel across bands.
 - A follow-up score ablation showed that `band_image_norm` keeps the same AUROC/AP as `band_image_ds` but improves all-city Otsu F1 from `0.1129` to `0.2007`.
 - Per-band projected-energy attribution maps are available for selected cities to inspect which Sentinel-2 bands drive the projected score.
+- Rank 12 is the strongest tested setting: mean AUROC `0.8477`, AP `0.2410`, and best F1 `0.3021`. Its AP remains below PCA-diff (`0.2541`), and using the maximum centered rank weakens the interpretation that a compact DS alone explains the useful signal.
+- Against corrected pressure baselines, rank-8 Band-Image DS is significantly worse than PCA-diff by paired city AP, significantly better than the current Celik adaptation, and not reliably different from raw L2 or repaired IR-MAD.
+- Equal-weight within-image rank fusion of PCA-diff, Band-Image DS, and IR-MAD raises mean AUROC to `0.8708` and wins 21/24 cities against PCA-diff, but the AP gain is not significant and Otsu F1 falls. This is complementarity evidence, not a finished detector.
+- A fixed-grid `1x1 + 2x2 + 4x4` pixel-spectral DS pyramid did not improve core-city AP over global pixel DS. Stop that exact construction; it is not equivalent to Green Learning, PixelHop, or wavelet features.
 
 ## 4. Spectral Change Versus Semantic Change
 
@@ -830,11 +834,28 @@ Why it matters:
 - If IR-MAD outperforms DS, the project should not hide that. It would push the thesis toward spatial DS, KDS/KPCA, temporal GDS/KGDS, or an interpretability/diagnostic framing.
 - If patch DS and IR-MAD fail in different places, that may support a hybrid-prior or false-positive-diagnosis contribution.
 
-Current implementation caution:
+Current verification status:
 
-- `phase1/baselines/ir_mad.py` is a compact implementation, not yet a paper-faithful trusted baseline.
-- Before strong claims, check the generalized eigenproblem, covariance regularization, iterative weights, chi-square weighting, convergence, normalization, and threshold policy against Nielsen/MAD/iMAD references.
-- Until this audit is done, old weak IR-MAD numbers are not evidence that IR-MAD is weak.
+- `phase1/baselines/ir_mad.py` now uses paired CCA transforms, the two cross-covariance factors in the generalized eigenproblems, sign-aligned MAD variates, variance `2(1-rho)`, and chi-square survival weights that emphasize likely unchanged pixels.
+- Formula guards cover equal images and a synthetic changed block. This makes the implementation suitable for current comparison pressure, but it remains a compact project implementation rather than an independently certified reproduction of every Nielsen implementation detail.
+- On all 24 OSCD cities, repaired IR-MAD reaches mean AUROC `0.8471` and AP `0.2138`; its Otsu F1 is only `0.0547`. It ranks some changes well but is poorly calibrated by per-image Otsu and often responds to broad seasonal/agricultural variation.
+
+### Celik PCA-k-means verification status
+
+- The old code concatenated all bands inside every `9x9` patch, producing 1,053-dimensional vectors and excessive memory use. The corrected default follows the scalar difference-image family more closely: compute CVA/L2 magnitude, extract scalar patches, fit PCA and k-means on a seeded subset, and predict in chunks.
+- `multiband_patch` remains an explicit project variant; it is not the default Celik comparison.
+- Synthetic changed-block and reproducibility guards pass. The implementation is still an adaptation, not a line-by-line reproduction.
+- Mean all-city AP is `0.1621`, below Band-Image DS (`0.2340`). Qualitative failures include dominant water/radiometric regions that do not cover the full OSCD target.
+
+### Rank-fusion diagnostic
+
+For score maps `s_m`, the diagnostic fusion converts valid-pixel values to within-image percentile ranks and averages them with equal weights:
+
+```text
+f(x) = mean_m percentile_rank(s_m(x))
+```
+
+This uses no OSCD labels and avoids incompatible score scales. It is useful for testing whether methods carry complementary rankings. It is not calibrated probability fusion, and its weak Otsu result means it cannot yet be treated as a deployable binary change map.
 
 ### Phase 1 thresholding vs Phase 2 priors
 

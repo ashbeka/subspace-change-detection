@@ -24,10 +24,13 @@ Read these first:
 4. `SECOND_OPINION_RESEARCH_CONTEXT.md`
    - Neutral context package for Claude/Gemini/another reviewer. Use it when asking an external model or person to challenge the project direction.
 
-5. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
-   - Curated report for the current major OSCD 3-seed sweep.
+5. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
+   - Current spatial-DS decision report: corrected Celik/IR-MAD pressure baselines, Band-Image rank sensitivity, label-free fusion, fixed-grid pyramid stop decision, and next evidence gate.
 
-6. `research_learning_map.html`
+6. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+   - Curated report for the historical OSCD 3-seed neural sweep.
+
+7. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

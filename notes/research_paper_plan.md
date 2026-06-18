@@ -311,7 +311,10 @@ Spatially aware Difference Subspace priors for interpretable Sentinel-2 changed-
 Status:
 
 - This is the strongest current candidate, not a proven contribution.
-- The claim becomes strong only if experiments show that patch/local/object/tensor-aware subspace construction improves spatial meaning, robustness, or downstream prior usefulness.
+- Global, patch, local-window, and fixed-grid pyramid DS have now been tested. Patch/local variants improve over global pixel DS but remain well below PCA-diff; the exact fixed-grid pixel-spectral pyramid is a negative result.
+- Band-Image DS is the strongest current DS construction, but even rank 12 remains below PCA-diff on mean AP. It should be retained as a component/diagnostic, not presented as a superior standalone detector.
+- Label-free PCA/Band-Image/IR-MAD rank fusion provides statistically reliable AUROC complementarity but not a reliable AP or thresholded-segmentation improvement.
+- The next contribution gate is whether pseudo-change analysis, split-safe calibration, or a genuinely different spatial feature representation makes this complementarity useful and interpretable.
 - Existing remote-sensing literature already contains spatial-spectral subspace and low-rank/sparse ideas, so novelty must be framed as a specific DS/GDS-style adaptation and evaluation, not as the invention of spatial satellite subspaces.
 
 Possible sharper thesis question:

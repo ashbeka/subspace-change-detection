@@ -112,15 +112,24 @@ Band-Image DS all-city result, 2026-06-18:
 - Mean rank-8 `pca_diff`: AUROC `0.8392`, AP `0.2541`, best F1 `0.3076`, Otsu F1 `0.2160`.
 - This supports the claim that Band-Image DS is worth studying and that score scaling affects thresholdability; it does **not** support the claim that it beats PCA-diff overall.
 
+Classical-pressure and follow-up result, 2026-06-18:
+
+- Repaired IR-MAD: mean AUROC `0.8471`, AP `0.2138`, Otsu F1 `0.0547`.
+- Corrected Celik scalar-difference PCA-k-means adaptation: mean AUROC `0.6867`, AP `0.1621`, Otsu F1 `0.1857`.
+- Rank-12 Band-Image DS is the strongest tested DS setting: mean AUROC `0.8477`, AP `0.2410`, best F1 `0.3021`; it still trails PCA-diff on mean AP.
+- Equal-weight PCA-diff + Band-Image + IR-MAD rank fusion reaches AUROC `0.8708` and wins 21/24 cities against PCA-diff (`p=0.00024`), but its AP improvement is not significant and Otsu F1 falls to `0.1084`.
+- A fixed-grid pixel-spectral DS pyramid failed to improve core-city AP and is stopped in that form.
+- Full interpretation: `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`.
+
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, inspect why Band-Image DS ranks changed pixels reasonably but still loses to PCA-diff on AP and slightly loses on Otsu F1:
+Before more long U-Net sweeps, test the two unresolved problems exposed by the comparison:
 
 ```text
-failure-mode maps -> score/threshold ablations -> Celik and IR-MAD pressure baselines
+pseudo-change separation -> split-safe score calibration -> optional neural/prior follow-up
 ```
 
-This directly answers Sensei's concern about breaking spatial information.
+Use city-held-out calibration only; do not tune thresholds on the evaluated city's labels. Preserve the parallel Sensei-aligned multi-date HLS/subspace track.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 

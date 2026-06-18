@@ -271,13 +271,13 @@ The Sensei-first track has priority for advisor alignment. The OSCD track remain
 Immediate next task:
 
 ```text
-Inspect why Band-Image DS ranks changed pixels reasonably but calibrates poorly, then test whether the score definition and thresholding are the bottleneck.
+Separate target change from radiometric pseudo-change, then test split-safe score calibration without using labels from the evaluated city.
 ```
 
 Immediate experiment track to keep in order:
 
 ```text
-global pixel DS -> patch-vector DS -> local-window DS -> Band-Image DS -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
+global pixel DS [done] -> patch/local DS [done] -> Band-Image DS [done] -> fixed-grid pyramid [stopped] -> corrected Celik/IR-MAD [done] -> pseudo-change/calibration [next] -> optional neural/prior follow-up
 ```
 
 Minimum fair comparisons:
@@ -342,15 +342,34 @@ Interpretation:
 - The score reduction was part of the thresholding problem, but PCA-diff still wins mean AP and still has slightly better Otsu F1.
 - `band_image_ratio` and `band_image_residual` should be treated as diagnostics, not primary scores.
 
-Next pressure-baseline task:
+Pressure-baseline result, 2026-06-18:
 
-1. Verify Celik PCA-kmeans implementation against its paper/reference behavior.
-2. Verify IR-MAD formula and code path.
-3. Run Celik and IR-MAD on the same 24-city OSCD comparison if implementation checks pass.
-4. Inspect qualitative failure modes for:
+1. Repaired IR-MAD now uses paired CCA transforms and unchanged-pixel chi-square survival weighting.
+2. Corrected Celik defaults to scalar CVA/L2 difference-image patches with seeded, chunked PCA/k-means fitting.
+3. Rank-8 mean AP: PCA-diff `0.2541`, Band-Image DS `0.2340`, raw L2 `0.2261`, IR-MAD `0.2138`, Celik `0.1621`.
+4. Band-Image DS is significantly worse than PCA-diff and significantly better than this Celik adaptation; it is not reliably different from raw L2 or IR-MAD.
+5. Rank-12 Band-Image DS improves to AP `0.2410`, but still does not beat PCA-diff.
+6. Three-way equal-weight rank fusion reaches AUROC `0.8708` versus PCA-diff `0.8406`, winning 21/24 cities (`p=0.00024`). Its AP gain is not significant and Otsu F1 drops to `0.1084`.
+7. Fixed-grid spectral pyramid AP (`0.0762`-`0.0765`) did not improve global pixel DS (`0.0791`); stop this exact branch.
+8. Inspect qualitative failure modes for:
    - Band-Image DS wins: Bordeaux, Chongqing, Milano, Paris, selected Saclay cases;
    - PCA-diff wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio;
    - patch/local-window wins: Norcia and Saclay-e style cases.
+
+Tracked report and outputs:
+
+- `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
+- `phase1/outputs/spatial_ds_traditional_pressure_allcities_corrected_20260618_174228/`
+- `phase1/outputs/band_image_ds_rank10_12_allcities_20260618_175418/`
+- `phase1/outputs/spatial_score_rank_fusion_allcities_20260618_175956/`
+- `phase1/outputs/spatial_pyramid_core5_decision_20260618_180652/`
+
+Next decision gate:
+
+1. Define a pseudo-change taxonomy using representative city maps: vegetation/seasonality, water, cloud/haze, illumination, registration, and target structural change.
+2. Test robust or nuisance-aware feature normalization only when it has a source and a held-out-city protocol.
+3. Compare per-image Otsu with thresholds/calibrators fitted on training cities and evaluated on unseen cities.
+4. Continue to neural/prior experiments only if the continuous geometric maps add held-out evidence beyond raw bands/PCA-diff or provide a clear diagnostic contribution.
 
 Immediate Sensei-first task:
 
@@ -429,10 +448,10 @@ Concrete near-term checklist:
    - This is the closest classical spatial-patch pressure baseline, not just another optional method.
    - Outcome: if Celik beats patch DS clearly, the thesis cannot claim patch DS is a strong spatial classical detector without a narrower interpretability argument.
 
-4. IR-MAD fair-comparison audit:
-   - Treat IR-MAD as a required classical multivariate baseline because it is established in remote-sensing change detection and is CCA-related.
-   - Do not trust the current lightweight implementation until it is checked against Nielsen/MAD/iMAD references.
-   - Outcome: either a paper-faithful IR-MAD score map in the same Phase 1 comparison table, or a clearly documented reason it is not yet fair to compare.
+4. IR-MAD fair-comparison verification: **completed 2026-06-18**.
+   - The corrected implementation uses paired transforms, unchanged-pixel reweighting, and synthetic formula guards.
+   - It was included in the same 24-city table as PCA-diff, raw L2, Celik, and DS variants.
+   - Outcome: mean AUROC `0.8471`, AP `0.2138`, and Otsu F1 `0.0547`; retain it as a ranking baseline and calibration/failure-mode pressure test.
 
 ## 6. Other Important Experiments To Queue
 
@@ -571,7 +590,7 @@ Concrete near-term checklist:
    - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
-18. IR-MAD fair-comparison audit:
+18. IR-MAD fair-comparison verification: **completed 2026-06-18**.
    - Sources:
      - Nielsen 2007 regularized IR-MAD paper;
      - Nielsen/Conradsen MAD/CCA formulation;
@@ -580,19 +599,18 @@ Concrete near-term checklist:
      - IR-MAD is a mature multivariate remote-sensing change detector.
      - It is based on CCA/MAD variates and is therefore close enough to DS to be a serious comparison pressure baseline.
      - Sensei and seminar feedback already pushed toward CCA, so ignoring IR-MAD would weaken the thesis.
-   - Audit before claims:
-     - Check whether `phase1/baselines/ir_mad.py` solves the correct CCA/generalized eigenproblem.
-     - Verify whether iterative reweighting emphasizes likely unchanged observations correctly.
-     - Recheck band selection, normalization, covariance regularization, subsampling seed, convergence behavior, chi-square weighting, and threshold calibration.
-     - Test equal-image/no-change toy behavior and a simple synthetic changed-pixel case.
-   - Fair comparison:
-     - Compare against raw L2/CVA, PCA-diff, Celik PCA-kmeans, global canonical DS, patch3 DS, and patch5 DS.
-     - Use the same OSCD cities, valid masks, score normalization policy, AUROC, PR-AUC/AP, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, and visual grids.
-     - Inspect whether IR-MAD reduces pseudo-change from radiometric/background effects better than DS or PCA-diff.
+   - Verification performed:
+     - corrected paired CCA/generalized eigenproblems and iterative unchanged-pixel weighting;
+     - checked regularization, seed, convergence, chi-square statistic, equal-image behavior, and a synthetic changed block;
+     - compared on all 24 cities with raw L2/CVA, PCA-diff, Celik, global DS, patch3, patch5, Band-Image DS, and local-window DS.
+   - Result:
+     - IR-MAD has the strongest single-method mean AUROC (`0.8471`) but lower AP (`0.2138`) than PCA-diff and Band-Image DS;
+     - per-image Otsu calibration is poor (`0.0547` mean F1);
+     - qualitative maps show useful ranking alongside broad seasonal/agricultural responses.
    - Decision:
-     - If IR-MAD beats DS, use that as honest evidence that DS needs a spatial, nonlinear, temporal, or interpretability-specific justification.
-     - If patch DS complements IR-MAD on specific false-positive/false-negative modes, that may support an interpretable hybrid-prior framing.
-     - Do not claim IR-MAD is weak from old runs unless this audit supports it.
+     - keep repaired IR-MAD in every serious classical comparison;
+     - do not claim it suppresses pseudo-change until the next nuisance/failure-mode study tests that directly;
+     - use the three-way rank-fusion result only as evidence of complementary rankings.
 
 19. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.

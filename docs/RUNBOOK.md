@@ -412,6 +412,24 @@ Tracked report:
 docs/experiment_reports/oscd_band_image_ds_score_ablation_2026-06-18.md
 ```
 
+Corrected all-city classical pressure comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank8_traditional_pressure:8:global_pixel+patch3+patch5+window128s64mean+band_image_norm+celik_pca_kmeans+ir_mad" --output-dir "phase1/outputs/spatial_ds_traditional_pressure_allcities_corrected_$tag" --continue-on-error --no-save-npy
+```
+
+Rank-12 label-free fusion comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_label_free_fusion:12:band_image_norm+ir_mad+rank_fusion_pca_band+rank_fusion_band_irmad+rank_fusion_pca_irmad+rank_fusion_pca_band_irmad" --output-dir "phase1/outputs/spatial_score_rank_fusion_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Tracked interpretation:
+
+```text
+docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md
+```
+
 Default sweep design:
 
 ```text
@@ -444,10 +462,12 @@ Validation meaning:
 - `raw_l2_corr`: redundancy check; if a DS score is almost perfectly correlated with raw spectral L2, it is probably not adding a distinct geometric signal.
 - `raw_l2` and `pca_diff`: baseline pressure so DS is not compared only against itself.
 
-Queued later variant:
+Completed fixed-grid pyramid decision:
 
 ```text
-multiscale_subspace_pyramid
+spatial_pyramid_1_2_4_energy
+spatial_pyramid_1_2_4_norm
+spatial_pyramid_1_2_4_8_norm
 ```
 
 This is the wavelet/JPEG/Green-Learning-inspired idea:
@@ -459,7 +479,7 @@ This is the wavelet/JPEG/Green-Learning-inspired idea:
 8x8 grid       -> 64 subspaces
 ```
 
-Do not call this "Green Learning" in results until the exact Green Learning / PixelHop / wavelet source is matched to the implementation.
+Core-five testing did not improve AP over global pixel DS. Stop this exact construction. Do not call it "Green Learning," PixelHop, or a wavelet implementation: those require a different, source-verified feature hierarchy.
 
 ## 6. Phase 1: MultiSenGE Optional Exploration
 
