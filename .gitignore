@@ -67,3 +67,7 @@ temporal/outputs/
 temporal/data/
 temporal/.secrets/
 temporal/outputs/
+
+# scratch PDFs
+*.tmp_*.pdf
+.tmp_*.pdf
