@@ -366,10 +366,20 @@ Tracked report and outputs:
 
 Next decision gate:
 
-1. Define a pseudo-change taxonomy using representative city maps: vegetation/seasonality, water, cloud/haze, illumination, registration, and target structural change.
-2. Test robust or nuisance-aware feature normalization only when it has a source and a held-out-city protocol.
-3. Compare per-image Otsu with thresholds/calibrators fitted on training cities and evaluated on unseen cities.
+1. Split-safe changed-area calibration: **completed 2026-06-18**.
+   - Fitted one top-ranked changed-area fraction per method on 14 official training cities and froze it for 10 official test cities.
+   - Three-way fusion test F1 `0.2670` versus PCA-diff `0.2452`; delta `+0.0218`, 7/10 wins, `p=0.1602`, bootstrap CI crosses zero.
+   - Band-Image DS test F1 `0.2507`; its `+0.0055` delta over PCA-diff is not reliable.
+   - Conclusion: rank fusion remains promising complementarity, not a proven improvement. Threshold scale alone does not solve the problem.
+2. Define a pseudo-change taxonomy using representative city maps: vegetation/seasonality, water, cloud/haze, illumination, registration, and target structural change.
+3. Test robust or nuisance-aware feature normalization only when it has a source and a held-out-city protocol.
 4. Continue to neural/prior experiments only if the continuous geometric maps add held-out evidence beyond raw bands/PCA-diff or provide a clear diagnostic contribution.
+
+Calibration implementation and outputs:
+
+- `phase1/scripts/evaluate_oscd_split_calibration.py`
+- `phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915/`
+- `phase1/outputs/oscd_split_safe_calibration_20260618_183238/`
 
 Immediate Sensei-first task:
 

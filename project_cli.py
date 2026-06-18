@@ -94,6 +94,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch/band-image DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
+    CommandInfo("phase1-score-calibration", "phase1", "Fit score-map changed-area fractions on OSCD train cities and evaluate them on test cities.", ["phase1-score-calibration", "--sweep-root", "<saved_npy_sweep>"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
     CommandInfo("phase1-viz-examples", "visualization", "Draw OSCD pre/post/GT/diff/DS example figures.", ["phase1-viz-examples", "--cities", "test"]),
@@ -445,6 +446,31 @@ def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
     if args.dry_run:
         cmd.append("--dry-run")
     return run_command(cmd, dry_run=False)
+
+
+def cmd_phase1_score_calibration(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/oscd_split_safe_calibration_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/evaluate_oscd_split_calibration.py",
+        "--sweep-root",
+        args.sweep_root,
+        "--oscd-root",
+        args.oscd_root,
+        "--output-dir",
+        out,
+        "--methods",
+        args.methods,
+        "--grid-size",
+        str(args.grid_size),
+        "--max-fraction",
+        str(args.max_fraction),
+        "--visual-cities",
+        args.visual_cities,
+    ]
+    if args.config:
+        cmd += ["--config", args.config]
+    return run_command(cmd, dry_run=args.dry_run)
 
 
 def cmd_phase1_multisenge_manifest(args: argparse.Namespace) -> int:
@@ -1109,6 +1135,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--continue-on-error", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spatial_subspace_sweep)
+
+    p = sub.add_parser("phase1-score-calibration", help="Fit changed-area fractions on OSCD train cities and evaluate them unchanged on test cities.")
+    p.add_argument("--sweep-root", required=True, help="Spatial sweep root generated with --save-npy.")
+    p.add_argument("--oscd-root", default="data/OSCD")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--methods", default="raw_l2,pca_diff,band_image_norm,ir_mad,rank_fusion_pca_band_irmad")
+    p.add_argument("--config", default="")
+    p.add_argument("--grid-size", type=int, default=300)
+    p.add_argument("--max-fraction", type=float, default=0.5)
+    p.add_argument("--visual-cities", default="brasilia,dubai,norcia")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_score_calibration)
 
     p = sub.add_parser("phase1-subspace-audit", help="Compatibility alias for phase1-subspace-inspect.")
     p.add_argument("--oscd-root", default="data/OSCD")

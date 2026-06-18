@@ -138,7 +138,32 @@ Representative grids are under each run's `comparison_grid.png`. Aggregate figur
 5. Stop fixed-grid pixel-spectral pyramid work in its current form.
 6. Next experiments should target the observed real problem: pseudo-change suppression and score calibration, with split-safe thresholding and a feature representation that can distinguish radiometric nuisance from target change.
 
-## 10. Reproduction Commands
+## 10. Split-Safe Calibration Follow-Up
+
+One changed-area fraction was fitted per method using macro F1 across the 14 official OSCD training cities. The fraction was then frozen and applied as an exact top-ranked-pixel budget to the 10 official test cities. Test labels were not used to select the fraction.
+
+| method | train-fitted fraction | test F1 | test IoU | test Otsu F1 | test oracle F1 |
+|---|---:|---:|---:|---:|---:|
+| PCA + Band-Image + IR-MAD | 2.79% | **0.2670** | **0.1613** | 0.1559 | **0.3632** |
+| Band-Image DS | 2.57% | 0.2507 | 0.1491 | 0.2714 | 0.3365 |
+| PCA-diff | 2.57% | 0.2452 | 0.1478 | **0.2879** | 0.3375 |
+| raw L2/CVA | 2.57% | 0.2382 | 0.1435 | 0.2601 | 0.3158 |
+| IR-MAD | 3.16% | 0.2204 | 0.1308 | 0.0648 | 0.3297 |
+
+The three-way fusion improves mean held-out F1 over PCA-diff by `+0.0218` and wins 7/10 test cities, but the paired result is not reliable (`p=0.1602`; bootstrap 95% CI `[-0.0027, +0.0533]`). Band-Image DS differs from PCA-diff by only `+0.0055` F1 with a wide interval. Therefore calibration does not establish superiority.
+
+The fitted fractions are close to the training-city mean changed-area prevalence, while test-city prevalence is higher and more variable. Fixed area calibration helps the poorly thresholded fusion and IR-MAD maps, but it does not consistently improve PCA-diff or Band-Image DS over per-image Otsu.
+
+Diagnostic maps show extensive false-positive changed regions outside OSCD labels. These regions can be described as candidate radiometric/seasonal/land-cover pseudo-change only after inspecting the source imagery; the error mask alone does not identify the physical cause.
+
+Calibration outputs:
+
+- `phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915/`
+- `phase1/outputs/oscd_split_safe_calibration_20260618_183238/`
+
+Decision: retain the fusion as a complementary score, but move the next experiment from generic threshold tuning to explicit pseudo-change/nuisance-feature analysis.
+
+## 11. Reproduction Commands
 
 Traditional pressure comparison:
 
@@ -150,4 +175,14 @@ Rank-12 fusion comparison:
 
 ```powershell
 $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_label_free_fusion:12:band_image_norm+ir_mad+rank_fusion_pca_band+rank_fusion_band_irmad+rank_fusion_pca_irmad+rank_fusion_pca_band_irmad" --output-dir "phase1/outputs/spatial_score_rank_fusion_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Split-safe calibration source and evaluator:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; $source="phase1/outputs/spatial_score_calibration_source_allcities_$tag"; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_calibration_source:12:band_image_norm+ir_mad+rank_fusion_pca_band_irmad" --output-dir $source --continue-on-error --save-npy
+```
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-score-calibration --sweep-root phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915 --config rank12_calibration_source --output-dir "phase1/outputs/oscd_split_safe_calibration_$tag"
 ```

@@ -857,6 +857,18 @@ f(x) = mean_m percentile_rank(s_m(x))
 
 This uses no OSCD labels and avoids incompatible score scales. It is useful for testing whether methods carry complementary rankings. It is not calibrated probability fusion, and its weak Otsu result means it cannot yet be treated as a deployable binary change map.
 
+### Split-safe changed-area calibration
+
+To test whether threshold scale is the main bottleneck, score maps are converted into exact top-ranked-pixel decisions. For method `m`, a changed-area fraction `q_m` is selected by macro F1 on official OSCD training cities only:
+
+```text
+q_m* = argmax_q mean_city F1(top_q(score_m), label), city in OSCD train
+```
+
+The chosen `q_m*` is frozen and applied to every official test city. This is supervised calibration because it uses training labels, but it is split-safe because test labels do not select the fraction. It is a project evaluation rule, not part of DS/IR-MAD theory.
+
+Current evidence: three-way rank fusion improves held-out mean F1 from PCA-diff's `0.2452` to `0.2670`, but the 10-city paired test is not significant. Extensive false-positive regions remain, so the next issue is nuisance/pseudo-change representation rather than another threshold search.
+
 ### Phase 1 thresholding vs Phase 2 priors
 
 Phase 1 can evaluate score maps with Otsu or train-calibrated thresholds. Phase 2 does not train on those thresholded masks by default. It loads continuous min-max-normalized prior score maps as additional channels.

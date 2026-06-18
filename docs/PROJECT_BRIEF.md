@@ -119,6 +119,7 @@ Classical-pressure and follow-up result, 2026-06-18:
 - Rank-12 Band-Image DS is the strongest tested DS setting: mean AUROC `0.8477`, AP `0.2410`, best F1 `0.3021`; it still trails PCA-diff on mean AP.
 - Equal-weight PCA-diff + Band-Image + IR-MAD rank fusion reaches AUROC `0.8708` and wins 21/24 cities against PCA-diff (`p=0.00024`), but its AP improvement is not significant and Otsu F1 falls to `0.1084`.
 - A fixed-grid pixel-spectral DS pyramid failed to improve core-city AP and is stopped in that form.
+- Train-city changed-area calibration gives the three-way fusion held-out test F1 `0.2670` versus PCA-diff `0.2452`, but the paired 10-city improvement is not significant (`p=0.1602`). Calibration does not establish a win.
 - Full interpretation: `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`.
 
 ## 5. Immediate Next Decision
@@ -126,7 +127,7 @@ Classical-pressure and follow-up result, 2026-06-18:
 Before more long U-Net sweeps, test the two unresolved problems exposed by the comparison:
 
 ```text
-pseudo-change separation -> split-safe score calibration -> optional neural/prior follow-up
+split-safe score calibration [done] -> pseudo-change/nuisance analysis [next] -> optional neural/prior follow-up
 ```
 
 Use city-held-out calibration only; do not tune thresholds on the evaluated city's labels. Preserve the parallel Sensei-aligned multi-date HLS/subspace track.

@@ -430,6 +430,20 @@ Tracked interpretation:
 docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md
 ```
 
+Generate saved score arrays for split-safe calibration:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; $source="phase1/outputs/spatial_score_calibration_source_allcities_$tag"; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_calibration_source:12:band_image_norm+ir_mad+rank_fusion_pca_band_irmad" --output-dir $source --continue-on-error --save-npy
+```
+
+Fit changed-area fractions on official training cities and evaluate them unchanged on official test cities:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-score-calibration --sweep-root phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915 --config rank12_calibration_source --output-dir "phase1/outputs/oscd_split_safe_calibration_$tag"
+```
+
+The second command writes train calibration curves, held-out test metrics, paired city tests, and TP/FP/FN diagnostic maps. It is supervised by training labels; it is not an unsupervised threshold.
+
 Default sweep design:
 
 ```text
