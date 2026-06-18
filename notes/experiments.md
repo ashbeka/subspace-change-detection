@@ -254,7 +254,7 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not another blind sweep. The all-city Band-Image DS sweep showed that `band_image_ds` is the strongest DS-family candidate, but it is still weaker than PCA-diff on mean AP and weak under Otsu thresholding.
+The first OSCD spatial-construction stage is complete. The corrected all-city comparison is documented in `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`.
 
 There are now two parallel tracks:
 
@@ -271,26 +271,22 @@ The Sensei-first track has priority for advisor alignment. The OSCD track remain
 Immediate next task:
 
 ```text
-Inspect why Band-Image DS ranks changed pixels reasonably but calibrates poorly, then test whether the score definition and thresholding are the bottleneck.
+Separate target change from radiometric pseudo-change, and test split-safe score calibration without per-city label tuning.
 ```
 
-Immediate experiment track to keep in order:
+Completed OSCD construction track:
 
 ```text
-global pixel DS -> patch-vector DS -> local-window DS -> Band-Image DS -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
+global pixel DS -> patch-vector DS -> local-window DS -> Band-Image DS -> fixed-grid pyramid -> corrected Celik/IR-MAD pressure baselines
 ```
 
-Minimum fair comparisons:
+Decision from that track:
 
-- raw spectral L2 / CVA;
-- PCA-diff;
-- Celik PCA-kmeans if the implementation is verified;
-- IR-MAD after formula audit;
-- global canonical DS;
-- patch3 and patch5 DS;
-- local-window DS;
-- Band-Image DS spatial-subspace candidate;
-- multiscale subspace pyramid.
+- Band-Image DS rank 12 is the strongest current standalone DS-family construction, but it does not beat PCA-diff on mean AP.
+- Repaired IR-MAD is competitive in ranking but poorly calibrated by per-image Otsu.
+- The exact fixed-grid pixel-spectral pyramid is stopped because it does not improve over global pixel DS.
+- Equal-weight PCA/Band-Image/IR-MAD rank fusion improves AUROC significantly but does not significantly improve AP and harms Otsu F1.
+- Do not start another long Phase 2 prior sweep until pseudo-change and calibration behavior are understood.
 
 Band-Image DS spatial-subspace pilot:
 
@@ -303,9 +299,11 @@ Band-Image DS spatial-subspace pilot:
 
 Status 2026-06-18:
 
-- Implemented and swept on all 24 local OSCD cities at ranks 6 and 8.
+- Implemented and swept on all 24 local OSCD cities at ranks 6, 8, 10, and 12 where applicable.
 - Strongest DS-family method in 44/48 city/rank runs.
-- Still below PCA-diff on mean AP, so the next task is diagnostic score/threshold/failure-mode work, not Phase 2 training.
+- Rank 12 is the best tested Band-Image setting: AUROC `0.8477`, AP `0.2410`, best F1 `0.3021`, Otsu F1 `0.2036`.
+- PCA-diff remains higher in mean AP (`0.2541`); rank-12 Band-Image wins 8/24 cities and loses 16/24 (`p=0.0646`).
+- The next task is pseudo-change and split-safe calibration work, not Phase 2 training.
 
 Minimum reporting:
 
@@ -342,15 +340,15 @@ Interpretation:
 - The score reduction was part of the thresholding problem, but PCA-diff still wins mean AP and still has slightly better Otsu F1.
 - `band_image_ratio` and `band_image_residual` should be treated as diagnostics, not primary scores.
 
-Next pressure-baseline task:
+Completed pressure-baseline and fusion result:
 
-1. Verify Celik PCA-kmeans implementation against its paper/reference behavior.
-2. Verify IR-MAD formula and code path.
-3. Run Celik and IR-MAD on the same 24-city OSCD comparison if implementation checks pass.
-4. Inspect qualitative failure modes for:
-   - Band-Image DS wins: Bordeaux, Chongqing, Milano, Paris, selected Saclay cases;
-   - PCA-diff wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio;
-   - patch/local-window wins: Norcia and Saclay-e style cases.
+- IR-MAD was repaired to use paired CCA transforms and unchanged-pixel chi-square survival weighting.
+- Celik now defaults to local patches from the scalar CVA/L2 difference image and uses bounded seeded fitting plus chunked prediction.
+- All 24 cities completed without failure.
+- Rank-8 mean AP: PCA-diff `0.2541`, Band-Image `0.2340`, raw L2 `0.2261`, IR-MAD `0.2138`, Celik `0.1621`.
+- Band-Image is significantly worse than PCA-diff and significantly better than this Celik adaptation; it is not reliably different from raw L2 or IR-MAD.
+- Three-way equal-weight rank fusion has AUROC `0.8708` versus PCA-diff `0.8406`, winning 21/24 cities (`p=0.00024`). AP rises to `0.2674`, but the paired AP improvement is not significant and Otsu F1 drops to `0.1084`.
+- Keep fusion as complementarity evidence only. Next check: calibration and pseudo-change categories using a split-safe protocol.
 
 Immediate Sensei-first task:
 
@@ -443,6 +441,7 @@ Concrete near-term checklist:
 2. PCA rank sensitivity:
    - Test ranks `2, 3, 4, 5, 6, 8, 10, 12`.
    - Compare variance thresholds `95%`, `99%`, `99.5%`.
+   - Status: fixed-rank Band-Image sensitivity is complete. Core-five performance rose through rank 12; all-city rank 12 reached AP `0.2410` versus PCA-diff `0.2541`. Variance-threshold selection remains open and should be evaluated without tuning on test cities.
 
 3. OSCD projection visualization:
    - Compute `delta_x_ds = D D^T (x_post - x_pre)`.
@@ -465,6 +464,7 @@ Concrete near-term checklist:
    - For each cell, fit pre/post subspaces and either assign a cell-level DS score or score pixels inside the cell using that cell's basis.
    - Compare pyramid aggregation against local-window DS to see whether explicit multiscale structure helps or just creates block artifacts.
    - Do not call it Green Learning in results until the exact Green Learning / PixelHop source is matched to the implementation.
+   - Status: the canonical pixel-spectral fixed-grid version was implemented and stopped at the core-five decision gate. Mean AP was `0.0761-0.0765`, not better than global pixel DS `0.0791`. Future Green Learning/wavelet work must change the feature representation rather than repeat the same pixel-spectral DS inside cells.
 
 6. Reference-code method family screen:
    - Review the bundled DS, MagTool, and MATLAB Subspace Toolbox code as an implementation menu, not as runtime dependencies.

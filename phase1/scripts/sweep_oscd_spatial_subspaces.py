@@ -27,6 +27,10 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import rankdata, wilcoxon
 
@@ -168,6 +172,53 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         writer = csv.DictWriter(f, fieldnames=fields)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def write_summary_figures(
+    output_dir: Path,
+    rows: list[dict[str, object]],
+    summary: list[dict[str, object]],
+) -> None:
+    """Write compact aggregate and city-wise AP figures for experiment review."""
+    if not rows or not summary:
+        return
+    ordered = sorted(summary, key=lambda item: float_or_nan(item.get("mean_average_precision")), reverse=True)
+    labels = [f"{item['method']}\n({item['config']})" for item in ordered]
+    ap_values = [float_or_nan(item.get("mean_average_precision")) for item in ordered]
+    auroc_values = [float_or_nan(item.get("mean_auroc")) for item in ordered]
+    x = np.arange(len(ordered))
+    width = 0.38
+    fig, ax = plt.subplots(figsize=(max(9.0, len(ordered) * 1.15), 5.8))
+    ax.bar(x - width / 2, ap_values, width, label="mean AP", color="#d95f02")
+    ax.bar(x + width / 2, auroc_values, width, label="mean AUROC", color="#1b9e77")
+    ax.set_xticks(x, labels, rotation=35, ha="right")
+    ax.set_ylim(0.0, 1.0)
+    ax.set_ylabel("score")
+    ax.set_title("OSCD aggregate ranking metrics")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(output_dir / "sweep_mean_ap_auroc.png", dpi=180)
+    plt.close(fig)
+
+    cities = sorted({str(row["city"]) for row in rows})
+    method_keys = sorted({(str(row["config"]), str(row["method"])) for row in rows})
+    matrix = np.full((len(method_keys), len(cities)), np.nan, dtype=np.float64)
+    city_index = {city: index for index, city in enumerate(cities)}
+    method_index = {key: index for index, key in enumerate(method_keys)}
+    for row in rows:
+        matrix[method_index[(str(row["config"]), str(row["method"]))], city_index[str(row["city"])]] = float_or_nan(
+            row.get("average_precision")
+        )
+    fig, ax = plt.subplots(figsize=(max(12.0, len(cities) * 0.58), max(4.5, len(method_keys) * 0.48)))
+    image = ax.imshow(matrix, aspect="auto", cmap="magma", vmin=0.0, vmax=max(0.05, float(np.nanmax(matrix))))
+    ax.set_xticks(np.arange(len(cities)), cities, rotation=55, ha="right")
+    ax.set_yticks(np.arange(len(method_keys)), [f"{method}\n({config})" for config, method in method_keys])
+    ax.set_title("Average precision by OSCD city")
+    fig.colorbar(image, ax=ax, label="AP", fraction=0.025, pad=0.02)
+    fig.tight_layout()
+    fig.savefig(output_dir / "sweep_city_average_precision_heatmap.png", dpi=180)
+    plt.close(fig)
 
 
 def aggregate_by_config_method(rows: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -538,6 +589,7 @@ def main() -> None:
     write_csv(output_dir / "sweep_best_ap_by_city_config.csv", best_ap)
     write_csv(output_dir / "sweep_best_ds_ap_by_city_config.csv", best_ap_ds)
     write_csv(output_dir / "sweep_pairwise_method_comparisons.csv", pairwise)
+    write_summary_figures(output_dir, all_rows, summary)
     write_report(output_dir / "sweep_report.md", args, configs, cities, summary, best_ap, best_ap_ds, pairwise, failures)
 
     print()

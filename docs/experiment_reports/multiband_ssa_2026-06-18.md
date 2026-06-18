@@ -48,10 +48,43 @@ band at **100%** (chance 16.7%, n=150) on `freq_split`. No scalar detector provi
   (`freq_split`) min-angle wins (1.0 vs 0.85). The contribution is regime-specific: DS wins on
   *distributed* multi-mode change, robust to noise.
 
-## 4. Open (adversarial verification in progress)
+## 4. Adversarial verification — VERDICT (this one survives; the claim narrows but holds)
 
-A 3-probe pass is attacking this: (A) stronger frequency-domain scalars (PSD/spectral entropy/full-ACF) —
-does DS keep its noise edge vs the *best* scalar? (B) construction robustness (rank/energy/W/L) — is the
-win knife-edge as the L1 one was? (C) is the win a special case, and does a trivial min-angle variant
-("mean of all angles" / "sum of all angles" ≈ DS) capture the same advantage — i.e. is the real lesson
-"aggregate all angles" rather than "use DS"? Verdict + honest final claim to follow before real-data work.
+Three probes attacked it (`temporal/experiments/probe_spectral_scalars.py`, `probe_mbprobe_angles.py`,
+`probe_mb_construction.py`). Unlike the L1 win, this one survives — with an honest, narrower claim. `[experiment-evidence]`
+
+**(A) Stronger frequency-domain scalars.** Added PSD-L2/L1, spectral entropy, full autocorrelation, and an
+*oracle* 2nd-harmonic-power detector. Result on the harmonic_dropout noise sweep (DS vs best strong scalar):
+| noise | DS | best strong scalar | margin |
+|---|---|---|---|
+| 0.25 | 1.00 | 1.00 (spec_ent / acf_full) | **+0.00 (TIE)** |
+| 0.80 | 0.99 | 0.67 (spec_ent) | **+0.32 (DS)** |
+| 1.20 | 0.74 | 0.58 (spec_ent) | **+0.15 (DS)** |
+→ On *clean* data strong scalars tie DS. DS's genuine edge is **noise robustness**, not raw power.
+
+**(B) Construction robustness.** DS-AUC = 0.94–1.00 across W∈{16,24,32}, L∈{8,12,16}, rank∈{4,8,12};
+DS−min-angle margin a stable **+0.45 to +0.57** everywhere. **Not knife-edge** — the opposite of the L1
+result (which collapsed to chance at rank≥2).
+
+**(C) Is it "DS" or just "aggregate the angles"?** Across all modes/noise, `ds_mag ≡ mean_all ≡ sum_1mcos`
+identically (the DS magnitude *is* the aggregate of all canonical angles). So the detection power is
+"aggregate ALL canonical angles" — a one-line generalization of single-angle SSA, which *is* the DS
+magnitude. And the win is **not** a harmonic_dropout cherry-pick: DS beats min-angle on 4 of 5 distributed
+modes (amp_redistribute is the exception — there DS and min-angle both fail, only ACF catches it).
+
+## 5. Honest, defensible claim (verified)
+
+> The multivariate temporal Difference Subspace — aggregating evidence across **all** canonical angles
+> between past/present signal subspaces — detects **distributed multi-mode structural change** in
+> satellite-like time series **robustly under noise**, substantially beating the conventional single-angle
+> SSA at every noise and construction setting, and beating the best frequency-domain scalar once noise is
+> non-trivial (≥0.8). Its basis **uniquely attributes** the change to specific bands/modes (100% vs 16.7%
+> chance). Caveats, stated up front: on clean data strong spectral scalars tie it; the detection magnitude
+> equals an aggregate of canonical angles (not a new scalar); and it is regime-specific (fails on
+> amplitude-redistribution change). Second-order/geodesic recovery decomposition adds an interpretability
+> axis no scalar provides.
+
+**Gate decision: GO** to real Sentinel-2 data with this narrowed claim (noise-robust multi-mode detection
++ attribution + recovery), since a genuine multi-dimensional regime where the subspace machinery robustly
+beats min-angle AND scalars now exists and is construction-stable. Next: a real S2 dynamics case via GEE
+(needs Earth Engine credentials), pre-registering W/L/rank from §4(B).
