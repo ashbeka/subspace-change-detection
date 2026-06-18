@@ -1,26 +1,83 @@
-"""
-Lightweight IR-MAD baseline.
+"""IR-MAD baseline for multiband change detection.
 
 Source/provenance:
-- Iteratively Reweighted Multivariate Alteration Detection (IR-MAD) is a
-  classical canonical-correlation-based remote-sensing change detector
-  associated with Nielsen's MAD/IR-MAD work.
-- The mathematical idea is to find canonical variates between two multiband
-  images, compute MAD variate differences, and iteratively reweight likely
-  unchanged observations.
+- Nielsen 2007 regularized/iteratively reweighted MAD: CCA is used to build
+  canonical variates for the two dates; their differences are MAD variates.
+- Google Earth Engine iMAD tutorial: the iterative weights are chi-square
+  survival probabilities of the standardized MAD statistic, so likely unchanged
+  pixels dominate the next covariance estimate.
 
-Project adaptation and caution:
-- This file is a compact Sentinel-2 implementation with optional subsampling for
-  large OSCD tiles. It is useful for comparison pressure and CCA intuition, but
-  it should be formula-checked against Nielsen/reference implementations before
-  making strong IR-MAD performance claims.
+Project adaptation:
+- Sentinel-2 OSCD tiles can contain more than one million valid pixels, so this
+  implementation optionally subsamples pixels for estimating the CCA transforms
+  and then applies the final transforms to all valid pixels.
+- This is a compact baseline implementation, not a replacement for a full
+  geospatial IR-MAD package. It is intended as fair classical comparison
+  pressure for DS/PCA-diff experiments.
 """
 from __future__ import annotations
 
 import numpy as np
 import scipy.linalg as la
+from scipy.stats import chi2
 
 Array = np.ndarray
+
+
+def _weighted_mean_cov(x: Array, w: Array, eps: float) -> tuple[Array, Array]:
+    """Return weighted mean and covariance for samples shaped bands x pixels."""
+    w = np.asarray(w, dtype=np.float64)
+    w_sum = float(np.sum(w))
+    if w_sum <= eps:
+        w = np.ones_like(w, dtype=np.float64)
+        w_sum = float(w.size)
+    wn = w / (w_sum + eps)
+    mean = np.sum(x * wn[None, :], axis=1, keepdims=True)
+    xc = x - mean
+    cov = (xc * wn[None, :]) @ xc.T
+    return mean, cov
+
+
+def _weighted_cross_cov(x: Array, y: Array, mx: Array, my: Array, w: Array, eps: float) -> Array:
+    w_sum = float(np.sum(w))
+    if w_sum <= eps:
+        w = np.ones_like(w, dtype=np.float64)
+        w_sum = float(w.size)
+    wn = w / (w_sum + eps)
+    return ((x - mx) * wn[None, :]) @ (y - my).T
+
+
+def _solve_cca(c11: Array, c22: Array, c12: Array, eps: float) -> tuple[Array, Array, Array]:
+    """Solve paired CCA generalized eigenproblems.
+
+    Returns A, B, rho where columns of A/B define canonical variates
+    U=A^T X and V=B^T Y. Eigenvalues are rho^2.
+    """
+    p = c11.shape[0]
+    reg11 = c11 + eps * np.eye(p)
+    reg22 = c22 + eps * np.eye(p)
+
+    inv22_c21 = la.solve(reg22, c12.T, assume_a="pos", check_finite=False)
+    inv11_c12 = la.solve(reg11, c12, assume_a="pos", check_finite=False)
+    mat_a = c12 @ inv22_c21
+    mat_b = c12.T @ inv11_c12
+    eig_a, a = la.eigh(mat_a, reg11, check_finite=False)
+    eig_b, b = la.eigh(mat_b, reg22, check_finite=False)
+
+    order_a = np.argsort(eig_a)[::-1]
+    order_b = np.argsort(eig_b)[::-1]
+    eig = np.clip(eig_a[order_a], 0.0, 1.0)
+    a = a[:, order_a]
+    b = b[:, order_b]
+    rho = np.sqrt(eig)
+    return a, b, rho
+
+
+def _align_signs(a: Array, b: Array, c12: Array) -> tuple[Array, Array]:
+    """Flip B signs so paired canonical variates have positive covariance."""
+    diag = np.diag(a.T @ c12 @ b)
+    signs = np.where(diag < 0.0, -1.0, 1.0)
+    return a, b * signs[None, :]
 
 
 def ir_mad_score(
@@ -31,9 +88,10 @@ def ir_mad_score(
     downsample_max_pixels: int = 200000,
     random_state: int = 1234,
     eps: float = 1e-6,
+    convergence_tol: float = 1e-4,
 ) -> Array:
     """
-    Compute IR-MAD change magnitude. Returns min-max normalized score.
+    Compute IR-MAD chi-square change statistic. Returns min-max normalized score.
     """
     # Flatten valid pixels
     v = valid_mask.reshape(-1)
@@ -51,41 +109,40 @@ def ir_mad_score(
         samp2 = mat2
 
     w = np.ones(samp1.shape[1], dtype=np.float64)
-    A = np.eye(samp1.shape[0])
+    A = np.eye(samp1.shape[0], dtype=np.float64)
+    B = np.eye(samp2.shape[0], dtype=np.float64)
+    rho = np.zeros(samp1.shape[0], dtype=np.float64)
+    m1 = np.mean(samp1, axis=1, keepdims=True)
+    m2 = np.mean(samp2, axis=1, keepdims=True)
 
     for _ in range(max(1, iters)):
-        # Weighted centering
-        w_norm = w / (np.sum(w) + eps)
-        m1 = np.sum(samp1 * w_norm, axis=1, keepdims=True)
-        m2 = np.sum(samp2 * w_norm, axis=1, keepdims=True)
-        x1c = samp1 - m1
-        x2c = samp2 - m2
-        # Weighted covariance
-        c11 = (x1c * w_norm) @ x1c.T
-        c22 = (x2c * w_norm) @ x2c.T
-        c12 = (x1c * w_norm) @ x2c.T
-        c21 = c12.T
-        # Solve generalized eigenproblem for canonical variates
+        prev_rho = rho.copy()
+        m1, c11 = _weighted_mean_cov(samp1, w, eps)
+        m2, c22 = _weighted_mean_cov(samp2, w, eps)
+        c12 = _weighted_cross_cov(samp1, samp2, m1, m2, w, eps)
         try:
-            eigvals, eigvecs = la.eigh(
-                c12 @ la.inv(c22 + eps * np.eye(c22.shape[0])),
-                c11 + eps * np.eye(c11.shape[0]),
-                check_finite=False,
-            )
+            A, B, rho = _solve_cca(c11, c22, c12, eps)
+            A, B = _align_signs(A, B, c12)
         except Exception:
-            continue
-        # Sort descending
-        idx_sort = np.argsort(eigvals)[::-1]
-        eigvals = eigvals[idx_sort]
-        A = eigvecs[:, idx_sort]
-        # Compute MAD variates on sample (difference of canonical projections)
-        mads = (A.T @ samp1) - (A.T @ samp2)
-        chi2 = np.sum((mads / (np.sqrt(np.maximum(eigvals, eps))[:, None] + eps)) ** 2, axis=0)
-        w = 1.0 - np.exp(-0.5 * chi2)  # higher weight to likely change
+            break
+
+        u = A.T @ (samp1 - m1)
+        vv = B.T @ (samp2 - m2)
+        mad = u - vv
+        sigma2 = np.maximum(2.0 * (1.0 - rho), eps)
+        z = np.sum((mad * mad) / sigma2[:, None], axis=0)
+        # High p-values are more compatible with no-change and therefore get
+        # higher weight in the next invariant-background estimate.
+        w = chi2.sf(z, df=samp1.shape[0])
+        if np.max(np.abs(rho - prev_rho)) < convergence_tol:
+            break
 
     # Apply final transform to full matrices
-    mads_full = (A.T @ mat1) - (A.T @ mat2)
-    mag = np.sqrt(np.sum(mads_full ** 2, axis=0))
+    u_full = A.T @ (mat1 - m1)
+    v_full = B.T @ (mat2 - m2)
+    mad_full = u_full - v_full
+    sigma2 = np.maximum(2.0 * (1.0 - rho), eps)
+    mag = np.sum((mad_full * mad_full) / sigma2[:, None], axis=0)
     score = np.zeros(valid_mask.size, dtype=np.float32)
     score[v] = mag
     # Min-max normalize

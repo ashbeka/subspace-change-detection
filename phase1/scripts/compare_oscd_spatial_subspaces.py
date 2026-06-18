@@ -15,6 +15,7 @@ Project adaptation under test:
 - global_pixel: one 13-band pixel is one sample, so spatial position is not used
   while fitting PCA.
 - local_window: fit a pre/post DS pair inside sliding spatial windows.
+- spatial_pyramid: fit canonical DS in fixed grids at multiple spatial scales.
 - patch_vector: flatten a local 13-band patch into one sample vector so local
   neighborhood layout enters the subspace.
 - band_image_ds: flatten each Sentinel-2 band image into one high-dimensional
@@ -28,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gc
 import json
 import re
 import sys
@@ -47,6 +49,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from phase1.baselines.celik_pca_kmeans import celik_score
+from phase1.baselines.ir_mad import ir_mad_score
 from phase1.baselines.pca_diff import pca_diff_score
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
 from phase1.data.preprocessing import apply_normalization, load_band_stats
@@ -71,6 +75,7 @@ class MethodSpec:
     patch_size: int | None = None
     aggregator: str = "mean"
     score_mode: str = "energy_sq"
+    pyramid_levels: tuple[int, ...] | None = None
 
 
 @dataclass
@@ -103,7 +108,10 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_METHODS,
         help=(
             "Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, "
-            "band_image_ds, band_image_norm, band_image_ratio, band_image_residual. "
+            "band_image_ds, band_image_norm, band_image_ratio, band_image_residual, "
+            "celik_pca_kmeans, ir_mad, rank_fusion_pca_band, rank_fusion_band_irmad, "
+            "rank_fusion_pca_irmad, rank_fusion_pca_band_irmad, "
+            "spatial_pyramid_1_2_4_energy, spatial_pyramid_1_2_4_norm, spatial_pyramid_1_2_4_8_norm. "
             "Legacy aliases such as flatbands are still accepted."
         ),
     )
@@ -113,6 +121,13 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--score_chunk_size", "--score-chunk-size", type=int, default=25000, help="Patch scoring chunk size.")
     ap.add_argument("--score_percentile", "--score-percentile", type=float, default=99.0, help="Percentile used for display normalization.")
     ap.add_argument("--save_band_attribution", "--save-band-attribution", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--celik_patch_size", "--celik-patch-size", type=int, default=9)
+    ap.add_argument("--celik_pca_energy", "--celik-pca-energy", type=float, default=0.9)
+    ap.add_argument("--celik_downsample_max_side", "--celik-downsample-max-side", type=int, default=384)
+    ap.add_argument("--celik_feature_mode", "--celik-feature-mode", choices=("spectral_norm", "multiband_patch"), default="spectral_norm")
+    ap.add_argument("--celik_max_fit_samples", "--celik-max-fit-samples", type=int, default=20000)
+    ap.add_argument("--ir_mad_iters", "--ir-mad-iters", type=int, default=10)
+    ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=True)
     return ap.parse_args()
 
@@ -142,6 +157,27 @@ def parse_method_spec(text: str) -> MethodSpec:
     key = text.strip().lower().replace("-", "_")
     if key == "global" or key == "global_pixel":
         return MethodSpec(name="global_pixel", family="global_pixel")
+
+    if key in {"celik", "celik_pca_kmeans", "pca_kmeans", "pcakmeans"}:
+        return MethodSpec(name="celik_pca_kmeans", family="celik_pca_kmeans")
+    if key in {"ir_mad", "irmad", "imad"}:
+        return MethodSpec(name="ir_mad", family="ir_mad")
+    fusion_dependencies = {
+        "rank_fusion_pca_band": "pca_diff+band_image_norm",
+        "rank_fusion_band_irmad": "band_image_norm+ir_mad",
+        "rank_fusion_pca_irmad": "pca_diff+ir_mad",
+        "rank_fusion_pca_band_irmad": "pca_diff+band_image_norm+ir_mad",
+    }
+    if key in fusion_dependencies:
+        return MethodSpec(name=key, family="rank_fusion", score_mode=fusion_dependencies[key])
+    pyramid_specs = {
+        "spatial_pyramid_1_2_4_energy": ((1, 2, 4), "energy_sq"),
+        "spatial_pyramid_1_2_4_norm": ((1, 2, 4), "energy_norm"),
+        "spatial_pyramid_1_2_4_8_norm": ((1, 2, 4, 8), "energy_norm"),
+    }
+    if key in pyramid_specs:
+        levels, score_mode = pyramid_specs[key]
+        return MethodSpec(name=key, family="spatial_pyramid", score_mode=score_mode, pyramid_levels=levels)
 
     if key in {"band_image_ds", "band_image", "band_images", "band_image_energy", "flatbands", "flat_bands", "flattened_band", "flattened_bands"}:
         return MethodSpec(name="band_image_ds", family="band_image", score_mode="energy_sq")
@@ -327,6 +363,82 @@ def local_window_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray
     return out.astype(np.float32), card
 
 
+def spatial_pyramid_ds_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    """Fit canonical pixel-spectral DS independently in fixed multiscale grids."""
+    if not spec.pyramid_levels:
+        raise ValueError(f"No pyramid levels configured for {spec.name}.")
+    cfg = DSConfig(
+        rank_r=args.rank,
+        variance_threshold=None,
+        random_state=args.seed,
+        subspace_variant="canonical",
+        score_normalization=None,
+    )
+    height, width = valid_mask.shape
+    scale_maps: list[np.ndarray] = []
+    cells_used = 0
+    cells_skipped = 0
+    min_pixels = max(args.rank + 1, 16)
+
+    for level in spec.pyramid_levels:
+        y_edges = np.linspace(0, height, level + 1, dtype=int)
+        x_edges = np.linspace(0, width, level + 1, dtype=int)
+        scale_score = np.zeros((height, width), dtype=np.float32)
+        for iy in range(level):
+            for ix in range(level):
+                sl_y = slice(int(y_edges[iy]), int(y_edges[iy + 1]))
+                sl_x = slice(int(x_edges[ix]), int(x_edges[ix + 1]))
+                cell_valid = valid_mask[sl_y, sl_x]
+                if int(np.sum(cell_valid)) < min_pixels:
+                    cells_skipped += 1
+                    continue
+                result = compute_ds_scores(
+                    x1[:, sl_y, sl_x],
+                    x2[:, sl_y, sl_x],
+                    valid_mask=cell_valid,
+                    cfg=cfg,
+                    normalize=False,
+                )["projection"].astype(np.float32)
+                if spec.score_mode == "energy_norm":
+                    result = np.sqrt(np.maximum(result, 0.0)).astype(np.float32)
+                elif spec.score_mode != "energy_sq":
+                    raise ValueError(f"Unsupported pyramid score mode: {spec.score_mode}")
+                scale_score[sl_y, sl_x] = result
+                cells_used += 1
+        scale_maps.append(scale_score)
+
+    output = np.mean(np.stack(scale_maps, axis=0), axis=0, dtype=np.float32)
+    output[~valid_mask] = 0.0
+    level_text = ", ".join(f"{level}x{level}" for level in spec.pyramid_levels)
+    card = ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "Hierarchical spatial-support experiment motivated by the project Green Learning/wavelet note; "
+            "uses canonical first-order DS at each grid cell but does not claim to implement PixelHop or a wavelet transform."
+        ),
+        sample_unit="one valid 13-band pixel inside one fixed pyramid grid cell",
+        input_object=f"for each cell and date: X_cell in R^(13 x N_cell), at grid scales {level_text}",
+        subspace_count=f"one pre/post PCA+DS pair per grid cell; cells used={cells_used}, skipped={cells_skipped}",
+        basis_shape=f"per cell Phi, Psi in R^(13 x {args.rank}); canonical D in R^(13 x <= {args.rank})",
+        fitting_method=f"rank-{args.rank} PCA and canonical DS independently at levels {level_text}; equal-weight mean across scale maps",
+        score_definition=(
+            "per cell pixel: ||D_cell^T delta||, then equal-weight mean across scales"
+            if spec.score_mode == "energy_norm"
+            else "per cell pixel: ||D_cell^T delta||^2, then equal-weight mean across scales"
+        ),
+        spatial_information="preserves coarse-to-fine regional support through fixed grid membership; exact coordinates are not PCA features and grid boundaries remain a risk",
+        code_path="phase1.scripts.compare_oscd_spatial_subspaces.spatial_pyramid_ds_score",
+        verification="must beat or explain global/window/patch DS and be pressure-tested against PCA-diff, IR-MAD, labels, maps, and grid-boundary artifacts",
+    )
+    return output, card
+
+
 def patch_valid_mask(valid_mask: np.ndarray, patch_size: int) -> np.ndarray:
     margin = patch_size // 2
     h, w = valid_mask.shape
@@ -501,6 +613,118 @@ def band_image_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, 
     return out, card, band_maps
 
 
+def celik_pca_kmeans_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+    score = celik_score(
+        x1,
+        x2,
+        patch_size=int(args.celik_patch_size),
+        pca_energy=float(args.celik_pca_energy),
+        valid_mask=valid_mask,
+        random_state=int(args.seed),
+        downsample_max_side=int(args.celik_downsample_max_side) if args.celik_downsample_max_side else None,
+        feature_mode=str(args.celik_feature_mode),
+        max_fit_samples=int(args.celik_max_fit_samples),
+        score_chunk_size=int(args.score_chunk_size),
+    )
+    card = ConstructionCard(
+        method="celik_pca_kmeans",
+        source_reference=(
+            "Celik 2009 PCA+k-means unsupervised change detection: build a difference image, "
+            "represent local neighborhoods in a PCA feature space, then cluster features into changed/unchanged groups."
+        ),
+        sample_unit=f"one local scalar difference-magnitude patch, patch_size={args.celik_patch_size}",
+        input_object=(
+            "CVA/L2 magnitude image ||X_post-X_pre||_2; local scalar patches are flattened for PCA/k-means"
+            if args.celik_feature_mode == "spectral_norm"
+            else "Difference tensor Delta=X_post-X_pre; local 13-band patches are flattened (explicit project adaptation)"
+        ),
+        subspace_count="one PCA feature space for local difference patches, followed by k=2 clustering",
+        basis_shape=f"PCA keeps components explaining {args.celik_pca_energy:.2f} cumulative variance",
+        fitting_method=(
+            f"PCA and k-means on a seeded subset of at most {args.celik_max_fit_samples} valid local patches; "
+            "all valid patches are predicted in chunks; larger projected-magnitude cluster is treated as changed"
+        ),
+        score_definition="binary changed-cluster assignment multiplied by normalized projected-feature magnitude",
+        spatial_information="uses local patch neighborhoods, so it is the closest traditional spatial baseline for patch-vector DS",
+        code_path="phase1.baselines.celik_pca_kmeans.celik_score",
+        verification="paper-family implementation; compared in this script against OSCD labels and DS/PCA-diff/raw L2",
+    )
+    return score.astype(np.float32), card
+
+
+def ir_mad_baseline_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+    score = ir_mad_score(
+        x1,
+        x2,
+        valid_mask,
+        iters=int(args.ir_mad_iters),
+        downsample_max_pixels=int(args.ir_mad_downsample_max_pixels),
+        random_state=int(args.seed),
+    )
+    card = ConstructionCard(
+        method="ir_mad",
+        source_reference=(
+            "Nielsen 2007 IR-MAD / GEE iMAD: canonical variates from paired multiband dates, "
+            "MAD variate differences, and iterative chi-square survival weighting of likely unchanged pixels."
+        ),
+        sample_unit="one paired valid pixel across pre/post Sentinel-2 dates",
+        input_object="X_pre, X_post in R^(13 x N), paired by pixel location",
+        subspace_count="CCA transform pair, not a DS subspace; included as established multivariate classical baseline",
+        basis_shape="A, B in R^(13 x 13), canonical correlations rho in R^13",
+        fitting_method="iteratively reweighted CCA on a seeded valid-pixel subsample, then final transform applied to all valid pixels",
+        score_definition="per pixel: chi-square statistic sum_i MAD_i^2 / (2 * (1 - rho_i))",
+        spatial_information="standard/global IR-MAD is spectral-paired, not spatial-local; pixel coordinates are used only for pairing and map reshaping",
+        code_path="phase1.baselines.ir_mad.ir_mad_score",
+        verification="formula repaired against Nielsen/GEE iMAD weighting; still treated as compact baseline, not a full geospatial package",
+    )
+    return score.astype(np.float32), card
+
+
+def percentile_rank_score(score: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
+    """Convert valid scores to deterministic empirical percentile ranks."""
+    values = np.asarray(score[valid_mask], dtype=np.float64)
+    order = np.argsort(values, kind="mergesort")
+    ranks = np.empty(values.size, dtype=np.float32)
+    if values.size <= 1:
+        ranks.fill(0.0)
+    else:
+        ranks[order] = np.linspace(0.0, 1.0, values.size, dtype=np.float32)
+    output = np.zeros_like(score, dtype=np.float32)
+    output[valid_mask] = ranks
+    return output
+
+
+def rank_fusion_score(
+    name: str,
+    dependency_text: str,
+    scores: dict[str, np.ndarray],
+    valid_mask: np.ndarray,
+) -> tuple[np.ndarray, ConstructionCard]:
+    dependencies = dependency_text.split("+")
+    missing = [item for item in dependencies if item not in scores]
+    if missing:
+        raise ValueError(
+            f"{name} requires {missing}. List computed methods such as band_image_norm and ir_mad before the fusion."
+        )
+    ranked = [percentile_rank_score(scores[item], valid_mask) for item in dependencies]
+    fused = np.mean(np.stack(ranked, axis=0), axis=0, dtype=np.float32)
+    fused[~valid_mask] = 0.0
+    card = ConstructionCard(
+        method=name,
+        source_reference="Label-free score-level rank aggregation; diagnostic ensemble rather than a new subspace method.",
+        sample_unit="one valid pixel score from each component method",
+        input_object=f"component score maps: {', '.join(dependencies)}",
+        subspace_count="none at fusion stage; component methods retain their own constructions",
+        basis_shape="not applicable",
+        fitting_method="convert each component map to within-image empirical percentile ranks, then take an unweighted mean",
+        score_definition="mean component percentile rank per valid pixel",
+        spatial_information="inherits component map layout; no neighborhood operation or label fitting is introduced",
+        code_path="phase1.scripts.compare_oscd_spatial_subspaces.rank_fusion_score",
+        verification="fixed equal-weight, label-free diagnostic; must be compared city-wise against every component",
+    )
+    return fused, card
+
+
 def rgb_preview(cube: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
     rgb = np.stack([cube[i] for i in RGB_INDICES], axis=-1).astype(np.float32)
     out = np.zeros_like(rgb, dtype=np.float32)
@@ -601,14 +825,15 @@ def main() -> None:
     x2_norm, _ = apply_normalization(sample.x_post, stats, valid_mask=sample.valid_mask, nodata_value=0.0)
     eval_mask &= valid_mask
 
-    print(f"Loaded {sample.city}/{split}: pre={sample.x_pre.shape}, post={sample.x_post.shape}, valid={int(eval_mask.sum())}")
-    print("Task: binary pixel change-segmentation scoring on OSCD labels.")
-    print("Meaningful here means: label ranking, thresholded segmentation, baseline pressure, spatial construction clarity, and map inspection.")
+    print(f"Loaded {sample.city}/{split}: pre={sample.x_pre.shape}, post={sample.x_post.shape}, valid={int(eval_mask.sum())}", flush=True)
+    print("Task: binary pixel change-segmentation scoring on OSCD labels.", flush=True)
+    print("Meaningful here means: label ranking, thresholded segmentation, baseline pressure, spatial construction clarity, and map inspection.", flush=True)
 
     methods = [parse_method_spec(x) for x in args.methods.split(",") if x.strip()]
     rows: list[dict[str, object]] = []
     cards: list[ConstructionCard] = []
     map_outputs: list[tuple[str, np.ndarray]] = []
+    score_by_name: dict[str, np.ndarray] = {}
     band_attribution_outputs: list[dict[str, str]] = []
 
     raw_l2 = raw_l2_score(x1_norm, x2_norm, eval_mask)
@@ -619,12 +844,13 @@ def main() -> None:
         metrics = score_metrics(score, target, eval_mask, raw_l2)
         rows.append({"method": name, "family": family, "runtime_sec": 0.0, "eval_valid_fraction": float(np.mean(eval_mask)), **metrics})
         map_outputs.append((name, score))
+        score_by_name[name] = score
         save_score_png(maps_dir / f"{name}.png", score, eval_mask, args.score_percentile)
         if args.save_npy:
             np.save(maps_dir / f"{name}.npy", score.astype(np.float32))
 
     for spec in methods:
-        print(f"Running {spec.name}...")
+        print(f"Running {spec.name}...", flush=True)
         start = time.perf_counter()
         method_mask = eval_mask
         if spec.family == "global_pixel":
@@ -639,9 +865,17 @@ def main() -> None:
                 band_attribution_outputs.append({"method": spec.name, "grid": str(grid_path), "csv": str(csv_attr_path)})
         elif spec.family == "local_window":
             score, card = local_window_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
+        elif spec.family == "spatial_pyramid":
+            score, card = spatial_pyramid_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "patch_vector":
             score, card, method_mask = patch_vector_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
             method_mask = method_mask & eval_mask
+        elif spec.family == "celik_pca_kmeans":
+            score, card = celik_pca_kmeans_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family == "ir_mad":
+            score, card = ir_mad_baseline_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family == "rank_fusion":
+            score, card = rank_fusion_score(spec.name, spec.score_mode, score_by_name, eval_mask)
         else:
             raise AssertionError(f"Unhandled method family: {spec.family}")
         runtime = time.perf_counter() - start
@@ -649,10 +883,12 @@ def main() -> None:
         rows.append({"method": spec.name, "family": spec.family, "runtime_sec": float(runtime), "eval_valid_fraction": float(np.mean(method_mask)), **metrics})
         cards.append(card)
         map_outputs.append((spec.name, score))
+        score_by_name[spec.name] = score
         save_score_png(maps_dir / f"{spec.name}.png", score, method_mask, args.score_percentile)
         if args.save_npy:
             np.save(maps_dir / f"{spec.name}.npy", score.astype(np.float32))
-        print(f"  done in {runtime:.2f}s, AUROC={metrics['auroc']:.4f}, AP={metrics['average_precision']:.4f}, Otsu F1={metrics['otsu_f1']:.4f}")
+        print(f"  done in {runtime:.2f}s, AUROC={metrics['auroc']:.4f}, AP={metrics['average_precision']:.4f}, Otsu F1={metrics['otsu_f1']:.4f}", flush=True)
+        gc.collect()
 
     csv_path = args.output_dir / "spatial_subspace_metrics.csv"
     fieldnames = sorted({key for row in rows for key in row.keys()})

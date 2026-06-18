@@ -27,6 +27,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterable
 
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import rankdata, wilcoxon
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CITIES = "beirut,dubai,lasvegas,milano,norcia"
@@ -98,6 +105,11 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--max_fit_samples", "--max-fit-samples", type=int, default=20000)
     ap.add_argument("--score_chunk_size", "--score-chunk-size", type=int, default=25000)
+    ap.add_argument("--celik_downsample_max_side", "--celik-downsample-max-side", type=int, default=384)
+    ap.add_argument("--celik_feature_mode", "--celik-feature-mode", choices=("spectral_norm", "multiband_patch"), default="spectral_norm")
+    ap.add_argument("--celik_max_fit_samples", "--celik-max-fit-samples", type=int, default=20000)
+    ap.add_argument("--ir_mad_iters", "--ir-mad-iters", type=int, default=10)
+    ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--resume", action="store_true", help="Skip a city/config run if its metrics CSV already exists.")
     ap.add_argument("--continue_on_error", "--continue-on-error", action="store_true")
@@ -162,6 +174,87 @@ def write_csv(path: Path, rows: list[dict[str, object]]) -> None:
         writer.writerows(rows)
 
 
+def write_summary_figures(
+    output_dir: Path,
+    rows: list[dict[str, object]],
+    summary: list[dict[str, object]],
+) -> None:
+    """Write compact aggregate and city-wise AP figures for experiment review."""
+    if not rows or not summary:
+        return
+    ordered = sorted(summary, key=lambda item: float_or_nan(item.get("mean_average_precision")), reverse=True)
+    configs = {str(item["config"]) for item in ordered}
+    labels = [
+        method_display_name(str(item["method"]))
+        if len(configs) == 1
+        else f"{method_display_name(str(item['method']))}\n({item['config']})"
+        for item in ordered
+    ]
+    ap_values = [float_or_nan(item.get("mean_average_precision")) for item in ordered]
+    auroc_values = [float_or_nan(item.get("mean_auroc")) for item in ordered]
+    x = np.arange(len(ordered))
+    width = 0.38
+    fig, ax = plt.subplots(figsize=(max(9.0, len(ordered) * 1.15), 5.8))
+    ax.bar(x - width / 2, ap_values, width, label="mean AP", color="#d95f02")
+    ax.bar(x + width / 2, auroc_values, width, label="mean AUROC", color="#1b9e77")
+    ax.set_xticks(x, labels, rotation=35, ha="right")
+    ax.set_ylim(0.0, 1.0)
+    ax.set_ylabel("score")
+    ax.set_title("OSCD aggregate ranking metrics")
+    ax.grid(axis="y", alpha=0.25)
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(output_dir / "sweep_mean_ap_auroc.png", dpi=180)
+    plt.close(fig)
+
+    cities = sorted({str(row["city"]) for row in rows})
+    method_keys = sorted({(str(row["config"]), str(row["method"])) for row in rows})
+    matrix = np.full((len(method_keys), len(cities)), np.nan, dtype=np.float64)
+    city_index = {city: index for index, city in enumerate(cities)}
+    method_index = {key: index for index, key in enumerate(method_keys)}
+    for row in rows:
+        matrix[method_index[(str(row["config"]), str(row["method"]))], city_index[str(row["city"])]] = float_or_nan(
+            row.get("average_precision")
+        )
+    fig, ax = plt.subplots(figsize=(max(12.0, len(cities) * 0.58), max(4.5, len(method_keys) * 0.48)))
+    image = ax.imshow(matrix, aspect="auto", cmap="magma", vmin=0.0, vmax=max(0.05, float(np.nanmax(matrix))))
+    ax.set_xticks(np.arange(len(cities)), cities, rotation=55, ha="right")
+    heatmap_labels = [
+        method_display_name(method) if len(configs) == 1 else f"{method_display_name(method)}\n({config})"
+        for config, method in method_keys
+    ]
+    ax.set_yticks(np.arange(len(method_keys)), heatmap_labels)
+    ax.set_title("Average precision by OSCD city")
+    fig.colorbar(image, ax=ax, label="AP", fraction=0.025, pad=0.02)
+    fig.tight_layout()
+    fig.savefig(output_dir / "sweep_city_average_precision_heatmap.png", dpi=180)
+    plt.close(fig)
+
+
+def method_display_name(method: str) -> str:
+    """Return concise plot labels while preserving exact IDs in CSV outputs."""
+    names = {
+        "raw_l2": "Raw L2 / CVA",
+        "pca_diff": "PCA-diff",
+        "band_image_ds": "Band-Image DS energy",
+        "band_image_norm": "Band-Image DS",
+        "celik_pca_kmeans": "Celik PCA-k-means",
+        "ir_mad": "IR-MAD",
+        "global_pixel": "Global Pixel DS",
+        "patch3": "Patch-3 DS",
+        "patch5": "Patch-5 DS",
+        "window128s64mean": "Local-Window DS",
+        "rank_fusion_pca_band": "PCA + Band-Image",
+        "rank_fusion_band_irmad": "Band-Image + IR-MAD",
+        "rank_fusion_pca_irmad": "PCA + IR-MAD",
+        "rank_fusion_pca_band_irmad": "PCA + Band-Image + IR-MAD",
+        "spatial_pyramid_1_2_4_energy": "Grid Pyramid 1/2/4 energy",
+        "spatial_pyramid_1_2_4_norm": "Grid Pyramid 1/2/4 norm",
+        "spatial_pyramid_1_2_4_8_norm": "Grid Pyramid 1/2/4/8 norm",
+    }
+    return names.get(method, method.replace("_", " "))
+
+
 def aggregate_by_config_method(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     grouped: dict[tuple[str, str, str], list[dict[str, object]]] = defaultdict(list)
     for row in rows:
@@ -179,6 +272,75 @@ def aggregate_by_config_method(rows: list[dict[str, object]]) -> list[dict[str, 
             out[f"mean_{metric}"] = mean(float_or_nan(x.get(metric)) for x in items)
         summary.append(out)
     return summary
+
+
+def paired_method_comparisons(
+    rows: list[dict[str, object]],
+    metrics: tuple[str, ...] = ("average_precision", "auroc", "best_f1", "otsu_f1"),
+    seed: int = 1234,
+) -> list[dict[str, object]]:
+    """Compare methods on matched city/config observations.
+
+    The bootstrap interval estimates uncertainty in the mean paired delta. The
+    Wilcoxon test supplies a distribution-free paired significance check; both
+    are descriptive evidence, not proof of cross-dataset generalization.
+    """
+    by_config: dict[str, dict[str, dict[str, dict[str, object]]]] = defaultdict(lambda: defaultdict(dict))
+    for row in rows:
+        by_config[str(row["config"])][str(row["method"])][str(row["city"])] = row
+
+    rng = np.random.default_rng(seed)
+    output: list[dict[str, object]] = []
+    for config, by_method in sorted(by_config.items()):
+        methods = sorted(by_method)
+        for metric in metrics:
+            for index, method_a in enumerate(methods):
+                for method_b in methods[index + 1 :]:
+                    common = sorted(set(by_method[method_a]) & set(by_method[method_b]))
+                    paired: list[tuple[str, float]] = []
+                    for city in common:
+                        a = float_or_nan(by_method[method_a][city].get(metric))
+                        b = float_or_nan(by_method[method_b][city].get(metric))
+                        if a == a and b == b:
+                            paired.append((city, a - b))
+                    if not paired:
+                        continue
+                    deltas = np.asarray([item[1] for item in paired], dtype=np.float64)
+                    tolerance = 1e-12
+                    nonzero = deltas[np.abs(deltas) > tolerance]
+                    if nonzero.size:
+                        p_value = float(wilcoxon(nonzero, alternative="two-sided", zero_method="wilcox").pvalue)
+                        ranks = rankdata(np.abs(nonzero))
+                        rank_sum = float(np.sum(ranks))
+                        rank_biserial = float((np.sum(ranks[nonzero > 0]) - np.sum(ranks[nonzero < 0])) / rank_sum)
+                    else:
+                        p_value = 1.0
+                        rank_biserial = 0.0
+
+                    if deltas.size > 1:
+                        samples = rng.choice(deltas, size=(10000, deltas.size), replace=True).mean(axis=1)
+                        ci_low, ci_high = np.quantile(samples, [0.025, 0.975])
+                    else:
+                        ci_low = ci_high = deltas[0]
+                    output.append(
+                        {
+                            "config": config,
+                            "metric": metric,
+                            "method_a": method_a,
+                            "method_b": method_b,
+                            "n_cities": int(deltas.size),
+                            "mean_delta_a_minus_b": float(np.mean(deltas)),
+                            "median_delta_a_minus_b": float(np.median(deltas)),
+                            "bootstrap_95ci_low": float(ci_low),
+                            "bootstrap_95ci_high": float(ci_high),
+                            "wins_a": int(np.sum(deltas > tolerance)),
+                            "ties": int(np.sum(np.abs(deltas) <= tolerance)),
+                            "wins_b": int(np.sum(deltas < -tolerance)),
+                            "wilcoxon_p_two_sided": p_value,
+                            "matched_rank_biserial": rank_biserial,
+                        }
+                    )
+    return output
 
 
 def best_rows(rows: list[dict[str, object]], metric: str, *, ds_only: bool = False) -> list[dict[str, object]]:
@@ -233,6 +395,7 @@ def write_report(
     summary: list[dict[str, object]],
     best_ap: list[dict[str, object]],
     best_ap_ds: list[dict[str, object]],
+    pairwise: list[dict[str, object]],
     failures: list[dict[str, object]],
 ) -> None:
     lines: list[str] = []
@@ -302,18 +465,37 @@ def write_report(
     lines.append("- Treat this as Phase 1 score-map evidence only. It does not prove Phase 2 neural segmentation improvement.")
     lines.append("- Inspect `comparison_grid.png` files for qualitative failure modes before deciding whether to train U-Net with any new prior.")
     lines.append("")
+    lines.append("## 7. Paired Average-Precision Pressure Tests")
+    lines.append("")
+    lines.append("Positive delta means method A is better. Confidence intervals and Wilcoxon p-values are paired over cities.")
+    lines.append("")
+    lines.append("| config | method A | method B | n | mean delta | 95% CI | W/T/L | p |")
+    lines.append("|---|---|---|---:|---:|---|---:|---:|")
+    pressure_methods = {"band_image_norm", "pca_diff", "raw_l2", "celik_pca_kmeans", "ir_mad"}
+    for row in pairwise:
+        if row["metric"] != "average_precision":
+            continue
+        if row["method_a"] not in pressure_methods or row["method_b"] not in pressure_methods:
+            continue
+        lines.append(
+            f"| {row['config']} | {row['method_a']} | {row['method_b']} | {row['n_cities']} | "
+            f"{fmt(row['mean_delta_a_minus_b'])} | [{fmt(row['bootstrap_95ci_low'])}, {fmt(row['bootstrap_95ci_high'])}] | "
+            f"{row['wins_a']}/{row['ties']}/{row['wins_b']} | {fmt(row['wilcoxon_p_two_sided'])} |"
+        )
+    lines.append("")
     if failures:
-        lines.append("## 7. Failures")
+        lines.append("## 8. Failures")
         lines.append("")
         for failure in failures:
             lines.append(f"- `{failure['city']}` / `{failure['config']}` returned code `{failure['returncode']}`. See `{failure['log']}`.")
         lines.append("")
-    lines.append("## 8. Output Files")
+    lines.append("## 9. Output Files")
     lines.append("")
     lines.append(f"- Full row summary: `{path.parent / 'sweep_metrics_all.csv'}`")
     lines.append(f"- Mean summary: `{path.parent / 'sweep_summary_by_config_method.csv'}`")
     lines.append(f"- Best AP rows: `{path.parent / 'sweep_best_ap_by_city_config.csv'}`")
     lines.append(f"- Best DS AP rows: `{path.parent / 'sweep_best_ds_ap_by_city_config.csv'}`")
+    lines.append(f"- Paired city-wise comparisons: `{path.parent / 'sweep_pairwise_method_comparisons.csv'}`")
     lines.append("")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -387,6 +569,16 @@ def main() -> None:
                     str(args.max_fit_samples),
                     "--score_chunk_size",
                     str(args.score_chunk_size),
+                    "--celik_downsample_max_side",
+                    str(args.celik_downsample_max_side),
+                    "--celik_feature_mode",
+                    str(args.celik_feature_mode),
+                    "--celik_max_fit_samples",
+                    str(args.celik_max_fit_samples),
+                    "--ir_mad_iters",
+                    str(args.ir_mad_iters),
+                    "--ir_mad_downsample_max_pixels",
+                    str(args.ir_mad_downsample_max_pixels),
                 ]
                 if not args.save_npy:
                     cmd.append("--no-save-npy")
@@ -427,9 +619,12 @@ def main() -> None:
     write_csv(output_dir / "sweep_summary_by_config_method.csv", summary)
     best_ap = best_rows(all_rows, "average_precision", ds_only=False)
     best_ap_ds = best_rows(all_rows, "average_precision", ds_only=True)
+    pairwise = paired_method_comparisons(all_rows, seed=args.seed)
     write_csv(output_dir / "sweep_best_ap_by_city_config.csv", best_ap)
     write_csv(output_dir / "sweep_best_ds_ap_by_city_config.csv", best_ap_ds)
-    write_report(output_dir / "sweep_report.md", args, configs, cities, summary, best_ap, best_ap_ds, failures)
+    write_csv(output_dir / "sweep_pairwise_method_comparisons.csv", pairwise)
+    write_summary_figures(output_dir, all_rows, summary)
+    write_report(output_dir / "sweep_report.md", args, configs, cities, summary, best_ap, best_ap_ds, pairwise, failures)
 
     print()
     print(f"Wrote sweep output: {output_dir}")
