@@ -1,0 +1,26 @@
+{
+  "_purpose": "FROZEN before outcomes. Test DS in its VERIFIED niche on a REAL LABELED dynamics change: irrigation start/stop (gain/loss of a growing-season cycle = multi-harmonic dynamics change). Labels from IrrMapper (UMT/Climate/IrrMapper_RF/v1_2, classification 0=irrigated). The fire test failed because a fire is a sharp shift; irrigation switch is the right regime.",
+  "frozen_2026_06_18": true,
+  "labels_source": "UMT/Climate/IrrMapper_RF/v1_2 (classification==0 => irrigated)",
+  "region_bbox": [-120.2, 46.2, -118.6, 47.2],
+  "region_name": "columbia_basin_wa",
+  "years": [2017, 2018, 2019, 2020, 2021, 2022],
+  "switch_rule": "switched-on: not-irrigated in 2017-2018 AND irrigated in 2021-2022; switched-off: reverse. constant: same status all 6 years. switch_year = first year of the new status.",
+  "n_sites_per_category": 8,
+  "s2_fetch_range": ["2016-06-01", "2023-06-30"],
+  "construction": "mssa",
+  "window_W_dates": 24, "embedding_L": 12, "rank_dim": 8, "energy": 0.99, "center": false,
+  "bands_for_subspace": ["B2", "B3", "B4", "B5", "B8", "B8A", "B11", "B12"],
+  "tolerance_years": 1,
+  "baselines": ["mssa_minangle", "ndvi_seasonal_amplitude_step", "trivial_reflectance_diff"],
+  "future_baseline": "BFAST harmonic-break (multi-harmonic) -- the natural classical comparator; add after first run.",
+  "preregistered_claims": {
+    "C1_detect": "switched sites show a larger DS change-score (max d1 or d_pre rise) than constant sites -> AUC(switched vs constant) > 0.7.",
+    "C2_localize": "for switched sites, the DS change-score peaks within +-1 year of the IrrMapper switch year.",
+    "C3_beats_minangle_and_scalar": "full DS AUC >= min-angle AUC and >= NDVI-amplitude-step AUC (the verified-regime claim on real data).",
+    "C4_attribution": "DS per-band attribution at the switch favors NIR/red-edge/SWIR (vegetation/moisture cycle bands).",
+    "C5_control_quiet": "constant sites show low DS change-scores."
+  },
+  "falsifier": "If switched sites are not separable from constant (AUC<=0.7), OR full DS does not beat min-angle AND NDVI-amplitude -> NEGATIVE; the diagnostic paper stands (DS niche does not transfer even to its best real regime).",
+  "no_tuning_rule": "Frozen. Exploration only on a held-out region, never tuned to make the switched-vs-constant separation look better."
+}
