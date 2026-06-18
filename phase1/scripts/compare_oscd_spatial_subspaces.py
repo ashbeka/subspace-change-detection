@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import gc
 import json
 import re
 import sys
@@ -47,6 +48,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from phase1.baselines.celik_pca_kmeans import celik_score
+from phase1.baselines.ir_mad import ir_mad_score
 from phase1.baselines.pca_diff import pca_diff_score
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
 from phase1.data.preprocessing import apply_normalization, load_band_stats
@@ -103,7 +106,8 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_METHODS,
         help=(
             "Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, "
-            "band_image_ds, band_image_norm, band_image_ratio, band_image_residual. "
+            "band_image_ds, band_image_norm, band_image_ratio, band_image_residual, "
+            "celik_pca_kmeans, ir_mad. "
             "Legacy aliases such as flatbands are still accepted."
         ),
     )
@@ -113,6 +117,13 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--score_chunk_size", "--score-chunk-size", type=int, default=25000, help="Patch scoring chunk size.")
     ap.add_argument("--score_percentile", "--score-percentile", type=float, default=99.0, help="Percentile used for display normalization.")
     ap.add_argument("--save_band_attribution", "--save-band-attribution", action=argparse.BooleanOptionalAction, default=False)
+    ap.add_argument("--celik_patch_size", "--celik-patch-size", type=int, default=9)
+    ap.add_argument("--celik_pca_energy", "--celik-pca-energy", type=float, default=0.9)
+    ap.add_argument("--celik_downsample_max_side", "--celik-downsample-max-side", type=int, default=384)
+    ap.add_argument("--celik_feature_mode", "--celik-feature-mode", choices=("spectral_norm", "multiband_patch"), default="spectral_norm")
+    ap.add_argument("--celik_max_fit_samples", "--celik-max-fit-samples", type=int, default=20000)
+    ap.add_argument("--ir_mad_iters", "--ir-mad-iters", type=int, default=10)
+    ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=True)
     return ap.parse_args()
 
@@ -142,6 +153,11 @@ def parse_method_spec(text: str) -> MethodSpec:
     key = text.strip().lower().replace("-", "_")
     if key == "global" or key == "global_pixel":
         return MethodSpec(name="global_pixel", family="global_pixel")
+
+    if key in {"celik", "celik_pca_kmeans", "pca_kmeans", "pcakmeans"}:
+        return MethodSpec(name="celik_pca_kmeans", family="celik_pca_kmeans")
+    if key in {"ir_mad", "irmad", "imad"}:
+        return MethodSpec(name="ir_mad", family="ir_mad")
 
     if key in {"band_image_ds", "band_image", "band_images", "band_image_energy", "flatbands", "flat_bands", "flattened_band", "flattened_bands"}:
         return MethodSpec(name="band_image_ds", family="band_image", score_mode="energy_sq")
@@ -501,6 +517,73 @@ def band_image_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, 
     return out, card, band_maps
 
 
+def celik_pca_kmeans_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+    score = celik_score(
+        x1,
+        x2,
+        patch_size=int(args.celik_patch_size),
+        pca_energy=float(args.celik_pca_energy),
+        valid_mask=valid_mask,
+        random_state=int(args.seed),
+        downsample_max_side=int(args.celik_downsample_max_side) if args.celik_downsample_max_side else None,
+        feature_mode=str(args.celik_feature_mode),
+        max_fit_samples=int(args.celik_max_fit_samples),
+        score_chunk_size=int(args.score_chunk_size),
+    )
+    card = ConstructionCard(
+        method="celik_pca_kmeans",
+        source_reference=(
+            "Celik 2009 PCA+k-means unsupervised change detection: build a difference image, "
+            "represent local neighborhoods in a PCA feature space, then cluster features into changed/unchanged groups."
+        ),
+        sample_unit=f"one local scalar difference-magnitude patch, patch_size={args.celik_patch_size}",
+        input_object=(
+            "CVA/L2 magnitude image ||X_post-X_pre||_2; local scalar patches are flattened for PCA/k-means"
+            if args.celik_feature_mode == "spectral_norm"
+            else "Difference tensor Delta=X_post-X_pre; local 13-band patches are flattened (explicit project adaptation)"
+        ),
+        subspace_count="one PCA feature space for local difference patches, followed by k=2 clustering",
+        basis_shape=f"PCA keeps components explaining {args.celik_pca_energy:.2f} cumulative variance",
+        fitting_method=(
+            f"PCA and k-means on a seeded subset of at most {args.celik_max_fit_samples} valid local patches; "
+            "all valid patches are predicted in chunks; larger projected-magnitude cluster is treated as changed"
+        ),
+        score_definition="binary changed-cluster assignment multiplied by normalized projected-feature magnitude",
+        spatial_information="uses local patch neighborhoods, so it is the closest traditional spatial baseline for patch-vector DS",
+        code_path="phase1.baselines.celik_pca_kmeans.celik_score",
+        verification="paper-family implementation; compared in this script against OSCD labels and DS/PCA-diff/raw L2",
+    )
+    return score.astype(np.float32), card
+
+
+def ir_mad_baseline_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
+    score = ir_mad_score(
+        x1,
+        x2,
+        valid_mask,
+        iters=int(args.ir_mad_iters),
+        downsample_max_pixels=int(args.ir_mad_downsample_max_pixels),
+        random_state=int(args.seed),
+    )
+    card = ConstructionCard(
+        method="ir_mad",
+        source_reference=(
+            "Nielsen 2007 IR-MAD / GEE iMAD: canonical variates from paired multiband dates, "
+            "MAD variate differences, and iterative chi-square survival weighting of likely unchanged pixels."
+        ),
+        sample_unit="one paired valid pixel across pre/post Sentinel-2 dates",
+        input_object="X_pre, X_post in R^(13 x N), paired by pixel location",
+        subspace_count="CCA transform pair, not a DS subspace; included as established multivariate classical baseline",
+        basis_shape="A, B in R^(13 x 13), canonical correlations rho in R^13",
+        fitting_method="iteratively reweighted CCA on a seeded valid-pixel subsample, then final transform applied to all valid pixels",
+        score_definition="per pixel: chi-square statistic sum_i MAD_i^2 / (2 * (1 - rho_i))",
+        spatial_information="standard/global IR-MAD is spectral-paired, not spatial-local; pixel coordinates are used only for pairing and map reshaping",
+        code_path="phase1.baselines.ir_mad.ir_mad_score",
+        verification="formula repaired against Nielsen/GEE iMAD weighting; still treated as compact baseline, not a full geospatial package",
+    )
+    return score.astype(np.float32), card
+
+
 def rgb_preview(cube: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
     rgb = np.stack([cube[i] for i in RGB_INDICES], axis=-1).astype(np.float32)
     out = np.zeros_like(rgb, dtype=np.float32)
@@ -601,9 +684,9 @@ def main() -> None:
     x2_norm, _ = apply_normalization(sample.x_post, stats, valid_mask=sample.valid_mask, nodata_value=0.0)
     eval_mask &= valid_mask
 
-    print(f"Loaded {sample.city}/{split}: pre={sample.x_pre.shape}, post={sample.x_post.shape}, valid={int(eval_mask.sum())}")
-    print("Task: binary pixel change-segmentation scoring on OSCD labels.")
-    print("Meaningful here means: label ranking, thresholded segmentation, baseline pressure, spatial construction clarity, and map inspection.")
+    print(f"Loaded {sample.city}/{split}: pre={sample.x_pre.shape}, post={sample.x_post.shape}, valid={int(eval_mask.sum())}", flush=True)
+    print("Task: binary pixel change-segmentation scoring on OSCD labels.", flush=True)
+    print("Meaningful here means: label ranking, thresholded segmentation, baseline pressure, spatial construction clarity, and map inspection.", flush=True)
 
     methods = [parse_method_spec(x) for x in args.methods.split(",") if x.strip()]
     rows: list[dict[str, object]] = []
@@ -624,7 +707,7 @@ def main() -> None:
             np.save(maps_dir / f"{name}.npy", score.astype(np.float32))
 
     for spec in methods:
-        print(f"Running {spec.name}...")
+        print(f"Running {spec.name}...", flush=True)
         start = time.perf_counter()
         method_mask = eval_mask
         if spec.family == "global_pixel":
@@ -642,6 +725,10 @@ def main() -> None:
         elif spec.family == "patch_vector":
             score, card, method_mask = patch_vector_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
             method_mask = method_mask & eval_mask
+        elif spec.family == "celik_pca_kmeans":
+            score, card = celik_pca_kmeans_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family == "ir_mad":
+            score, card = ir_mad_baseline_score(x1_norm, x2_norm, eval_mask, args)
         else:
             raise AssertionError(f"Unhandled method family: {spec.family}")
         runtime = time.perf_counter() - start
@@ -652,7 +739,8 @@ def main() -> None:
         save_score_png(maps_dir / f"{spec.name}.png", score, method_mask, args.score_percentile)
         if args.save_npy:
             np.save(maps_dir / f"{spec.name}.npy", score.astype(np.float32))
-        print(f"  done in {runtime:.2f}s, AUROC={metrics['auroc']:.4f}, AP={metrics['average_precision']:.4f}, Otsu F1={metrics['otsu_f1']:.4f}")
+        print(f"  done in {runtime:.2f}s, AUROC={metrics['auroc']:.4f}, AP={metrics['average_precision']:.4f}, Otsu F1={metrics['otsu_f1']:.4f}", flush=True)
+        gc.collect()
 
     csv_path = args.output_dir / "spatial_subspace_metrics.csv"
     fieldnames = sorted({key for row in rows for key in row.keys()})
