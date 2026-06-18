@@ -62,3 +62,8 @@ references/reference_papers/*.pdf
 
 # temporal experiment outputs (generated)
 temporal/outputs/
+
+# temporal-DS: cached GEE fetches + secrets (never commit)
+temporal/data/
+temporal/.secrets/
+temporal/outputs/

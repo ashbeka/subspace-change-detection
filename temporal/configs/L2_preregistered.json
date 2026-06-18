@@ -1,0 +1,20 @@
+{
+  "_purpose": "FROZEN construction for the real-data L2 run. Set BEFORE looking at any event data, from the verified synthetic robustness sweep (docs/experiment_reports/multiband_ssa_2026-06-18.md sec 4B, where DS-AUC was 0.94-1.00 and the DS-vs-min-angle margin +0.45..+0.57 across this whole grid). Do not tune these against real event outcomes; tune only on stable/synthetic AOIs.",
+  "frozen_2026_06_18": true,
+  "construction": "mssa",
+  "window_W_dates": 24,
+  "embedding_L": 12,
+  "rank_dim": 8,
+  "energy": 0.99,
+  "center": false,
+  "lag_tau_subspaces": 1,
+  "delta_days": 5,
+  "min_valid_dates_per_window": 16,
+  "bands_for_subspace": ["B2", "B3", "B4", "B5", "B8", "B8A", "B11", "B12"],
+  "recovery_proxy": "NBR",
+  "circularity_guard": "NBR uses B8/B12; for the recovery (L3) claim prefer MTBS dNBR class polygons, or require DS to track recovery timing better than raw reflectance does.",
+  "cloud_mask": {"s2cloudless_prob_thresh": 40, "scl_bad_classes": [3, 8, 9, 10]},
+  "baselines_mandatory": ["mssa_minangle", "psd_spectral_scalar", "multilag_acf", "trivial_reflectance_diff_null"],
+  "metrics": ["onset_localization_days", "change_point_auc", "placebo_quiet_rate", "attribution_band_vs_physics"],
+  "gate0_rule": "On 1 documented event AOI: does d1(t) peak within +-delta_days of the event date? YES -> scale to all AOIs. NO after honest debugging on STABLE/SYNTHETIC data only -> stop, invoke diagnostic-paper fallback."
+}
