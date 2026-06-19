@@ -70,11 +70,17 @@ lineage), answers "geometry-inside-deep-learning." *Risk:* needs a feature extra
   `python -m temporal.experiments.hsi_dimensionality data_hsi/<file>.mat` (runner is built + auto-detects format).
 
 ## 6. Next experiments (precise, runnable — in priority order)
-1. **H-A controlled nuisance test (no new data):** take Salinas; synthesize "date 2" = Salinas + structured
-   radiometric nuisance (per-band gain/offset, atmospheric haze, illumination scaling) + injected real changes
-   on a subset; test whether SFA-CD/GDS-residual beats SAM/CVA *as nuisance grows* (SAM should hold, CVA should
-   degrade, the invariant-subspace method should hold or win). This directly tests H-A's core claim with data
-   in hand. Pre-register; report SAM/CVA/IR-MAD nulls.
+1. **[DONE 2026-06-19 — H-A POSITIVE]** Controlled nuisance test on Salinas: SFA-CD held AUC ~1.0 under
+   global-affine radiometric nuisance while SAM(0.64)/CVA(0.50=chance)/DS(0.51) collapsed (+0.34 over best
+   scalar). Plain shape-DS also collapsed → the win is from MODELING-THE-INVARIANT, not shape-comparison.
+   Report: `docs/experiment_reports/hsi_HA_nuisance_2026-06-19.md`. **Caveat:** global-affine is the easy case
+   (SFA/IR-MAD are built for it); SFA-CD itself is established → not yet OUR novelty. NOVELTY GAP / NEXT:
+   1a. **Harder nuisance** — nonlinear (BRDF/atmospheric) + spatially-varying; linear SFA fails there →
+       test KERNEL (KSFA/KDS) and local/patch invariant-residual (where geometry/nonlinearity wins). THE gap.
+   1b. **GDS-common-subspace** as the invariant model vs SFA-CD — does the subspace version match AND add
+       band/structure ATTRIBUTION (nuisance directions vs change directions) the chi-square lacks?
+   1c. Add **IR-MAD** as the established affine-invariant bar (SFA/GDS must match/beat it).
+   1d. Real bitemporal HSI-CD benchmark (real nuisance) once a `.mat` is downloaded.
 2. **H-A on real bitemporal HSI-CD** (once a benchmark `.mat` is downloaded): SFA-CD / GDS-residual / DS vs
    SAM/CVA/IR-MAD, AUC. The decisive real test.
 3. **H-B:** spectral-SSA subspace trajectory + 1st/2nd-order DS on a multi-date series (synthetic dynamics +
