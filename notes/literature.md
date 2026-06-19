@@ -338,8 +338,8 @@ These leads came from the updated Apple/Slack notes and new bookmark source. Tre
 
 Bookmark integration:
 
-- Importable file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`.
-- Merge summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-17.json`.
+- Importable file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`.
+- Merge summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-20.json`.
 - The new `Research (un-ingested)` source contributed `186` unique URLs; all were preserved in the organized output.
 - Only `14` ambiguous research-like links remain parked because their titles/URLs do not identify the resource safely.
 
@@ -394,13 +394,39 @@ instead of collecting unrelated papers.
 |---|---|---|
 | Toker et al. 2022, *DynamicEarthNet: Daily Multi-Spectral Satellite Dataset for Semantic Change Segmentation*, https://openaccess.thecvf.com/content/CVPR2022/html/Toker_DynamicEarthNet_Daily_Multi-Spectral_Satellite_Dataset_for_Semantic_Change_Segmentation_CVPR_2022_paper.html | Daily Planet multispectral observations for 75 AOIs plus monthly pixel labels for seven land-cover classes; introduces semantic change segmentation evaluation. | Best identified labeled test for temporal characterization/localization, but the official archive is about 524 GB (`labels.zip` about 1.4 GB and imagery split into multi-GB latitude archives). Define one-AOI selective acquisition before downloading. |
 | Official implementation, https://github.com/aysim/dynnet | Temporal baselines, splits, pretrained-model pointers, and official dataset link. | Use to understand data layout and evaluation; do not make it a dependency for the initial classical geometric test. |
+| Ketchum et al. 2020, *IrrMapper*, https://doi.org/10.3390/rs12142328 | Annual 30 m irrigation classifications over 11 western US states; the current Earth Engine v1.2 catalog spans 1986 through 2024. | Enables candidate irrigation-regime transitions with strong Sentinel-2 overlap, but transitions are derived weak labels rather than manually annotated event dates. |
+| Earth Engine IrrMapper v1.2 catalog, https://developers.google.com/earth-engine/datasets/catalog/UMT_Climate_IrrMapper_RF_v1_2 | Public binary annual irrigation collection and current temporal extent. | Practical source for candidate patch/year labels; requires an Earth Engine-enabled Cloud project for extraction. |
+| Wenger et al. 2022, *MultiSenGE*, https://isprs-annals.copernicus.org/articles/V-3-2022/635/2022/isprs-annals-V-3-2022-635-2022.pdf | Local multi-date Sentinel-2/Sentinel-1 sequences and static LULC labels. | Useful for controlled temporal geometry and nuisance tests, but static labels do not validate event timing. |
 
 DynamicEarthNet is not Sentinel-2 and therefore tests method generality rather
 than a Sentinel-specific claim. A Harmonized Sentinel-2 event sequence with
 independent annotations remains the preferred sensor-matched alternative if a
 manageable label source is available.
 
-### 10.5 Current Novelty Boundary
+IrrMapper's paper exposes a directly relevant gap: its annual model aggregates
+seasonal reflectance statistics and explicitly does not model capture-level
+spectral dynamics. That motivates testing seasonal trajectory representations.
+It does **not** establish that DS is the solution. Its documented limitations
+include fixed March-November season assumptions, weak response for orchards,
+vineyards, sparse irrigation, and possible class-transition errors.
+
+### 10.5 Hyperspectral And Temporal Leads From 2026-06-20
+
+| Source | What it adds | Decision |
+|---|---|---|
+| Theiler and Perkins, *Proposed Framework for Anomalous Change Detection*, https://web.engr.oregonstate.edu/~wongwe/workshops/icml2006/papers/theiler.pdf | Frames rare local change against pervasive illumination, focus, atmosphere, or seasonal differences. | Strong conceptual pressure for the nuisance-subspace idea; compare against anomalous-change methods rather than only ordinary CVA. |
+| Chakraborty and Ghosh 2021, https://arxiv.org/abs/2109.04990 | Unsupervised hyperspectral CD using multi-level feature-fusion autoencoders. | Modern nonlinear comparison pressure for a hyperspectral pivot. |
+| Gatto et al., n-mode GDS, https://arxiv.org/abs/1909.01954 | Tensor modes are represented and compared without collapsing all structure into one matrix. | Main source for a later spatial-spectral-temporal tensor experiment; not needed for the first seasonal-subspace test. |
+| CiTIUS hyperspectral CD dataset, https://citius.usc.es/investigacion/datasets/hyperspectral-change-detection-dataset | Registered hyperspectral pairs and change-detection benchmark resources. | First practical dataset lead if the hyperspectral route is activated. |
+| Nielsen, MAD/MAF source page, https://orbit.dtu.dk/en/publications/multivariate-alteration-detection-mad-and-maf-postprocessing-in-m/ | Classical invariant multivariate-change baseline lineage. | Required baseline for multispectral/hyperspectral claims. |
+| Wu, Du, and Zhang 2013 subspace HSI-CD lineage | Confirms subspace-based hyperspectral change detection already exists. | Novelty cannot be "use subspaces on hyperspectral imagery"; novelty must be the exact geometric object, temporal design, or verified capability. |
+
+The latest essential knowledge base also preserves direct DS/GDS, second-order
+DS, time-series DS, S3CCA/TRCCA, signal-latent-subspace, Grassmann tracking,
+SFA, SSC, tensor GDS, and toolbox links. Search-result URLs and ChatGPT links are
+provenance only; original papers and repositories remain the citation sources.
+
+### 10.6 Current Novelty Boundary
 
 The scoped search found extensive satellite time-series change-point,
 seasonality, novelty, classical subspace, hyperspectral subspace, and learned

@@ -1,0 +1,29 @@
+{
+  "base_file": "docs\\source_records\\final_organization_2026-06-12\\chrome_bookmarks_organized_all_2026-06-17.html",
+  "source_file": "docs\\source_records\\final_organization_2026-06-12\\new_bookmark_6_20_26.html",
+  "output_file": "docs\\source_records\\final_organization_2026-06-12\\chrome_bookmarks_organized_all_2026-06-20.html",
+  "base_entries": 1742,
+  "source_entries": 37,
+  "source_unique_urls": 37,
+  "source_urls_already_present": 0,
+  "entries_added": 37,
+  "output_entries": 1779,
+  "expected_output_entries": 1779,
+  "url_count_check_passed": true,
+  "placements": {
+    "Learning/Machine Learning and AI/General Resources": 2,
+    "Learning/Machine Learning and AI/LLMs and Modern AI": 1,
+    "Research/01 Read First - Thesis Core/02 OSCD And Classical Change Detection Baselines": 5,
+    "Research/02 Methods - Subspace Geometry/01 General Subspace Geometry And Toolboxes": 1,
+    "Research/02 Methods - Subspace Geometry/04 Hyperspectral Geometry Unmixing And Spectral Methods": 7,
+    "Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection": 1,
+    "Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning": 4,
+    "Research/03 Methods - Change Detection/04 Preprocessing Multitemporal And Sensor Issues": 1,
+    "Research/04 Datasets - Current Candidate Future/01 Sentinel OSCD MultiSenGE And EO Datasets": 2,
+    "Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs": 1,
+    "Research/04 Datasets - Current Candidate Future/05 Hyperspectral Change And Analysis Datasets": 5,
+    "Research/06 Background - Read As Needed/01 Remote Sensing Books And Guides": 2,
+    "Research/09 Parking Lot - Lower Priority/02 Nonproject Papers To Triage Later": 1,
+    "Research/09 Parking Lot - Lower Priority/03 Misc Project-Relevant Research Links": 4
+  }
+}

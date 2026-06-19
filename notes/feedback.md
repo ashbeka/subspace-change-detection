@@ -106,6 +106,16 @@ Actions:
   - then define one subspace per date;
   - then calculate first DS, second DS, and geodesic projection/decomposition quantities.
 - Do not let semantic change, greenhouse mapping, hyperspectral anomaly detection, or foundation-model ideas replace the Sensei-first tasks until their datasets and evaluation protocols are real.
+- The latest note batch strengthens the Sensei-first temporal interpretation:
+  the temporal axis can supply the real set of related observations that the
+  original image-set methods require. Build a subspace from multiple dates of
+  the same aligned region/season, rather than assuming that unordered pixels
+  from one date are equivalent to multiple views of one object.
+- For any event study, report whether first/second magnitudes change at the
+  documented event and remain stable during no-event periods. Separate abrupt
+  disturbance, gradual drift, recovery, seasonality, and acquisition artifacts.
+- IrrMapper transitions are weak labels derived from annual random-forest maps.
+  Do not describe them to Sensei as independently annotated switch dates.
 
 ## 2. Subspace Construction Feedback
 

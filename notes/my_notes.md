@@ -196,6 +196,26 @@ These notes are distilled from Apple Notes, Slack notes, Sensei messages, the up
 - Post-classification change detection may become useful if the project becomes semantic or object/state change. It is not the immediate OSCD core unless we first have reliable pre/post class maps or object labels.
 - Hyperspectral or richer-band satellite imagery could make subspace methods more natural because dimensionality reduction, MNF/PCA, and band-feature isolation are already common there. Treat this as a possible future pivot, not current OSCD evidence.
 - The Data Fusion Contest and multimodal/foundation-model change-detection resources are valuable for field awareness and future benchmarks, but they should not derail the immediate spatial DS experiments.
+- A more defensible temporal sample definition is now explicit: for one fixed
+  field or patch and one year/season, each cloud-filtered date composite is one
+  related observation. PCA over those ordered observations produces one
+  seasonal subspace; annual subspaces can then be compared by first/second DS
+  and geodesic quantities. This avoids pretending that millions of unrelated
+  scene pixels are an image set.
+- Irrigation start/stop is an interesting labeled-regime hypothesis because it
+  adds or removes a seasonal vegetation cycle. IrrMapper is useful for finding
+  candidate annual transitions, but its maps are classifier outputs, not
+  manually annotated switch-year truth. Any transition result needs manual or
+  independent verification and a second dataset before a performance claim.
+- Hyperspectral imagery remains a separate pivot. Hundreds of bands make
+  band-set and spectral-shape experiments more plausible, but bands are ordered
+  wavelengths, not interchangeable object views. A valid experiment must define
+  spectral neighborhoods/patches and compare against SAM, CVA, MAD/IR-MAD,
+  unmixing, and established hyperspectral change-detection methods.
+- The most useful question from the latest notes is not merely whether a score
+  rises. It is whether the subspace trajectory reacts at the documented event,
+  stays quiet during unchanged seasonal cycles, and separates abrupt regime
+  change from gradual drift or recovery.
 
 ## 4. Notes To Translate Later
 

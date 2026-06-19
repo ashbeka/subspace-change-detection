@@ -180,7 +180,7 @@ Resource indexes:
 
 Bookmark export:
 
-- `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`
+- `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`
 
 ## 8. Questions For A Second-Opinion LLM
 
@@ -215,4 +215,3 @@ Immediate next work:
 3. Add Celik and IR-MAD only after confirming formula and implementation behavior.
 4. Inspect qualitative maps for pseudo-change, vegetation, shadows, water, registration, and city-specific failure modes.
 5. Decide whether spatial DS is a main thesis path, a diagnostic negative result, or a reason to pivot.
-

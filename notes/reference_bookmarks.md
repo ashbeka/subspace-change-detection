@@ -14,26 +14,26 @@
 
 Current organized Chrome import file:
 
-`docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`
+`docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`
 
 Latest source merge:
 
-- Base organized file: `chrome_bookmarks_organized_all_2026-06-12.html`
-- New source folder parsed: `Research (un-ingested)` from `bookmarks_6_17_26_with_research_uningested_bookmarks.html`
-- Merge summary: `bookmark_organization_summary_2026-06-17.json`
+- Base organized file: `chrome_bookmarks_organized_all_2026-06-17.html`
+- New source parsed: `new_bookmark_6_20_26.html`
+- Essential source map checked: `most_essential_knowledge_base.md`
+- Merge summary: `bookmark_organization_summary_2026-06-20.json`
 
 | check | count |
 |---|---:|
-| Base organized bookmark entries | 1556 |
-| New Research (un-ingested) bookmarks | 186 |
-| New unique URLs | 186 |
-| New URLs added | 186 |
-| Exact duplicates already in base | 0 |
-| Duplicates within new source | 0 |
-| Final organized bookmark entries | 1742 |
-| Expected final entries | 1742 |
+| Base organized bookmark entries | 1742 |
+| New source bookmarks | 37 |
+| New unique URLs | 37 |
+| New URLs added | 37 |
+| Essential knowledge-base URLs covered | 58 / 58 |
+| Final organized bookmark entries | 1779 |
+| Expected final entries | 1779 |
 | URL count check passed | true |
-| Research entries after merge | 635 |
+| Research entries after merge | 669 |
 | Remaining research parking entries after second pass | 14 |
 | New links moved out of parking during second pass | 54 |
 
@@ -65,12 +65,12 @@ Shared-category bookmarks get one primary folder to avoid artificial duplicate c
 |---|---:|
 | Career and Opportunities | 106 |
 | Language Study | 62 |
-| Learning | 242 |
+| Learning | 245 |
 | Life Admin | 69 |
 | Personal Notes and Culture | 18 |
 | Programming and Tools | 122 |
 | Projects | 284 |
-| Research | 635 |
+| Research | 669 |
 | To Review | 150 |
 | University | 54 |
 
@@ -103,6 +103,7 @@ Research and learning details:
 | Research/02 Methods - Subspace Geometry/01 General Subspace Geometry And Toolboxes | 30 |
 | Research/02 Methods - Subspace Geometry/02 Kernel PCA And Kernel Subspace | 1 |
 | Research/02 Methods - Subspace Geometry/03 Optional Green Learning Wavelets Compression | 6 |
+| Research/02 Methods - Subspace Geometry/04 Hyperspectral Geometry Unmixing And Spectral Methods | 7 |
 | Research/03 Methods - Change Detection/01 Binary And Unsupervised Change Detection | 27 |
 | Research/03 Methods - Change Detection/02 Semantic And Damage Change Detection | 35 |
 | Research/03 Methods - Change Detection/03 Remote Sensing Deep Learning | 59 |
@@ -111,6 +112,7 @@ Research and learning details:
 | Research/04 Datasets - Current Candidate Future/02 Earth Observation Portals And Catalogs | 21 |
 | Research/04 Datasets - Current Candidate Future/03 Disaster Damage And Semantic Datasets | 12 |
 | Research/04 Datasets - Current Candidate Future/04 Land Cover And Spectral Background | 35 |
+| Research/04 Datasets - Current Candidate Future/05 Hyperspectral Change And Analysis Datasets | 5 |
 | Research/05 Applications - Use Cases And Problem Framing/01 Greenhouses Agriculture Environmental Monitoring | 3 |
 | Research/05 Applications - Use Cases And Problem Framing/02 Urban Infrastructure And Built Environment | 22 |
 | Research/05 Applications - Use Cases And Problem Framing/03 Humanitarian And Conflict Mapping | 11 |
@@ -144,6 +146,13 @@ Start Zotero import and focused reading from these folders, in order:
 - `Research/08 Tools And Code - Implementation Support/01 Reference Implementations` (15)
 
 The new 2026-06-17 source adds many modern change-detection and benchmark links. Read them as comparison pressure and problem-framing material; do not let them replace the immediate spatial-DS experiment unless the research direction is intentionally pivoted.
+
+The 2026-06-20 batch adds focused temporal-irrigation, hyperspectral CD,
+anomalous-change, SAM/MAD, tensor GDS, MultiSenGE, and dataset resources. The
+highest-priority additions are IrrMapper, Theiler anomalous change, the CiTIUS
+hyperspectral benchmark, the original MAD/MAF source, MultiSenGE, and n-mode
+GDS. Generic diffusion/LLM links were kept under `Learning`, not promoted into
+the thesis reading queue.
 
 ## 6. Review Buckets
 
