@@ -17,11 +17,23 @@ Project adaptation:
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import numpy as np
 import scipy.linalg as la
 from scipy.stats import chi2
 
 Array = np.ndarray
+
+
+@dataclass(frozen=True)
+class IRMADResult:
+    """Full iMAD result needed by downstream invariant-pixel methods."""
+
+    score: Array
+    no_change_probability: Array
+    canonical_correlations: Array
+    iterations: int
 
 
 def _weighted_mean_cov(x: Array, w: Array, eps: float) -> tuple[Array, Array]:
@@ -80,7 +92,7 @@ def _align_signs(a: Array, b: Array, c12: Array) -> tuple[Array, Array]:
     return a, b * signs[None, :]
 
 
-def ir_mad_score(
+def ir_mad_result(
     x1: Array,
     x2: Array,
     valid_mask: Array,
@@ -89,7 +101,7 @@ def ir_mad_score(
     random_state: int = 1234,
     eps: float = 1e-6,
     convergence_tol: float = 1e-4,
-) -> Array:
+) -> IRMADResult:
     """
     Compute IR-MAD chi-square change statistic. Returns min-max normalized score.
     """
@@ -115,7 +127,8 @@ def ir_mad_score(
     m1 = np.mean(samp1, axis=1, keepdims=True)
     m2 = np.mean(samp2, axis=1, keepdims=True)
 
-    for _ in range(max(1, iters)):
+    completed_iterations = 0
+    for iteration in range(max(1, iters)):
         prev_rho = rho.copy()
         m1, c11 = _weighted_mean_cov(samp1, w, eps)
         m2, c22 = _weighted_mean_cov(samp2, w, eps)
@@ -125,6 +138,8 @@ def ir_mad_score(
             A, B = _align_signs(A, B, c12)
         except Exception:
             break
+
+        completed_iterations = iteration + 1
 
         u = A.T @ (samp1 - m1)
         vv = B.T @ (samp2 - m2)
@@ -143,8 +158,11 @@ def ir_mad_score(
     mad_full = u_full - v_full
     sigma2 = np.maximum(2.0 * (1.0 - rho), eps)
     mag = np.sum((mad_full * mad_full) / sigma2[:, None], axis=0)
+    no_change = chi2.sf(mag, df=mat1.shape[0])
     score = np.zeros(valid_mask.size, dtype=np.float32)
+    no_change_map = np.zeros(valid_mask.size, dtype=np.float32)
     score[v] = mag
+    no_change_map[v] = no_change.astype(np.float32, copy=False)
     # Min-max normalize
     if np.any(score > 0):
         s_min, s_max = score[v].min(), score[v].max()
@@ -152,4 +170,32 @@ def ir_mad_score(
             score[v] = (score[v] - s_min) / (s_max - s_min + eps)
         else:
             score[v] = 0.0
-    return score.reshape(valid_mask.shape)
+    return IRMADResult(
+        score=score.reshape(valid_mask.shape),
+        no_change_probability=no_change_map.reshape(valid_mask.shape),
+        canonical_correlations=rho.astype(np.float32, copy=True),
+        iterations=completed_iterations,
+    )
+
+
+def ir_mad_score(
+    x1: Array,
+    x2: Array,
+    valid_mask: Array,
+    iters: int = 3,
+    downsample_max_pixels: int = 200000,
+    random_state: int = 1234,
+    eps: float = 1e-6,
+    convergence_tol: float = 1e-4,
+) -> Array:
+    """Compute the min-max normalized IR-MAD chi-square change statistic."""
+    return ir_mad_result(
+        x1=x1,
+        x2=x2,
+        valid_mask=valid_mask,
+        iters=iters,
+        downsample_max_pixels=downsample_max_pixels,
+        random_state=random_state,
+        eps=eps,
+        convergence_tol=convergence_tol,
+    ).score

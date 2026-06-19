@@ -50,6 +50,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from phase1.baselines.celik_pca_kmeans import celik_score
+from phase1.baselines.anomalous_change import chronochrome_score, covariance_equalization_score
 from phase1.baselines.ir_mad import ir_mad_score
 from phase1.baselines.pca_diff import pca_diff_score
 from phase1.data.oscd_dataset import OSCDEvaluatorDataset
@@ -59,6 +60,15 @@ from phase1.ds.ds_scores import DSConfig, compute_ds_scores
 from phase1.eval.metrics import binary_metrics
 from phase1.eval.thresholding import apply_threshold, otsu_threshold
 from phase1.eval.utils import suppress_rasterio_warnings
+from phase1.subspace.pif_nuisance import (
+    PIFContext,
+    build_pif_context,
+    pif_delta_subspace_residual_score,
+    pif_nuisance_ds_residual_score,
+    pif_radiometric_match,
+    multiscale_pif_delta_residual_score,
+    multiscale_spatial_features,
+)
 
 
 BAND_ORDER = ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10", "B11", "B12", "B8A"]
@@ -76,6 +86,7 @@ class MethodSpec:
     aggregator: str = "mean"
     score_mode: str = "energy_sq"
     pyramid_levels: tuple[int, ...] | None = None
+    spatial_sigmas: tuple[float, ...] | None = None
 
 
 @dataclass
@@ -110,6 +121,17 @@ def parse_args() -> argparse.Namespace:
             "Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, "
             "band_image_ds, band_image_norm, band_image_ratio, band_image_residual, "
             "celik_pca_kmeans, ir_mad, rank_fusion_pca_band, rank_fusion_band_irmad, "
+            "chronochrome, covariance_equalization, pif_radiometric_l2, pif_radiometric_pca, "
+            "pif_nuisance_ds_r1, pif_nuisance_ds_r2, pif_nuisance_ds_r3, "
+            "pif_delta_residual_r1, pif_delta_residual_r2, pif_delta_residual_r3, "
+            "smoothed_l2_sigma1, smoothed_pca_sigma1, smoothed_chronochrome_sigma1, "
+            "smoothed_global_ds_sigma1, multiscale_global_ds_sigma0_1_2, "
+            "smoothed_magnitude_weighted_ds_sigma1, smoothed_magnitude_weighted_ds_sigma2, "
+            "local_autocorrelation_ds_magnitude_w32s16, local_autocorrelation_ds_magnitude_w64s32, "
+            "local_centered_ds_magnitude_w32s16, "
+            "post_smoothed_pca_sigma1, post_smoothed_raw_l2_sigma1, "
+            "smoothed_pif_delta_residual_sigma1_r1, multiscale_l2_sigma0_1_2, "
+            "multiscale_pca_sigma0_1_2, multiscale_pif_delta_residual_sigma0_1_2_r1, "
             "rank_fusion_pca_irmad, rank_fusion_pca_band_irmad, "
             "spatial_pyramid_1_2_4_energy, spatial_pyramid_1_2_4_norm, spatial_pyramid_1_2_4_8_norm. "
             "Legacy aliases such as flatbands are still accepted."
@@ -128,6 +150,8 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--celik_max_fit_samples", "--celik-max-fit-samples", type=int, default=20000)
     ap.add_argument("--ir_mad_iters", "--ir-mad-iters", type=int, default=10)
     ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
+    ap.add_argument("--pif_probability", "--pif-probability", type=float, default=0.9)
+    ap.add_argument("--pif_fallback_fraction", "--pif-fallback-fraction", type=float, default=0.1)
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=True)
     return ap.parse_args()
 
@@ -162,6 +186,88 @@ def parse_method_spec(text: str) -> MethodSpec:
         return MethodSpec(name="celik_pca_kmeans", family="celik_pca_kmeans")
     if key in {"ir_mad", "irmad", "imad"}:
         return MethodSpec(name="ir_mad", family="ir_mad")
+    if key in {"chronochrome", "chronochrome_symmetric", "cc"}:
+        return MethodSpec(name="chronochrome", family="chronochrome")
+    if key in {"covariance_equalization", "covariance_equalisation", "cov_equalization", "ce"}:
+        return MethodSpec(name="covariance_equalization", family="covariance_equalization")
+    if key in {"pif_radiometric_l2", "pif_normalized_l2", "pif_matched_l2"}:
+        return MethodSpec(name="pif_radiometric_l2", family="pif_radiometric", score_mode="raw_l2")
+    if key in {"pif_radiometric_pca", "pif_normalized_pca", "pif_matched_pca"}:
+        return MethodSpec(name="pif_radiometric_pca", family="pif_radiometric", score_mode="pca_diff")
+    if key in {"pif_nuisance_ds", "pif_nuisance_ds_residual"}:
+        return MethodSpec(name="pif_nuisance_ds_r2", family="pif_nuisance_ds", window_size=2)
+    pif_ds_match = re.fullmatch(r"pif_nuisance_ds_r(?P<rank>\d+)", key)
+    if pif_ds_match:
+        nuisance_rank = int(pif_ds_match.group("rank"))
+        return MethodSpec(
+            name=f"pif_nuisance_ds_r{nuisance_rank}",
+            family="pif_nuisance_ds",
+            window_size=nuisance_rank,
+        )
+    pif_delta_match = re.fullmatch(r"pif_delta_residual_r(?P<rank>\d+)", key)
+    if pif_delta_match:
+        nuisance_rank = int(pif_delta_match.group("rank"))
+        return MethodSpec(
+            name=f"pif_delta_residual_r{nuisance_rank}",
+            family="pif_delta_residual",
+            window_size=nuisance_rank,
+        )
+    spatial_specs = {
+        "smoothed_l2_sigma1": ("spatial_feature_l2", (1.0,), 0),
+        "smoothed_l2_sigma2": ("spatial_feature_l2", (2.0,), 0),
+        "smoothed_pca_sigma1": ("spatial_feature_pca", (1.0,), 0),
+        "smoothed_pca_sigma2": ("spatial_feature_pca", (2.0,), 0),
+        "smoothed_chronochrome_sigma1": ("spatial_feature_chronochrome", (1.0,), 0),
+        "smoothed_chronochrome_sigma2": ("spatial_feature_chronochrome", (2.0,), 0),
+        "smoothed_global_ds_sigma1": ("spatial_feature_ds", (1.0,), 0),
+        "smoothed_global_ds_sigma2": ("spatial_feature_ds", (2.0,), 0),
+        "global_pixel_magnitude_weighted_ds": ("spatial_feature_weighted_ds", (0.0,), 0),
+        "smoothed_magnitude_weighted_ds_sigma1": ("spatial_feature_weighted_ds", (1.0,), 0),
+        "smoothed_magnitude_weighted_ds_sigma2": ("spatial_feature_weighted_ds", (2.0,), 0),
+        "smoothed_pif_delta_residual_sigma1_r1": ("spatial_pif_delta", (1.0,), 1),
+        "smoothed_pif_delta_residual_sigma2_r1": ("spatial_pif_delta", (2.0,), 1),
+        "multiscale_l2_sigma0_1_2": ("spatial_feature_l2", (0.0, 1.0, 2.0), 0),
+        "multiscale_pca_sigma0_1_2": ("spatial_feature_pca", (0.0, 1.0, 2.0), 0),
+        "multiscale_global_ds_sigma0_1_2": ("spatial_feature_ds", (0.0, 1.0, 2.0), 0),
+        "multiscale_magnitude_weighted_ds_sigma0_1_2": ("spatial_feature_weighted_ds", (0.0, 1.0, 2.0), 0),
+        "multiscale_pif_delta_residual_sigma0_1_2_r1": ("spatial_pif_delta", (0.0, 1.0, 2.0), 1),
+    }
+    if key in spatial_specs:
+        family, sigmas, nuisance_rank = spatial_specs[key]
+        return MethodSpec(
+            name=key,
+            family=family,
+            window_size=nuisance_rank or None,
+            spatial_sigmas=sigmas,
+        )
+    post_smoothing_specs = {
+        "post_smoothed_pca_sigma1": ("pca_diff", (1.0,)),
+        "post_smoothed_pca_sigma2": ("pca_diff", (2.0,)),
+        "post_smoothed_raw_l2_sigma1": ("raw_l2", (1.0,)),
+        "post_smoothed_raw_l2_sigma2": ("raw_l2", (2.0,)),
+    }
+    if key in post_smoothing_specs:
+        dependency, sigmas = post_smoothing_specs[key]
+        return MethodSpec(
+            name=key,
+            family="score_post_smoothing",
+            score_mode=dependency,
+            spatial_sigmas=sigmas,
+        )
+    local_magnitude_match = re.fullmatch(
+        r"local_(?P<fit>autocorrelation|centered)_ds_magnitude_w(?P<size>\d+)s(?P<stride>\d+)",
+        key,
+    )
+    if local_magnitude_match:
+        size = int(local_magnitude_match.group("size"))
+        stride = int(local_magnitude_match.group("stride"))
+        return MethodSpec(
+            name=key,
+            family="local_ds_magnitude",
+            window_size=size,
+            stride=stride,
+            score_mode=local_magnitude_match.group("fit"),
+        )
     fusion_dependencies = {
         "rank_fusion_pca_band": "pca_diff+band_image_norm",
         "rank_fusion_band_irmad": "band_image_norm+ir_mad",
@@ -680,6 +786,386 @@ def ir_mad_baseline_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray
     return score.astype(np.float32), card
 
 
+def local_ds_magnitude_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    """Map intrinsic DS magnitude from overlapping local spectral subspaces."""
+    if spec.window_size is None or spec.stride is None:
+        raise ValueError(f"{spec.name} requires window and stride.")
+    height, width = valid_mask.shape
+    accumulator = np.zeros((height, width), dtype=np.float64)
+    counts = np.zeros((height, width), dtype=np.float64)
+    windows_used = 0
+    windows_skipped = 0
+    fit_mode = str(spec.score_mode)
+    for row in _window_positions(height, spec.window_size, spec.stride):
+        row_slice = slice(row, row + spec.window_size)
+        for column in _window_positions(width, spec.window_size, spec.stride):
+            column_slice = slice(column, column + spec.window_size)
+            local_mask = valid_mask[row_slice, column_slice]
+            minimum = max(int(args.rank) + 1, 2 * int(args.rank))
+            if int(local_mask.sum()) < minimum:
+                windows_skipped += 1
+                continue
+            first = x1[:, row_slice, column_slice][:, local_mask]
+            second = x2[:, row_slice, column_slice][:, local_mask]
+            effective_rank = min(int(args.rank), first.shape[0] - 1, first.shape[1] - 1)
+            if fit_mode == "autocorrelation":
+                pre = pca_utils.fit_autocorrelation_basis(first, rank=effective_rank)
+                post = pca_utils.fit_autocorrelation_basis(second, rank=effective_rank)
+            elif fit_mode == "centered":
+                pre = pca_utils.fit_covariance_basis(first, rank=effective_rank)
+                post = pca_utils.fit_covariance_basis(second, rank=effective_rank)
+            else:
+                raise ValueError(f"Unknown local subspace fit mode: {fit_mode!r}")
+            components = pca_utils.difference_subspace_canonical_components(pre.basis, post.basis)
+            magnitude = float(np.sum(components.squared_pair_magnitudes))
+            local_accumulator = accumulator[row_slice, column_slice]
+            local_counts = counts[row_slice, column_slice]
+            local_accumulator[local_mask] += magnitude
+            local_counts[local_mask] += 1.0
+            windows_used += 1
+    score = np.divide(accumulator, counts, out=np.zeros_like(accumulator), where=counts > 0)
+    score[~valid_mask] = 0.0
+    fit_description = (
+        "uncentered R=XX^T/N eigenspaces stated in Fukui--Maki Section 3.2"
+        if fit_mode == "autocorrelation"
+        else "centered local covariance PCA ablation"
+    )
+    return score.astype(np.float32), ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "Fukui--Maki TPAMI 2015 canonical subspaces and MagTool calcMagnitude: "
+            "m(P,Q)=2*sum_i(1-cos(theta_i)); local-window mapping is the project adaptation."
+        ),
+        sample_unit=f"one valid 13-band pixel inside each {spec.window_size}x{spec.window_size} neighborhood",
+        input_object="For each neighborhood: X_pre_w, X_post_w in R^(13 x N_w)",
+        subspace_count=f"one pre/post subspace pair per neighborhood; used={windows_used}, skipped={windows_skipped}",
+        basis_shape=f"Phi_w, Psi_w in R^(13 x {args.rank})",
+        fitting_method=f"{fit_description}; stride={spec.stride}",
+        score_definition="window evidence is intrinsic first-order DS magnitude 2*sum(1-cos(theta_i)); overlapping evidence is averaged per pixel",
+        spatial_information="the image coordinates determine local sample membership and each output pixel aggregates only covering neighborhoods",
+        code_path="phase1.scripts.compare_oscd_spatial_subspaces.local_ds_magnitude_score",
+        verification="centered-vs-autocorrelation construction ablation, rank/window sensitivity, OSCD labels, PCA-diff and spatial-PCA pressure",
+    )
+
+
+def anomalous_change_baseline_score(
+    method: str,
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+) -> tuple[np.ndarray, ConstructionCard]:
+    if method == "chronochrome":
+        score = chronochrome_score(
+            x1,
+            x2,
+            valid_mask,
+            direction="symmetric",
+            max_fit_pixels=int(args.ir_mad_downsample_max_pixels),
+            random_state=int(args.seed),
+        )
+        reference = "Theiler and Perkins 2006 equations 14-18; Schaum/Stocker chronochrome family."
+        fitting = "fit forward and reverse cross-date linear predictors on a seeded paired-pixel subset"
+        definition = "mean percentile rank of forward and reverse prediction-residual Mahalanobis scores"
+        basis = "L_forward and L_reverse in R^(13 x 13), with residual covariance matrices"
+    elif method == "covariance_equalization":
+        score = covariance_equalization_score(
+            x1,
+            x2,
+            valid_mask,
+            max_fit_pixels=int(args.ir_mad_downsample_max_pixels),
+            random_state=int(args.seed),
+        )
+        reference = "Theiler and Perkins 2006 equation 19; Schaum/Stocker covariance equalization."
+        fitting = "fit separate symmetric whitening transforms and a covariance for their paired residual"
+        definition = "Mahalanobis magnitude of X_pre^(-1/2)x_pre - X_post^(-1/2)x_post"
+        basis = "two 13 x 13 whitening transforms plus a 13 x 13 residual covariance"
+    else:
+        raise ValueError(f"Unknown anomalous-change method: {method}")
+    return score.astype(np.float32), ConstructionCard(
+        method=method,
+        source_reference=reference,
+        sample_unit="one co-registered valid pre/post Sentinel-2 pixel pair",
+        input_object="X_pre, X_post in R^(13 x N), paired by pixel location",
+        subspace_count="no DS basis; the normal cross-date relationship is modeled directly",
+        basis_shape=basis,
+        fitting_method=fitting,
+        score_definition=definition,
+        spatial_information="pixel location supplies pairing and map reconstruction; neighborhood context is not modeled",
+        code_path=f"phase1.baselines.anomalous_change.{method}_score",
+        verification="equation-level synthetic tests plus OSCD city-wise pressure comparison",
+    )
+
+
+def pif_method_score(
+    spec: MethodSpec,
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    context: PIFContext,
+) -> tuple[np.ndarray, ConstructionCard]:
+    common = {
+        "pmin": float(args.pif_probability),
+        "fallback_fraction": float(args.pif_fallback_fraction),
+        "ir_mad_iters": int(args.ir_mad_iters),
+        "max_fit_pixels": int(args.ir_mad_downsample_max_pixels),
+    }
+    if spec.family == "pif_radiometric":
+        matched, context, coefficients = pif_radiometric_match(
+            x1, x2, valid_mask, context=context, **common
+        )
+        if spec.score_mode == "raw_l2":
+            score = raw_l2_score(x1, matched, valid_mask)
+            definition = "raw spectral L2 after PIF orthogonal per-band radiometric matching"
+        else:
+            score = pca_diff_score(
+                x1, matched, valid_mask, rank_S=args.rank, variance_threshold=None, random_state=args.seed
+            )
+            definition = "PCA-diff after PIF orthogonal per-band radiometric matching"
+        card = ConstructionCard(
+            method=spec.name,
+            source_reference="Canty/Nielsen 2008 and GEE iMAD Part 3 relative radiometric normalization.",
+            sample_unit="one iMAD-selected pseudo-invariant paired pixel per spectral band",
+            input_object=f"{context.selected_pixels} PIF pixel pairs selected at effective p >= {context.threshold_used:.6g}",
+            subspace_count="no new DS; iMAD identifies invariant pixels and 13 symmetric regression lines align the dates",
+            basis_shape="13 slope/intercept pairs; " + str(coefficients.shape),
+            fitting_method="orthogonal regression target ~= slope * reference + intercept, then invert target onto reference scale",
+            score_definition=definition,
+            spatial_information="global radiometric alignment; coordinates are retained for paired fitting and map reconstruction",
+            code_path="phase1.subspace.pif_nuisance.pif_radiometric_match",
+            verification="synthetic affine-shift test and OSCD pressure against unnormalized L2/PCA-diff and anomalous-change baselines",
+        )
+        return score.astype(np.float32), card
+
+    if spec.family == "pif_nuisance_ds":
+        pif_subspace_rank = int(spec.window_size or 2)
+        result = pif_nuisance_ds_residual_score(
+            x1,
+            x2,
+            valid_mask,
+            rank=pif_subspace_rank,
+            random_state=int(args.seed),
+            context=context,
+            **common,
+        )
+        return result.score.astype(np.float32), ConstructionCard(
+            method=spec.name,
+            source_reference=(
+                "Project hypothesis combining iMAD PIF selection with Fukui/Maki canonical DS; "
+                "not an established paper method or a novelty claim."
+            ),
+            sample_unit="one 13-band PIF pixel vector; only likely unchanged pixels fit the nuisance geometry",
+            input_object=f"X_pre_PIF, X_post_PIF in R^(13 x {result.pif_pixels})",
+            subspace_count="two rank-r PIF PCA subspaces; their canonical DS plus PIF mean shift forms one nuisance basis",
+            basis_shape=f"nuisance basis in R^(13 x {result.nuisance_basis.shape[1]}), canonical DS rank={result.ds_rank}",
+            fitting_method="iMAD PIF selection -> pre/post PIF PCA -> canonical DS -> append mean-shift direction -> QR",
+            score_definition="per pixel: norm of centered spectral difference after projection outside the PIF nuisance basis",
+            spatial_information="global spectral nuisance model; pixel pairing and output coordinates retained, neighborhoods not modeled",
+            code_path="phase1.subspace.pif_nuisance.pif_nuisance_ds_residual_score",
+            verification="synthetic nuisance/change separation and comparison with chronochrome, covariance equalization, iMAD, PCA-diff",
+        )
+
+    if spec.family == "pif_delta_residual":
+        nuisance_rank = int(spec.window_size or 1)
+        score, context, nuisance = pif_delta_subspace_residual_score(
+            x1,
+            x2,
+            valid_mask,
+            nuisance_rank=nuisance_rank,
+            random_state=int(args.seed),
+            context=context,
+            **common,
+        )
+        return score.astype(np.float32), ConstructionCard(
+            method=spec.name,
+            source_reference="PIF-conditioned nuisance-PCA ablation; related to subspace-projection anomaly detection.",
+            sample_unit="one 13-band difference vector from an iMAD-selected PIF pixel",
+            input_object=f"Delta_PIF in R^(13 x {context.selected_pixels})",
+            subspace_count="one PCA nuisance subspace fitted to stable-pixel difference vectors",
+            basis_shape=f"U_nuisance in R^(13 x {nuisance.shape[1]})",
+            fitting_method="subtract PIF mean shift, fit PCA to PIF differences, reject leading nuisance directions",
+            score_definition="per pixel: norm of spectral difference outside the PIF-difference nuisance subspace",
+            spatial_information="global spectral nuisance model; pixel coordinates are preserved but neighborhoods are not modeled",
+            code_path="phase1.subspace.pif_nuisance.pif_delta_subspace_residual_score",
+            verification="ablation against the canonical nuisance-DS hypothesis and established ACD baselines",
+        )
+    raise ValueError(f"Unhandled PIF method family: {spec.family}")
+
+
+def spatial_feature_score(
+    spec: MethodSpec,
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    context: PIFContext | None,
+) -> tuple[np.ndarray, ConstructionCard]:
+    """Score Gaussian-neighborhood features with matched non-subspace controls."""
+    if spec.spatial_sigmas is None:
+        raise ValueError(f"{spec.name} does not define spatial scales.")
+    sigmas = tuple(float(value) for value in spec.spatial_sigmas)
+    scale_text = ", ".join(f"sigma={value:g}" for value in sigmas)
+    source = (
+        "Theiler and Perkins 2006 Section 5 motivates smoothing/spatio-spectral operators for "
+        "misregistration and characteristic anomaly size; the score variants are controlled project ablations."
+    )
+
+    if spec.family == "spatial_pif_delta":
+        if context is None:
+            raise ValueError("PIF context is required for spatial PIF nuisance scoring.")
+        nuisance_rank = int(spec.window_size or 1)
+        score, _, nuisance = multiscale_pif_delta_residual_score(
+            x1,
+            x2,
+            valid_mask,
+            sigmas=sigmas,
+            nuisance_rank=nuisance_rank,
+            random_state=int(args.seed),
+            context=context,
+            pmin=float(args.pif_probability),
+            fallback_fraction=float(args.pif_fallback_fraction),
+            ir_mad_iters=int(args.ir_mad_iters),
+            max_fit_pixels=int(args.ir_mad_downsample_max_pixels),
+        )
+        definition = "norm of multiscale spatial-spectral difference after rejecting the leading PIF nuisance direction"
+        fitting = "iMAD PIF selection on raw bands -> masked Gaussian features -> PIF delta PCA -> residual norm"
+        subspaces = "one rank-1 nuisance PCA subspace fitted to multiscale PIF difference vectors"
+        basis = f"U_nuisance in R^({13 * len(sigmas)} x {nuisance.shape[1]})"
+        code_path = "phase1.subspace.pif_nuisance.multiscale_pif_delta_residual_score"
+    else:
+        features1 = multiscale_spatial_features(x1, valid_mask, sigmas=sigmas)
+        features2 = multiscale_spatial_features(x2, valid_mask, sigmas=sigmas)
+        if spec.family == "spatial_feature_l2":
+            score = raw_l2_score(features1, features2, valid_mask)
+            definition = "Euclidean magnitude of the matched multiscale spatial-spectral difference vector"
+            fitting = "no fitted subspace; masked Gaussian features followed by L2"
+            subspaces = "none; this isolates the contribution of spatial filtering"
+            basis = "not applicable"
+            code_path = "phase1.subspace.pif_nuisance.multiscale_spatial_features + raw_l2_score"
+        elif spec.family == "spatial_feature_pca":
+            score = pca_diff_score(
+                features1,
+                features2,
+                valid_mask,
+                rank_S=min(int(args.rank), features1.shape[0] - 1),
+                variance_threshold=None,
+                random_state=int(args.seed),
+            )
+            definition = "PCA-diff magnitude in the multiscale spatial-spectral feature space"
+            fitting = "masked Gaussian features -> PCA-diff using the experiment rank"
+            subspaces = "one PCA difference representation; non-DS spatial control"
+            basis = f"PCA feature space from R^{features1.shape[0]} with rank <= {args.rank}"
+            code_path = "phase1.subspace.pif_nuisance.multiscale_spatial_features + phase1.baselines.pca_diff"
+        elif spec.family == "spatial_feature_chronochrome":
+            score = chronochrome_score(
+                features1,
+                features2,
+                valid_mask,
+                direction="symmetric",
+                max_fit_pixels=int(args.ir_mad_downsample_max_pixels),
+                random_state=int(args.seed),
+            )
+            definition = "symmetric chronochrome prediction-residual anomaly on spatially filtered bands"
+            fitting = "masked Gaussian features -> forward/reverse linear cross-date prediction"
+            subspaces = "none; established relation-modeling pressure after the same spatial operator"
+            basis = "cross-date linear predictor and residual covariance"
+            code_path = "phase1.subspace.pif_nuisance.multiscale_spatial_features + phase1.baselines.anomalous_change"
+        elif spec.family == "spatial_feature_ds":
+            cfg = DSConfig(
+                rank_r=min(int(args.rank), features1.shape[0] - 1),
+                variance_threshold=None,
+                random_state=int(args.seed),
+                subspace_variant="canonical",
+                score_normalization=None,
+            )
+            output = compute_ds_scores(
+                features1,
+                features2,
+                valid_mask=valid_mask,
+                cfg=cfg,
+                normalize=False,
+            )
+            score = output["projection"]
+            definition = "canonical DS projected energy of the paired multiscale spatial-spectral difference"
+            fitting = "masked Gaussian features -> separate rank-r pre/post PCA -> canonical Difference Subspace"
+            subspaces = "one pre-date and one post-date PCA subspace, followed by one canonical DS"
+            basis = f"Phi/Psi in R^({features1.shape[0]} x {cfg.rank_r}); D in R^({features1.shape[0]} x <= {cfg.rank_r})"
+            code_path = "phase1.subspace.pif_nuisance.multiscale_spatial_features + phase1.ds.ds_scores.compute_ds_scores"
+        elif spec.family == "spatial_feature_weighted_ds":
+            matrix1 = features1[:, valid_mask]
+            matrix2 = features2[:, valid_mask]
+            effective_rank = min(int(args.rank), features1.shape[0] - 1, matrix1.shape[1] - 1)
+            pre = pca_utils.fit_pca_basis(
+                matrix1,
+                rank=effective_rank,
+                variance_threshold=None,
+                random_state=int(args.seed),
+                use_randomized=True,
+            )
+            post = pca_utils.fit_pca_basis(
+                matrix2,
+                rank=effective_rank,
+                variance_threshold=None,
+                random_state=int(args.seed),
+                use_randomized=True,
+            )
+            components = pca_utils.difference_subspace_canonical_components(pre.basis, post.basis)
+            delta = matrix2 - matrix1
+            coefficients = components.basis.T @ delta
+            weighted_energy = np.sum(
+                components.squared_pair_magnitudes[:, None] * coefficients * coefficients,
+                axis=0,
+            )
+            score = np.zeros(valid_mask.shape, dtype=np.float32)
+            score[valid_mask] = weighted_energy.astype(np.float32, copy=False)
+            definition = (
+                "canonical DS projection energy weighted by each principal-pair magnitude "
+                "2(1-cos(theta_i))"
+            )
+            fitting = (
+                "masked Gaussian features -> pre/post rank-r PCA -> canonical principal pairs -> "
+                "magnitude-weighted projection"
+            )
+            subspaces = "one pre/post PCA pair and one canonical DS with retained principal-pair magnitudes"
+            basis = (
+                f"D in R^({features1.shape[0]} x {components.basis.shape[1]}); "
+                f"{components.squared_pair_magnitudes.size} geometric weights"
+            )
+            code_path = (
+                "phase1.ds.pca_utils.difference_subspace_canonical_components + "
+                "phase1.scripts.compare_oscd_spatial_subspaces.spatial_feature_score"
+            )
+        else:
+            raise ValueError(f"Unhandled spatial feature family: {spec.family}")
+
+    return score.astype(np.float32), ConstructionCard(
+        method=spec.name,
+        source_reference=source,
+        sample_unit=f"one co-registered pixel represented at {scale_text}",
+        input_object=f"Z_pre, Z_post in R^({13 * len(sigmas)} x N); feature blocks retain band identity by scale",
+        subspace_count=subspaces,
+        basis_shape=basis,
+        fitting_method=fitting,
+        score_definition=definition,
+        spatial_information=(
+            "Gaussian neighborhoods encode local spatial support while masked normalization prevents invalid pixels "
+            "from bleeding into valid neighborhoods; exact coordinates remain unchanged."
+        ),
+        code_path=code_path,
+        verification=(
+            "same-city comparison against unsmoothed L2/PCA/chronochrome and PIF spectral residuals; "
+            "city-wise AP/AUROC/Otsu metrics plus map inspection"
+        ),
+    )
+
+
 def percentile_rank_score(score: np.ndarray, valid_mask: np.ndarray) -> np.ndarray:
     """Convert valid scores to deterministic empirical percentile ranks."""
     values = np.asarray(score[valid_mask], dtype=np.float64)
@@ -692,6 +1178,37 @@ def percentile_rank_score(score: np.ndarray, valid_mask: np.ndarray) -> np.ndarr
     output = np.zeros_like(score, dtype=np.float32)
     output[valid_mask] = ranks
     return output
+
+
+def post_smoothed_score(
+    spec: MethodSpec,
+    scores: dict[str, np.ndarray],
+    valid_mask: np.ndarray,
+) -> tuple[np.ndarray, ConstructionCard]:
+    """Apply the same masked Gaussian operator after scalar change scoring."""
+    dependency = str(spec.score_mode)
+    if dependency not in scores:
+        raise ValueError(f"{spec.name} requires the precomputed score {dependency!r}.")
+    sigmas = spec.spatial_sigmas or (1.0,)
+    if len(sigmas) != 1:
+        raise ValueError("Post-smoothed score control expects exactly one sigma.")
+    sigma = float(sigmas[0])
+    smoothed = multiscale_spatial_features(
+        scores[dependency][None, :, :], valid_mask, sigmas=(sigma,)
+    )[0]
+    return smoothed.astype(np.float32), ConstructionCard(
+        method=spec.name,
+        source_reference="Generic masked Gaussian score-map regularization; control for the Theiler-inspired pre-feature smoothing experiment.",
+        sample_unit="one scalar change score and its Gaussian spatial neighborhood",
+        input_object=f"the already computed {dependency} score map",
+        subspace_count="none beyond the dependency method",
+        basis_shape="not applicable",
+        fitting_method=f"compute {dependency}, then masked Gaussian smoothing with sigma={sigma:g}",
+        score_definition="Gaussian-weighted local average of the scalar change score",
+        spatial_information="spatial support enters only after detection, isolating post-processing from spatial feature construction",
+        code_path="phase1.scripts.compare_oscd_spatial_subspaces.post_smoothed_score",
+        verification="direct city-wise comparison with pre-smoothed PCA/L2 under the same sigma",
+    )
 
 
 def rank_fusion_score(
@@ -830,6 +1347,37 @@ def main() -> None:
     print("Meaningful here means: label ranking, thresholded segmentation, baseline pressure, spatial construction clarity, and map inspection.", flush=True)
 
     methods = [parse_method_spec(x) for x in args.methods.split(",") if x.strip()]
+    pif_families = {"pif_radiometric", "pif_nuisance_ds", "pif_delta_residual", "spatial_pif_delta"}
+    pif_context: PIFContext | None = None
+    if any(spec.family in pif_families for spec in methods):
+        print("Estimating shared iMAD pseudo-invariant pixels for PIF-conditioned methods...", flush=True)
+        pif_context = build_pif_context(
+            x1_norm,
+            x2_norm,
+            eval_mask,
+            pmin=float(args.pif_probability),
+            fallback_fraction=float(args.pif_fallback_fraction),
+            ir_mad_iters=int(args.ir_mad_iters),
+            max_fit_pixels=int(args.ir_mad_downsample_max_pixels),
+            random_state=int(args.seed),
+        )
+        print(
+            f"  selected {pif_context.selected_pixels} PIF pixels "
+            f"(effective probability threshold={pif_context.threshold_used:.6g})",
+            flush=True,
+        )
+        if args.save_npy:
+            np.save(maps_dir / "pif_mask.npy", pif_context.pif_mask.astype(np.uint8))
+    pif_diagnostics = (
+        {
+            "pif_pixels": pif_context.selected_pixels,
+            "pif_fraction": pif_context.selected_pixels / max(1, int(eval_mask.sum())),
+            "pif_effective_threshold": pif_context.threshold_used,
+            "pif_requested_threshold": float(args.pif_probability),
+        }
+        if pif_context is not None
+        else {}
+    )
     rows: list[dict[str, object]] = []
     cards: list[ConstructionCard] = []
     map_outputs: list[tuple[str, np.ndarray]] = []
@@ -842,7 +1390,7 @@ def main() -> None:
 
     for name, family, score in baselines:
         metrics = score_metrics(score, target, eval_mask, raw_l2)
-        rows.append({"method": name, "family": family, "runtime_sec": 0.0, "eval_valid_fraction": float(np.mean(eval_mask)), **metrics})
+        rows.append({"method": name, "family": family, "runtime_sec": 0.0, "eval_valid_fraction": float(np.mean(eval_mask)), **pif_diagnostics, **metrics})
         map_outputs.append((name, score))
         score_by_name[name] = score
         save_score_png(maps_dir / f"{name}.png", score, eval_mask, args.score_percentile)
@@ -865,6 +1413,8 @@ def main() -> None:
                 band_attribution_outputs.append({"method": spec.name, "grid": str(grid_path), "csv": str(csv_attr_path)})
         elif spec.family == "local_window":
             score, card = local_window_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
+        elif spec.family == "local_ds_magnitude":
+            score, card = local_ds_magnitude_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "spatial_pyramid":
             score, card = spatial_pyramid_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "patch_vector":
@@ -874,13 +1424,26 @@ def main() -> None:
             score, card = celik_pca_kmeans_score(x1_norm, x2_norm, eval_mask, args)
         elif spec.family == "ir_mad":
             score, card = ir_mad_baseline_score(x1_norm, x2_norm, eval_mask, args)
+        elif spec.family in {"chronochrome", "covariance_equalization"}:
+            score, card = anomalous_change_baseline_score(spec.family, x1_norm, x2_norm, eval_mask, args)
+        elif spec.family in pif_families:
+            if pif_context is None:
+                raise AssertionError("PIF context was not initialized.")
+            if spec.family == "spatial_pif_delta":
+                score, card = spatial_feature_score(spec, x1_norm, x2_norm, eval_mask, args, pif_context)
+            else:
+                score, card = pif_method_score(spec, x1_norm, x2_norm, eval_mask, args, pif_context)
+        elif spec.family in {"spatial_feature_l2", "spatial_feature_pca", "spatial_feature_chronochrome", "spatial_feature_ds", "spatial_feature_weighted_ds"}:
+            score, card = spatial_feature_score(spec, x1_norm, x2_norm, eval_mask, args, pif_context)
         elif spec.family == "rank_fusion":
             score, card = rank_fusion_score(spec.name, spec.score_mode, score_by_name, eval_mask)
+        elif spec.family == "score_post_smoothing":
+            score, card = post_smoothed_score(spec, score_by_name, eval_mask)
         else:
             raise AssertionError(f"Unhandled method family: {spec.family}")
         runtime = time.perf_counter() - start
         metrics = score_metrics(score, target, method_mask, raw_l2)
-        rows.append({"method": spec.name, "family": spec.family, "runtime_sec": float(runtime), "eval_valid_fraction": float(np.mean(method_mask)), **metrics})
+        rows.append({"method": spec.name, "family": spec.family, "runtime_sec": float(runtime), "eval_valid_fraction": float(np.mean(method_mask)), **pif_diagnostics, **metrics})
         cards.append(card)
         map_outputs.append((spec.name, score))
         score_by_name[spec.name] = score
