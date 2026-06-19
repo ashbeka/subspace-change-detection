@@ -71,3 +71,6 @@ temporal/outputs/
 # scratch PDFs
 *.tmp_*.pdf
 .tmp_*.pdf
+
+# hyperspectral benchmark data (large, local)
+data_hsi/
