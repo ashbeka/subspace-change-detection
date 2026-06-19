@@ -650,6 +650,13 @@ pixel RMSE; contribution maps remain diffuse and miss known events.
 **Curiosity:** does a structural event appear primarily as motion orthogonal to
 the normal seasonal geodesic, while ordinary phenology remains along it?
 
+**Stronger sample construction to test next:** build one annual/seasonal
+subspace from repeated date composites of the same aligned patch or field:
+`X_y in R^((B*N) x M_dates)`. This makes the temporal observations the genuine
+sample set. Irrigation start/stop is the first candidate phenomenon because it
+adds or removes a seasonal cycle. IrrMapper can propose annual transitions, but
+its outputs are weak labels and require manual/independent verification.
+
 ### 16.2 Radiometrically Invariant, Registration-Robust Temporal Subspace Change
 
 **Problem statement:** Can the useful invariance of full-channel band-image
@@ -889,6 +896,19 @@ registered multi-date multispectral sequence
 -> registration-robust spatial support
 -> labeled multi-temporal evaluation
 ```
+
+The first labeled-data attempt is now the **seasonal observation subspace**
+study, not another per-date global-pixel map. It asks whether annual subspaces
+built from repeated Sentinel-2 date composites detect irrigation-regime
+transitions and distinguish them from ordinary seasonal variation. A small
+DynamicEarthNet slice remains the independent-label pressure test.
+
+Controlled evidence now narrows this framing. Seasonal DS is not the expected
+standalone winner: simple NDVI and singular-value controls dominate the current
+synthetic boundary task. The surviving paper hypothesis is that low-rank
+orientation geometry adds radiometrically robust within-sequence timing or
+trajectory evidence, while singular energy carries amplitude change. This must
+be demonstrated on verified real transitions and against temporal baselines.
 
 Current evidence:
 

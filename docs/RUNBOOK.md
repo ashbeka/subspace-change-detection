@@ -523,7 +523,7 @@ MultiSenGE is exploratory. Do not use it as the main supervised segmentation ben
 Formula tests:
 
 ```powershell
-.\.venv\Scripts\python.exe -m unittest tests.test_temporal_subspace_dynamics -v
+.\.venv\Scripts\python.exe -m unittest tests.test_temporal_subspace_dynamics tests.test_seasonal_observation_subspaces -v
 ```
 
 Build the current five-patch, 23-date MultiSenGE manifest:
@@ -569,6 +569,21 @@ Run the subpixel translation and low-frequency robustness curve:
 $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-registration-curve --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --target-date 20200909 --context-size 3 --rank 2 --shifts 0.25,0.5,1,2 --strategies native,gaussian1,gaussian2,pool2,pool4,phase_align --local-strength 0.25 --window-size 32 --repeats 3 --max-patches 5 --output-dir "phase1/outputs/temporal_registration_curve_$tag"
 ```
 
+Run the seasonal observation-subspace stress test before acquiring irrigation
+data. This compares abrupt shape change, amplitude-only change, gradual drift,
+phase shift, radiometric nuisance, missing composites, and translation:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-seasonal-regime-study --repeats 80 --ranks 1,2,4,8 --preprocessing uncentered,feature_centered,feature_centered_observation_l2 --bootstrap 200 --output-dir "phase1/outputs/seasonal_regime_subspace_study_$tag"
+```
+
+Check public IrrMapper coverage and, after configuring an Earth Engine-enabled
+Cloud project, query one candidate AOI without downloading imagery:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-irrigation-data-feasibility --ee-project <GOOGLE_CLOUD_PROJECT_ID> --bbox=-112.60,45.20,-112.40,45.35 --start 2017-01-01 --end 2025-01-01 --output-dir "phase1/outputs/irrigation_regime_data_feasibility_$tag"
+```
+
 Interpretation rules:
 
 - `rank 0` means full band-image span (`r=B`) for the generic runner.
@@ -583,6 +598,9 @@ Interpretation rules:
 - `temporal_context_ds` is canonical DS between backward/forward context spans.
   `linear_projection_novelty` is a separate orthogonal-residual control and is
   not IPOL's NNLS/NFA algorithm.
+- The seasonal-regime command is synthetic diagnostics, not irrigation
+  accuracy. Real IrrMapper transitions are weak labels and require manual or
+  independent verification.
 
 ## 7. Phase 2 Config Matrix
 

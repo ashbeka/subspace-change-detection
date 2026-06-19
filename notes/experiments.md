@@ -972,35 +972,48 @@ Outputs:
 
 ### 10.7 Immediate Experiment Order
 
-1. Obtain a labeled multi-temporal evaluation slice:
-   - preferred: a manageable DynamicEarthNet AOI with monthly semantic labels;
-   - dataset size is approximately 524 GB in full, so define a selective
+1. Test seasonal observation subspaces on a labeled regime-change protocol:
+   - one aligned patch/field and one year supply a set of cloud-filtered date
+     composites; each full spatial-spectral date cube is one column of `X_y`;
+   - build one PCA subspace per year, then calculate first DS, second DS,
+     along/orthogonal decomposition, and time-aware geodesic deviation;
+   - first controlled task: irrigation start/stop, because adding/removing
+     irrigation changes seasonal dynamics rather than only one acquisition;
+   - use IrrMapper transitions only as weak candidate labels, manually verify a
+     selected subset, and require an independently labeled repeat before a
+     performance claim;
+   - if Earth Engine access remains blocked, run the complete synthetic regime
+     validation and preserve real-data evaluation as blocked rather than
+     fabricating results.
+2. Obtain an independently labeled multi-temporal evaluation slice:
+   - preferred: a selectively acquired DynamicEarthNet AOI with monthly semantic labels;
+   - dataset size is approximately 524-564 GB in full, so define a selective
      acquisition protocol rather than downloading blindly;
    - fallback: an independently annotated Harmonized Sentinel-2 event sequence.
-2. Build a registration robustness curve:
+3. Build a registration robustness curve:
    - translations from subpixel/interpolated shifts through at least two pixels;
    - compare pre-registration, local pooling, low-frequency/wavelet features,
      and displacement-minimized scores;
    - keep gain/offset and local persistent/transient interventions.
-3. Preserve the task split in evaluation:
+4. Preserve the task split in evaluation:
    - event timing/characterization: first, second, orthogonal, along, and
      time-aware geodesic descriptors;
    - changed-area localization: projection novelty, IPOL NFA, raw/index, and
      classical/deep segmentation controls.
-4. Extend multiscale local temporal band-image subspaces only with a matched
+5. Extend multiscale local temporal band-image subspaces only with a matched
    non-DS control:
    - scales: whole scene, `2x2`, `4x4`, and overlapping local tiles;
    - compute first, second, orthogonal, along, and time-aware quantities per
      tile;
    - compare spatial fusion with matched local PCA/chronochrome controls.
-5. Add temporal baselines beyond the reproduced IPOL NFA:
+6. Add temporal baselines beyond the reproduced IPOL NFA:
    - MOSUM and one trend/seasonal method such as BFAST/JUST;
    - never call another detector output ground truth.
-6. Acquire one Sensei-requested Harmonized Sentinel-2 sequence:
+7. Acquire one Sensei-requested Harmonized Sentinel-2 sequence:
    - report region, dates, frame count, actual gaps, clouds/no-data, bands,
      spatial alignment, and event/evaluation source;
    - do not run a large sequence before this feasibility card exists.
-7. Decide after the above whether the paper is:
+8. Decide after the above whether the paper is:
    - a new time-aware/local temporal DS method;
    - a nuisance-robust DS method;
    - or a diagnostic benchmark explaining when temporal DS helps/fails.
@@ -1018,3 +1031,53 @@ Continue toward a method claim only if:
 Otherwise publish or present the negative result honestly: full-channel temporal
 DS is radiometrically invariant but registration sensitive, and whole-scene
 geometric contributions are too diffuse for changed-area localization.
+
+Seasonal-regime study design:
+
+| Component | Required test |
+|---|---|
+| Positive event | irrigation off-to-on and on-to-off transitions |
+| Negative event | stable irrigated and stable non-irrigated years |
+| Confounders | phenological phase shift, gradual trend, gain/offset, missing composites, clouds/noise, spatial translation/local warp |
+| Geometric scores | adjacent first magnitude/geodesic, second total, along, orthogonal, time-aware deviation |
+| Controls | NDVI amplitude/mean break, raw mean-spectrum L2, minimum principal angle, null/no-event score, then MOSUM/BFAST/JUST |
+| Event metric | boundary AUROC/AP, event-year rank, timing error, false alarms per stable sequence |
+| Characterization metric | abrupt-versus-gradual classification and effect-size separation |
+| Calibration | train-free threshold analysis plus held-out-site calibration if a threshold is reported |
+| Generalization | hold out geography and year; repeat on an independent label source |
+
+Stop the irrigation route if DS scores do not exceed simple NDVI/raw/min-angle
+controls on event timing, if success depends on one geography/rank, or if manual
+inspection shows that IrrMapper transition noise explains the apparent result.
+
+### 10.9 Seasonal Observation Stress-Test Result
+
+Completed 2026-06-20:
+
+- `800` synthetic five-year sequences (`80` per scenario), `3200` candidate
+  boundaries per rank/preprocessing configuration, `200` sequence-level
+  bootstrap resamples, plus noise `0.02` and `0.04` pressure runs.
+- Best first DS: uncentered rank 1, AUROC `0.950`, AP `0.403`
+  (`0.356-0.469`), versus raw monthly RMS AP `0.459` and NDVI-curve AP `1.000`.
+- Rank-1 DS ranked the true abrupt boundary first within every event sequence,
+  but did not calibrate well across sequences.
+- Feature-centered rank-1 DS rejected tested gain/offset and phase nuisances,
+  but false-alarm rates were `0.997` for missing composites, `0.559` for
+  one-pixel translation, and `0.528` for gradual drift under a stable-cycle
+  95th-percentile threshold.
+- At noise `0.04`, rank-2 second-along AP was `0.698` (`0.649-0.778`) versus
+  NDVI second-difference AP `0.674` (`0.622-0.730`); intervals overlap.
+- Conclusion: continue only as a real-data test of relative event timing,
+  geometric trajectory characterization, and orientation-plus-energy
+  decomposition. Do not claim a synthetic DS performance win.
+
+Report:
+`docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
+
+Data gate:
+
+- Public IrrMapper v1.2 coverage and 1986-2024 temporal extent are verified.
+- AOI/frame querying is blocked until an Earth Engine-enabled Google Cloud
+  project is configured.
+- IrrMapper transitions remain weak labels; manual/independent verification is
+  required before performance testing.

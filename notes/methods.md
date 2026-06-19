@@ -1193,3 +1193,79 @@ Registration scale-space result:
   generic scale-space cue, not evidence that DS uniquely solves registration.
 - Local deformation, parallax, seasonal boundaries, and real labels remain
   untested. Those are required before a robustness claim.
+
+### 15.8 Seasonal Observation Subspaces
+
+The next temporal construction uses dates, not bands or pixels, as the sample
+set. For one fixed spatial support and one season/year `y`, let
+
+```text
+x_(y,m) in R^(B * N)
+```
+
+be the consistently flattened multispectral patch at composite date `m`, with
+`B` bands and `N` common valid spatial locations. Stack `M` date observations:
+
+```text
+X_y = [x_(y,1), ..., x_(y,M)] in R^((B*N) x M).
+```
+
+After per-feature temporal centering and optional per-observation L2
+normalization, the leading left singular vectors form the seasonal observation
+subspace:
+
+```text
+S_y in Gr(r, B*N),  r <= M - 1 after centering.
+```
+
+This is a genuine image-set-style construction: the columns are repeated
+observations of the same aligned region through one seasonal cycle. A sequence
+`S_(y-1), S_y, S_(y+1)` supports the paper-faithful first/second DS and geodesic
+decomposition already implemented in this project.
+
+Construction card:
+
+| Field | Definition |
+|---|---|
+| Variant | seasonal observation subspace |
+| Source | image-set PCA/MSM convention; Kanai et al. 2023 temporal signal subspaces; Fukui et al. 2024 first/second DS |
+| Sample unit | one aligned multispectral date composite of the same patch/field |
+| Matrix | `X_y in R^((B*N) x M)` |
+| Subspace count | one per patch/field per season or year |
+| Fitting | SVD/PCA over date columns; rank bounded by valid temporal samples |
+| Comparison | adjacent first DS; triple second DS; along/orthogonal and irregular-time geodesic diagnostics |
+| Preserved | spatial coordinates, band identity, and seasonal observation set |
+| Lost | ordering inside the season unless time/Hankel embedding is added |
+| Required controls | NDVI/amplitude, raw spectral mean, minimum principal angle, MOSUM/BFAST/JUST where data length permits |
+| Verification | synthetic seasonal-regime tests, no-event cycles, gain/offset, missing dates, phase shifts, gradual transitions, and real labeled/verified events |
+
+[gap] Ordinary PCA of `X_y` is order-invariant within the season.
+[why it matters] Irrigation and phenology are trajectories, not only unordered
+sets; two cycles with the same span but different ordering can look identical.
+[next check] Compare the snapshot subspace with a Hankel/SSA or product-Grassmann
+variant after the simpler construction passes the event-alignment gate.
+
+[gap] IrrMapper annual classes are model outputs and can inherit Landsat,
+growing-season, orchard/vineyard, wetland, and weak-NDVI errors.
+[why it matters] Derived start/stop transitions are weak labels, not direct event
+annotations.
+[next check] Manually verify selected fields in independent imagery and repeat
+the main result on DynamicEarthNet or another independently labeled sequence.
+
+Controlled result, 2026-06-20:
+
+- The rank-1 seasonal orientation score can identify the strongest boundary
+  within a synthetic event sequence, but its absolute calibration is weak.
+- Feature-centered geometry rejects tested global gain/offset and phase shifts,
+  yet false-alarms heavily on missing composites, gradual drift, and one-pixel
+  translation.
+- Singular energy and normalized singular-spectrum changes outperform DS in the
+  current synthetic event task. This supports an explicit orientation-plus-
+  energy representation rather than claiming DS alone contains all change
+  information.
+- At high noise, rank-2 second-order along change becomes competitive with NDVI
+  curvature, but bootstrap intervals overlap. Treat this as a real-data
+  hypothesis only.
+- Date permutation leaves the ordinary seasonal subspace unchanged. Order-aware
+  Hankel/SSA/product-Grassmann construction remains a justified follow-up, not a
+  current contribution.

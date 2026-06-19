@@ -108,6 +108,8 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-temporal-context-ds", "multisenge", "Compare backward/forward temporal-context DS on a dated registered TIFF sequence.", ["phase1-temporal-context-ds"]),
     CommandInfo("phase1-temporal-context-injections", "multisenge", "Stress-test temporal-context DS with controlled change and nuisance injections.", ["phase1-temporal-context-injections"]),
     CommandInfo("phase1-temporal-registration-curve", "multisenge", "Measure temporal-context sensitivity to subpixel registration error and low-frequency controls.", ["phase1-temporal-registration-curve"]),
+    CommandInfo("phase1-seasonal-regime-study", "multisenge", "Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.", ["phase1-seasonal-regime-study"]),
+    CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
     CommandInfo("phase2-sweep", "phase2", "Run a controlled train/eval sweep.", ["phase2-sweep", "--preset", "core", "--progress-bars"]),
@@ -244,7 +246,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         check_path("Venus TPAMI data root", "data/venus_tpami2015", kind="dir"),
         check_path("phase1 configs", "phase1/configs", kind="dir"),
         check_path("phase2 configs", "phase2/configs", kind="dir"),
-        check_path("organized Chrome bookmarks", "docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html", kind="file"),
+        check_path("organized Chrome bookmarks", "docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html", kind="file"),
         check_path("retained non-public PDF", "references/reference_papers/MVA_2025_human_motion_analysis.pdf", kind="file"),
     ]
     for module in ["numpy", "yaml", "torch", "rasterio", "sklearn", "phase1", "phase2"]:
@@ -750,6 +752,55 @@ def cmd_phase1_temporal_registration_curve(args: argparse.Namespace) -> int:
         "--seed",
         str(args.seed),
     ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_seasonal_regime_study(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/seasonal_regime_subspace_study_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_seasonal_regime_subspaces",
+        "--output_dir",
+        out,
+        "--repeats",
+        str(args.repeats),
+        "--seed",
+        str(args.seed),
+        "--ranks",
+        args.ranks,
+        "--preprocessing",
+        args.preprocessing,
+        "--height",
+        str(args.height),
+        "--width",
+        str(args.width),
+        "--noise",
+        str(args.noise),
+        "--bootstrap",
+        str(args.bootstrap),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_irrigation_data_feasibility(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/irrigation_regime_data_feasibility_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.check_irrigation_regime_data",
+        "--output_dir",
+        out,
+        f"--bbox={args.bbox}",
+        "--start",
+        args.start,
+        "--end",
+        args.end,
+        "--max_cloud",
+        str(args.max_cloud),
+    ]
+    if args.ee_project:
+        cmd += ["--ee_project", args.ee_project]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1525,6 +1576,38 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_temporal_registration_curve)
+
+    p = sub.add_parser(
+        "phase1-seasonal-regime-study",
+        help="Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--repeats", type=int, default=80)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ranks", default="1,2,4,8")
+    p.add_argument(
+        "--preprocessing",
+        default="uncentered,feature_centered,feature_centered_observation_l2",
+    )
+    p.add_argument("--height", type=int, default=16)
+    p.add_argument("--width", type=int, default=16)
+    p.add_argument("--noise", type=float, default=0.008)
+    p.add_argument("--bootstrap", type=int, default=200)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_seasonal_regime_study)
+
+    p = sub.add_parser(
+        "phase1-irrigation-data-feasibility",
+        help="Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--ee-project", default="")
+    p.add_argument("--bbox", default="-112.60,45.20,-112.40,45.35")
+    p.add_argument("--start", default="2017-01-01")
+    p.add_argument("--end", default="2025-01-01")
+    p.add_argument("--max-cloud", type=float, default=60.0)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_irrigation_data_feasibility)
 
     p = sub.add_parser("phase1-viz-examples", help="Visualize OSCD examples with raw diffs and DS maps.")
     p.add_argument("--config", default="canonical", help="Phase 1 config alias or path.")

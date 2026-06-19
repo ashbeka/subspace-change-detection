@@ -186,16 +186,30 @@ whole-scene first/second/geodesic DS [done]
 -> IPOL NFA replication across four sequences [done]
 -> bidirectional temporal-context DS/projection novelty [done]
 -> controlled persistent/transient/nuisance tests [done]
--> labeled multi-temporal evaluation slice [next]
+-> synthetic seasonal observation subspace regime-change test [done]
+-> verified real seasonal regime-change test [next]
+-> independently labeled multi-temporal evaluation slice [next]
 -> registration-robustness curve [next]
 -> MOSUM/BFAST/JUST pressure baselines
 ```
+
+The next construction uses repeated dates as the real related-observation set:
+one annual/seasonal subspace per fixed patch or field, followed by first/second
+DS and geodesic analysis across years. Irrigation start/stop is the first
+candidate event. IrrMapper is a weak-label source, not ground truth; manual or
+independent validation is mandatory.
 
 The active claim is conditional. Current DS contribution maps are not accurate
 changed-area detectors. The surviving hypothesis separates sequence-level
 first/second/geodesic characterization from projection-based localization and
 requires registration robustness plus real multi-temporal labels. If that
 fails, retain the negative result and use the empirical diagnostic framing.
+
+The 2026-06-20 seasonal-observation stress test found that rank-1 geometry can
+rank an injected abrupt boundary within a sequence but is weaker than simple
+NDVI/singular-value controls across sequences and remains sensitive to missing
+composites, drift, and translation. The next result must therefore use verified
+real temporal labels; synthetic success is not enough.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 
