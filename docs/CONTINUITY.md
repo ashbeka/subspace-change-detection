@@ -44,12 +44,14 @@ reframed the whole direction (§3).
 - **Research posture:** be **problem-first, method-aware** (the original sin was method-first/forcing).
 
 ## 4. The THREE live hypotheses (kept, to be iteratively improved + experimented; from Top-10 #2/#3/#8)
-**H-A — Invariance/nuisance-robust unsupervised CD via the invariant-subspace residual.** Claim: model the
-no-change/common/slow subspace (GDS-common / SFA-slow / IR-MAD), measure change as the residual outside it;
-beats SAM/CVA *specifically under date-to-date illumination/atmospheric/sensor nuisance* (where SAM/CVA fail).
-*Defensible:* this is the only regime the grounding says subspaces can win; testable on bitemporal HSI-CD (has
-nuisance) and on controlled nuisance-injection. *Falsifier:* if it does not beat SAM/CVA/IR-MAD under nuisance.
-*This is the most defensible — START HERE.*
+**H-A — Invariance/nuisance-robust unsupervised CD via the invariant-subspace residual.** [DETECTION ANGLE
+CLOSED, 2026-06-19] Floor: SFA-CD beat scalars under affine nuisance. BUT 1a gating showed **IR-MAD already
+handles affine/nonlinear/spatial nuisance near-perfectly for distinct change** (AUC 0.98-1.00) — no gap for a
+kernel/local method; and synthetic nuisance+change cannot reliably adjudicate this (results swing with design;
+my IR-MAD even has an additive-change normalization bug). So H-A's *detection* novelty is dominated by IR-MAD.
+Survives only as: (i) interpretable **attribution** (which spectral directions = nuisance vs change) IR-MAD's
+chi-square lacks — modest; (ii) the **real bitemporal HSI-CD benchmark** as the only trustworthy test (blocked).
+Do NOT generate more synthetic H-A experiments (drilling). Reports: hsi_HA_nuisance / hsi_HA_hard_nuisance _2026-06-19.
 
 **H-B — Change-trajectory characterization via 2nd-order Difference Subspace.** Claim: don't just detect IF
 change — characterize HOW (velocity = 1st-order DS, acceleration = 2nd-order DS, abrupt vs gradual via the
