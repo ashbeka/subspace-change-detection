@@ -11,6 +11,7 @@
 - [7. Paused Work](#7-paused-work)
 - [8. Evidence Rules](#8-evidence-rules)
 - [9. Source Ingestion Summary](#9-source-ingestion-summary)
+- [10. Active Temporal Difference-Subspace Study](#10-active-temporal-difference-subspace-study)
 
 ## 1. Current Research Question
 
@@ -765,3 +766,255 @@ Active rule:
 - Use this file for current experiment evidence, queued audits, and decision gates.
 - Use `docs/source_records/final_organization_2026-06-12/prior_ingestion_ledgers.md` only when checking historical provenance.
 - Old archive/research-notes/phase-doc claims are historical unless they are repeated above as current evidence or current tasks.
+
+## 10. Active Temporal Difference-Subspace Study
+
+Active question as of 2026-06-19:
+
+```text
+Can paper-faithful first/second Difference Subspaces and geodesic decomposition
+provide distinct, spatially attributable evidence of change in registered
+multispectral satellite time series, after accounting for irregular cadence,
+radiometric variation, and misregistration?
+```
+
+This supersedes the instruction near the end of Section 6 that temporal pilots
+must wait for the spatial OSCD audit. That audit has now been run and found that
+simple spatial PCA/smoothing explains much of the apparent gain.
+
+### 10.1 Completed Implementation Checks
+
+- One date cube is represented by `X_t in R^(N_common_pixels x B_bands)`.
+- Each column is one complete aligned band image flattened over the same common
+  spatial mask.
+- The leading left singular vectors form `S_t in Gr(r, N_common_pixels)`.
+- Full-rank MultiSenGE uses `r=10`; full-rank IPOL RGBI uses `r=4`.
+- Paper-faithful first magnitude is `2 sum_i(1-cos(theta_i))`.
+- Paper-faithful second DS is `D(S_t, M(S_{t-1},S_{t+1}))`.
+- Geodesic decomposition reports along and orthogonal components.
+- The second-order paper assumes equal intervals. The project therefore also
+  reports a separate time-aware deviation from the endpoint Grassmann geodesic
+  at the observed acquisition fraction. It is not mislabeled as paper DS.
+- Canonical spatial contributions sum to the corresponding DS magnitude.
+- Eighteen focused unit tests cover equal-speed, along-geodesic, off-geodesic,
+  unequal-gap, interpolation, mean-subspace, common-mask, shape, and attribution
+  behavior.
+
+### 10.2 Controlled Findings
+
+Full-rank centered band-image subspaces on real MultiSenGE triples with injected
+changes:
+
+- local change versus global per-band gain/offset:
+  - paper second/orthogonal AUROC `1.0`, AP `1.0` in the rank-10 pilot;
+  - the full band-image span is invariant to the tested invertible per-band
+    scaling, while centering removes constant offset.
+- local change versus one-pixel translation:
+  - orthogonal AUROC `0.0`; every tested translation produced a larger response
+    than the local synthetic change.
+- local change versus all tested negatives:
+  - AUROC `0.875`, AP `0.540`.
+
+Interpretation: the construction has a real radiometric invariance but is not
+registration robust. This is a method boundary worth studying, not evidence of
+general change-detection superiority.
+
+Output:
+
+`phase1/outputs/multisenge_temporal_injections_full_channel_20260619_193250/`
+
+### 10.3 Real-Sequence Findings
+
+MultiSenGE, five patches x 23 dates:
+
+- only `15/105` triples have left/right gap ratio <= `1.5`;
+- paper second and orthogonal magnitudes correlate at `0.973`;
+- paper second correlates with raw second reflectance RMSE at `0.709`, NDVI
+  curvature at `0.818`, and NBR curvature at `0.752`;
+- the time-aware deviation correlates with paper second at `0.941` and raw
+  curvature at `0.675`;
+- on the 15 balanced triples, time-aware deviation and paper second correlate
+  at `0.988`.
+
+These curves currently track spectral/index curvature strongly. MultiSenGE has
+static land-cover labels, so this is descriptive evidence, not supervised event
+detection accuracy.
+
+Output:
+
+`phase1/outputs/multisenge_temporal_timeaware_core5_20260619_194845/`
+
+IPOL Las Vegas, 20 registered RGBI dates:
+
+- the published NFA method identifies important changes at frames 2 and 4;
+- first DS ranks frame 2 highly but frame 4 only tenth among 19 pairs;
+- paper second/time-aware maps at both frames respond broadly to roofs, roads,
+  and scene texture rather than isolating only the published changed objects;
+- the strongest paper second/time-aware response occurs at 2018-02-15, not one
+  of the first-five published demonstration events.
+
+This is important negative pressure: whole-scene temporal DS is not yet a
+competitive local detector.
+
+Output:
+
+`phase1/outputs/ipol_vegas_temporal_timeaware_20260619_194845/`
+
+### 10.4 Four-Sequence External Pressure Test
+
+The exact IPOL C implementation was compiled locally and run on pseudo-gamma
+versions of Las Vegas, Al Wakrah, Piraeus, and Beijing Airport. Its log-NFA
+maps are external detector outputs, not ground truth.
+
+One-date rank-2 band-image DS did not generalize. Its adjacent/along score was
+near raw difference on Vegas but worse on Al Wakrah, Piraeus, and Beijing.
+Multiscale tiling did not rescue that result.
+
+For second-order rank-2 whole-scene maps, macro results over the four sequences
+were:
+
+| Method | Macro pixel AP | Macro pixel AUROC | Macro temporal Spearman with IPOL changed fraction |
+|---|---:|---:|---:|
+| raw time-interpolation residual | 0.1206 | 0.8282 | 0.5485 |
+| paper second DS | 0.0895 | 0.8518 | 0.5934 |
+| orthogonal component | 0.0951 | 0.8409 | 0.5826 |
+| along component | 0.0512 | 0.7774 | 0.3065 |
+| irregular-time geodesic deviation | 0.0994 | 0.8404 | 0.5898 |
+
+Interpretation: second/time-aware geometry is slightly better aligned with
+sequence-level event intensity in aggregate, but worse at pixel localization.
+This motivates a descriptor/interpretation hypothesis, not a detector win.
+
+Bidirectional temporal-context sweep (`V={3,5}`, rank `{1,2}`, per-band and
+joint) produced:
+
+- raw adjacent RMS macro AP `0.38`, AUROC `0.97`;
+- best linear projection novelty (`V=3`, rank 2, per-band) macro AP `0.37`,
+  AUROC `0.98`;
+- best temporal-context DS macro AP about `0.10`.
+
+The DS localization hypothesis is rejected under this construction. Projection
+novelty remains a candidate because it improves AUROC in all four sequences,
+but it beats raw AP only on Piraeus and still needs labeled evaluation.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_ds_macro_4seq_20260620/`
+- `phase1/outputs/temporal_context_ds_*_matrix_20260620/`
+
+### 10.5 Persistent-Change And Nuisance Diagnostic
+
+Five real MultiSenGE backgrounds were used with known injected masks. Four
+predefined configurations varied context `V={3,5}` and rank `{1,2}`.
+
+Rank-2, `V=3`, per-band results:
+
+| Method | Persistent localization AP | Persistent/transient response | Gain/offset response | Translation response |
+|---|---:|---:|---:|---:|
+| temporal-context DS | 0.733 | 0.97x by raw sums; positive paired normalized contrast | near zero | 16.6x persistent response |
+| linear projection novelty | 0.909 | 1.51x | near zero | 11.8x persistent response |
+| raw adjacent RMS | 0.936 | exactly 1.00x | very large | 7.1x persistent response |
+
+Clustered bootstrap over five patch backgrounds gives projection novelty a
+persistent-vs-transient normalized contrast of `0.190` with 95% interval
+`[0.170, 0.212]`. Its persistent localization AP difference from raw is
+`-0.024`, interval `[-0.068, 0.018]`. The DS contrast grows at lower rank/longer
+context, but localization degrades sharply. Five clusters are too few for a
+publication-level uncertainty claim; this is a stable diagnostic lead.
+
+Decision:
+
+- retain persistence discrimination and radiometric invariance as hypotheses;
+- reject current DS as the main localization score;
+- treat translation robustness and labeled multi-temporal evaluation as hard
+  gates before method claims.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_injections_multisenge_*_20260620/`
+- `phase1/outputs/temporal_context_injections_macro_20260620/`
+
+### 10.6 Registration And Scale-Space Curve
+
+Controlled horizontal shifts `{0.25,0.5,1,2}` pixels were compared with a
+persistent local injection on five MultiSenGE backgrounds.
+
+For a `32x32`, strength-0.25 event using projection novelty:
+
+| Representation | Translation/local ratio at 1 px | Local AP |
+|---|---:|---:|
+| native | 26.67 | 0.982 |
+| Gaussian `sigma=1` | 8.19 | 0.993 |
+| Gaussian `sigma=2` | 3.17 | 0.993 |
+| Gaussian `sigma=3` | 1.72 | 0.988 |
+| Gaussian `sigma=4` | 1.14 | 0.984 |
+| phase alignment | 0.006 | 0.877 |
+
+The apparent robustness does not generalize to a weak `16x16` event: at one
+pixel and `sigma=4`, translation/local ratio remains `32.8` and local AP falls
+to `0.764`. Phase alignment corrects integer shifts well but loses event AP and
+is imperfect at `0.25-0.5` pixels.
+
+Cross-scale retention (`score_sigma / score_native`) perfectly separates the
+tested global translations from persistent local injections for DS, projection
+novelty, and raw difference. Projection has the largest mean log-retention
+margin at `sigma=4`, but AUROC/AP are `1.0` for all three methods. Therefore
+scale-space decay is a useful generic artifact diagnostic, not DS-specific
+novelty.
+
+Next robustness test must include local warps/parallax and natural labeled
+events. Do not claim Gaussian smoothing or phase alignment solves registration.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_registration_curve_*_20260620/`
+- `phase1/outputs/temporal_context_scale_decay_20260620/`
+
+### 10.7 Immediate Experiment Order
+
+1. Obtain a labeled multi-temporal evaluation slice:
+   - preferred: a manageable DynamicEarthNet AOI with monthly semantic labels;
+   - dataset size is approximately 524 GB in full, so define a selective
+     acquisition protocol rather than downloading blindly;
+   - fallback: an independently annotated Harmonized Sentinel-2 event sequence.
+2. Build a registration robustness curve:
+   - translations from subpixel/interpolated shifts through at least two pixels;
+   - compare pre-registration, local pooling, low-frequency/wavelet features,
+     and displacement-minimized scores;
+   - keep gain/offset and local persistent/transient interventions.
+3. Preserve the task split in evaluation:
+   - event timing/characterization: first, second, orthogonal, along, and
+     time-aware geodesic descriptors;
+   - changed-area localization: projection novelty, IPOL NFA, raw/index, and
+     classical/deep segmentation controls.
+4. Extend multiscale local temporal band-image subspaces only with a matched
+   non-DS control:
+   - scales: whole scene, `2x2`, `4x4`, and overlapping local tiles;
+   - compute first, second, orthogonal, along, and time-aware quantities per
+     tile;
+   - compare spatial fusion with matched local PCA/chronochrome controls.
+5. Add temporal baselines beyond the reproduced IPOL NFA:
+   - MOSUM and one trend/seasonal method such as BFAST/JUST;
+   - never call another detector output ground truth.
+6. Acquire one Sensei-requested Harmonized Sentinel-2 sequence:
+   - report region, dates, frame count, actual gaps, clouds/no-data, bands,
+     spatial alignment, and event/evaluation source;
+   - do not run a large sequence before this feasibility card exists.
+7. Decide after the above whether the paper is:
+   - a new time-aware/local temporal DS method;
+   - a nuisance-robust DS method;
+   - or a diagnostic benchmark explaining when temporal DS helps/fails.
+
+### 10.8 Evidence Gates
+
+Continue toward a method claim only if:
+
+- known/published events are localized better than whole-scene DS;
+- improvement is not reproduced by smoothing/tiling a non-DS baseline;
+- registration robustness improves without destroying local-change response;
+- at least one independent sequence repeats the finding;
+- the result survives rank, scale, preprocessing, and cadence ablations.
+
+Otherwise publish or present the negative result honestly: full-channel temporal
+DS is radiometrically invariant but registration sensitive, and whole-scene
+geometric contributions are too diffuse for changed-area localization.

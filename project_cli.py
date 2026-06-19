@@ -101,7 +101,13 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-viz-method-grid", "visualization", "Draw saved Phase 1 prior maps side by side.", ["phase1-viz-method-grid", "--prior-root", "full"]),
     CommandInfo("phase1-multisenge-manifest", "multisenge", "Build a small MultiSenGE temporal manifest.", ["phase1-multisenge-manifest"]),
     CommandInfo("phase1-multisenge-viz", "multisenge", "Run exploratory MultiSenGE DS visualization.", ["phase1-multisenge-viz"]),
-    CommandInfo("phase1-multisenge-geodesic", "multisenge", "Run MultiSenGE temporal/geodesic analysis.", ["phase1-multisenge-geodesic"]),
+    CommandInfo("phase1-multisenge-temporal-dynamics", "multisenge", "Measure first/second DS and geodesic components over MultiSenGE dates.", ["phase1-multisenge-temporal-dynamics", "phase1-multisenge-geodesic"]),
+    CommandInfo("phase1-multisenge-temporal-injections", "multisenge", "Compare temporal DS with radiometric/registration nuisance controls.", ["phase1-multisenge-temporal-injections"]),
+    CommandInfo("phase1-registered-sequence-dynamics", "multisenge", "Analyze first/second DS on a dated registered TIFF sequence.", ["phase1-registered-sequence-dynamics"]),
+    CommandInfo("phase1-multiscale-sequence-dynamics", "multisenge", "Analyze local/multiscale temporal DS on a dated registered TIFF sequence.", ["phase1-multiscale-sequence-dynamics"]),
+    CommandInfo("phase1-temporal-context-ds", "multisenge", "Compare backward/forward temporal-context DS on a dated registered TIFF sequence.", ["phase1-temporal-context-ds"]),
+    CommandInfo("phase1-temporal-context-injections", "multisenge", "Stress-test temporal-context DS with controlled change and nuisance injections.", ["phase1-temporal-context-injections"]),
+    CommandInfo("phase1-temporal-registration-curve", "multisenge", "Measure temporal-context sensitivity to subpixel registration error and low-frequency controls.", ["phase1-temporal-registration-curve"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
     CommandInfo("phase2-sweep", "phase2", "Run a controlled train/eval sweep.", ["phase2-sweep", "--preset", "core", "--progress-bars"]),
@@ -494,6 +500,8 @@ def cmd_phase1_multisenge_manifest(args: argparse.Namespace) -> int:
         cmd.append("--include_s1")
     if args.no_require_ground_reference:
         cmd.append("--no_require_ground_reference")
+    if args.patch_ids:
+        cmd += ["--patch_ids", args.patch_ids]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -516,7 +524,7 @@ def cmd_phase1_multisenge_viz(args: argparse.Namespace) -> int:
 
 def cmd_phase1_multisenge_geodesic(args: argparse.Namespace) -> int:
     config = phase1_config(args.config)
-    out = args.output_dir or f"phase1/outputs/multisenge_temporal_geodesic_{timestamp()}"
+    out = args.output_dir or f"phase1/outputs/multisenge_temporal_dynamics_{timestamp()}"
     cmd = [
         str(venv_python()),
         "-m",
@@ -532,6 +540,216 @@ def cmd_phase1_multisenge_geodesic(args: argparse.Namespace) -> int:
     ]
     if args.max_patches:
         cmd += ["--max_patches", str(args.max_patches)]
+    if args.patch_ids:
+        cmd += ["--patch_ids", args.patch_ids]
+    if args.rank:
+        cmd += ["--rank", str(args.rank)]
+    if args.preprocessing:
+        cmd += ["--preprocessing", args.preprocessing]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multisenge_temporal_injections(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_temporal_injections_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_band_subspace_injections",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--repeats",
+        str(args.repeats),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_registered_sequence_dynamics(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/registered_sequence_dynamics_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_registered_multispectral_sequence",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--balanced_gap_ratio",
+        str(args.balanced_gap_ratio),
+        "--top_k",
+        str(args.top_k),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multiscale_sequence_dynamics(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multiscale_sequence_dynamics_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_multiscale_temporal_subspaces",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--grids",
+        args.grids,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--min-valid-locations",
+        str(args.min_valid_locations),
+        "--reference-event-frames",
+        args.reference_event_frames,
+        "--evaluation-frame-count",
+        str(args.evaluation_frame_count),
+        "--figure-frame-count",
+        str(args.figure_frame_count),
+    ]
+    if args.reference_map_dir:
+        cmd += ["--reference-map-dir", args.reference_map_dir]
+    if args.reference_crop:
+        cmd += ["--reference-crop", args.reference_crop]
+    if args.reference_lognfa_dir:
+        cmd += [
+            "--reference-lognfa-dir",
+            args.reference_lognfa_dir,
+            "--reference-logepsilon",
+            str(args.reference_logepsilon),
+        ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_context_ds(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_context_ds_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_bidirectional_temporal_context_ds",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--context_sizes",
+        args.context_sizes,
+        "--ranks",
+        args.ranks,
+        "--factorizations",
+        args.factorizations,
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--scale_divisor",
+        str(args.scale_divisor),
+        "--figure_count",
+        str(args.figure_count),
+    ]
+    if args.figure_config:
+        cmd += ["--figure_config", args.figure_config]
+    if args.reference_lognfa_dir:
+        cmd += [
+            "--reference_lognfa_dir",
+            args.reference_lognfa_dir,
+            "--reference_logepsilon",
+            str(args.reference_logepsilon),
+        ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_context_injections(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_context_injections_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_context_injections",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--context_size",
+        str(args.context_size),
+        "--rank",
+        str(args.rank),
+        "--factorization",
+        args.factorization,
+        "--preprocessing",
+        args.preprocessing,
+        "--repeats",
+        str(args.repeats),
+        "--max_patches",
+        str(args.max_patches),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_registration_curve(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_registration_curve_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_context_registration_curve",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--context_size",
+        str(args.context_size),
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--shifts",
+        args.shifts,
+        "--strategies",
+        args.strategies,
+        "--local_strength",
+        str(args.local_strength),
+        "--window_size",
+        str(args.window_size),
+        "--repeats",
+        str(args.repeats),
+        "--max_patches",
+        str(args.max_patches),
+        "--seed",
+        str(args.seed),
+    ]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1166,6 +1384,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--include-s1", action="store_true")
     p.add_argument("--no-require-ground-reference", action="store_true")
+    p.add_argument("--patch-ids", default="", help="Optional comma-separated patch IDs to select explicitly.")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_manifest)
 
@@ -1176,14 +1395,136 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_viz)
 
-    p = sub.add_parser("phase1-multisenge-geodesic", help="Run MultiSenGE temporal/geodesic analysis.")
+    p = sub.add_parser(
+        "phase1-multisenge-temporal-dynamics",
+        aliases=["phase1-multisenge-geodesic"],
+        help="Measure first/second DS and geodesic components over MultiSenGE dates.",
+    )
     p.add_argument("--config", default="multisenge-geodesic", help="Phase 1 config alias or path.")
     p.add_argument("--multisenge-root", default="data/MultiSenGE")
     p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_50p_5dates.json")
     p.add_argument("--output-dir", default="")
     p.add_argument("--max-patches", type=int, default=0)
+    p.add_argument("--patch-ids", default="", help="Optional comma-separated patch IDs from the manifest.")
+    p.add_argument("--rank", type=int, default=0, help="Override the configured subspace rank.")
+    p.add_argument("--preprocessing", default="", choices=["", "uncentered", "centered", "band_l2", "centered_band_l2"])
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_geodesic)
+
+    p = sub.add_parser(
+        "phase1-multisenge-temporal-injections",
+        help="Compare temporal DS response to local synthetic change and nuisance controls.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--rank", type=int, default=6)
+    p.add_argument("--preprocessing", default="centered_band_l2", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--repeats", type=int, default=12)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multisenge_temporal_injections)
+
+    p = sub.add_parser(
+        "phase1-registered-sequence-dynamics",
+        help="Analyze first/second DS and spatial contributions on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--rank", type=int, default=0, help="0 keeps the full band-image span.")
+    p.add_argument("--preprocessing", default="centered", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--balanced-gap-ratio", type=float, default=1.5)
+    p.add_argument("--top-k", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_registered_sequence_dynamics)
+
+    p = sub.add_parser(
+        "phase1-multiscale-sequence-dynamics",
+        help="Analyze local/multiscale temporal DS on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--grids", default="1,2,4,8")
+    p.add_argument("--rank", type=int, default=0, help="0 keeps the full band-image span.")
+    p.add_argument("--preprocessing", default="centered", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--min-valid-locations", type=int, default=64)
+    p.add_argument("--reference-event-frames", default="")
+    p.add_argument("--evaluation-frame-count", type=int, default=0)
+    p.add_argument("--figure-frame-count", type=int, default=5)
+    p.add_argument("--reference-map-dir", default="")
+    p.add_argument("--reference-crop", default="")
+    p.add_argument("--reference-lognfa-dir", default="")
+    p.add_argument("--reference-logepsilon", type=float, default=1.0)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiscale_sequence_dynamics)
+
+    p = sub.add_parser(
+        "phase1-temporal-context-ds",
+        help="Compare backward/forward temporal-context DS on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--context-sizes", default="3,5,7")
+    p.add_argument("--ranks", default="1,2,3")
+    p.add_argument("--factorizations", default="per_band,joint")
+    p.add_argument(
+        "--preprocessing",
+        default="centered_column_l2",
+        choices=["uncentered", "centered", "column_l2", "centered_column_l2"],
+    )
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--scale-divisor", type=float, default=1.0)
+    p.add_argument("--reference-lognfa-dir", default="")
+    p.add_argument("--reference-logepsilon", type=float, default=1.0)
+    p.add_argument("--figure-config", default="")
+    p.add_argument("--figure-count", type=int, default=4)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_context_ds)
+
+    p = sub.add_parser(
+        "phase1-temporal-context-injections",
+        help="Stress-test temporal-context DS with controlled MultiSenGE interventions.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--context-size", type=int, default=3)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--factorization", default="per_band", choices=["per_band", "joint"])
+    p.add_argument("--preprocessing", default="centered_column_l2")
+    p.add_argument("--repeats", type=int, default=4)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_context_injections)
+
+    p = sub.add_parser(
+        "phase1-temporal-registration-curve",
+        help="Measure temporal-context sensitivity to subpixel translation and scale-space controls.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--context-size", type=int, default=3)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--preprocessing", default="centered_column_l2")
+    p.add_argument("--shifts", default="0.25,0.5,1,2")
+    p.add_argument("--strategies", default="native,gaussian1,gaussian2,pool2,pool4,phase_align")
+    p.add_argument("--local-strength", type=float, default=0.25)
+    p.add_argument("--window-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=3)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_registration_curve)
 
     p = sub.add_parser("phase1-viz-examples", help="Visualize OSCD examples with raw diffs and DS maps.")
     p.add_argument("--config", default="canonical", help="Phase 1 config alias or path.")

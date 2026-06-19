@@ -15,7 +15,11 @@
 
 The broader research direction is **interpretable subspace-based change detection for multispectral satellite imagery**.
 
-The implemented project is **Sentinel-2 OSCD binary change detection with unsupervised prior maps**.
+The implemented project contains two evidence tracks:
+
+- **Sentinel-2 OSCD binary change detection with unsupervised prior maps**;
+- **first/second Difference-Subspace dynamics on registered multi-date
+  multispectral sequences**.
 
 The active pipeline is:
 
@@ -29,10 +33,13 @@ OSCD is the current concrete benchmark and evidence source, not a permanent boun
 
 ## 2. Problem Statement
 
-Current research question:
+Current active research question:
 
 ```text
-Can DS-based representations help detect changed areas in pre/post multispectral satellite images, and what subspace construction preserves the spatial information needed for that task?
+Can paper-faithful first/second Difference Subspaces and geodesic decomposition
+provide distinct, spatially attributable evidence of change in registered
+multispectral satellite time series, after accounting for irregular cadence,
+radiometric variation, and misregistration?
 ```
 
 Working problem statement as of 2026-06-17:
@@ -51,6 +58,12 @@ geometric/subspace change evidence first -> supervised/deep-learning integration
 
 The project is not trying to prove that DS beats deep learning outright. It is testing whether spatially aware subspace geometry can produce interpretable change priors that are useful by themselves and possibly useful as inputs, diagnostics, or label-efficient aids for neural change-detection models.
 
+The 2026-06-19 ranked problem portfolio is in
+`notes/research_paper_plan.md`, Section 16. The immediate program is temporal
+first/second DS plus nuisance, localization, and external-baseline tests. The
+old spatial OSCD question remains a verification track rather than the primary
+novelty claim.
+
 ## 3. Implemented Pipeline
 
 Phase 1:
@@ -66,6 +79,15 @@ Phase 2:
 - optionally appends Phase 1 prior maps as extra channels;
 - trains binary segmentation models such as U-Net and Siamese U-Net;
 - evaluates stitched city-level OSCD masks under ignored `phase2/outputs/`.
+
+Temporal sequence track:
+
+- builds one band-image subspace per registered date;
+- computes adjacent first DS, triple second DS, and geodesic along/orthogonal
+  components;
+- reports a separately labeled irregular-cadence geodesic deviation;
+- maps canonical contribution energy back to common spatial coordinates;
+- runs controlled radiometric, local-change, and translation injections.
 
 ## 4. Current Evidence
 
@@ -122,15 +144,58 @@ Classical-pressure and follow-up result, 2026-06-18:
 - Train-city changed-area calibration gives the three-way fusion held-out test F1 `0.2670` versus PCA-diff `0.2452`, but the paired 10-city improvement is not significant (`p=0.1602`). Calibration does not establish a win.
 - Full interpretation: `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`.
 
+Temporal first/second DS result, 2026-06-19:
+
+- Eighteen focused formula/construction tests pass.
+- Full-rank centered band-image subspaces are invariant to the tested global
+  per-band gain/offset but respond more strongly to a one-pixel translation
+  than to the tested local change.
+- On five MultiSenGE patches x 23 dates, second DS correlates strongly with
+  raw/NDVI/NBR temporal curvature; static labels do not validate event accuracy.
+- On the published IPOL Las Vegas sequence, whole-scene contribution maps are
+  diffuse and do not cleanly reproduce the source paper's changed objects.
+- Full report:
+  `docs/experiment_reports/multispectral_temporal_difference_subspaces_2026-06-19.md`.
+
+Temporal replication and context result, 2026-06-20:
+
+- The exact IPOL C implementation was run on Las Vegas, Al Wakrah, Piraeus,
+  and Beijing Airport; its output is an external agreement target, not truth.
+- One-date rank-2 band-image DS and multiscale tiling did not generalize as
+  changed-area detectors.
+- Second/time-aware geometry has slightly higher macro temporal agreement with
+  IPOL event intensity than raw interpolation residual, but lower pixel AP.
+- Bidirectional temporal-context DS has poor localization and is deprioritized.
+- Per-band rank-2 projection novelty nearly matches raw macro AP (`0.37` vs
+  `0.38`) and improves macro AUROC (`0.98` vs `0.97`), but wins AP on only one
+  of four sequences.
+- Controlled five-patch MultiSenGE interventions show radiometric invariance
+  and persistent-vs-transient sensitivity, but severe one-pixel translation
+  sensitivity. No real-label performance claim is supported.
+- Gaussian scale-space reduces global-shift response for large injected events,
+  but fails to make weak small events robust. Cross-scale decay distinguishes
+  the tested global shift for raw and geometric methods alike, so it is a
+  generic artifact cue rather than DS-specific novelty.
+
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, test the two unresolved problems exposed by the comparison:
+Before more long U-Net sweeps, continue the Sensei-aligned temporal study:
 
 ```text
-split-safe score calibration [done] -> pseudo-change/nuisance analysis [next] -> optional neural/prior follow-up
+whole-scene first/second/geodesic DS [done]
+-> IPOL NFA replication across four sequences [done]
+-> bidirectional temporal-context DS/projection novelty [done]
+-> controlled persistent/transient/nuisance tests [done]
+-> labeled multi-temporal evaluation slice [next]
+-> registration-robustness curve [next]
+-> MOSUM/BFAST/JUST pressure baselines
 ```
 
-Use city-held-out calibration only; do not tune thresholds on the evaluated city's labels. Preserve the parallel Sensei-aligned multi-date HLS/subspace track.
+The active claim is conditional. Current DS contribution maps are not accurate
+changed-area detectors. The surviving hypothesis separates sequence-level
+first/second/geodesic characterization from projection-based localization and
+requires registration robustness plus real multi-temporal labels. If that
+fails, retain the negative result and use the empirical diagnostic framing.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 

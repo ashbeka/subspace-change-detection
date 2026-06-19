@@ -22,12 +22,19 @@ def parse_args():
   ap.add_argument("--seed", type=int, default=1234)
   ap.add_argument("--include_s1", action="store_true", help="Also store S1 timestamps in the manifest (slower).")
   ap.add_argument("--no_require_ground_reference", action="store_true", help="Allow patches without ground_reference/*.tif.")
+  ap.add_argument("--patch_ids", default="", help="Optional comma-separated patch IDs to select explicitly.")
   return ap.parse_args()
 
 
 def main():
   args = parse_args()
   records = load_multisenge_records(args.multisenge_root, include_s1=bool(args.include_s1))
+  requested = {value.strip() for value in args.patch_ids.split(",") if value.strip()}
+  if requested:
+    missing = sorted(requested - set(records))
+    if missing:
+      raise ValueError(f"Unknown MultiSenGE patch IDs: {missing}")
+    records = {key: value for key, value in records.items() if key in requested}
   subset = select_records(
     records,
     min_s2_dates=args.min_s2_dates,

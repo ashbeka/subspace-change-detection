@@ -37,6 +37,7 @@
   - [MultiSenGE caveat](#multisenge-caveat)
   - [KDS and CCA implementation gaps](#kds-and-cca-implementation-gaps)
   - [Deep-feature subspace gap](#deep-feature-subspace-gap)
+- [15. Temporal Band-Image Difference-Subspace Dynamics](#15-temporal-band-image-difference-subspace-dynamics)
 
 ## 1. Current Project Scope
 
@@ -1007,3 +1008,188 @@ Possible satellite variants:
 - GDS projection to improve separation between known classes or pseudo-classes.
 
 This should wait until the raw/global/local DS audit is clear.
+
+## 15. Temporal Band-Image Difference-Subspace Dynamics
+
+### 15.1 Construction Card
+
+| Field | Current temporal construction |
+|---|---|
+| Variant | full/low-rank temporal band-image subspace |
+| Source | Fukui et al. 2024 second-order DS; Jang/senpai channel-flattening advice; standard Grassmann geodesic interpolation for the time-aware diagnostic |
+| Sample unit | one complete aligned band image at one date |
+| Date matrix | `X_t in R^(N_common_pixels x B_bands)` |
+| Subspace count | one `S_t` for every date and spatial region |
+| Basis | leading left singular vectors, `S_t in R^(N_common_pixels x r)` |
+| Full rank | `r=B` when all independent band-image directions are retained |
+| Comparison | adjacent first DS; triple second DS; geodesic along/orthogonal decomposition; irregular-time geodesic deviation |
+| Spatial information | fixed pixel coordinates are ambient dimensions; they are preserved only if all dates use the same mask/alignment |
+| Lost information | exact band identity is not preserved after taking the span; full-rank span is invariant to invertible mixing/scaling of its band vectors |
+| Code | `phase1/subspace/temporal_band_images.py`, `phase1/subspace/second_order_ds.py`, `phase1/subspace/geodesic.py` |
+| Verification | `tests/test_temporal_subspace_dynamics.py` plus controlled gain/offset/translation/local-change injections |
+
+This is not the old OSCD pixel-spectrum construction. The matrix orientation is
+the opposite:
+
+```text
+global OSCD pixel DS:     X_t in R^(B bands x N pixel samples)
+temporal band-image DS:   X_t in R^(N spatial coordinates x B band-image samples)
+```
+
+The temporal construction follows Sensei's requested first trial: a small
+channel-dimensional subspace in a super-high-dimensional spatial vector space.
+
+### 15.2 First And Second Magnitudes
+
+For orthonormal bases `S_a` and `S_b`, let singular values of
+`S_a^T S_b` be `cos(theta_i)`. The first DS magnitude is:
+
+```text
+Mag(D(S_a,S_b)) = 2 * sum_i (1 - cos(theta_i)).
+```
+
+Given equally spaced `S_{t-1}, S_t, S_{t+1}`, the paper defines:
+
+```text
+D2 = D(S_t, M(S_{t-1},S_{t+1})),
+```
+
+where `M` is the principal-component/Karcher-style mean subspace obtained from
+the endpoint principal vectors. The implementation uses the mathematically
+equivalent principal-vector form instead of allocating an infeasible
+`N_pixels x N_pixels` projector matrix.
+
+For the decomposition:
+
+```text
+W = span(S_{t-1}, S_{t+1})
+omega(S_t) = projection of S_t onto W
+orthogonal component = Mag(D(S_t, omega(S_t)))
+along component = Mag(D(omega(S_t), M))
+```
+
+The paper states that total magnitude is approximately the sum of these two
+components and explicitly leaves a proof for future work. The project therefore
+records the decomposition residual instead of asserting exact equality.
+
+### 15.3 Irregular-Cadence Diagnostic
+
+The paper derives second-order DS from a central difference with equal
+`Delta t` and then sets `Delta t=1`. Satellite acquisitions are often irregular.
+The paper-faithful number is retained, but a separate diagnostic is added:
+
+1. Let `h_left=t-t_left` and `h_right=t_right-t`.
+2. Set `alpha=h_left/(h_left+h_right)`.
+3. Interpolate the endpoint subspaces along their shortest Grassmann geodesic
+   to `Gamma(alpha)`.
+4. Measure `rho(S_t,Gamma(alpha))` and
+   `Mag(D(S_t,Gamma(alpha)))`.
+5. Report the small-angle acceleration proxy
+   `2*rho/(h_left*h_right)` separately.
+
+This asks whether the observed middle subspace departs from constant-speed
+endpoint motion at its actual acquisition time. It is a project adaptation,
+not a redefinition of Fukui et al.'s second-order DS.
+
+Source for geodesic interpolation: Edelman, Arias, and Smith 1998, *The
+Geometry of Algorithms with Orthogonality Constraints*.
+
+### 15.4 Spatial Attribution
+
+For each canonical principal-vector pair `u_i,v_i`, the DS magnitude contains
+`||u_i-v_i||^2`. The spatial contribution at ambient coordinate `j` is:
+
+```text
+c_j = sum_i (u_i[j] - v_i[j])^2.
+```
+
+Therefore `sum_j c_j = Mag(D)`. Reshaping `c` through the common spatial mask
+produces an attribution map without pretending that the DS is a pixel-wise
+classifier. These maps currently respond broadly to scene structure on IPOL
+Las Vegas, motivating local/multiscale subspaces.
+
+### 15.5 Verified Invariance And Failure Boundary
+
+With `r=B` and centered band images:
+
+- an invertible per-band scaling changes the basis vectors but not their span;
+- centering removes a constant per-band spatial offset;
+- consequently, tested global gain/offset changes produce zero or near-zero DS;
+- a spatial translation changes which ambient coordinate contains each value,
+  so the span changes strongly.
+
+This explains the controlled result: radiometric invariance and translation
+sensitivity are consequences of the representation, not accidental metrics.
+The next method question is how to reduce the latter while preserving the
+former and retaining localized-change sensitivity.
+
+### 15.6 Bidirectional Temporal-Context Construction
+
+The one-date construction above asks how the spatial-band span moves from one
+date to the next. A second construction, motivated by the backward/forward
+reference sets in Dagobert et al. 2022, compares date windows at boundary `t`.
+It is an adaptation, not a reproduction of their NNLS/NFA detector.
+
+| Field | Bidirectional temporal-context construction |
+|---|---|
+| Source | Fukui-Maki canonical DS; Dagobert et al. backward/forward temporal context |
+| Boundary | last pre-context date `t-1`; first post-context date `t` |
+| Context | `V` dates before and `V` dates after, with endpoint replication only at sequence ends |
+| Per-band matrix | `X^-_(t,c), X^+_(t,c) in R^(N_common_pixels x V_dates)` |
+| Joint matrix | `X^-_t, X^+_t in R^(N_common_pixels x (B_bands V_dates))` |
+| Basis | leading non-degenerate left singular vectors; rank is clipped to numerical rank |
+| DS score | mean canonical spatial DS contribution over band factors, or one joint contribution map |
+| Linear control | first post-date projected outside the backward basis plus last pre-date projected outside the forward basis |
+| Raw control | adjacent per-pixel RMS band difference |
+| Preserved | pixel coordinates, temporal side of the boundary, and per-band identity in the factorized version |
+| Lost | date order inside each context span and coefficient sign constraints used by IPOL NNLS |
+| Code | `phase1/subspace/temporal_context.py` |
+| Verification | endpoint indexing, equal contexts, persistent local change, and global gain/offset invariance in `tests/test_temporal_subspace_dynamics.py` |
+
+The tall matrices use the snapshot identity `X^T X v=sigma^2 v`, followed by
+`u=Xv/sigma`. This is mathematically the same left singular subspace as a full
+SVD but avoids decomposing an `N_pixels x N_pixels` object.
+
+The linear projection novelty score is deliberately separate from DS. It is a
+signed orthogonal-subspace residual; Dagobert et al. instead fit a non-negative
+cone and apply an a-contrario NFA decision. Similar behavior does not make the
+two methods equivalent.
+
+### 15.7 Current Method Boundary
+
+Four IPOL sequences reject the present temporal-context DS map as a competitive
+local detector. Its best tested configuration has much lower macro AP than raw
+adjacent RMS. The linear projection novelty control is stronger: rank-2,
+`V=3`, per-band context improves mean AUROC on all four sequences and nearly
+matches macro AP, but only beats raw AP on Piraeus. These are agreement results
+against IPOL output, not accuracy against ground truth.
+
+Controlled MultiSenGE interventions show a narrower useful property:
+
+- centered/L2 context geometry is effectively invariant to tested global gain
+  and offset;
+- temporal-context scores can distinguish a persistent injected change from
+  the same one-date transient, while adjacent raw difference cannot;
+- raw difference still localizes the injected region best;
+- one-pixel translation produces a much larger geometric response than the
+  local event.
+
+Therefore the viable hypotheses are now split:
+
+1. first/second/geodesic quantities as sequence-level event descriptors;
+2. projection novelty as a radiometrically invariant localization mechanism;
+3. registration-robust spatial support as the missing method component.
+
+Do not call the current temporal-context DS map a validated change detector.
+
+Registration scale-space result:
+
+- Gaussian low-pass support reduces translation response monotonically, but
+  robustness depends strongly on event size and strength.
+- Global phase correlation removes tested integer shifts, but its interpolation
+  and natural-context alignment reduce local-event AP.
+- The ratio of low-pass to native response separates the tested global shift
+  from persistent injections, but raw difference separates them too. This is a
+  generic scale-space cue, not evidence that DS uniquely solves registration.
+- Local deformation, parallax, seasonal boundaries, and real labels remain
+  untested. Those are required before a robustness claim.

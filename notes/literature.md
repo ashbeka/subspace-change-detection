@@ -11,6 +11,7 @@
 - [7. Literature Leads](#7-literature-leads)
 - [8. Reference Leads](#8-reference-leads)
 - [9. Reset Literature Problem Map](#9-reset-literature-problem-map)
+- [10. Temporal Satellite Subspace Reading Spine](#10-temporal-satellite-subspace-reading-spine)
 
 ## 1. Must-Cite Core Sources
 
@@ -353,3 +354,66 @@ Bookmark integration:
 | Hyperspectral/anomaly/data fusion route | MNF/PCA dimensionality reduction, hyperspectral anomaly detection, IEEE Data Fusion Contest | Richer-band imagery may be a more natural subspace application than Sentinel-2 OSCD. | Treat as pivot/future route; verify datasets and labels before implementation. |
 | Application framing | abandoned greenhouse mapping, urban/infrastructure monitoring, disaster screening | These are possible motivations but not current evidence. | Use only as future application unless data and evaluation are available. |
 | Research trend scans | awesome remote-sensing CD list, recent arXiv resources, SiROC, foundation/open-vocabulary CD leads | Helps prevent missing modern baselines and overclaiming novelty. | Use curated lists as discovery indices, not ground truth; add high-priority papers/repos to bookmark/literature triage, then verify with original papers/code before citing or implementing. |
+
+## 10. Temporal Satellite Subspace Reading Spine
+
+The active temporal study needs four literature layers. Read them in this order
+instead of collecting unrelated papers.
+
+### 10.1 Core Geometry
+
+| Source | Exact role | Project consequence |
+|---|---|---|
+| Fukui et al. 2024, *Second-order Difference Subspace*, https://arxiv.org/abs/2409.08563 | Defines generalized first DS, magnitude, second DS, subspace projection, and approximate along/orthogonal decomposition. | Primary formula source. It assumes equal `Delta t`; irregular satellite dates need a separately labeled adaptation. |
+| Fukui and Maki 2015, TPAMI DS/GDS/KDS/KGDS | Defines the broader DS/GDS and kernel family. | Must cite for DS lineage and avoid claiming DS itself is new. |
+| Edelman, Arias, and Smith 1998, https://doi.org/10.1137/S0895479895290954 | Standard Grassmann geodesics and interpolation. | Source for evaluating the endpoint geodesic at the observed acquisition fraction. |
+| Gatto et al. 2019, n-mode GDS, https://arxiv.org/abs/1909.01954 | Preserves tensor modes in generalized DS. | Future alternative if flattening spatial/spectral/time modes proves inadequate. |
+
+### 10.2 Satellite Time-Series Change Baselines
+
+| Source | What it measures | Comparison use |
+|---|---|---|
+| Dagobert et al. 2022, IPOL, https://doi.org/10.5201/ipol.2022.416 | Forward/backward novelty residuals, NFA significance, duration, multiscale patches on registered RGBI sequences. | Closest external sequence-level spatial baseline. Its C code and pseudo-gamma preprocessing were reproduced locally on four sequences; outputs are agreement targets, not labels. |
+| Verbesselt et al. 2009, BFAST, https://doi.org/10.1016/j.rse.2009.08.014 | Breaks in trend and seasonal components. | Required pressure when claiming abrupt temporal change rather than ordinary seasonality. |
+| Jamali et al. 2020, JUST, https://doi.org/10.3390/rs12234001 | Jump, trend, and seasonal analysis for noisy/irregular satellite time series. | Direct irregular-cadence and seasonality comparison pressure. |
+| Zhu/CCDC family and dense time-series evaluations | Continuous change detection and classification. | Broader operational baseline; use when a sufficiently long sequence and event protocol exist. |
+| Dagobert paper MOSUM comparison | Per-pixel moving-sum change-point baseline. | Lightweight first temporal statistical comparator. |
+
+### 10.3 Pseudo-Change And Learned Temporal Representations
+
+| Source | Relevance | Boundary |
+|---|---|---|
+| Du et al. 2019, DSFA, https://doi.org/10.1109/TGRS.2019.2930682 | Learns invariant/slow features so changed pixels differ while unchanged pixels remain stable. | Strong baseline/idea for separating slow background variation from abrupt change; not DS lineage. |
+| Deep learning for satellite image time-series analysis review 2024, https://doi.org/10.1109/MGRS.2024.3393010 | Maps modern SITS representations and tasks. | Prevents comparing only against old classical methods. |
+| ChangeMamba 2024, https://doi.org/10.1109/TGRS.2024.3417253 | Modern spatiotemporal state-space CD. | Performance pressure only; not a method to reimplement before the classical geometric question is answered. |
+| Signal Latent Subspace 2024, https://doi.org/10.1016/j.apacoust.2024.110181 | Builds product-Grassmann subspaces from neural latent features. | Main analogy for a later raw-versus-deep temporal subspace experiment. |
+
+### 10.4 Labeled Multi-Temporal Evaluation Candidate
+
+| Source | What it provides | Feasibility consequence |
+|---|---|---|
+| Toker et al. 2022, *DynamicEarthNet: Daily Multi-Spectral Satellite Dataset for Semantic Change Segmentation*, https://openaccess.thecvf.com/content/CVPR2022/html/Toker_DynamicEarthNet_Daily_Multi-Spectral_Satellite_Dataset_for_Semantic_Change_Segmentation_CVPR_2022_paper.html | Daily Planet multispectral observations for 75 AOIs plus monthly pixel labels for seven land-cover classes; introduces semantic change segmentation evaluation. | Best identified labeled test for temporal characterization/localization, but the official archive is about 524 GB (`labels.zip` about 1.4 GB and imagery split into multi-GB latitude archives). Define one-AOI selective acquisition before downloading. |
+| Official implementation, https://github.com/aysim/dynnet | Temporal baselines, splits, pretrained-model pointers, and official dataset link. | Use to understand data layout and evaluation; do not make it a dependency for the initial classical geometric test. |
+
+DynamicEarthNet is not Sentinel-2 and therefore tests method generality rather
+than a Sentinel-specific claim. A Harmonized Sentinel-2 event sequence with
+independent annotations remains the preferred sensor-matched alternative if a
+manageable label source is available.
+
+### 10.5 Current Novelty Boundary
+
+The scoped search found extensive satellite time-series change-point,
+seasonality, novelty, classical subspace, hyperspectral subspace, and learned
+spatiotemporal work. It did **not** find a direct publication applying Fukui's
+2024 first/second DS plus geodesic decomposition to registered multispectral
+satellite image sequences. This is evidence of novelty potential, not proof of
+novelty. A formal systematic search and advisor confirmation are still needed.
+
+The defensible novelty is not "subspaces for satellite images." It may be one
+of:
+
+- first validated use of this specific first/second DS geometry on SITS;
+- an irregular-cadence extension with explicit separation from paper theory;
+- a registration-robust/local multiscale construction;
+- or an empirical result explaining what these geometric quantities detect and
+  where they fail relative to NFA/MOSUM/BFAST/JUST and learned methods.

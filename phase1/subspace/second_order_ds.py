@@ -27,8 +27,13 @@ def principal_component_subspace(basis1: Array, basis2: Array, eig_tol: float = 
   """
   PCS / Karcher-subspace-style mean M between two subspaces.
 
-  We form G = P1 + P2 where Pi = basis_i basis_iᵀ and take eigenvectors whose
-  eigenvalues are > 1 (Fukui & Maki 2015).
+  Fukui--Maki define M as eigenvectors of ``P1 + P2`` whose eigenvalues are
+  greater than one.  Forming that ambient ``n x n`` matrix is infeasible when
+  spatial pixels are the ambient coordinates.  The equivalent principal-vector
+  form is used here: if ``S1.T @ S2 = U diag(sigma) V.T``, then normalized
+  columns of ``S1 U + S2 V`` are the eigenvectors with eigenvalues
+  ``1 + sigma``.  Components with ``sigma <= eig_tol`` have eigenvalue one and
+  are excluded exactly as in the projector definition.
   """
   if basis1.ndim != 2 or basis2.ndim != 2:
     raise ValueError("Expected 2D basis matrices.")
@@ -37,22 +42,16 @@ def principal_component_subspace(basis1: Array, basis2: Array, eig_tol: float = 
   if basis1.shape[1] == 0 or basis2.shape[1] == 0:
     return np.zeros((basis1.shape[0], 0), dtype=np.float32)
 
-  p1 = basis1 @ basis1.T
-  p2 = basis2 @ basis2.T
-  g = (p1 + p2).astype(np.float32, copy=False)
-  eigvals, eigvecs = np.linalg.eigh(g)
-  order = np.argsort(eigvals)[::-1]
-  eigvals = eigvals[order].astype(np.float32)
-  eigvecs = eigvecs[:, order]
-
-  # Numerical cleanup similar in spirit to the senpai reference implementation.
-  eigvals = np.where(eigvals >= 2.0 - float(eig_tol), 2.0, eigvals)
-  eigvals = np.where(eigvals <= float(eig_tol), 0.0, eigvals)
-
-  keep = eigvals > 1.0
+  left, correlations, right_t = np.linalg.svd(basis1.T @ basis2, full_matrices=False)
+  keep = correlations > float(eig_tol)
   if not np.any(keep):
     return np.zeros((basis1.shape[0], 0), dtype=np.float32)
-  return eigvecs[:, keep].astype(np.float32, copy=False)
+  first_vectors = basis1 @ left[:, keep]
+  second_vectors = basis2 @ right_t.T[:, keep]
+  mean_vectors = first_vectors + second_vectors
+  norms = np.linalg.norm(mean_vectors, axis=0, keepdims=True)
+  mean_vectors = mean_vectors / np.maximum(norms, float(eig_tol))
+  return mean_vectors.astype(np.float32, copy=False)
 
 
 def difference_subspace_canonical(basis1: Array, basis2: Array, eps: float = 1e-6) -> Array:

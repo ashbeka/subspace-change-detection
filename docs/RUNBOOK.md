@@ -10,6 +10,7 @@
 - [5. Phase 1: Generate Prior Maps](#5-phase-1-generate-prior-maps)
 - [5A. Phase 1: Spatial Subspace Audit Workflow](#5a-phase-1-spatial-subspace-audit-workflow)
 - [6. Phase 1: MultiSenGE Optional Exploration](#6-phase-1-multisenge-optional-exploration)
+- [6A. Temporal First/Second DS Study](#6a-temporal-firstsecond-ds-study)
 - [7. Phase 2 Config Matrix](#7-phase-2-config-matrix)
 - [8. Phase 2: Short E0/E1 Smoke Run](#8-phase-2-short-e0e1-smoke-run)
 - [9. Phase 2: Single Full Run](#9-phase-2-single-full-run)
@@ -516,6 +517,72 @@ Run MultiSenGE visualization:
 ```
 
 MultiSenGE is exploratory. Do not use it as the main supervised segmentation benchmark without new work.
+
+## 6A. Temporal First/Second DS Study
+
+Formula tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest tests.test_temporal_subspace_dynamics -v
+```
+
+Build the current five-patch, 23-date MultiSenGE manifest:
+
+```powershell
+.\.venv\Scripts\python.exe -m phase1.scripts.build_multisenge_manifest --multisenge_root data/MultiSenGE --output_path phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --patch_ids "32TLT_3855_0,32TLT_4369_257,32TLT_4883_514,32TLT_5397_1028,32TLT_5654_257" --min_s2_dates 20 --seed 1234
+```
+
+Run full-rank band-image first/second DS on those patches:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-temporal-dynamics --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --rank 10 --preprocessing centered --patch-ids "32TLT_3855_0,32TLT_4369_257,32TLT_4883_514,32TLT_5397_1028,32TLT_5654_257" --output-dir "phase1/outputs/multisenge_temporal_timeaware_core5_$tag"
+```
+
+Run controlled local-change/radiometric/translation injections:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-temporal-injections --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --rank 10 --preprocessing centered --repeats 12 --output-dir "phase1/outputs/multisenge_temporal_injections_$tag"
+```
+
+Run any directory of registered date-prefixed multispectral TIFFs:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-registered-sequence-dynamics --sequence-dir tmp/ipol416_vegas --output-dir "phase1/outputs/registered_temporal_ds_$tag" --rank 0 --preprocessing centered --top-k 20
+```
+
+Compare backward/forward temporal contexts on a registered sequence:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-context-ds --sequence-dir tmp/ipol416_vegas_pseudogamma --context-sizes 3,5 --ranks 1,2 --factorizations per_band,joint --reference-lognfa-dir tmp/ipol416_reference_run_pseudogamma/lognfa_dir --output-dir "phase1/outputs/temporal_context_ds_vegas_$tag" --figure-config 5:2:per_band --figure-count 4
+```
+
+Run controlled persistent/transient/radiometric/translation interventions on
+the current five-patch MultiSenGE manifest:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-context-injections --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --target-date 20200909 --context-size 3 --rank 2 --factorization per_band --repeats 4 --max-patches 5 --output-dir "phase1/outputs/temporal_context_injections_$tag"
+```
+
+Run the subpixel translation and low-frequency robustness curve:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-registration-curve --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --target-date 20200909 --context-size 3 --rank 2 --shifts 0.25,0.5,1,2 --strategies native,gaussian1,gaussian2,pool2,pool4,phase_align --local-strength 0.25 --window-size 32 --repeats 3 --max-patches 5 --output-dir "phase1/outputs/temporal_registration_curve_$tag"
+```
+
+Interpretation rules:
+
+- `rank 0` means full band-image span (`r=B`) for the generic runner.
+- The paper's second DS assumes equal time spacing. Use `gap_ratio` and the
+  separately named time-aware geodesic deviation for irregular dates.
+- MultiSenGE's static reference is not temporal ground truth.
+- Contribution maps sum to DS magnitude but are attribution maps, not calibrated
+  change probabilities.
+- Do not claim superiority until external NFA/MOSUM/BFAST/JUST or equivalent
+  baselines and an event-evaluation protocol are present.
+- IPOL log-NFA comparisons are detector agreement, not ground-truth accuracy.
+- `temporal_context_ds` is canonical DS between backward/forward context spans.
+  `linear_projection_novelty` is a separate orthogonal-residual control and is
+  not IPOL's NNLS/NFA algorithm.
 
 ## 7. Phase 2 Config Matrix
 

@@ -59,10 +59,25 @@ Sensei-priority task order as of 2026-06-14:
 3. Generate a set of time-sequential satellite subspaces from Harmonized Sentinel-2 or another valid multi-date dataset.
    - Reason: Sensei repeatedly asked whether a time-sequential satellite dataset had been obtained, and asked for the Google dataset frame count and time step.
    - Minimum facts to report: area, dates, number of valid frames, nominal revisit interval, cloud/no-data filtering, bands used, and whether the images are spatially aligned.
+   - Status 2026-06-19: completed first trials on five 23-date MultiSenGE
+     patches and the published 20-frame registered IPOL Las Vegas RGBI
+     sequence. Harmonized Sentinel-2 remains the requested independent dataset.
+   - Status 2026-06-20: expanded external pressure to four IPOL sequences and
+     tested backward/forward date-window subspaces. A labeled or independently
+     annotated sequence is still missing; IPOL detector maps are not truth.
 
 4. Calculate first DS magnitude, second DS magnitude, and geodesic-decomposition/projection quantities on the time-sequential subspaces.
    - Reason: Sensei specifically asked whether the changes in magnitudes of the first and second DSs can be calculated soon.
    - Treat this as a lab-aligned exploratory result even if it does not beat modern change-detection baselines.
+   - Status 2026-06-19: implemented and formula-tested. First, second, along,
+     orthogonal, spatial-contribution, and irregular-cadence diagnostics now
+     run through the project CLI. The current whole-scene maps are diffuse and
+     registration-sensitive, so local/multiscale and baseline tests are next.
+   - Status 2026-06-20: the exact IPOL detector was reproduced on four
+     sequences. Second/time-aware quantities show a small sequence-level
+     agreement lead over raw interpolation residual, but lower pixel AP.
+     Temporal-context DS localization failed; projection novelty and
+     registration robustness are the remaining hypotheses.
 
 5. Keep the OSCD spatial-information experiment as the verification track.
    - Reason: Sensei warned that the current global pixel subspace can break spatial information.
@@ -74,7 +89,8 @@ Sensei-priority task order as of 2026-06-14:
 
 Actions:
 
-- Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.
+- Add a Harmonized Sentinel-2 or selectively acquired labeled DynamicEarthNet
+  feasibility audit before any serious GDS/KGDS or temporal performance claim.
 - Prepare concrete questions for Jang/Suto/Pedro/Santos about sample definition, spatial preservation, rank choice, and reference-code behavior.
 
 2026-06-17 source-batch update:
