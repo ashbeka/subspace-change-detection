@@ -33,7 +33,7 @@ def sfa_cd(X1, X2, eps=1e-3):
     D = X1 - X2
     A = D.T @ D / N + eps * np.eye(B)                     # difference covariance (change/derivative)
     Bm = (X1.T @ X1 + X2.T @ X2) / (2 * N) + eps * np.eye(B)   # signal covariance
-    lam, W = eigh(A, B=Bm)                                 # ascending lam: slow/most-invariant first
+    lam, W = eigh(A, Bm)                                   # ascending lam: slow/most-invariant first
     Y1, Y2 = X1 @ W, X2 @ W
     Dj = Y1 - Y2
     sig2 = Dj.var(0) + 1e-9                                # variance of each SFA difference component
