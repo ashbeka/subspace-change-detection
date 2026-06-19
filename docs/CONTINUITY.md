@@ -98,3 +98,11 @@ failsafe under every hypothesis.
 ## 8. Resume command
 Say: **"continue on claude/temporal-ds (worktree E:/research_projects/sccd-claude) — read docs/CONTINUITY.md;
 start with H-A experiment #1."** Memory files auto-load; git log + reports + this doc reconstruct everything.
+
+## 9. NOTE/KNOWLEDGE ACCESS RULE (important)
+The user keeps adding raw notes (apple_notes, slack_notes_to_myself, slack_messages_with_sensei, etc.) to the
+**MAIN repo** and has Codex ingest them — these live at the ABSOLUTE path
+`E:/research_projects/subspace-change-detection/docs/source_records/final_organization_2026-06-12/` (and the
+ingested `notes/` there). This worktree's own copies are STALE. RULE: always read the user's latest notes/
+knowledge from the **main-repo absolute path** (same disk, always readable from any session root). Write our
+experiments/method-docs to THIS worktree (claude/temporal-ds). notes = read from main repo; code+docs = write here.
