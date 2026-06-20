@@ -91,6 +91,14 @@ that localizes the splice (margin 3.10 vs harmonic_cp 1.19, SFA 0.99), seasonali
 misses (theory-consistent: multi-dim ⇒ DS≠SAM). Strongest positive so far. Caveats: n=1 splice (large/artificial
 change), windowed-SFA showing likely my poor adaptation, per-pixel IR-MAD untested. NEXT to convert lead→result:
 NATURAL gradual change (deforestation/irrigation) + multi-case + per-pixel IR-MAD. Report: ssds_validate_2026-06-20.
+[LEAD DOWNGRADED 2026-06-20 — ssds_natural] The splice win did NOT replicate on REAL continuous natural changes.
+a_hat localized 0/2: on the Creek Fire (abrupt) it fails (margin 0.50) while the CRUDE band-subspace velocity
+nails it (margin 9.96, 20d off) — abrupt spectral change is the band-subspace's job; a_hat is insensitive to
+level/spectral shifts (a fire is just a trend inside its 1.5-yr window). On GERD reservoir (gradual multi-year
+fill) there is no single change-point to localize. Neither tests a_hat's actual niche (a change in the seasonal
+OSCILLATION STRUCTURE = phenology), which I could not get clean real data for. So a_hat's niche is NARROW +
+UNPROVEN; the splice was niche-specific + join-artifact. Recurring pattern holds. For the Gaza DAMAGE motive
+(abrupt) the band-subspace is the right tool, not a_hat. Report: ssds_natural_2026-06-20. RE-GROUND/decision next.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
