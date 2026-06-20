@@ -68,6 +68,13 @@ signal subspaces + a LEARNED non-anomalous reference DS D_N (model-the-normal, f
 invariance lever) + direction/magnitude indices; I never built D_N. So temporal-DS/H-B is NOT fairly closed.
 NEW LEAD: implement the faithful Kanai signal-subspace DS (with D_N) + test where raw temporal DS failed (S2
 seasonality) and on HSI. Reports: HB1_trajectory / HB1b_*_2026-06-20.
+[UPDATE 2026-06-20] Faithful Kanai signal-subspace DS BUILT + L0-validated (AUC 0.98, beats min-angle;
+ssds_L0_2026-06-20). On real S2 (Tenerife fire, ssds_S2_tenerife_2026-06-20): it FAILS to localize the abrupt
+fire (margin<1); D_N no help; crude band-subspace velocity localizes (fragile); NBR domain index works. BUT
+under-powered — 84 dates force tiny windows, <1yr pre-fire ⇒ D_N can't learn seasonality; and fire is an abrupt
+SPECTRAL change (band-subspace's job), not the temporal-oscillatory change the method targets. Fair test needs a
+GEE multi-year regular series with a GRADUAL change. Construction lesson: subspace must represent the right thing
+(spectral identity vs temporal structure) for the change type. DECISION POINT — see report's 'Next options'.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make

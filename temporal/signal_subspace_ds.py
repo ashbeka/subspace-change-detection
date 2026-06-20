@@ -34,6 +34,20 @@ def signal_subspace(h: np.ndarray, w: int, M: int, r: int) -> np.ndarray:
     return np.ascontiguousarray(U[:, :min(r, U.shape[1])])
 
 
+def mssa_signal_subspace(X: np.ndarray, w: int, M: int, r: int) -> np.ndarray:
+    """Multivariate-SSA signal subspace from a multichannel series X (L x B): per-band Hankel matrices
+    stacked vertically -> trajectory matrix (B*w x M); top-r left singular vectors. REPRESENTS: the joint
+    spectral-temporal structure of the window (captures cross-band + temporal correlation simultaneously)."""
+    X = np.asarray(X, float)
+    base = len(X) - (w + M - 1)
+    if base < 0:
+        raise ValueError(f"series too short: need {w+M-1}, got {len(X)}")
+    blocks = [np.stack([X[base + c: base + c + w, b] for c in range(M)], axis=1) for b in range(X.shape[1])]
+    Hm = np.vstack(blocks)                                          # (B*w, M)
+    U, _, _ = np.linalg.svd(Hm, full_matrices=False)
+    return np.ascontiguousarray(U[:, :min(r, U.shape[1])])
+
+
 def _mu(P_past: np.ndarray, P_pres: np.ndarray) -> float:
     """Log super-volume of the DS = sum log cos(theta_i) over past/present canonical angles (Kanai Eq.5)."""
     cos = np.clip(ss.canonical_cosines(P_past, P_pres), 1e-6, 1.0)
