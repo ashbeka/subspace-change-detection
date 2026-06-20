@@ -135,6 +135,15 @@ UNVALIDATED (Codex gate: must beat per-band-diff/sparse-PCA). Both Claude+Codex 
 closed, attribution+orientation-factorization are the only open characterization cells. Report:
 hermiston_bitemporal_2026-06-21. NEXT in line: T2 RTW warp-invariance go/no-go. Codex mining (challenges 1,2) at
 E:/research_projects/subspace-change-detection-research-mining/docs/research/ — orientation-factorization + contiguous-band attribution.
+[T2-RTW NO-GO 2026-06-21] warp-invariance lever real (DTW 0.98) but OWNED by DTW/TWDTW; RTW subspace near-chance
+(0.55). My proposed line EXHAUSTED. Pivoted to cross-mining favorite → [FIRST POSITIVE LEAD 2026-06-21 —
+orientation_factorization] Codex Ch1: factorize local change into mean|dispersion|covariance-ORIENTATION. The
+Grassmann eigenspace-orientation descriptor fires ONLY on orientation change (0.94), scale-invariant (ignores
+scale 0.52, mean 0.53), where SPD/Frobenius CONFLATE scale+orientation (1.0 on both). First producible
+characterization output geometry uniquely gives. CAVEATS: scale-invariance true-by-construction; synthetic only;
+UNVALIDATED on real HSI (Codex gate: must beat SPD/nonparametric at explaining orientation-only change). NEXT:
+validate on REAL Hermiston (does real change have a meaningful orientation component?) + contiguous-band
+attribution (Codex Ch2) + registration-robustness gate (Codex Ch3). Report: orientation_factorization_2026-06-21.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
