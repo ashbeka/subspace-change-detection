@@ -446,6 +446,13 @@ Multi-date subspace methods:
   against phase-aware harmonic, Fourier, DTW/TWDTW, and non-warped controls,
   not assumed from the method name. This requires multi-date data, not OSCD's
   two dates.
+- Controlled MultiSenGE result, 2026-06-21: the selected raw RTW construction
+  (`R=4`, `L=64`, rank `5`) was order-sensitive and nuisance-tolerant but did
+  not add beyond an order-invariant snapshot subspace on held-out structural
+  changes. The pooled positive signal was dominated by a relative-band-phase
+  intervention that ordinary cross-band covariance also detected. Treat RTW as
+  a closed detector route for the current data, not as evidence that temporal
+  ordering never matters.
 - PCA-SFA and Slow Feature Subspace suggest a way to separate slow/background temporal variation from faster anomalous change. A satellite version would need same-season or dense time series so "slow" does not simply mean seasonal drift.
 - Product Grassmann and Hankel-like temporal embeddings suggest treating satellite data as factors, for example spectral subspace, local spatial/patch subspace, and temporal/date subspace, instead of flattening everything into one unordered pixel matrix.
 - G-LMSM and Signal Latent Subspace suggest a neural-subspace hybrid: extract CNN/foundation-model features, build subspaces from patch/date features, and either compare them geometrically or learn dictionary subspaces on the Grassmann manifold.

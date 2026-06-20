@@ -149,9 +149,10 @@ Contribution lanes to keep explicit:
 
 Post-mining priority, 2026-06-21:
 
-1. Run the RTW phase/tempo-invariance gate as the next positive-method test.
-   This is Sensei-aligned and asks whether randomized ordered subsequences add a
-   specific temporal invariance that harmonic/Fourier/TWDTW controls lack.
+1. RTW phase/tempo-invariance gate is complete and negative as an incremental
+   method: held-out AP `0.8078` did not exceed snapshot-subspace AP `0.8156`,
+   and the paired interval crossed zero. Keep RTW as a diagnostic row; do not
+   advance to natural transitions from this result.
 2. Keep the diagnostic paper as the evidence-backed publication spine: direct
    DS detection and first/second trajectory geometry have repeatedly failed to
    add beyond simpler controls on real data.
@@ -159,9 +160,10 @@ Post-mining priority, 2026-06-21:
    default. It becomes defensible only through nested raw-only, geometry-only,
    raw-plus-geometry, and shuffled-geometry comparisons under held-out sites and
    label budgets.
-4. Keep moment-factorized local HSI orientation/wavelength attribution as the
-   strongest data-gated parallel route. Do not revive generic material-subspace
-   detection without covariance, MMD, unmixing, and per-band falsifiers.
+4. Moment-factorized local HSI orientation/wavelength attribution is now the
+   strongest remaining positive-method gate. Do not revive generic material-
+   subspace detection without covariance, MMD, unmixing, and per-band
+   falsifiers.
 
 ## 5. Research Gap
 

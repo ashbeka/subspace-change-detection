@@ -365,6 +365,16 @@ MMD/energy, fused per-band effects, and unmixing are mandatory falsifiers.
 
 ### 5.4 Closed Or Deprioritized Routes
 
+- RTW phase/tempo-invariance gate completed 2026-06-21:
+  - selected on three development patches: `R=4`, `L=64`, rank `5`, raw;
+  - held-out structural AP `0.8078`, versus snapshot-subspace AP `0.8156`;
+  - paired AP delta `-0.0078`, 95% interval `[-0.0807,+0.0435]`;
+  - marginal-matched-shape AP only `0.4533`; relative-band-phase AP `0.9511`
+    was matched by snapshot PCA (`0.9550`) and DTW (`0.9459`);
+  - median RTW sampling-std/score ratio `0.3012`;
+  - decision: no-go for a natural-transition RTW study; retain the result in
+    the diagnostic line;
+  - report: `docs/experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`.
 - The requested first/second DS magnitude and geodesic decomposition were
   implemented and independently tested; the rolling RGB SpaceNet 7 detector
   lost to radiometric controls and did not improve their fusion.

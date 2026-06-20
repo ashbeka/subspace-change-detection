@@ -36,7 +36,10 @@ Read these first:
 8. `experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`
    - Independent-label SpaceNet 7 gate for rolling first/second trajectory DS; records the negative result against standardized radiometric controls.
 
-9. `research_learning_map.html`
+9. `experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`
+   - Controlled MultiSenGE test of Randomized Time Warping against snapshot-subspace, Fourier/harmonic, DTW/TWDTW, M-SSA, and radiometric controls; records the no-go decision for a natural-transition RTW study.
+
+10. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

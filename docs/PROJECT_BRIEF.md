@@ -207,6 +207,17 @@ are not accurate changed-area detectors. A next route must test a materially
 different role, such as multispectral feature/nuisance isolation, on fresh
 held-out evidence rather than retuning the failed SpaceNet 7 construction.
 
+The subsequent RTW phase/tempo-invariance gate is also complete. On two
+held-out MultiSenGE patches, RTW reached structural-change AP `0.8078`, but the
+simpler order-invariant snapshot subspace reached `0.8156`; paired RTW-minus-
+snapshot AP was `-0.0078` with interval `[-0.0807,+0.0435]`. RTW was highly
+sensitive to relative band-phase changes, but snapshot PCA and DTW matched that
+signal, while the harder marginal-matched shape target remained weak. The RTW
+natural-transition stage is therefore stopped. The strongest remaining
+positive-method gate is moment-factorized local hyperspectral orientation and
+wavelength attribution with covariance/SPD, MMD, unmixing, and per-band
+falsifiers; the accumulated negative results remain the diagnostic paper spine.
+
 The 2026-06-20 seasonal-observation stress test found that rank-1 geometry can
 rank an injected abrupt boundary within a sequence but is weaker than simple
 NDVI/singular-value controls across sequences and remains sensitive to missing

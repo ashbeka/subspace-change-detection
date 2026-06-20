@@ -111,6 +111,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-temporal-context-injections", "multisenge", "Stress-test temporal-context DS with controlled change and nuisance injections.", ["phase1-temporal-context-injections"]),
     CommandInfo("phase1-temporal-registration-curve", "multisenge", "Measure temporal-context sensitivity to subpixel registration error and low-frequency controls.", ["phase1-temporal-registration-curve"]),
     CommandInfo("phase1-seasonal-regime-study", "multisenge", "Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.", ["phase1-seasonal-regime-study"]),
+    CommandInfo("phase1-rtw-invariance-gate", "multisenge", "Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.", ["phase1-rtw-invariance-gate"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -889,6 +890,50 @@ def cmd_phase1_spacenet7_temporal_subspaces(args: argparse.Namespace) -> int:
     ]
     if args.controls_only:
         cmd.append("--controls_only")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_rtw_invariance_gate(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_rtw_invariance_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multisenge_rtw_invariance",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--development_patches",
+        str(args.development_patches),
+        "--max_patches",
+        str(args.max_patches),
+        "--subsequence_lengths",
+        args.subsequence_lengths,
+        "--n_samples",
+        args.n_samples,
+        "--ranks",
+        args.ranks,
+        "--preprocessing",
+        args.preprocessing,
+        "--rtw_replicates",
+        str(args.rtw_replicates),
+        "--screening_repeats",
+        str(args.screening_repeats),
+        "--screening_rtw_replicates",
+        str(args.screening_rtw_replicates),
+        "--finalists",
+        str(args.finalists),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1771,6 +1816,33 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--bootstrap", type=int, default=200)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_seasonal_regime_study)
+
+    p = sub.add_parser(
+        "phase1-rtw-invariance-gate",
+        help="Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=6)
+    p.add_argument("--development-patches", type=int, default=3)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--subsequence-lengths", default="4,8,12")
+    p.add_argument("--n-samples", default="64,256")
+    p.add_argument("--ranks", default="2,5")
+    p.add_argument(
+        "--preprocessing",
+        default="raw,reference_zscore,per_sequence_zscore",
+    )
+    p.add_argument("--rtw-replicates", type=int, default=3)
+    p.add_argument("--screening-repeats", type=int, default=2)
+    p.add_argument("--screening-rtw-replicates", type=int, default=1)
+    p.add_argument("--finalists", type=int, default=6)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_rtw_invariance_gate)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

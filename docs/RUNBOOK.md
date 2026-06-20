@@ -584,6 +584,19 @@ MultiSenGE backgrounds with controlled event and nuisance transformations:
 $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-order-aware-interventions --output-dir "phase1/outputs/multisenge_order_aware_interventions_$tag" --crop-size 32 --repeats 8 --max-patches 5 --ranks 1,2 --representations unordered,difference,trajectory2,trajectory3 --preprocessing feature_centered_observation_l2 --bootstrap 300
 ```
 
+Run the RTW timing/tempo-invariance gate. The command screens all configurations
+on a fixed development subset, re-estimates six finalists, freezes one, and
+scores two untouched patches against Fourier, harmonic, DTW/TWDTW, M-SSA,
+snapshot-subspace, and scalar controls:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-invariance-gate --output-dir "phase1/outputs/multisenge_rtw_invariance_$tag"
+```
+
+The completed 2026-06-21 gate was negative for incremental RTW value. Do not
+advance to natural irrigation/crop-transition claims unless a new mechanism and
+fresh preregistration justify reopening it.
+
 Run the strongest current local/off-grid controlled protocol with fair
 multispectral index controls:
 
