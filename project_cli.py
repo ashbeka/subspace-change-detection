@@ -855,6 +855,41 @@ def cmd_phase1_seasonal_regime_study(args: argparse.Namespace) -> int:
     return run_command(cmd, dry_run=args.dry_run)
 
 
+def cmd_phase1_spacenet7_temporal_subspaces(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_temporal_subspaces_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_spacenet7_temporal_subspaces",
+        "--aoi_root",
+        args.aoi_root,
+        "--output_dir",
+        out,
+        "--window",
+        str(args.window),
+        "--rank",
+        str(args.rank),
+        "--grids",
+        args.grids,
+        "--representations",
+        args.representations,
+        "--preprocessing",
+        args.preprocessing,
+        "--radiometric_normalization",
+        args.radiometric_normalization,
+        "--min_valid_pixels",
+        str(args.min_valid_pixels),
+        "--min_new_building_pixels",
+        str(args.min_new_building_pixels),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--all_touched_labels" if args.all_touched_labels else "--no-all_touched_labels",
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
 def cmd_phase1_irrigation_data_feasibility(args: argparse.Namespace) -> int:
     out = args.output_dir or f"phase1/outputs/irrigation_regime_data_feasibility_{timestamp()}"
     cmd = [
@@ -1710,6 +1745,33 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--bootstrap", type=int, default=200)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_seasonal_regime_study)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-temporal-subspaces",
+        help="Evaluate rolling first/second DS maps on labeled monthly SpaceNet 7 construction.",
+    )
+    p.add_argument(
+        "--aoi-root",
+        default="data/SpaceNet7_sample/L15-1203E-1203N_4815_3378_13",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--window", type=int, default=4)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--grids", default="8,16")
+    p.add_argument("--representations", default="unordered,difference,trajectory2")
+    p.add_argument("--preprocessing", default="feature_centered")
+    p.add_argument(
+        "--radiometric-normalization",
+        default="none",
+        choices=["none", "per_date_channel_standardize", "per_date_channel_quantile"],
+    )
+    p.add_argument("--min-valid-pixels", type=int, default=16)
+    p.add_argument("--min-new-building-pixels", type=int, default=2)
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--all-touched-labels", action=argparse.BooleanOptionalAction, default=True)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_temporal_subspaces)
 
     p = sub.add_parser(
         "phase1-irrigation-data-feasibility",
