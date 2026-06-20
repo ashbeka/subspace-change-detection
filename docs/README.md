@@ -15,25 +15,40 @@ Read these first:
 1. `PROJECT_BRIEF.md`
    - Short project truth: scope, pipeline, evidence, next decision, and forbidden overclaims.
 
-2. `RESEARCH_RESET_AUDIT.md`
+2. `research/synthesis_specific_tasks.md`
+   - 2026-06-21 research-mining convergence: ranked specific tasks and the full, falsifiable plan for local moment-factorized, wavelength-attributed satellite HSI change characterization.
+
+3. `research/closest_methods_novelty.md`
+   - Closest HSI subspace, covariance/ACD, unmixing, band-selection, tensor, and deep methods; safe novelty boundaries and killer baselines.
+
+4. `CD_TAXONOMY.md`
+   - Mechanism-based CD taxonomy, invariance ladder, construction-card requirements, and placement of subspace geometry.
+
+5. `kb/README.md`
+   - Entry point to the per-paper research-mining knowledge base and project evidence map.
+
+6. `research/challenges_ranked.md`
+   - Ranked HSI temporal-change challenges with problem fit, novelty pressure, risk, and decision gates.
+
+7. `RESEARCH_RESET_AUDIT.md`
    - Critical reset document: current code truth, literature-grounded problem map, ranked thesis framings, minimum viable thesis path, and 7-day action plan.
 
-3. `RUNBOOK.md`
+8. `RUNBOOK.md`
    - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
 
-4. `SECOND_OPINION_RESEARCH_CONTEXT.md`
+9. `SECOND_OPINION_RESEARCH_CONTEXT.md`
    - Neutral context package for Claude/Gemini/another reviewer. Use it when asking an external model or person to challenge the project direction.
 
-5. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
+10. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
    - Current spatial-DS decision report: corrected Celik/IR-MAD pressure baselines, Band-Image rank sensitivity, label-free fusion, fixed-grid pyramid stop decision, and next evidence gate.
 
-6. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
+11. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
    - Synthetic and real-background controlled tests of unordered, trajectory, first/second DS, local eigenspectrum, nuisance robustness, and the independent-label evidence gate.
 
-7. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+12. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the historical OSCD 3-seed neural sweep.
 
-8. `research_learning_map.html`
+13. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records
