@@ -147,6 +147,22 @@ Contribution lanes to keep explicit:
 | Hybrid NN + geometry | Neural models localize or produce features; subspace/GDS methods interpret, cluster, diagnose, or summarize changed regions. | `H5`, `H6`, `H7`, `H9`, `H10`, `H11` in `notes/experiments.md`. | Evidence that geometry adds interpretation, label-efficiency, error insight, or temporal structure beyond the neural mask alone. |
 | Negative or diagnostic study | Even if DS does not beat PCA-diff, IR-MAD, or U-Net, the thesis can still show exactly where and why it fails or helps. | Spatial DS comparison, IR-MAD comparison, city-wise failure taxonomy, pseudo-change analysis. | Clear failure modes tied to sample construction, spatial information loss, pseudo-change, or dataset-label mismatch. |
 
+Post-mining priority, 2026-06-21:
+
+1. Run the RTW phase/tempo-invariance gate as the next positive-method test.
+   This is Sensei-aligned and asks whether randomized ordered subsequences add a
+   specific temporal invariance that harmonic/Fourier/TWDTW controls lack.
+2. Keep the diagnostic paper as the evidence-backed publication spine: direct
+   DS detection and first/second trajectory geometry have repeatedly failed to
+   add beyond simpler controls on real data.
+3. Treat geometry features plus shallow learning as conditional, not the next
+   default. It becomes defensible only through nested raw-only, geometry-only,
+   raw-plus-geometry, and shuffled-geometry comparisons under held-out sites and
+   label budgets.
+4. Keep moment-factorized local HSI orientation/wavelength attribution as the
+   strongest data-gated parallel route. Do not revive generic material-subspace
+   detection without covariance, MMD, unmixing, and per-band falsifiers.
+
 ## 5. Research Gap
 
 Established facts:

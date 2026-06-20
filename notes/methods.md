@@ -436,7 +436,16 @@ Multi-date subspace methods:
 - Second-order DS is the natural next subspace idea for progression/recovery, but it requires at least three meaningful time points or period subspaces.
 - Period-subspace DS should use multiple images per side when available, for example early-month versus late-month, first half-year versus second half-year, or pre-event window versus post-event window.
 - SSA, SFA, DMD, RTW, and Fourier time-series analysis are future temporal tools. They need enough temporal depth and a clear target before implementation.
-- RTW/Deep RTW suggests a way to compare date sequences without assuming events happen at the same temporal speed: randomly sample ordered date subsequences, build a sequence subspace, and compare subspaces by canonical angles or DS/GDS. This is only meaningful for multi-date data, not OSCD's two dates.
+- RTW generates many Time Elastic features by repeatedly selecting `R` elements
+  from a sequence while retaining temporal order, concatenating them into
+  vectors in `R^(dR)`, and fitting a PCA "hypo subspace" to those vectors. Two
+  sequences are compared through the singular values `kappa_i` of `X^T Y`,
+  commonly summarized as `mean(kappa_i^2)`. The bundled MATLAB `TEfeatures.m`
+  confirms ordered random subsequence sampling; it is not arbitrary image
+  warping. For satellite use, timing/tempo tolerance must be demonstrated
+  against phase-aware harmonic, Fourier, DTW/TWDTW, and non-warped controls,
+  not assumed from the method name. This requires multi-date data, not OSCD's
+  two dates.
 - PCA-SFA and Slow Feature Subspace suggest a way to separate slow/background temporal variation from faster anomalous change. A satellite version would need same-season or dense time series so "slow" does not simply mean seasonal drift.
 - Product Grassmann and Hankel-like temporal embeddings suggest treating satellite data as factors, for example spectral subspace, local spatial/patch subspace, and temporal/date subspace, instead of flattening everything into one unordered pixel matrix.
 - G-LMSM and Signal Latent Subspace suggest a neural-subspace hybrid: extract CNN/foundation-model features, build subspaces from patch/date features, and either compare them geometrically or learn dictionary subspaces on the Grassmann manifold.

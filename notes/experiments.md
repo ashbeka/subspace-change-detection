@@ -255,30 +255,129 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not another blind sweep. The all-city Band-Image DS sweep showed that `band_image_ds` is the strongest DS-family candidate, but it is still weaker than PCA-diff on mean AP and weak under Otsu thresholding.
-
-There are now two parallel tracks:
+Post-mining decision, 2026-06-21:
 
 ```text
-Sensei-first track:
-  generate time-sequential satellite subspaces -> first/second DS magnitude -> geodesic decomposition/projection
+Next gate:
+  RTW phase/tempo invariance versus seasonal-cycle shape change
 
-OSCD verification track:
-  explain whether spatially aware DS fixes the spatial-information weakness on a labeled benchmark
+Conditional follow-up:
+  use verified RTW/geometry quantities as interpretable features in a shallow
+  classifier only if they add information beyond scalar/harmonic controls
+
+Parallel data-gated route:
+  moment-factorized local hyperspectral change attribution
 ```
 
-The Sensei-first track has priority for advisor alignment. The OSCD track remains important because it provides labels and lets the project verify whether the subspace maps correspond to changed areas.
+This replaces the earlier generic proposal to test "subspace geometry as
+interpretable multispectral features for shallow learning" immediately. That
+proposal is too easy to validate for the wrong reason: a classifier can exploit
+mean, variance, or raw radiometric features while geometry contributes nothing.
+The RTW gate first tests a specific structural claim suggested by Sensei and not
+answered by the completed first/second-DS experiments.
 
-Immediate next task:
+### 5.1 RTW Phase/Tempo-Invariance Gate
+
+Research question:
 
 ```text
-Separate target change from radiometric pseudo-change, then test split-safe score calibration without using labels from the evaluated city.
+Can an RTW hypo-subspace suppress changes in seasonal timing/tempo while
+remaining sensitive to changes in the shape of a multispectral seasonal cycle,
+beyond phase-aware harmonic, Fourier, DTW/TWDTW, and non-warped subspace controls?
 ```
 
-Immediate experiment track to keep in order:
+Satellite construction:
+
+- one sample object is a pixel, field, or fixed patch with a regularized
+  multiband sequence `Z=[z_1,...,z_N]`, `z_t in R^d`;
+- sample `R` temporally ordered observations repeatedly and concatenate them
+  into `L` time-elastic vectors `f_l in R^(dR)`;
+- fit a rank-`m` PCA hypo-subspace to `F=[f_1,...,f_L]`;
+- compare reference and target hypo-subspaces through the canonical-correlation
+  spectrum of `X^T Y`, using `1-mean(kappa_i^2)` as the primary dissimilarity;
+- do not call the construction warp-invariant until the nuisance tests show it.
+
+Controlled regimes over real-background seasonal curves:
+
+| Regime | Meaning | Expected RTW behavior |
+|---|---|---|
+| null resampling/noise | unchanged | low score |
+| circular phase shift | timing nuisance | low score |
+| monotone nonlinear time warp | tempo nuisance | low score |
+| missing/irregular composites | acquisition nuisance | uncertainty or low score, not false change |
+| amplitude/mean shift | easy change control | may respond; not the claimed novelty |
+| same-phase cycle-shape deformation | target change | high score |
+| crop/irrigation regime transition | real target after controlled gate | high score on held-out sites/years |
+
+Required baselines:
+
+- Euclidean/CVA and SAM on aligned seasonal vectors;
+- harmonic regression with explicit phase terms;
+- Fourier-magnitude descriptors as a strong phase-invariant null;
+- DTW, time-weighted DTW, and soft-DTW where feasible;
+- non-warped PCA/MSM and M-SSA/Hankel-subspace comparison;
+- simple NDVI/mean/amplitude change features.
+
+Primary metrics:
+
+- AP and AUROC for target-change versus timing/tempo nuisance;
+- false-positive rate on phase/tempo nuisances at a validation-fixed threshold;
+- target-to-nuisance score ratio and its bootstrap interval;
+- response curves versus phase shift, warp severity, missing observations, and
+  noise;
+- held-out geography/year AP and event timing error for the real gate.
+
+Go/no-go rule:
+
+- **Go:** RTW exceeds phase-aware harmonic, Fourier magnitude, and TWDTW beyond
+  bootstrap uncertainty on at least two real-background families, then repeats
+  on independently labeled or manually verified transitions.
+- **No-go:** a simpler invariant baseline matches RTW, success exists only on
+  synthetic curves, or nuisance rejection destroys sensitivity to cycle-shape
+  change. In that case, retain RTW as a negative row in the diagnostic study.
+
+### 5.2 Conditional Shallow-Learning Test
+
+Only after a geometric block passes its mechanism gate, compare nested models
+under geography/year holdout and label budgets of `10%, 25%, 50%, 100%`:
 
 ```text
-global pixel DS [done] -> patch/local DS [done] -> Band-Image DS [done] -> fixed-grid pyramid [stopped] -> corrected Celik/IR-MAD [done] -> pseudo-change/calibration [next] -> optional neural/prior follow-up
+scalar/harmonic features only
+geometry features only
+scalar/harmonic + geometry
+scalar/harmonic + shuffled-geometry negative control
+```
+
+Use regularized logistic regression first. Geometry features may include the
+canonical-correlation spectrum, RTW dissimilarity, attention/contribution
+concentration, rank/energy, and uncertainty. The claim requires a positive
+held-out `Delta AP` or equal performance at a lower label budget; classifier
+accuracy alone does not prove a geometric contribution.
+
+### 5.3 Parallel Hyperspectral Attribution Gate
+
+The strongest Codex-mining alternative remains local, moment-factorized HSI
+change characterization: separate mean, total scale, normalized eigenspectrum,
+and eigenspace orientation, then attribute orientation discrepancy to contiguous
+wavelength intervals. Run its algebra and moment-matched tests in parallel only
+if a real bitemporal HSI benchmark can be obtained. Full covariance/SPD,
+MMD/energy, fused per-band effects, and unmixing are mandatory falsifiers.
+
+### 5.4 Closed Or Deprioritized Routes
+
+- The requested first/second DS magnitude and geodesic decomposition were
+  implemented and independently tested; the rolling RGB SpaceNet 7 detector
+  lost to radiometric controls and did not improve their fusion.
+- Direct global/patch/Band-Image DS on OSCD is retained as diagnostic evidence,
+  not the immediate optimization target.
+- Generic geometry-plus-shallow-learning is deferred until geometry earns a
+  distinct feature signal.
+
+Historical OSCD experiment track:
+
+```text
+global pixel DS [done] -> patch/local DS [done] -> Band-Image DS [done] ->
+fixed-grid pyramid [stopped] -> corrected Celik/IR-MAD [done]
 ```
 
 Minimum fair comparisons:
