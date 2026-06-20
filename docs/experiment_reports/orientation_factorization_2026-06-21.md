@@ -34,7 +34,23 @@ Honest caveats (do NOT oversell):
   whether the factorization is more USEFUL/specific than reporting SPD. Codex's gate: must beat full
   covariance/SPD + nonparametric tests at explaining orientation-only change MORE specifically/stably.
 
-## Next (to turn the lead into a result)
+## DECISIVE VALIDATION (2026-06-21, hermiston_orientation_validate) — LEAD FALSIFIED
+Semi-synthetic mean-preserving heterogeneity change on REAL Hermiston spectra + global-illumination nuisance,
+with the PRE-REGISTERED killer null (correlation-matrix distance = also scale-invariant). AUC(changed vs stable):
+| alpha | CVA | SAM | ORIENTATION | SPD | cov_Frob | **corr_dist** |
+|---|---|---|---|---|---|---|
+| 0.0 | 0.836 | 0.802 | 0.745 | 0.777 | 0.788 | **0.911** |
+| 0.1 | 0.584 | 0.696 | 0.571 | 0.636 | 0.727 | **0.979** |
+| 0.2 | 0.635 | 0.817 | 0.705 | 0.752 | 0.674 | **0.935** |
+**The correlation-matrix distance BEATS orientation across all illumination levels (0.91–0.98) AND is the most
+robust.** Orientation (0.57–0.75) is mediocre: the low-rank eigenspace discards structure the full correlation
+matrix keeps (same "subspace tolerance loses information" failure as material-subspace). CVA collapses under
+illumination; SPD/cov-Frob fooled by scale; orientation < correlation. ⇒ the orientation lever is REDUNDANT —
+worse than a standard scale-invariant correlation-matrix distance. The factorization MECHANISM is real but the
+*geometry* (low-rank orientation subspace) adds nothing over correlation. The first positive lead is CLOSED.
+Same recurring pattern, caught (again) by a pre-registered killer null.
+
+## Next (superseded — lead closed)
 1. REAL validation on Hermiston: per local patch, factorize the real 2004→2007 change into mean/dispersion/
    orientation; is there a non-trivial orientation component, and does it localize sensibly vs the 5 change types?
 2. Contiguous-band ATTRIBUTION (Codex Challenge 2): which contiguous wavelength intervals carry the orientation

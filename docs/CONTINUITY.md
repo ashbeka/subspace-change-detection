@@ -144,6 +144,15 @@ characterization output geometry uniquely gives. CAVEATS: scale-invariance true-
 UNVALIDATED on real HSI (Codex gate: must beat SPD/nonparametric at explaining orientation-only change). NEXT:
 validate on REAL Hermiston (does real change have a meaningful orientation component?) + contiguous-band
 attribution (Codex Ch2) + registration-robustness gate (Codex Ch3). Report: orientation_factorization_2026-06-21.
+[ORIENTATION LEAD FALSIFIED 2026-06-21 — hermiston_orientation_validate] Decisive semi-synthetic test on REAL
+Hermiston spectra (mean-preserving heterogeneity + illumination) with the PRE-REGISTERED killer null
+(correlation-matrix distance, also scale-invariant): corr_dist BEATS orientation across all illumination
+(0.91-0.98 vs 0.57-0.75) and is most robust. The low-rank orientation eigenspace discards structure the full
+correlation matrix keeps. ⇒ orientation REDUNDANT (worse than a standard correlation-matrix distance). FIRST
+positive lead CLOSED by its own pre-registered null. ⇒ EVERY subspace-positive lead now closed: detection,
+characterization (T1), warp (T2/DTW), material-subspace, orientation. THE DIAGNOSTIC IS THE CONTRIBUTION
+(comprehensively supported incl. real bitemporal HSI + the correct nulls). Positive hunt EXHAUSTED; remaining
+low-prob stone = Codex Ch2 attribution (likely redundant w/ per-band diff). Report: orientation_factorization_2026-06-21.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
