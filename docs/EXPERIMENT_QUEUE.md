@@ -6,7 +6,12 @@ with a one-line result. Keep each item scoped to a SINGLE run. Priority reflects
 Always report the trivial/standard null (SAM/CVA/IR-MAD/scalar 2nd-difference) beside the method.
 
 ## Up next
-- [ ] **SSDS-S2 (faithful Kanai signal-subspace DS on real S2 — THE decisive test).** Use the validated
+- [ ] **SSDS-validate (the LIVE LEAD).** ssds_longseries gave the first real positive (a_hat+D_N localizes a
+  real change, seasonality-robust, null-splice clean). Now harden it: (a) IR-MAD + SFA-CD adapted to the
+  sliding-window setting as STRONG baselines (a_hat must match/beat — IR-MAD owns detection elsewhere); (b) a
+  NATURAL gradual change (deforestation / irrigation onset via GEE) instead of a splice; (c) multi-case (several
+  splice points + a 2nd location pair) for consistency. Script builds on `temporal/experiments/ssds_longseries.py`.
+- [ ] **SSDS-S2 (faithful Kanai signal-subspace DS on real S2 — earlier under-powered test).** Use the validated
   `temporal/signal_subspace_ds.py` (L0 passed AUC ~0.98). Learn the non-anomalous reference D_N from a NORMAL
   seasonal period of a cached/GEE S2 series; test whether departure-from-D_N detects the real event (fire onset
   / irrigation switch) WITHOUT firing on normal seasonal swings. Multivariate option: per-band or M-SSA signal

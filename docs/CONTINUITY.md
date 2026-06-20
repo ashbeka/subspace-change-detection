@@ -75,6 +75,15 @@ under-powered — 84 dates force tiny windows, <1yr pre-fire ⇒ D_N can't learn
 SPECTRAL change (band-subspace's job), not the temporal-oscillatory change the method targets. Fair test needs a
 GEE multi-year regular series with a GRADUAL change. Construction lesson: subspace must represent the right thing
 (spectral identity vs temporal structure) for the change type. DECISION POINT — see report's 'Next options'.
+[GENUINE LEAD 2026-06-20 — ssds_longseries] Fetched 7-yr S2 (Iowa Corn Belt + Amazon, GEE). FAIR test of the
+faithful signal-subspace DS with learned D_N: (1) seasonality-ROBUST — a_hat corr w/ seasonal transitions 0.055
+vs scalar NDVI-diff 0.58 (scalar false-alarms every green-up; subspace doesn't); (2) DETECTION — a_hat+D_N is
+the ONLY method that localizes a real change (splice CornBelt→Amazon, margin 3.10) vs no-D_N mean-angle (1.04,
+fails) and crude TDS (2.05, fails) → D_N earns its keep in DETECTION; (3) NULL-SPLICE control PASSED (a_hat
+doesn't localize a no-change join, 1.96 vs 3.10). FIRST real positive in the project. NOT yet proven: splice is
+artificial (1.6x real-vs-artifact sep), n=1, and IR-MAD/SFA bars NOT yet compared (IR-MAD owns detection
+elsewhere). NEXT: IR-MAD/SFA sliding-window baselines + a NATURAL gradual change (deforestation/irrigation) +
+multi-case. This is the live lead — pursue it. Report: ssds_longseries_2026-06-20.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
