@@ -1332,3 +1332,43 @@ sensing result.
 [next check] Acquire one labeled DynamicEarthNet AOI or manually verify an
 IrrMapper/Sentinel-2 transition slice; compare DS, eigenspectrum, NDVI/NDMI/NBR,
 raw multispectral controls, and one established temporal-break baseline.
+
+## 16. Research-Mining Decision: Factorized Local HSI Change (2026-06-21)
+
+The literature audit in `docs/kb/` closes generic distributional/subspace CD as
+a novelty claim. Covariance equalization, quadratic anomalous-change detectors,
+HSI background-subspace CD, SMSL, and multitemporal unmixing already occupy that
+territory. The surviving construction is narrower and must separate components:
+
+```text
+X_t in R^(B x n)
+mu_t = mean spectrum in one local support
+Z_t = X_t - mu_t 1^T
+C_t = Z_t Z_t^T/(n-1) + epsilon I
+Cbar_t = C_t / trace(C_t)
+```
+
+Report mean, total scale, normalized eigenspectrum, and top-r eigenspace
+orientation separately. Orientation uses principal angles/DS only after
+centering and scale quotienting. Wavelength attribution uses the diagonal of
+the DS projector, followed by a standard fused/structured penalty; this is
+inspired by S3CCA but is not S3CCA.
+
+Construction card:
+
+| Field | Definition |
+|---|---|
+| Variant | centered, trace-quotiented local spectral-distribution orientation |
+| Sample unit | one HSI pixel spectrum in the same registered local support/date |
+| Matrix | `X_t in R^(B x n)`, centered to `Z_t` |
+| Basis | shrinkage/dual-SVD top-r eigenspace with eigengap uncertainty |
+| Comparison | Grassmann/projector/DS orientation beside full covariance/SPD |
+| Preserved | wavelength identity and local spectral distribution |
+| Lost | mean/scale in the orientation branch and within-window spatial arrangement |
+| Output | component maps, uncertainty, and contiguous wavelength intervals |
+| Falsifier | covariance/SPD, MMD, unmixing, or per-band attribution matches it |
+
+[gap] Is any proposed orientation output non-equivalent to a regularized
+covariance/SPD decomposition?
+[why it matters] If not, DS is notation rather than a contribution.
+[next check] Complete the algebra/equivalence table before implementation.

@@ -1074,6 +1074,39 @@ Completed 2026-06-20:
 Report:
 `docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
 
+## Research-Mining Gate: Local HSI Distribution Components (2026-06-21)
+
+Research-only plan; no experiment was run during mining. Do not start real-data
+or training work until the formula gate is written.
+
+First gate uses matched sample counts and at least these regimes:
+
+```text
+null/resampling
+mean-only: mean changes, covariance fixed
+scale-only: covariance multiplied by alpha
+shape-only: normalized eigenvalues change, eigenvectors fixed
+orientation-only: mean/trace/eigenvalues fixed, eigenspace rotates
+```
+
+For the orientation-only case, constrain the affected wavelengths to a known
+contiguous interval so attribution has ground truth. Required controls are
+shrinkage covariance/SPD distances, covariance Frobenius, MMD/energy, per-band
+mean/variance, sparse PCA/fused attribution, and unmixing where meaningful.
+
+Decision gates:
+
+- inactive components must remain quiet in every regime;
+- orientation must be invariant to isotropic covariance scale;
+- repeated/near-repeated eigenvalues must raise uncertainty;
+- one-pixel translation, blur, missing bands/pixels, and boundary mixing are
+  explicit nuisance strata;
+- proceed to satellite HSI only if formula and real-spectrum semi-synthetic
+  gates pass;
+- airborne or Salinas evidence must not be reported as satellite evidence.
+
+Full plan and falsifiers: `docs/research/synthesis_specific_tasks.md`.
+
 Data gate:
 
 - Public IrrMapper v1.2 coverage and 1986-2024 temporal extent are verified.

@@ -950,3 +950,36 @@ This is a sharper version of ranks 1-4, not a new eleventh project. It survives
 a negative outcome: if geometry does not improve localization, the empirical
 result can still explain which invariances, persistence cues, and failure modes
 temporal subspaces provide relative to established SITS detectors.
+
+## 17. Research-Mining Convergence (2026-06-21)
+
+The exhaustive paper/closest-method audit in `docs/kb/` and `docs/research/`
+changes the highest-priority *novel task* from another temporal DS detector to:
+
+```text
+local bitemporal satellite HSI
+-> separate mean, total dispersion, normalized eigenspectrum, and eigenspace
+   orientation change
+-> attribute the orientation component to contiguous wavelength intervals
+-> compare directly with covariance/SPD, MMD, unmixing, sparse PCA/band
+   selection, and established HSI-CD methods.
+```
+
+This respects the closed trajectory result: second-order/geodesic dynamics is
+not the top task. It also respects the mean-preserving result: covariance can
+detect that regime, so the contribution must be mechanism separation and
+attribution rather than unique detection.
+
+Provisional paper question:
+
+```text
+After mean and isotropic scale are removed, does local spectral-distribution
+orientation change provide stable, physically useful wavelength evidence that
+full covariance/SPD tests, nonparametric two-sample tests, and unmixing do not?
+```
+
+Safe novelty wording is “we investigate a moment-factorized and
+wavelength-attributed local HSI change task.” Do not use “first” until the 2025
+survey and subscription full-text databases are checked and Sensei confirms the
+boundary. If the strong nulls match it, remove DS from the contribution and
+retain the result as a diagnostic closure of the final distributional edge.

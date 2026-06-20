@@ -444,3 +444,31 @@ of:
 - a registration-robust/local multiscale construction;
 - or an empirical result explaining what these geometric quantities detect and
   where they fail relative to NFA/MOSUM/BFAST/JUST and learned methods.
+
+### 10.7 Research-Mining Boundary For HSI Distribution Change (2026-06-21)
+
+The closest-prior audit changes the novelty boundary:
+
+- Liu et al. 2019, DOI `10.1109/MGRS.2019.2898520`: exact
+  multitemporal-HSI-CD review boundary.
+- Lv et al. 2025, DOI `10.1016/j.inffus.2025.103257`: latest verified
+  peer-reviewed HSI land-cover CD survey; closed full text in this session.
+- Wu et al. 2013, DOI `10.1109/JSTARS.2013.2241396`: background-subspace HSI
+  CD already exists.
+- Schaum/Stocker and Theiler covariance-equalization/quadratic ACD lineage,
+  including DOI `10.1364/AO.47.000F12`: covariance/distributional HSI change is
+  established.
+- Chang et al. 2022, DOI `10.1109/TGRS.2022.3220814`: multiview subspace
+  learning for anomalous HSI CD already exists.
+- Coupled/multitemporal unmixing, including DOI
+  `10.1109/JSTARS.2021.3104164`, already reports endmember-specific change
+  direction/intensity.
+- Sparse PCA and band-selection HSI CD, including DOI `10.1117/12.897434` and
+  DOI `10.1109/TGRS.2024.3382638`, already select wavelength regions/bands.
+
+Therefore the defensible opening is not subspace, covariance, subpixel change,
+or band selection alone. It is the exact combination of local
+mean/scale/eigenspectrum/orientation factorization and contiguous wavelength
+attribution, under direct covariance/SPD, MMD, unmixing, and sparse-band
+pressure. Full-text IEEE/Scopus/Web of Science searching remains required
+before any “first” claim.
