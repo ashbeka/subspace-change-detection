@@ -1074,6 +1074,68 @@ Completed 2026-06-20:
 Report:
 `docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
 
+### 10.8 Independently Labeled SpaceNet 7 Gate - Completed 2026-06-21
+
+The independent-label gate was executed on SpaceNet 7 monthly RGB imagery.
+One AOI was used for discovery, three for development, and four additional
+AOIs were selected by growth quantile before confirmation scoring.
+
+Frozen candidate:
+
+```text
+fixed 8x8 cells
+-> six-month rolling windows
+-> lag-two RGB trajectory matrix
+-> rank-two subspace
+-> second-DS orthogonal magnitude
+```
+
+Confirmation macro AP across four AOIs:
+
+| Method | Mean AP |
+|---|---:|
+| Second-DS orthogonal magnitude | 0.1127 |
+| Standardized raw pair RMS | 0.1615 |
+| Standardized raw second RMS | 0.1502 |
+| Two-radiometric rank fusion | 0.1910 |
+| Geometry plus radiometric rank fusion | 0.1747 |
+
+The three-score fusion was below the two-radiometric fusion by `-0.0163` macro
+AP, with hierarchical 95% interval `[-0.0531, +0.0140]`. Geometry alone lost
+substantially, and adding it did not improve the fair two-control fusion.
+
+Component analysis: first DS was the strongest geometric quantity at AP
+`0.1313`; second total/along were `0.1229/0.1226`; second orthogonal was
+`0.1127`. First magnitude and Grassmann distance were effectively redundant
+(`rho=0.9999`), while second total was dominated by along ordering
+(`rho=0.9596`).
+
+Data-integrity correction: SpaceNet UDM polygons are CRS84 and must be
+reprojected to the image CRS. Valid support is intersected per transition over
+only the rolling windows being compared, not over the entire sequence. One
+preselected AOI had no valid six-month support and was replaced before scoring
+using a mask-only deterministic rule.
+
+Decision:
+
+- close this exact rolling RGB trajectory-DS detector;
+- do not tune its grid, window, rank, or fusion on the seven non-discovery
+  AOIs;
+- retain the result as evidence that verified first/second DS quantities need
+  not be useful local change detectors;
+- require a new mechanism and fresh held-out data for the next route.
+
+[gap] Can subspaces isolate useful multispectral/hyperspectral characteristics
+or explain nuisance/change factors even when RGB trajectory DS fails as a
+detector?
+[why it matters] This is a materially different role for geometry and is not
+answered by the SpaceNet 7 experiment.
+[next check] Design a source-grounded feature-isolation or nuisance-subspace
+experiment with a matched non-subspace control and untouched evaluation data.
+
+Report:
+`docs/experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`.
+
 Data gate:
 
 - Public IrrMapper v1.2 coverage and 1986-2024 temporal extent are verified.

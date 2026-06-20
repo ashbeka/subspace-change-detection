@@ -33,7 +33,10 @@ Read these first:
 7. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the historical OSCD 3-seed neural sweep.
 
-8. `research_learning_map.html`
+8. `experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`
+   - Independent-label SpaceNet 7 gate for rolling first/second trajectory DS; records the negative result against standardized radiometric controls.
+
+9. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

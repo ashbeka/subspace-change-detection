@@ -971,3 +971,27 @@ Most important next analysis:
 ```text
 Targeted visualization plus true threshold tuning for the completed v5 core sweep. Current per-city/per-seed CSV analysis is done; true threshold tuning still needs probability maps or an inference threshold-sweep.
 ```
+
+## 18. SpaceNet 7 Temporal Subspace Gate
+
+Evaluate one SpaceNet 7 AOI with the frozen rolling trajectory construction:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-temporal-subspaces --aoi-root "data/SpaceNet7_confirmation/L15-1691E-1211N_6764_3347_13" --representations trajectory2 --preprocessing feature_centered --window 6 --rank 2 --grids 8 --output-dir "phase1/outputs/spacenet7_geometry_$tag"
+```
+
+Compute fair standardized radiometric controls without repeating SVD fitting:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-temporal-subspaces --aoi-root "data/SpaceNet7_confirmation/L15-1691E-1211N_6764_3347_13" --window 6 --grids 8 --radiometric-normalization per_date_channel_standardize --controls-only --output-dir "phase1/outputs/spacenet7_controls_$tag"
+```
+
+Analyze already paired confirmation runs with the fixed rank fusion:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-hybrid-analysis --input-root phase1/outputs --geometry-glob "spacenet7_confirmation_validmask_*_geometry_20260621_012400" --controls-glob "spacenet7_confirmation_validmask_*_controls_20260621_012400" --bootstrap 3000 --output-dir "phase1/outputs/spacenet7_confirmation_hybrid_$tag"
+```
+
+These commands reproduce a negative gate, not a promoted baseline. Do not tune
+this construction on the confirmation AOIs. See
+`docs/experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`.

@@ -887,6 +887,32 @@ def cmd_phase1_spacenet7_temporal_subspaces(args: argparse.Namespace) -> int:
         str(args.seed),
         "--all_touched_labels" if args.all_touched_labels else "--no-all_touched_labels",
     ]
+    if args.controls_only:
+        cmd.append("--controls_only")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spacenet7_hybrid_analysis(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_hybrid_analysis_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_spacenet7_hybrid_validation",
+        "--input_root",
+        args.input_root,
+        "--geometry_glob",
+        args.geometry_glob,
+        "--controls_glob",
+        args.controls_glob,
+        "--output_dir",
+        out,
+        "--min_new_building_pixels",
+        str(args.min_new_building_pixels),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1770,8 +1796,23 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--bootstrap", type=int, default=300)
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--all-touched-labels", action=argparse.BooleanOptionalAction, default=True)
+    p.add_argument("--controls-only", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spacenet7_temporal_subspaces)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-hybrid-analysis",
+        help="Evaluate the frozen geometry+radiometry rank fusion across SpaceNet 7 AOIs.",
+    )
+    p.add_argument("--input-root", default="phase1/outputs")
+    p.add_argument("--geometry-glob", required=True)
+    p.add_argument("--controls-glob", required=True)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--min-new-building-pixels", type=int, default=2)
+    p.add_argument("--bootstrap", type=int, default=2000)
+    p.add_argument("--seed", type=int, default=90210)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_hybrid_analysis)
 
     p = sub.add_parser(
         "phase1-irrigation-data-feasibility",

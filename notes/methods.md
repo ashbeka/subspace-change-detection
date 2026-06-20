@@ -1332,3 +1332,44 @@ sensing result.
 [next check] Acquire one labeled DynamicEarthNet AOI or manually verify an
 IrrMapper/Sentinel-2 transition slice; compare DS, eigenspectrum, NDVI/NDMI/NBR,
 raw multispectral controls, and one established temporal-break baseline.
+
+### 15.10 Rolling Local Trajectory Subspaces On SpaceNet 7
+
+| Construction-card field | Definition |
+|---|---|
+| Variant | rolling local RGB trajectory subspace |
+| Source/reference | SpaceNet 7/MUDS data model; project trajectory construction; paper-guided first/second DS and geodesic decomposition |
+| Sample unit | one aligned RGB observation of one fixed AOI cell at one month |
+| Input | `x_t in R^(3*N_cell)`; lag-two `H_t in R^((6*N_cell) x 5)` over a six-month window |
+| Subspace count | one rank-two subspace per cell and rolling window |
+| Basis | two leading left singular vectors of feature-centered `H_t` in the frozen confirmation run |
+| Comparison | first DS/Grassmann quantities; second total, along, and orthogonal magnitudes |
+| Target | first appearance of a persistent SpaceNet 7 building ID, aggregated to fixed cells |
+| Preserved | within-cell RGB layout and adjacent-month order in each trajectory column |
+| Lost | object identity inside the subspace; detail below cell resolution; information outside RGB |
+| Code | `phase1/data/spacenet7_dataset.py`; `phase1/scripts/evaluate_spacenet7_temporal_subspaces.py` |
+| Verification | loader/rasterization tests, temporal formula tests, development AOIs, and four untouched confirmation AOIs |
+
+`labels_match_pix` uses pixel-coordinate geometries. Rasterizing those labels
+with the image's projected affine transform silently produces incorrect masks;
+the correct operation uses the identity affine transform. A regression test
+guards this dataset-specific fact.
+
+SpaceNet UDM polygons declare CRS84 coordinates and must be reprojected to the
+image CRS before rasterization. Validity is then intersected over the dates
+required by each local first/second comparison; a sequence-wide intersection
+is unnecessarily destructive.
+
+The construction is mathematically executable and formula-tested, but it
+failed as a detector: confirmation AP was `0.1127`, versus `0.1910` for the
+two-radiometric rank fusion. This separates implementation correctness from task
+utility. Do not infer that a correct DS equation automatically defines the
+right satellite sample object or score.
+
+The component behavior is itself informative. First-DS magnitude and first
+Grassmann distance had mean within-AOI Spearman correlation `0.9999`; at the
+tested small rotations they provide almost the same ranking. Second total and
+along had correlation `0.9596`, so total magnitude was largely governed by
+motion along the estimated geodesic. Orthogonal magnitude was distinct from
+raw second difference (`rho=-0.0314`) but nearly random for new-building cells
+(AUROC `0.5055`). Distinctness is not evidence of task relevance.

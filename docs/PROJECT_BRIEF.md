@@ -188,22 +188,24 @@ whole-scene first/second/geodesic DS [done]
 -> controlled persistent/transient/nuisance tests [done]
 -> synthetic seasonal observation subspace regime-change test [done]
 -> order-aware and local real-background interventions [done]
--> independently labeled multi-temporal evaluation slice [next]
+-> independently labeled multi-temporal evaluation slice [done: SpaceNet 7 RGB]
 -> registration/smoothing robustness curve [done, controlled only]
 -> MOSUM/BFAST/JUST pressure baselines
 ```
 
-The next construction uses repeated dates as the real related-observation set:
-one annual/seasonal subspace per fixed patch or field, followed by first/second
-DS and geodesic analysis across years. Irrigation start/stop is the first
-candidate event. IrrMapper is a weak-label source, not ground truth; manual or
-independent validation is mandatory.
+The independently labeled SpaceNet 7 gate used repeated monthly observations
+of fixed cells, rolling rank-two RGB trajectory subspaces, and persistent-ID
+building first appearances. After correcting CRS84 UDM rasterization and using
+transition-local valid support, second-DS orthogonal magnitude reached macro AP
+`0.1127` on four untouched confirmation AOIs. A two-radiometric rank fusion
+reached `0.1910`; adding geometry reduced it to `0.1747` (`-0.0163`, 95%
+interval `-0.0531` to `+0.0140`). This exact RGB trajectory detector is closed.
 
-The active claim is conditional. Current DS contribution maps are not accurate
-changed-area detectors. The surviving hypothesis separates sequence-level
-first/second/geodesic characterization from projection-based localization and
-requires registration robustness plus real multi-temporal labels. If that
-fails, retain the negative result and use the empirical diagnostic framing.
+The active claim is now narrower. First/second/geodesic DS quantities can be
+computed and interpreted as sequence descriptors, but the tested quantities
+are not accurate changed-area detectors. A next route must test a materially
+different role, such as multispectral feature/nuisance isolation, on fresh
+held-out evidence rather than retuning the failed SpaceNet 7 construction.
 
 The 2026-06-20 seasonal-observation stress test found that rank-1 geometry can
 rank an injected abrupt boundary within a sequence but is weaker than simple
@@ -218,8 +220,9 @@ sensitivity. For off-grid localized mode change, Gaussian-sigma-2 local
 eigenspectrum reached AP `0.688`, NDMI `0.680`, and first DS `0.456`. This is a
 competitive invariance tradeoff, not superiority: eigenspectrum rejected tested
 gain/offset but still responded to missing composites and translation. The
-project is now blocked on an independently labeled temporal slice, not another
-synthetic refinement.
+independent-label gate has now been completed and rejected the strong detection
+hypothesis. The project is blocked on selecting a new mechanism and fresh
+evaluation data, not on more tuning of the same RGB trajectory detector.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 

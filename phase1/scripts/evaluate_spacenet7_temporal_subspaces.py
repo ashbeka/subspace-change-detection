@@ -48,7 +48,6 @@ from phase1.data.spacenet7_dataset import (
 from phase1.subspace.geodesic import grassmann_geodesic_distance, subspace_magnitude
 from phase1.subspace.second_order_ds import second_order_difference_subspace
 from phase1.subspace.temporal_trajectory import (
-  TemporalRepresentationSubspace,
   build_temporal_representation_subspace,
   representation_covariance_change,
   representation_energy_change,
@@ -96,6 +95,11 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument("--bootstrap", type=int, default=300)
   parser.add_argument("--seed", type=int, default=1234)
   parser.add_argument("--all_touched_labels", action=argparse.BooleanOptionalAction, default=True)
+  parser.add_argument(
+    "--controls_only",
+    action="store_true",
+    help="Compute radiometric first/second controls without fitting subspaces.",
+  )
   return parser.parse_args()
 
 
@@ -194,27 +198,18 @@ def _raw_second_controls(
   }
 
 
-def _fit_rolling_subspaces(
-  cubes: list[np.ndarray],
-  valid: np.ndarray,
+def transition_valid_mask(
+  valid_masks: list[np.ndarray],
   *,
+  end_index: int,
   window: int,
-  rank: int,
-  representation: str,
-  lag: int,
-  preprocessing: str,
-) -> dict[int, TemporalRepresentationSubspace]:
-  output = {}
-  for end_index in range(window - 1, len(cubes)):
-    output[end_index] = build_temporal_representation_subspace(
-      cubes[end_index - window + 1 : end_index + 1],
-      valid,
-      rank=rank,
-      representation=representation,
-      lag=lag,
-      preprocessing=preprocessing,
-    )
-  return output
+) -> np.ndarray:
+  """Intersect only dates required by one first/second rolling comparison."""
+  support_stop = end_index + 2 if end_index + 1 < len(valid_masks) else end_index + 1
+  required = valid_masks[end_index - window : support_stop]
+  if len(required) < window + 1:
+    raise ValueError("A transition comparison requires previous and current rolling windows.")
+  return np.logical_and.reduce(required)
 
 
 def _best_threshold_metrics(labels: np.ndarray, scores: np.ndarray) -> tuple[float, float]:
@@ -407,13 +402,17 @@ def _save_example(
   rows: list[dict],
   summary: list[dict],
   cubes: list[np.ndarray],
-  valid: np.ndarray,
+  valid_masks: list[np.ndarray],
   new_masks: list[np.ndarray],
   dates: list[str],
   output_dir: Path,
 ) -> None:
-  date_counts = [(date, int(np.sum(mask & valid))) for date, mask in zip(dates, new_masks)]
-  eligible = [(date, count) for index, (date, count) in enumerate(date_counts) if index >= 4]
+  date_counts = [
+    (date, int(np.sum(mask & valid)))
+    for date, mask, valid in zip(dates, new_masks, valid_masks)
+  ]
+  evaluated_dates = {row["date"] for row in rows}
+  eligible = [(date, count) for date, count in date_counts if date in evaluated_dates]
   selected_date = max(eligible, key=lambda item: item[1])[0]
   date_index = dates.index(selected_date)
   ds_rows = [
@@ -428,7 +427,7 @@ def _save_example(
       "representation": first["representation"],
       "grid": first["grid"],
       "rank": first["rank"],
-      "score": "first_ds_magnitude",
+      "score": "raw_second_rms" if np.isfinite(float(first["raw_second_rms"])) else "raw_pair_rms",
     }
   selected = [
     row for row in rows
@@ -437,15 +436,16 @@ def _save_example(
     and int(row["grid"]) == int(best["grid"])
     and int(row["rank"]) == int(best["rank"])
   ]
+  display_valid = valid_masks[date_index - 1] & valid_masks[date_index]
   panels = [
-    (_rgb_for_display(cubes[date_index - 1], valid), f"Previous month: {dates[date_index - 1]}", None),
-    (_rgb_for_display(cubes[date_index], valid), f"Current month: {selected_date}", None),
-    (new_masks[date_index] & valid, f"First-appearance buildings ({date_counts[date_index][1]} px)", "gray"),
-    (_fill_map(selected, "raw_pair_rms", valid.shape), "Raw pair RMS", "magma"),
-    (_fill_map(selected, "robust_temporal_z_rms", valid.shape), "Robust temporal z RMS", "magma"),
-    (_fill_map(selected, str(best["score"]), valid.shape), f"Best subspace diagnostic: {best['score']}", "magma"),
-    (_fill_map(selected, "second_along", valid.shape), "Second DS: along", "magma"),
-    (_fill_map(selected, "second_orthogonal", valid.shape), "Second DS: orthogonal", "magma"),
+    (_rgb_for_display(cubes[date_index - 1], display_valid), f"Previous month: {dates[date_index - 1]}", None),
+    (_rgb_for_display(cubes[date_index], display_valid), f"Current month: {selected_date}", None),
+    (new_masks[date_index] & display_valid, f"First-appearance buildings ({date_counts[date_index][1]} px)", "gray"),
+    (_fill_map(selected, "raw_pair_rms", display_valid.shape), "Raw pair RMS", "magma"),
+    (_fill_map(selected, "robust_temporal_z_rms", display_valid.shape), "Robust temporal z RMS", "magma"),
+    (_fill_map(selected, str(best["score"]), display_valid.shape), f"Best subspace diagnostic: {best['score']}", "magma"),
+    (_fill_map(selected, "second_along", display_valid.shape), "Second DS: along", "magma"),
+    (_fill_map(selected, "second_orthogonal", display_valid.shape), "Second DS: orthogonal", "magma"),
   ]
   figure, axes = plt.subplots(2, 4, figsize=(16, 8))
   for axis, (image, title, cmap) in zip(axes.flat, panels):
@@ -490,9 +490,10 @@ def main() -> None:
   reference_shape = loaded[0].valid_mask.shape
   if any(image.valid_mask.shape != reference_shape for image in loaded):
     raise ValueError("SpaceNet 7 observations do not share one image shape.")
-  common_valid = np.logical_and.reduce([image.valid_mask for image in loaded])
+  valid_masks = [image.valid_mask for image in loaded]
+  sequence_common_valid = np.logical_and.reduce(valid_masks)
   cubes = [
-    _normalize_date(image.rgb, common_valid, args.radiometric_normalization)
+    _normalize_date(image.rgb, image.valid_mask, args.radiometric_normalization)
     for image in loaded
   ]
   feature_sequences = [read_geojson_features(observation.matched_label_path) for observation in observations]
@@ -515,34 +516,94 @@ def main() -> None:
 
   for grid in grids:
     for cell_row, cell_col, row_slice, col_slice in _grid_cells(*reference_shape, grid):
-      cell_valid = common_valid[row_slice, col_slice]
-      valid_pixels = int(np.sum(cell_valid))
-      if valid_pixels < args.min_valid_pixels:
-        continue
       cell_cubes = [cube[:, row_slice, col_slice] for cube in cubes]
+      cell_valid_masks = [mask[row_slice, col_slice] for mask in valid_masks]
+      if args.controls_only:
+        for end_index in range(args.window, len(cubes)):
+          cell_valid = transition_valid_mask(
+            cell_valid_masks,
+            end_index=end_index,
+            window=args.window,
+          )
+          valid_pixels = int(np.sum(cell_valid))
+          if valid_pixels < args.min_valid_pixels:
+            continue
+          second_scores = {score: float("nan") for score in SECOND_SCORES}
+          if end_index + 1 < len(cubes):
+            second_scores.update(_raw_second_controls(cell_cubes, end_index, args.window, cell_valid))
+          target = new_masks[end_index][row_slice, col_slice] & cell_valid
+          positive_pixels = int(np.sum(target))
+          rows.append({
+            "date": dates[end_index],
+            "date_index": end_index,
+            "representation": "controls",
+            "lag": 1,
+            "preprocessing": "not_applicable",
+            "radiometric_normalization": args.radiometric_normalization,
+            "window": args.window,
+            "rank": 0,
+            "grid": grid,
+            "cell_row": cell_row,
+            "cell_col": cell_col,
+            "row_start": row_slice.start,
+            "row_stop": row_slice.stop,
+            "col_start": col_slice.start,
+            "col_stop": col_slice.stop,
+            "positive_pixels": positive_pixels,
+            "valid_pixels": valid_pixels,
+            "negative_pixels": valid_pixels - positive_pixels,
+            "first_ds_magnitude": float("nan"),
+            "first_geodesic": float("nan"),
+            "representation_energy_change": float("nan"),
+            "representation_spectrum_change": float("nan"),
+            "representation_covariance_change": float("nan"),
+            **_raw_controls(cell_cubes, end_index, args.window, cell_valid),
+            **second_scores,
+          })
+        continue
       for representation, lag, representation_name in representations:
         if representation == "trajectory" and lag >= args.window:
           continue
-        fitted = _fit_rolling_subspaces(
-          cell_cubes,
-          cell_valid,
-          window=args.window,
-          rank=args.rank,
-          representation=representation,
-          lag=lag,
-          preprocessing=args.preprocessing,
-        )
         for end_index in range(args.window, len(cubes)):
-          previous_fit = fitted[end_index - 1]
-          current_fit = fitted[end_index]
+          cell_valid = transition_valid_mask(
+            cell_valid_masks,
+            end_index=end_index,
+            window=args.window,
+          )
+          valid_pixels = int(np.sum(cell_valid))
+          if valid_pixels < args.min_valid_pixels:
+            continue
+          previous_fit = build_temporal_representation_subspace(
+            cell_cubes[end_index - args.window : end_index],
+            cell_valid,
+            rank=args.rank,
+            representation=representation,
+            lag=lag,
+            preprocessing=args.preprocessing,
+          )
+          current_fit = build_temporal_representation_subspace(
+            cell_cubes[end_index - args.window + 1 : end_index + 1],
+            cell_valid,
+            rank=args.rank,
+            representation=representation,
+            lag=lag,
+            preprocessing=args.preprocessing,
+          )
           effective_rank = min(previous_fit.rank, current_fit.rank)
           if effective_rank < 1:
             continue
           previous_basis = previous_fit.basis[:, :effective_rank]
           current_basis = current_fit.basis[:, :effective_rank]
           second_scores = {score: float("nan") for score in SECOND_SCORES}
-          if end_index + 1 in fitted:
-            next_fit = fitted[end_index + 1]
+          if end_index + 1 < len(cubes):
+            next_fit = build_temporal_representation_subspace(
+              cell_cubes[end_index - args.window + 2 : end_index + 2],
+              cell_valid,
+              rank=args.rank,
+              representation=representation,
+              lag=lag,
+              preprocessing=args.preprocessing,
+            )
             second_rank = min(effective_rank, next_fit.rank)
             if second_rank >= 1:
               second = second_order_difference_subspace(
@@ -581,6 +642,7 @@ def main() -> None:
             "col_start": col_slice.start,
             "col_stop": col_slice.stop,
             "positive_pixels": positive_pixels,
+            "valid_pixels": valid_pixels,
             "negative_pixels": valid_pixels - positive_pixels,
             "first_ds_magnitude": subspace_magnitude(previous_basis, current_basis) / effective_rank,
             "first_geodesic": grassmann_geodesic_distance(previous_basis, current_basis) / np.sqrt(effective_rank),
@@ -614,7 +676,7 @@ def main() -> None:
     rows=rows,
     summary=summary,
     cubes=cubes,
-    valid=common_valid,
+    valid_masks=valid_masks,
     new_masks=new_masks,
     dates=dates,
     output_dir=args.output_dir,
@@ -626,9 +688,13 @@ def main() -> None:
     "aoi_root": str(args.aoi_root),
     "dates": dates,
     "observations": len(observations),
-    "common_valid_pixels": int(np.sum(common_valid)),
+    "sequence_intersection_valid_pixels": int(np.sum(sequence_common_valid)),
+    "validity_support": "transition-local intersection over dates required by the compared rolling windows",
     "new_building_features_by_date": {date: len(features) for date, features in zip(dates, new_features)},
-    "new_building_pixels_by_date": {date: int(np.sum(mask & common_valid)) for date, mask in zip(dates, new_masks)},
+    "new_building_pixels_by_date": {
+      date: int(np.sum(mask & valid))
+      for date, mask, valid in zip(dates, new_masks, valid_masks)
+    },
     "window": args.window,
     "rank": args.rank,
     "grids": grids,
@@ -637,6 +703,7 @@ def main() -> None:
     "radiometric_normalization": args.radiometric_normalization,
     "all_touched_labels": args.all_touched_labels,
     "minimum_new_building_pixels_for_positive_cell": args.min_new_building_pixels,
+    "controls_only": args.controls_only,
     "bootstrap_unit": "monthly transition within one AOI",
     "runtime_seconds": time.perf_counter() - started,
     "claim_boundary": "Exploratory RGB temporal-label evidence on one AOI; not SCOT, not held-out geography, and not multispectral Sentinel-2 validation.",
