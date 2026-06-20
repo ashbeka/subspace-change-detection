@@ -117,6 +117,13 @@ fairness: confirmed via K-sweep (K=2/3/8 all lose to SAM). ⇒ EVERY subspace-as
 MSM/GDS and the user's material-subspace + spectral-damage ideas — fairly tested and FAILED. The DIAGNOSTIC is
 the contribution. Surviving positive sliver = subspace for ATTRIBUTION/characterization (not detection), untested.
 Approach ranking + paper skeletons: docs/RESEARCH_APPROACHES_RANKED.md. Research-mining session running in parallel.
+[T1 FALSIFIED 2026-06-20 — t1_changetype] Ran the research-mining's TOP task T1 (geodesic change-TYPE
+characterization) L1 falsifier with the PROPER M-SSA construction: scalar ||Δ²m|| separates abrupt-vs-gradual
+PERFECTLY (AUC 1.000) vs subspace geodesic split 0.98 → T1 REDUNDANT, folds into the diagnostic (its own
+pre-registered outcome). So detection AND characterization-via-T1 both fold into T4. THE PAPER = T4 diagnostic
+(+ T1 as a negative row). The ONE remaining genuinely-novel positive bet = T2 (RTW warp-invariant phenological
+CD; RTW never in RS, Sensei-endorsed) — go/no-go = phase-shift(nuisance) vs same-phase shape-change(real),
+warp-invariant subspace vs phase-aware harmonic (synthesis §3). Report: t1_changetype_2026-06-20.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
