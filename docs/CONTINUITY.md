@@ -99,6 +99,14 @@ fill) there is no single change-point to localize. Neither tests a_hat's actual 
 OSCILLATION STRUCTURE = phenology), which I could not get clean real data for. So a_hat's niche is NARROW +
 UNPROVEN; the splice was niche-specific + join-artifact. Recurring pattern holds. For the Gaza DAMAGE motive
 (abrupt) the band-subspace is the right tool, not a_hat. Report: ssds_natural_2026-06-20. RE-GROUND/decision next.
+[LEAD CLOSED 2026-06-20 — ssds_phenology, the user-chosen FINAL FAIR SHOT] Tested a_hat on its ACTUAL niche
+(seasonal-OSCILLATION-STRUCTURE change = real Saudi irrigation onsets, flat desert→emerging cycle, 5yr flat
+pre). a_hat FAILS on 0/3 (AUC 0.55-0.66), beaten by harmonic deseasonalization AND the trivial NDVI mean-shift
+(0.78-0.83) on EVERY site. So a_hat fails on abrupt (fire), gradual signal-loss (reservoir), AND its own niche
+(phenology) — the only "win" was the artificial splice. ⇒ the subspace-as-better-DETECTOR thesis is
+COMPREHENSIVELY FALSIFIED on real data (with H-A IR-MAD + H-B-crude mean-vector). THE CONTRIBUTION IS THE
+DIAGNOSTIC: "when/why does subspace geometry help/fail for satellite CD, and when is it just spectral-angle /
+mean-vector / harmonic-deseasonalization." Next: consolidate the diagnostic paper. Report: ssds_phenology_2026-06-20.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
