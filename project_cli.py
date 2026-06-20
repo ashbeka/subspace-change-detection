@@ -103,6 +103,8 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-multisenge-viz", "multisenge", "Run exploratory MultiSenGE DS visualization.", ["phase1-multisenge-viz"]),
     CommandInfo("phase1-multisenge-temporal-dynamics", "multisenge", "Measure first/second DS and geodesic components over MultiSenGE dates.", ["phase1-multisenge-temporal-dynamics", "phase1-multisenge-geodesic"]),
     CommandInfo("phase1-multisenge-temporal-injections", "multisenge", "Compare temporal DS with radiometric/registration nuisance controls.", ["phase1-multisenge-temporal-injections"]),
+    CommandInfo("phase1-multisenge-order-aware-interventions", "multisenge", "Stress-test unordered, difference, and trajectory subspaces on real temporal backgrounds.", ["phase1-multisenge-order-aware-interventions"]),
+    CommandInfo("phase1-multiscale-order-aware-interventions", "multisenge", "Localize controlled temporal events with cell-wise unordered and trajectory subspaces.", ["phase1-multiscale-order-aware-interventions"]),
     CommandInfo("phase1-registered-sequence-dynamics", "multisenge", "Analyze first/second DS on a dated registered TIFF sequence.", ["phase1-registered-sequence-dynamics"]),
     CommandInfo("phase1-multiscale-sequence-dynamics", "multisenge", "Analyze local/multiscale temporal DS on a dated registered TIFF sequence.", ["phase1-multiscale-sequence-dynamics"]),
     CommandInfo("phase1-temporal-context-ds", "multisenge", "Compare backward/forward temporal-context DS on a dated registered TIFF sequence.", ["phase1-temporal-context-ds"]),
@@ -577,6 +579,74 @@ def cmd_phase1_multisenge_temporal_injections(args: argparse.Namespace) -> int:
     return run_command(cmd, dry_run=args.dry_run)
 
 
+def cmd_phase1_multisenge_order_aware_interventions(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_order_aware_interventions_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multisenge_order_aware_interventions",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--ranks",
+        args.ranks,
+        "--representations",
+        args.representations,
+        "--preprocessing",
+        args.preprocessing,
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--max_patches",
+        str(args.max_patches),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multiscale_order_aware_interventions(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multiscale_order_aware_interventions_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multiscale_order_aware_interventions",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--grids",
+        args.grids,
+        "--representations",
+        args.representations,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--spatial_smoothing_sigma",
+        str(args.spatial_smoothing_sigma),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--max_patches",
+        str(args.max_patches),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
 def cmd_phase1_registered_sequence_dynamics(args: argparse.Namespace) -> int:
     out = args.output_dir or f"phase1/outputs/registered_sequence_dynamics_{timestamp()}"
     cmd = [
@@ -771,6 +841,8 @@ def cmd_phase1_seasonal_regime_study(args: argparse.Namespace) -> int:
         args.ranks,
         "--preprocessing",
         args.preprocessing,
+        "--representations",
+        args.representations,
         "--height",
         str(args.height),
         "--width",
@@ -1478,6 +1550,44 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_phase1_multisenge_temporal_injections)
 
     p = sub.add_parser(
+        "phase1-multisenge-order-aware-interventions",
+        help="Stress-test unordered, difference, and trajectory subspaces on real MultiSenGE backgrounds.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=8)
+    p.add_argument("--ranks", default="1,2")
+    p.add_argument("--representations", default="unordered,difference,trajectory2,trajectory3")
+    p.add_argument("--preprocessing", default="feature_centered_observation_l2")
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multisenge_order_aware_interventions)
+
+    p = sub.add_parser(
+        "phase1-multiscale-order-aware-interventions",
+        help="Localize controlled temporal events with cell-wise unordered and trajectory subspaces.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=4)
+    p.add_argument("--grids", default="2,4")
+    p.add_argument("--representations", default="unordered,trajectory2")
+    p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--preprocessing", default="feature_centered_observation_l2")
+    p.add_argument("--spatial-smoothing-sigma", type=float, default=0.0)
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiscale_order_aware_interventions)
+
+    p = sub.add_parser(
         "phase1-registered-sequence-dynamics",
         help="Analyze first/second DS and spatial contributions on registered dated TIFFs.",
     )
@@ -1588,6 +1698,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument(
         "--preprocessing",
         default="uncentered,feature_centered,feature_centered_observation_l2",
+    )
+    p.add_argument(
+        "--representations",
+        default="unordered",
+        help="Comma-separated unordered,difference,trajectory2,trajectory3,...",
     )
     p.add_argument("--height", type=int, default=16)
     p.add_argument("--width", type=int, default=16)

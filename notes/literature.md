@@ -365,6 +365,7 @@ instead of collecting unrelated papers.
 | Source | Exact role | Project consequence |
 |---|---|---|
 | Fukui et al. 2024, *Second-order Difference Subspace*, https://arxiv.org/abs/2409.08563 | Defines generalized first DS, magnitude, second DS, subspace projection, and approximate along/orthogonal decomposition. | Primary formula source. It assumes equal `Delta t`; irregular satellite dates need a separately labeled adaptation. |
+| Kanai et al. 2023, *Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces*, https://arxiv.org/abs/2303.17802 | Builds SSA signal subspaces from scalar sliding-window trajectory matrices and compares past/present signal subspaces. | The project block-trajectory matrix is a multivariate satellite adaptation. An unordered annual observation span is not Kanai's order-aware construction. |
 | Fukui and Maki 2015, TPAMI DS/GDS/KDS/KGDS | Defines the broader DS/GDS and kernel family. | Must cite for DS lineage and avoid claiming DS itself is new. |
 | Edelman, Arias, and Smith 1998, https://doi.org/10.1137/S0895479895290954 | Standard Grassmann geodesics and interpolation. | Source for evaluating the endpoint geodesic at the observed acquisition fraction. |
 | Gatto et al. 2019, n-mode GDS, https://arxiv.org/abs/1909.01954 | Preserves tensor modes in generalized DS. | Future alternative if flattening spatial/spectral/time modes proves inadequate. |

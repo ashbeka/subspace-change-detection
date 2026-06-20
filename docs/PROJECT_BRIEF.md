@@ -187,9 +187,9 @@ whole-scene first/second/geodesic DS [done]
 -> bidirectional temporal-context DS/projection novelty [done]
 -> controlled persistent/transient/nuisance tests [done]
 -> synthetic seasonal observation subspace regime-change test [done]
--> verified real seasonal regime-change test [next]
+-> order-aware and local real-background interventions [done]
 -> independently labeled multi-temporal evaluation slice [next]
--> registration-robustness curve [next]
+-> registration/smoothing robustness curve [done, controlled only]
 -> MOSUM/BFAST/JUST pressure baselines
 ```
 
@@ -210,6 +210,16 @@ rank an injected abrupt boundary within a sequence but is weaker than simple
 NDVI/singular-value controls across sequences and remains sensitive to missing
 composites, drift, and translation. The next result must therefore use verified
 real temporal labels; synthetic success is not enough.
+
+The follow-up used five real MultiSenGE temporal backgrounds with exact
+controlled interventions. Unordered annual PCA was confirmed to be date-order
+invariant; first-difference and block-trajectory representations restore order
+sensitivity. For off-grid localized mode change, Gaussian-sigma-2 local
+eigenspectrum reached AP `0.688`, NDMI `0.680`, and first DS `0.456`. This is a
+competitive invariance tradeoff, not superiority: eigenspectrum rejected tested
+gain/offset but still responded to missing composites and translation. The
+project is now blocked on an independently labeled temporal slice, not another
+synthetic refinement.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 

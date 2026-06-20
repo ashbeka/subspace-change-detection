@@ -1269,3 +1269,66 @@ Controlled result, 2026-06-20:
 - Date permutation leaves the ordinary seasonal subspace unchanged. Order-aware
   Hankel/SSA/product-Grassmann construction remains a justified follow-up, not a
   current contribution.
+
+### 15.9 Order-Aware And Local Temporal Representations
+
+The unordered matrix `X=[x_1,...,x_T]` cannot encode date order because
+`span(XP)=span(X)` for a permutation matrix `P`. The order-aware adaptation now
+uses
+
+```text
+h_j = [x_j; ...; x_(j+L-1)]
+H_L = [h_1,...,h_(T-L+1)] in R^((D*L) x (T-L+1)).
+```
+
+Kanai et al. use a scalar SSA trajectory matrix. Replacing each scalar by one
+flattened multispectral observation is this project's multivariate satellite
+adaptation. First temporal differences are a simpler order-aware control.
+
+Construction card:
+
+| Field | Definition |
+|---|---|
+| Variants | unordered observations, first differences, block trajectory |
+| Sample unit | one aligned date observation of one fixed spatial cell |
+| Feature dimension | `D=B*N_cell`; trajectory dimension `D*L` |
+| Subspace | leading left singular vectors, usually rank 1-2 |
+| First comparison | canonical-angle DS magnitude / Grassmann distance |
+| Second comparison | Fukui second total, along, and orthogonal magnitudes |
+| Non-DS diagnostics | representation energy, normalized singular spectrum, normalized covariance operator |
+| Spatial extension | independent 2x2, 4x4, or 8x8 cell subspaces |
+| Preserved | fixed cell layout; trajectory variants also preserve local date neighborhoods |
+| Lost | unordered variant loses order; non-overlapping cells quantize boundaries |
+| Code | `phase1/subspace/temporal_trajectory.py`; MultiSenGE intervention runners |
+| Verification | eight invariance/formula tests plus controlled real-background nuisance studies |
+
+The normalized covariance diagnostic compares
+
+```text
+C_X = X X^T / trace(X X^T)
+d_cov(X,Y) = ||C_X-C_Y||_F.
+```
+
+It retains orientation and relative singular energy. It is not DS and must not
+be presented as Fukui's method. The implementation uses small Gram matrices so
+it does not form the huge ambient covariance.
+
+Controlled MultiSenGE findings:
+
+- trajectory/difference subspaces correctly respond to date permutations;
+- they did not outperform unordered seasonal descriptors on the current
+  localization task;
+- pure DS orientation discards amplitude changes that remain in the same span;
+- fine local support plus Gaussian sigma 2 raised unordered eigenspectrum AP to
+  `0.688`, versus NDMI `0.680` and first DS `0.456`;
+- eigenspectrum gain/offset false alarms were `0.050`, but missing-composite and
+  translation false alarms remained `0.358` and `0.292`;
+- these are controlled interventions, not natural-change accuracy.
+
+[gap] Does local eigenspectrum performance survive independently labeled
+temporal changes rather than injected spectral modes?
+[why it matters] Without this, the finding is a behavior study, not a remote-
+sensing result.
+[next check] Acquire one labeled DynamicEarthNet AOI or manually verify an
+IrrMapper/Sentinel-2 transition slice; compare DS, eigenspectrum, NDVI/NDMI/NBR,
+raw multispectral controls, and one established temporal-break baseline.

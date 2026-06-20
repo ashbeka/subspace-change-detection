@@ -910,6 +910,14 @@ orientation geometry adds radiometrically robust within-sequence timing or
 trajectory evidence, while singular energy carries amplitude change. This must
 be demonstrated on verified real transitions and against temporal baselines.
 
+The real-background intervention study sharpens this again. Block-trajectory
+subspaces restore temporal-order sensitivity but did not improve controlled
+localization. At fine local support, a smoothed temporal eigenspectrum was
+competitive with NDMI/NBR and more invariant to tested gain/offset, while pure
+first/second DS orientation was weaker. The immediate paper question is now
+whether this orientation-versus-spectrum tradeoff repeats on independently
+labeled events; it is not yet a method claim.
+
 Current evidence:
 
 - second/time-aware geometry has slightly stronger macro temporal agreement
@@ -923,14 +931,19 @@ Current evidence:
   gain is event-scale dependent and raw difference has the same cross-scale
   discrimination pattern;
 - IPOL agreement is not ground truth, so no performance claim is authorized.
+- In the off-grid MultiSenGE localization intervention, Gaussian-sigma-2 local
+  eigenspectrum AP was `0.688`, NDMI `0.680`, and first DS `0.456`; the
+  eigenspectrum/NDMI intervals overlap.
+- Eigenspectrum gain/offset false alarms were `0.050`, but missing-composite and
+  translation false alarms remained `0.358` and `0.292`.
 
 The strongest current paper hypothesis is therefore:
 
 ```text
-Can a registration-robust temporal subspace pipeline separate (a) when and how
-a multispectral scene trajectory changes from (b) where persistent change
-occurs, using geodesic descriptors for temporal characterization and
-cross-context projection novelty for localization?
+Can local temporal subspace orientation and eigenspectrum descriptors separate
+(a) when/how a multispectral trajectory changes from (b) where a persistent
+spectral-mode change occurs, while remaining distinguishable from missing-data,
+radiometric, and registration artifacts?
 ```
 
 This is a sharper version of ranks 1-4, not a new eleventh project. It survives

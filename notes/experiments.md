@@ -1081,3 +1081,73 @@ Data gate:
   project is configured.
 - IrrMapper transitions remain weak labels; manual/independent verification is
   required before performance testing.
+
+### 10.10 Real-Background Order And Localization Result
+
+Completed 2026-06-20:
+
+1. Corrected the temporal construction distinction:
+   - unordered annual PCA is invariant to date permutation;
+   - first differences and block trajectory matrices are order-aware;
+   - eight formula/invariance tests pass.
+2. Ran global/crop controlled interventions on five MultiSenGE patches:
+   - `8` repeats, `23` dates, ranks `1,2`, four representations, four
+     preprocessing modes;
+   - best DS-family AP `0.448`; normalized trajectory DS AP `0.365`;
+   - simple amplitude/spectrum controls were stronger.
+3. Ran cell-wise localization with exact injected masks:
+   - randomized off-grid supports;
+   - grids `2,4,8`;
+   - stable, gain/offset, phase, missing-composite, translation, global-
+     amplitude, and localized-mode scenarios;
+   - patch-level bootstrap, not pixel-independent bootstrap.
+4. Ran a smoothing robustness curve and fair multispectral controls:
+   - local eigenspectrum AP increased `0.516 -> 0.650 -> 0.688` for Gaussian
+     sigma `0,1,2`;
+   - translation false alarms decreased `0.847 -> 0.607 -> 0.292`;
+   - missing-composite false alarms decreased `0.843 -> 0.563 -> 0.358`;
+   - sigma-2 AP: eigenspectrum `0.688`, NDMI `0.680`, NBR `0.637`, NDVI
+     `0.486`, first DS `0.456`;
+   - paired eigenspectrum-minus-NDMI delta AP `+0.008`, 95% CI
+     `-0.249` to `+0.244`; there is no superiority claim;
+   - paired eigenspectrum-minus-first-DS delta AP `+0.233`, 95% CI
+     `+0.084` to `+0.354` in this controlled task.
+
+Decision:
+
+- retain first/second DS as interpretable trajectory descriptors;
+- do not treat pure DS as the winning detector;
+- promote local temporal eigenspectrum as a candidate companion descriptor;
+- keep order-aware trajectory matrices for event timing/order questions, not
+  because they won the current localization intervention;
+- stop synthetic/controlled refinement until a real-label slice is prepared.
+
+Immediate next experiment: independently labeled temporal gate
+
+```text
+one labeled AOI/transition source
+-> fixed spatial supports and temporal windows
+-> local eigenspectrum + first/second DS + geodesic quantities
+-> NDVI/NDMI/NBR + raw multispectral controls
+-> MOSUM or BFAST/JUST pressure baseline
+-> held-out region/time evaluation
+```
+
+Preferred route: selectively acquire one DynamicEarthNet AOI and its monthly
+labels. Do not download the full ~524 GB archive. Alternative: configure an
+Earth Engine project, extract a small IrrMapper/Sentinel-2 slice, and manually
+verify transition fields before scoring.
+
+Required decision gates:
+
+- Event labels must be independent of the tested Sentinel-2/Planet features.
+- Acquisition dates and masks must be explicit.
+- Thresholds or calibration must be fit outside the held-out AOI/year.
+- Eigenspectrum must beat or complement the best index/break baseline on at
+  least one repeatable event class, or the contribution becomes a negative
+  diagnostic.
+- Missing observations and residual registration must remain explicit
+  nuisance strata.
+
+Report:
+`docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.

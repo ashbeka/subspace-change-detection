@@ -165,3 +165,140 @@ the hyperspectral benchmark route.
 - Method: `phase1/subspace/seasonal_observations.py`
 - Runner: `phase1/scripts/evaluate_seasonal_regime_subspaces.py`
 - Tests: `tests/test_seasonal_observation_subspaces.py`
+
+## 9. Order-Aware Construction Correction
+
+The first seasonal construction above is an unordered observation matrix. It
+does **not** implement Kanai et al.'s trajectory construction. For any date
+permutation matrix `P`,
+
+```text
+span(X P) = span(X).
+```
+
+At full numerical rank it is also invariant to any invertible mixing of the
+date columns. Therefore it represents the annual observation span but cannot
+encode temporal order.
+
+The corrected order-aware adaptation is the multivariate block trajectory
+matrix
+
+```text
+h_j = [x_j; x_(j+1); ...; x_(j+L-1)]
+H_L = [h_1, ..., h_(T-L+1)] in R^((D*L) x (T-L+1)).
+```
+
+This follows the role of Kanai et al.'s scalar SSA trajectory matrix while
+replacing each scalar lag by one flattened spatial-spectral observation. It is
+a project adaptation, not an equation copied from that paper. A first-
+difference matrix `[x_2-x_1, ..., x_T-x_(T-1)]` is retained as a simpler
+order-aware control.
+
+Eight formula/invariance tests verify equal-sequence behavior, matrix shapes,
+unordered permutation/mixing invariance, order-aware permutation response, and
+the covariance diagnostic.
+
+## 10. Real-Background Controlled Study
+
+Five MultiSenGE patches supplied real 23-date Sentinel-2 backgrounds. The
+study sampled eight 32x32 crops per patch and applied known transformations to
+two later pseudo-years. This produced `2560` global/crop-level rows per
+preprocessing condition.
+
+Tested events:
+
+- global seasonal-amplitude change;
+- localized red/NIR/SWIR seasonal-mode change.
+
+Tested negatives/confounders:
+
+- stable acquisition jitter;
+- gain/offset;
+- seasonal phase shift;
+- missing/interpolated composites;
+- one-pixel translation.
+
+The normalized order-aware geometry did not reproduce the synthetic result.
+Best DS-family AP was `0.365`; NDVI-amplitude AP was `0.875`. Across four
+preprocessing modes, the best pure orientation result was AP `0.448`
+(`column_l2`, unordered second-orthogonal). Unordered singular-spectrum change
+reached AP `0.822`, but this aggregate result was driven mainly by the global
+amplitude event.
+
+Interpretation: DS compares basis orientation and discards singular-value
+energy. An amplitude change can stay inside the same seasonal mode span and is
+therefore invisible to pure orientation geometry. Feature centering plus
+column normalization can remove that amplitude exactly.
+
+## 11. Multiscale Localization And Fair Controls
+
+The follow-up fitted one temporal subspace per grid cell and evaluated exact
+injected pixels against stable/nuisance pixels. Event supports were randomized
+off grid before the final run. The strongest resolution was an 8x8 grid over
+32x32 crops (4x4 pixels per cell).
+
+Gaussian low-pass support was predeclared as a registration-robustness control:
+
+| sigma | local eigenspectrum AP | local DS AP | local NDVI AP | eigenspectrum translation false alarm | eigenspectrum missing-composite false alarm |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0.516 | 0.238 | 0.421 | 0.847 | 0.843 |
+| 1 | 0.650 | 0.376 | 0.460 | 0.607 | 0.563 |
+| 2 | 0.688 | 0.456 | 0.486 | 0.292 | 0.358 |
+
+At sigma 2, patch-bootstrap results for localized change were:
+
+| score | AUROC | AP (95% patch-bootstrap CI) |
+|---|---:|---:|
+| normalized temporal eigenspectrum change | 0.973 | 0.688 (0.578-0.792) |
+| NDMI amplitude change | 0.947 | 0.680 (0.526-0.822) |
+| normalized covariance-operator change | 0.950 | 0.667 (0.374-0.849) |
+| NBR amplitude change | 0.937 | 0.637 (0.478-0.816) |
+| NDVI amplitude change | 0.898 | 0.486 (0.416-0.590) |
+| first DS magnitude | 0.923 | 0.456 (0.247-0.668) |
+
+The eigenspectrum is therefore competitive with the best spectral-index
+control, not superior to it. Its useful tradeoff is invariance to the tested
+gain/offset: `0.050` false-alarm rate versus `0.970` for NDMI. It remains more
+sensitive to missing composites (`0.358` versus `0.156`).
+
+The paired patch bootstrap confirms the boundary: eigenspectrum minus NDMI was
+only `+0.008` AP (95% CI `-0.249` to `+0.244`), while eigenspectrum minus first
+DS was `+0.233` (95% CI `+0.084` to `+0.354`).
+
+The earlier NDVI-only comparison overstated the result. Adding NDMI, NBR,
+per-band amplitude, and multispectral curve controls removed that overclaim.
+
+## 12. Current Finding And Decision Gate
+
+The surviving controlled finding is:
+
+```text
+For localized seasonal spectral-mode interventions on real Sentinel-2
+backgrounds, fine local support plus low-pass preprocessing makes temporal
+eigenspectrum change competitive with strong spectral-index controls while
+retaining better tested gain/offset invariance. Pure DS orientation is useful
+but weaker. Order-aware trajectory DS restores temporal-order sensitivity but
+does not improve this event-localization task.
+```
+
+This is not yet publishable performance evidence because the events are
+injected and the five MultiSenGE patches do not contain event-time labels. The
+next gate is an independently labeled temporal slice, preferably a selectively
+acquired DynamicEarthNet AOI or manually verified IrrMapper/Sentinel-2
+transition. Required comparisons are local eigenspectrum, first/second DS,
+NDVI/NDMI/NBR, raw multispectral controls, and one established temporal break
+method. If the result does not survive held-out real events, retain it as a
+negative diagnostic about what subspace orientation discards.
+
+Additional artifacts:
+
+- order-aware synthetic ablation:
+  `phase1/outputs/order_aware_seasonal_ablation_20260620_062052/`;
+- real-background global study:
+  `phase1/outputs/multisenge_order_aware_interventions_20260620_193159/`;
+- off-grid multiscale study:
+  `phase1/outputs/multiscale_order_aware_offgrid_20260620_195608/`;
+- sigma-2 fair-control study:
+  `phase1/outputs/multiscale_order_aware_fair_controls_20260620_201745/`;
+- winning-configuration visualization:
+  `phase1/outputs/multiscale_order_aware_winning_visual_20260620_201208/`.

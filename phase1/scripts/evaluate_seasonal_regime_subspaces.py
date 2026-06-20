@@ -2,7 +2,7 @@
 
 This script is a controlled method test, not real irrigation performance.  It
 constructs five-year multispectral seasonal sequences with known changes and
-nuisances, builds one temporal-observation subspace per year, and compares:
+nuisances, builds one temporal subspace per year, and compares:
 
 - first DS magnitude and Grassmann distance;
 - minimum principal angle;
@@ -11,10 +11,11 @@ nuisances, builds one temporal-observation subspace per year, and compares:
 - paper-faithful second DS along/orthogonal decomposition.
 
 Source trail:
-- Kanai et al. (2023) motivates temporal signal-subspace anomaly comparison;
+- Kanai et al. (2023) supplies the scalar SSA trajectory-matrix construction;
 - Fukui et al. (2024) defines first/second DS and the geodesic decomposition;
-- the synthetic seasonal generator and evaluation protocol are project-designed
-  stress tests intended to expose both capability and failure boundaries.
+- the block-Hankel satellite representation, first-difference control,
+  synthetic seasonal generator, and evaluation protocol are project-designed
+  adaptations intended to expose both capability and failure boundaries.
 """
 
 from __future__ import annotations
@@ -34,11 +35,11 @@ from phase1.subspace.geodesic import (
   principal_angles,
   subspace_magnitude,
 )
-from phase1.subspace.seasonal_observations import (
-  SeasonalObservationSubspace,
-  build_seasonal_observation_subspace,
-  normalized_singular_spectrum_change,
-  singular_energy_change,
+from phase1.subspace.temporal_trajectory import (
+  TemporalRepresentationSubspace,
+  build_temporal_representation_subspace,
+  representation_energy_change,
+  representation_spectrum_change,
 )
 from phase1.subspace.second_order_ds import second_order_difference_subspace
 
@@ -67,6 +68,11 @@ def parse_args() -> argparse.Namespace:
   parser.add_argument(
     "--preprocessing",
     default="uncentered,feature_centered,feature_centered_observation_l2",
+  )
+  parser.add_argument(
+    "--representations",
+    default="unordered",
+    help="Comma-separated unordered,difference,trajectory2,trajectory3,...",
   )
   parser.add_argument("--height", type=int, default=16)
   parser.add_argument("--width", type=int, default=16)
@@ -226,17 +232,38 @@ def _fit_years(
   *,
   rank: int,
   preprocessing: str,
-) -> list[SeasonalObservationSubspace]:
+  representation: str,
+  lag: int,
+) -> list[TemporalRepresentationSubspace]:
   mask = np.ones(years[0][0].shape[1:], dtype=bool)
   return [
-    build_seasonal_observation_subspace(
+    build_temporal_representation_subspace(
       season,
       mask,
       rank=rank,
       preprocessing=preprocessing,
+      representation=representation,
+      lag=lag,
     )
     for season in years
   ]
+
+
+def _parse_representation(value: str) -> tuple[str, int, str]:
+  key = value.strip().lower().replace("-", "_")
+  if key == "unordered":
+    return "unordered", 1, "unordered"
+  if key in {"difference", "first_difference"}:
+    return "difference", 1, "difference"
+  if key.startswith("trajectory"):
+    suffix = key.removeprefix("trajectory").lstrip("_")
+    lag = int(suffix) if suffix else 3
+    return "trajectory", lag, f"trajectory{lag}"
+  if key.startswith("hankel"):
+    suffix = key.removeprefix("hankel").lstrip("_")
+    lag = int(suffix) if suffix else 3
+    return "trajectory", lag, f"trajectory{lag}"
+  raise ValueError(f"Unsupported representation specification: {value!r}")
 
 
 def _metric_summary(
@@ -249,9 +276,14 @@ def _metric_summary(
   rng: np.random.Generator,
 ) -> list[dict]:
   output: list[dict] = []
-  groups = sorted({(row["preprocessing"], int(row["rank"])) for row in rows})
-  for preprocessing, rank in groups:
-    selected = [row for row in rows if row["preprocessing"] == preprocessing and int(row["rank"]) == rank]
+  groups = sorted({(row["representation"], row["preprocessing"], int(row["rank"])) for row in rows})
+  for representation, preprocessing, rank in groups:
+    selected = [
+      row for row in rows
+      if row["representation"] == representation
+      and row["preprocessing"] == preprocessing
+      and int(row["rank"]) == rank
+    ]
     labels = np.asarray([int(row[label_name]) for row in selected], dtype=int)
     if np.unique(labels).size < 2:
       continue
@@ -284,6 +316,7 @@ def _metric_summary(
         predicted = indices[int(np.argmax(scores[indices]))]
         top1.append(int(labels[predicted] == 1))
       output.append({
+        "representation": representation,
         "preprocessing": preprocessing,
         "rank": rank,
         "score": score_name,
@@ -311,9 +344,14 @@ def _nuisance_false_alarm_summary(rows: list[dict], score_names: list[str]) -> l
     "spatial_translation",
     "gradual_shape_drift",
   }
-  groups = sorted({(row["preprocessing"], int(row["rank"])) for row in rows})
-  for preprocessing, rank in groups:
-    selected = [row for row in rows if row["preprocessing"] == preprocessing and int(row["rank"]) == rank]
+  groups = sorted({(row["representation"], row["preprocessing"], int(row["rank"])) for row in rows})
+  for representation, preprocessing, rank in groups:
+    selected = [
+      row for row in rows
+      if row["representation"] == representation
+      and row["preprocessing"] == preprocessing
+      and int(row["rank"]) == rank
+    ]
     for score_name in score_names:
       stable_values = np.asarray(
         [float(row[score_name]) for row in selected if row["scenario"] in stable], dtype=float
@@ -324,6 +362,7 @@ def _nuisance_false_alarm_summary(rows: list[dict], score_names: list[str]) -> l
           [float(row[score_name]) for row in selected if row["scenario"] == scenario], dtype=float
         )
         output.append({
+          "representation": representation,
           "preprocessing": preprocessing,
           "rank": rank,
           "score": score_name,
@@ -353,12 +392,18 @@ def _plot_summary(summary: list[dict], output: Path) -> None:
     "ndvi_curve_rms",
     "ndvi_amplitude_change",
   ]
-  configs = sorted({(row["preprocessing"], int(row["rank"])) for row in summary})
+  configs = sorted({
+    (row["representation"], row["preprocessing"], int(row["rank"]))
+    for row in summary
+  })
   matrix = np.full((len(methods), len(configs)), np.nan, dtype=float)
-  index = {(row["score"], row["preprocessing"], int(row["rank"])): row for row in summary}
+  index = {
+    (row["score"], row["representation"], row["preprocessing"], int(row["rank"])): row
+    for row in summary
+  }
   for row_index, method in enumerate(methods):
     for col_index, config in enumerate(configs):
-      item = index.get((method, config[0], config[1]))
+      item = index.get((method, config[0], config[1], config[2]))
       if item:
         matrix[row_index, col_index] = float(item["average_precision"])
   figure, axis = plt.subplots(figsize=(max(10, 1.25 * len(configs)), 6.5))
@@ -366,7 +411,10 @@ def _plot_summary(summary: list[dict], output: Path) -> None:
   axis.set_yticks(range(len(methods)), [name.replace("_", " ") for name in methods])
   axis.set_xticks(
     range(len(configs)),
-    [f"{name.replace('_', ' ')}\nr={rank}" for name, rank in configs],
+    [
+      f"{representation}\n{name.replace('_', ' ')}\nr={rank}"
+      for representation, name, rank in configs
+    ],
     rotation=45,
     ha="right",
   )
@@ -387,6 +435,11 @@ def main() -> None:
   output.mkdir(parents=True, exist_ok=True)
   ranks = sorted({int(value) for value in args.ranks.split(",") if value.strip()})
   preprocessing_modes = [value.strip() for value in args.preprocessing.split(",") if value.strip()]
+  representations = [
+    _parse_representation(value)
+    for value in args.representations.split(",")
+    if value.strip()
+  ]
   rng = np.random.default_rng(args.seed)
   boundary_rows: list[dict] = []
   triple_rows: list[dict] = []
@@ -403,56 +456,70 @@ def main() -> None:
       )
       raw_boundary = [_raw_boundary_scores(years[index], years[index + 1]) for index in range(4)]
       raw_second = [_raw_second_scores(years[index - 1], years[index], years[index + 1]) for index in range(1, 4)]
-      for preprocessing in preprocessing_modes:
-        for rank in ranks:
-          fitted = _fit_years(years, rank=rank, preprocessing=preprocessing)
-          effective_rank = min(item.rank for item in fitted)
-          if effective_rank < 1:
-            continue
-          bases = [item.basis[:, :effective_rank] for item in fitted]
-          for boundary in range(4):
-            angles = principal_angles(bases[boundary], bases[boundary + 1])
-            row = {
-              "sequence_id": sequence_id,
-              "scenario": scenario,
-              "repeat": repeat,
-              "preprocessing": preprocessing,
-              "rank": effective_rank,
-              "boundary": boundary,
-              "event_boundary": -1 if event_boundary is None else event_boundary,
-              "is_abrupt_event_boundary": int(event_boundary == boundary),
-              "is_shape_event_boundary": int(
-                event_boundary == boundary and scenario in {"abrupt_shape_on", "abrupt_shape_off"}
-              ),
-              "is_amplitude_event_boundary": int(
-                event_boundary == boundary and scenario == "abrupt_amplitude_only"
-              ),
-              "first_ds_magnitude": subspace_magnitude(bases[boundary], bases[boundary + 1]) / effective_rank,
-              "first_geodesic": grassmann_geodesic_distance(bases[boundary], bases[boundary + 1]) / np.sqrt(effective_rank),
-              "minimum_principal_angle": float(np.min(angles)) if angles.size else 0.0,
-              "seasonal_energy_change": singular_energy_change(fitted[boundary], fitted[boundary + 1]),
-              "singular_spectrum_change": normalized_singular_spectrum_change(fitted[boundary], fitted[boundary + 1]),
-              **raw_boundary[boundary],
-            }
-            boundary_rows.append(row)
-          for center in range(1, 4):
-            result = second_order_difference_subspace(
-              bases[center - 1], bases[center], bases[center + 1], decompose=True
-            )
-            triple_rows.append({
-              "sequence_id": sequence_id,
-              "scenario": scenario,
-              "repeat": repeat,
-              "preprocessing": preprocessing,
-              "rank": effective_rank,
-              "center_year": center,
-              "event_boundary": -1 if event_boundary is None else event_boundary,
-              "is_post_event_year": int(event_boundary is not None and center == event_boundary + 1),
-              "second_magnitude": float(result.mag_total) / effective_rank,
-              "second_along": float(result.mag_along or 0.0) / effective_rank,
-              "second_orthogonal": float(result.mag_orth or 0.0) / effective_rank,
-              **raw_second[center - 1],
-            })
+      for representation, lag, representation_name in representations:
+        for preprocessing in preprocessing_modes:
+          fitted = _fit_years(
+            years,
+            rank=max(ranks),
+            preprocessing=preprocessing,
+            representation=representation,
+            lag=lag,
+          )
+          available_rank = min(item.rank for item in fitted)
+          evaluated_ranks: set[int] = set()
+          for rank in ranks:
+            effective_rank = min(int(rank), available_rank)
+            if effective_rank < 1 or effective_rank in evaluated_ranks:
+              continue
+            evaluated_ranks.add(effective_rank)
+            bases = [item.basis[:, :effective_rank] for item in fitted]
+            for boundary in range(4):
+              angles = principal_angles(bases[boundary], bases[boundary + 1])
+              row = {
+                "sequence_id": sequence_id,
+                "scenario": scenario,
+                "repeat": repeat,
+                "representation": representation_name,
+                "lag": lag,
+                "preprocessing": preprocessing,
+                "rank": effective_rank,
+                "boundary": boundary,
+                "event_boundary": -1 if event_boundary is None else event_boundary,
+                "is_abrupt_event_boundary": int(event_boundary == boundary),
+                "is_shape_event_boundary": int(
+                  event_boundary == boundary and scenario in {"abrupt_shape_on", "abrupt_shape_off"}
+                ),
+                "is_amplitude_event_boundary": int(
+                  event_boundary == boundary and scenario == "abrupt_amplitude_only"
+                ),
+                "first_ds_magnitude": subspace_magnitude(bases[boundary], bases[boundary + 1]) / effective_rank,
+                "first_geodesic": grassmann_geodesic_distance(bases[boundary], bases[boundary + 1]) / np.sqrt(effective_rank),
+                "minimum_principal_angle": float(np.min(angles)) if angles.size else 0.0,
+                "seasonal_energy_change": representation_energy_change(fitted[boundary], fitted[boundary + 1]),
+                "singular_spectrum_change": representation_spectrum_change(fitted[boundary], fitted[boundary + 1]),
+                **raw_boundary[boundary],
+              }
+              boundary_rows.append(row)
+            for center in range(1, 4):
+              result = second_order_difference_subspace(
+                bases[center - 1], bases[center], bases[center + 1], decompose=True
+              )
+              triple_rows.append({
+                "sequence_id": sequence_id,
+                "scenario": scenario,
+                "repeat": repeat,
+                "representation": representation_name,
+                "lag": lag,
+                "preprocessing": preprocessing,
+                "rank": effective_rank,
+                "center_year": center,
+                "event_boundary": -1 if event_boundary is None else event_boundary,
+                "is_post_event_year": int(event_boundary is not None and center == event_boundary + 1),
+                "second_magnitude": float(result.mag_total) / effective_rank,
+                "second_along": float(result.mag_along or 0.0) / effective_rank,
+                "second_orthogonal": float(result.mag_orth or 0.0) / effective_rank,
+                **raw_second[center - 1],
+              })
       sequence_id += 1
 
   _write_csv(output / "boundary_scores.csv", boundary_rows)
@@ -531,6 +598,7 @@ def main() -> None:
     "event_scenarios": sorted(EVENT_SCENARIOS),
     "ranks": ranks,
     "preprocessing": preprocessing_modes,
+    "representations": [name for _, _, name in representations],
     "seed": args.seed,
     "noise": args.noise,
     "bootstrap_resamples": args.bootstrap,

@@ -28,7 +28,7 @@ Read these first:
    - Current spatial-DS decision report: corrected Celik/IR-MAD pressure baselines, Band-Image rank sensitivity, label-free fusion, fixed-grid pyramid stop decision, and next evidence gate.
 
 6. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
-   - Synthetic stress test of annual subspaces built from repeated seasonal observations, including first/second DS, geodesic scores, nuisance failures, rank sensitivity, and the real IrrMapper evidence gate.
+   - Synthetic and real-background controlled tests of unordered, trajectory, first/second DS, local eigenspectrum, nuisance robustness, and the independent-label evidence gate.
 
 7. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the historical OSCD 3-seed neural sweep.

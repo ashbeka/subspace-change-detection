@@ -577,6 +577,20 @@ phase shift, radiometric nuisance, missing composites, and translation:
 $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-seasonal-regime-study --repeats 80 --ranks 1,2,4,8 --preprocessing uncentered,feature_centered,feature_centered_observation_l2 --bootstrap 200 --output-dir "phase1/outputs/seasonal_regime_subspace_study_$tag"
 ```
 
+Compare unordered, first-difference, and block-trajectory subspaces on real
+MultiSenGE backgrounds with controlled event and nuisance transformations:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-order-aware-interventions --output-dir "phase1/outputs/multisenge_order_aware_interventions_$tag" --crop-size 32 --repeats 8 --max-patches 5 --ranks 1,2 --representations unordered,difference,trajectory2,trajectory3 --preprocessing feature_centered_observation_l2 --bootstrap 300
+```
+
+Run the strongest current local/off-grid controlled protocol with fair
+multispectral index controls:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multiscale-order-aware-interventions --output-dir "phase1/outputs/multiscale_order_aware_fair_controls_$tag" --crop-size 32 --grids 8 --representations unordered --rank 1 --preprocessing feature_centered_observation_l2 --spatial-smoothing-sigma 2 --repeats 4 --max-patches 5 --bootstrap 300
+```
+
 Check public IrrMapper coverage and, after configuring an Earth Engine-enabled
 Cloud project, query one candidate AOI without downloading imagery:
 
@@ -601,6 +615,9 @@ Interpretation rules:
 - The seasonal-regime command is synthetic diagnostics, not irrigation
   accuracy. Real IrrMapper transitions are weak labels and require manual or
   independent verification.
+- The order-aware and multiscale intervention commands use real backgrounds but
+  injected transformations. They test behavior/localization, not natural event
+  accuracy. Do not report their AP as DynamicEarthNet or IrrMapper performance.
 
 ## 7. Phase 2 Config Matrix
 
