@@ -58,12 +58,16 @@ change — characterize HOW (velocity = 1st-order DS, acceleration = 2nd-order D
 geodesic along/orthogonal split). *Defensible:* Sensei's flagship 2024 paper, first satellite application,
 less-crowded niche (few methods characterize change dynamics), max novelty. *Risk:* geodesic-suppresses-
 seasonality is unproven; needs ≥3 dates or spectral-SSA; no labeled HSI time series (synthetic + S2 only).
-[STATUS 2026-06-20 — LARGELY CLOSED] H-B-1/1b (synthetic): trajectory curvature is REDUNDANT with the
-mean-spectrum vector 2nd-difference ||Δ²m||; 2nd-order DS magnitude never fired; the subspace is NOT
-nuisance-invariant. Only residual = a modest, NON-unique edge as a sensitive/sample-robust detector of
-MEAN-PRESERVING distributional change (rotate/stable AUC 1.0 vs cov-Frobenius 0.70, mean-nulls 0.58) — but
-not scale-invariant, and covariance statistics also detect it. Reports: HB1_trajectory / HB1b_*_2026-06-20.
-Do NOT drill more synthetic H-B. The distributional-change thread needs Task B lit-adjudication before real data.
+[STATUS 2026-06-20 — RE-OPENED after reading the papers] My crude H-B-1/1b synthetics showed trajectory
+curvature redundant with the mean-vector 2nd-difference ||Δ²m|| AND a modest distributional-change edge
+(rotate/stable AUC 1.0 vs cov-Frob 0.70). BUT see docs/SUBSPACE_CONSTRUCTION_LEDGER.md §3: (1) my 2nd-order DS
+impl is FAITHFUL (verified vs arXiv:2409.08563) — it read ~0 only because my constructions had NO acceleration
+signal (uniform rotation = constant velocity = zero acceleration); it is UNTESTED for its real purpose. (2) My
+"temporal DS failed on S2" never implemented the lab's actual method — Kanai'23 (arXiv:2303.17802) uses SSA
+signal subspaces + a LEARNED non-anomalous reference DS D_N (model-the-normal, flag-the-residual = the
+invariance lever) + direction/magnitude indices; I never built D_N. So temporal-DS/H-B is NOT fairly closed.
+NEW LEAD: implement the faithful Kanai signal-subspace DS (with D_N) + test where raw temporal DS failed (S2
+seasonality) and on HSI. Reports: HB1_trajectory / HB1b_*_2026-06-20.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
