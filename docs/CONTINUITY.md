@@ -84,6 +84,13 @@ doesn't localize a no-change join, 1.96 vs 3.10). FIRST real positive in the pro
 artificial (1.6x real-vs-artifact sep), n=1, and IR-MAD/SFA bars NOT yet compared (IR-MAD owns detection
 elsewhere). NEXT: IR-MAD/SFA sliding-window baselines + a NATURAL gradual change (deforestation/irrigation) +
 multi-case. This is the live lead — pursue it. Report: ssds_longseries_2026-06-20.
+[LEAD SURVIVES make-or-break 2026-06-20 — ssds_validate] a_hat BEATS the STANDARD harmonic deseasonalization
+(BFAST/CCDC; K=3, given its fair change-point/mean-shift form) AND windowed SFA-CD: a_hat is the ONLY method
+that localizes the splice (margin 3.10 vs harmonic_cp 1.19, SFA 0.99), seasonality-robust (0.055 vs harmonic
+0.149), null-splice clean. Likely edge = M-SSA models JOINT cross-band+temporal structure that per-band harmonic
+misses (theory-consistent: multi-dim ⇒ DS≠SAM). Strongest positive so far. Caveats: n=1 splice (large/artificial
+change), windowed-SFA showing likely my poor adaptation, per-pixel IR-MAD untested. NEXT to convert lead→result:
+NATURAL gradual change (deforestation/irrigation) + multi-case + per-pixel IR-MAD. Report: ssds_validate_2026-06-20.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
