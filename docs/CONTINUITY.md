@@ -153,6 +153,14 @@ positive lead CLOSED by its own pre-registered null. ⇒ EVERY subspace-positive
 characterization (T1), warp (T2/DTW), material-subspace, orientation. THE DIAGNOSTIC IS THE CONTRIBUTION
 (comprehensively supported incl. real bitemporal HSI + the correct nulls). Positive hunt EXHAUSTED; remaining
 low-prob stone = Codex Ch2 attribution (likely redundant w/ per-band diff). Report: orientation_factorization_2026-06-21.
+[POSITIVE HUNT COMPLETE 2026-06-21] N<<B small-sample twist FAILED (set-subspace WORST, 0.67, on real Hermiston;
+small_sample_subspace_cd) + attribution (Codex Ch2) FAILED (DS-basis near-random 0.18-0.26 vs per-band diff
+0.6-1.0; attribution_test). EVERY cell now closed: detection (all regimes) / characterization(T1) / warp(T2-DTW)
+/ material-subspace / orientation(corr) / small-sample / attribution. Subspace geometry dominated by a simpler
+standard statistic EVERYWHERE. Only untested cell = H-C deep-feature geometry (engineering-heavy; any win =
+the features' not the geometry's) — NOT recommended. CONCLUSION: the DIAGNOSTIC is the contribution (real-data
+validated, pre-registered nulls, 2 minings corroborate, Sensei novelty bar). Pivot to consolidation/seminar when
+the user is ready. Reports: small_sample_subspace_cd / attribution_test _2026-06-21.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
