@@ -62,7 +62,7 @@ checking the closest prior work; be blunt and honest — do not defend a failing
 frequently. When you hit a wall, find a smart workaround rather than stopping.
 
 ## 4. THE RESEARCH-MINING PROGRAM (execute in order; commit each deliverable)
-1. **Deep-study the provided ~20 papers** (in the notes/source_records location) PLUS the core subspace papers
+1. **Deep-study the provided ~20 papers** (I'll provide you the papers in the prompt) PLUS the core subspace papers
    (DS/GDS/KDS/KGDS TPAMI-2015; 2nd-order DS arXiv:2409.08563; SSA-anomaly-DS arXiv:2303.17802; SLS; SFA/SFS;
    S3CCA/TRCCA; and "Geometry of subspace set and its application to machine learning" 2024). Build a
    structured **KNOWLEDGE BASE** (`docs/kb/`): per paper → method + math, the signal/subspace idea, the
