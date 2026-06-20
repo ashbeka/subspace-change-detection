@@ -124,6 +124,17 @@ pre-registered outcome). So detection AND characterization-via-T1 both fold into
 (+ T1 as a negative row). The ONE remaining genuinely-novel positive bet = T2 (RTW warp-invariant phenological
 CD; RTW never in RS, Sensei-endorsed) — go/no-go = phase-shift(nuisance) vs same-phase shape-change(real),
 warp-invariant subspace vs phase-aware harmonic (synthesis §3). Report: t1_changetype_2026-06-20.
+[REAL-DATA CLOSURE 2026-06-21 — hermiston_bitemporal] DATA UNBLOCKED: real bitemporal HSI now in hand at
+data_hsi/ChangeDetectionDataset/ (Hermiston 242-band + 5-class change-type GT present; Bay Area/Santa Barbara
+readme-only). FIRST real bitemporal HSI test: DETECTION CLOSED — DS(wavelength-Hankel) 0.534 near-chance vs
+CVA 0.981 / SAM 0.848 / IR-MAD 0.562; DS−SAM gap negative (−0.31 @242 bands) and does NOT grow with band count
+→ the dimensionality hypothesis is FALSIFIED on REAL data (capstone diagnostic row; change is amplitude-dominated
+→ DS's amplitude-invariance discards the signal). ATTRIBUTION (C5): DS gives a DIFFERENT band ranking (corr 0.05
+vs per-band-diff) + per-type band differences, BUT class4 picks noisy edge bands 239-241 → likely partly noise;
+UNVALIDATED (Codex gate: must beat per-band-diff/sparse-PCA). Both Claude+Codex minings converge: detection
+closed, attribution+orientation-factorization are the only open characterization cells. Report:
+hermiston_bitemporal_2026-06-21. NEXT in line: T2 RTW warp-invariance go/no-go. Codex mining (challenges 1,2) at
+E:/research_projects/subspace-change-detection-research-mining/docs/research/ — orientation-factorization + contiguous-band attribution.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
