@@ -107,6 +107,16 @@ pre). a_hat FAILS on 0/3 (AUC 0.55-0.66), beaten by harmonic deseasonalization A
 COMPREHENSIVELY FALSIFIED on real data (with H-A IR-MAD + H-B-crude mean-vector). THE CONTRIBUTION IS THE
 DIAGNOSTIC: "when/why does subspace geometry help/fail for satellite CD, and when is it just spectral-angle /
 mean-vector / harmonic-deseasonalization." Next: consolidate the diagnostic paper. Report: ssds_phenology_2026-06-20.
+[EXHAUSTED THE REMAINING IDEAS 2026-06-20] (e) MATERIAL-SUBSPACE MSM/GDS CD (the lab's own framing, Salinas
+204-band): NEGATIVE — SAM-to-mean beats MSM/GDS under nuisance and the subspace gets MONOTONICALLY WORSE with
+more dims (tolerance is a liability for detection); GDS removes discriminative info. Report:
+material_subspace_cd_2026-06-20. (d) SPECTRAL/BAND-SUBSPACE for ABRUPT damage (Gaza), head-to-head on the
+Tenerife fire: band-subspace margin 1.96 vs SAM 1.10 / CVA 1.01 — a modest, FRAGILE edge, doesn't robustly
+localize, beaten by the NBR domain index → not compelling; folds into the diagnostic. (f) re-implementation
+fairness: confirmed via K-sweep (K=2/3/8 all lose to SAM). ⇒ EVERY subspace-as-detector idea — incl. the lab's
+MSM/GDS and the user's material-subspace + spectral-damage ideas — fairly tested and FAILED. The DIAGNOSTIC is
+the contribution. Surviving positive sliver = subspace for ATTRIBUTION/characterization (not detection), untested.
+Approach ranking + paper skeletons: docs/RESEARCH_APPROACHES_RANKED.md. Research-mining session running in parallel.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
