@@ -161,6 +161,15 @@ standard statistic EVERYWHERE. Only untested cell = H-C deep-feature geometry (e
 the features' not the geometry's) — NOT recommended. CONCLUSION: the DIAGNOSTIC is the contribution (real-data
 validated, pre-registered nulls, 2 minings corroborate, Sensei novelty bar). Pivot to consolidation/seminar when
 the user is ready. Reports: small_sample_subspace_cd / attribution_test _2026-06-21.
+[BET 1 CLOSED 2026-06-21 — both pillars, rigorous] Pre-reg docs/research/bet1_design.md. E1 (crux: N<<B
+distributional, sweep N×changetype×illum on real Salinas): SET-SUBSPACE flat ~0.55-0.62 at EVERY N; sample/
+shrink CORRELATION reaches 0.99; no small-sample denoising free lunch (top-k truncation discards the subtle
+rank-1 change). E2 (registration, real spatial image + pixel-shift): SET-SUBSPACE WORST (0.52); patch_mean_SAM
+wins (0.93-1.0, registration+illumination robust); registration-robustness is SHARED by all patch methods, not
+subspace-specific. ⇒ Bet 1 has no positive lead; the subspace is structurally dominated (truncation liability +
+shared registration). Secondary: patch_mean_SAM is a strong simple robust baseline (not a subspace contribution).
+PIVOT TO BET 2 (multi-dim damage/recovery trajectory characterization) next, per the user's plan. Reports:
+bet1_e1_crux / bet1_e2_registration _2026-06-21.
 
 **H-C — Subspace geometry on deep/foundation features (SLS-style).** Claim: build subspaces FROM a remote-
 sensing foundation-model/CNN's features (not raw bands) and compare by DS/canonical angles; rich features make
