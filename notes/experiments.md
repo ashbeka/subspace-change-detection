@@ -12,6 +12,7 @@
 - [8. Evidence Rules](#8-evidence-rules)
 - [9. Source Ingestion Summary](#9-source-ingestion-summary)
 - [10. Active Temporal Difference-Subspace Study](#10-active-temporal-difference-subspace-study)
+- [11. Cross-Branch Evidence Decision](#11-cross-branch-evidence-decision)
 
 ## 1. Current Research Question
 
@@ -255,26 +256,25 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-Post-mining decision, 2026-06-21:
+Current decision, 2026-06-22:
 
 ```text
 Next gate:
-  RTW phase/tempo invariance versus seasonal-cycle shape change
+  Band-Image DS versus matched spatial nulls on the frozen OSCD split
 
 Conditional follow-up:
-  use verified RTW/geometry quantities as interpretable features in a shallow
-  classifier only if they add information beyond scalar/harmonic controls
+  Band-Image/PCA/IR-MAD candidate-ranking fusion or prior-channel test only if
+  the spatial DS component survives the nulls
 
-Parallel data-gated route:
-  moment-factorized local hyperspectral change attribution
+Completed evidence:
+  RTW and moment-factorized HSI gates are negative detector results
 ```
 
-This replaces the earlier generic proposal to test "subspace geometry as
-interpretable multispectral features for shallow learning" immediately. That
-proposal is too easy to validate for the wrong reason: a classifier can exploit
-mean, variance, or raw radiometric features while geometry contributes nothing.
-The RTW gate first tests a specific structural claim suggested by Sensei and not
-answered by the completed first/second-DS experiments.
+The decisive controls are smoothed/multiscale PCA-diff, spatial
+Gram/correlation distance, matched cross-projection, PCA-diff, and repaired
+IR-MAD. Primary evidence is official test-city AP with configuration fixed on
+training cities. Section 11 gives the full decision gate. Sections 5.1-5.3 are
+retained as completed/historical experiment designs, not the current next task.
 
 ### 5.1 RTW Phase/Tempo-Invariance Gate
 
@@ -1340,3 +1340,74 @@ Required decision gates:
 
 Report:
 `docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
+
+## 11. Cross-Branch Evidence Decision
+
+Completed 2026-06-22 after independently checking the Codex, Claude,
+Antigravity, research-mining, and legacy branches. The full method-by-method
+matrix is in
+`docs/experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`.
+
+Stable conclusions:
+
+1. Band-Image DS is the strongest tested DS construction on OSCD, but it is
+   pairwise DS, not GDS. At rank 12 it reaches AUROC `0.8477`, AP `0.2410`,
+   versus PCA-diff AP `0.2541`.
+2. Equal-weight PCA-diff + Band-Image DS + IR-MAD rank fusion has a significant
+   AUROC gain (`0.8708` vs `0.8406`), but its AP and held-out F1 gains are not
+   significant. Retain it as analyst-ranking evidence, not segmentation proof.
+3. Spatially smoothed/multiscale PCA-diff is the strongest observed positive
+   map result: AP `0.267404/0.267447` vs PCA-diff `0.254095`; smoothed delta
+   `+0.013310`, interval `[+0.004860,+0.022220]`, 19/24 wins. This comes from
+   `spatial_acd_multiscale_allcities_20260619_012510`, not the numerically
+   similar three-way fusion run. Because it was identified post-hoc, it needs
+   a frozen rerun.
+4. First/second DS and geodesic decomposition are formula-verified and tested
+   on sequential data. They did not beat radiometric controls on SpaceNet 7.
+5. RTW, SSA, SFA, local HSI orientation/DS, material MSM, Grassmann
+   orientation, kernel proxies, and deep-feature proxies do not currently
+   support positive detector claims.
+
+Matched-null experiment completed 2026-06-22:
+
+```text
+official OSCD split
+-> freeze preprocessing, rank, and fusion on training cities
+-> PCA-diff and smoothed/multiscale PCA-diff
+-> Band-Image DS rank 12
+-> matched spatial Gram/correlation distance
+-> matched full-rank reconstruction/cross-projection control
+-> repaired IR-MAD
+-> frozen equal-weight or train-only fusion
+-> test-city AP first; AUROC, fixed-threshold F1/IoU, runtime, and maps second [done]
+```
+
+Result:
+
+- Band-Image DS AP `0.2410` beats PCA-matched normalized Gram `0.1417`,
+  projector-row `0.1024`, and cross-reconstruction `0.2153`, but not PCA-diff `0.2541` or
+  smoothed/multiscale PCA `0.2679/0.2680`.
+- Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`. Its
+  official-test gain beyond smoothed PCA is uncertain, but it beats the
+  centering-matched cross-reconstruction fusion on all cities and test cities.
+- A distinct DS ranking contribution is supported internally against the
+  matched geometric controls. External transfer and improvement beyond the
+  strongest spatial-PCA map are not established.
+
+[gap] The OSCD findings are retrospective and lack external multispectral
+confirmation.
+[why it matters] OSCD has influenced rank and method selection; another OSCD
+split cannot provide a clean publication claim.
+[next check] Select one compatible labeled multispectral benchmark, freeze all
+methods before scoring, and test Band-Image DS against spatial PCA,
+cross-reconstruction, IR-MAD, and equal-rank fusion.
+
+Preferred candidate: xBD-S12. Freeze rank at the 12-band centered maximum of
+11, use its event-based split, treat no-data/unclassified pixels explicitly,
+and compare building-damage localization rather than silently calling its
+labels ordinary binary change. The Sentinel archive is `8.87 GB`; download and
+extraction require explicit approval. Original xBD archives are already under
+`data/xbd/`.
+
+Report:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.

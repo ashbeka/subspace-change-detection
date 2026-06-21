@@ -22,6 +22,9 @@
 - [15. Cleanup and Retention](#15-cleanup-and-retention)
 - [16. Troubleshooting](#16-troubleshooting)
 - [17. Current Evidence Anchors](#17-current-evidence-anchors)
+- [18. SpaceNet 7 Temporal Subspace Gate](#18-spacenet-7-temporal-subspace-gate)
+- [19. Hyperspectral Moment Geometry Gate](#19-hyperspectral-moment-geometry-gate)
+- [20. Band-Image Matched Spatial Controls](#20-band-image-matched-spatial-controls)
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
@@ -1033,3 +1036,33 @@ $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.
 These commands reproduce a negative gate, not a promoted baseline. Do not tune
 this construction on the confirmation AOIs. See
 `docs/experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`.
+
+## 19. Hyperspectral Moment Geometry Gate
+
+Reproduce the deterministic four-dataset local HSI factorization experiment:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-hsi-moment-geometry --datasets "benton,hermiston,farmland,shenzhen" --configs "joint_robust_zscore:5:3:3,joint_robust_zscore:9:5:3,joint_robust_zscore:13:7:5,per_date_zscore:9:5:5" --bootstrap 2000 --output-dir phase1/outputs/hsi_moment_geometry_final_stable_20260621_185316
+```
+
+This reproduces a rejected detector hypothesis and a successful
+formula/mechanism verification. See
+`docs/experiment_reports/hsi_local_moment_geometry_2026-06-21.md` before
+interpreting any ratio or attribution output.
+
+## 20. Band-Image Matched Spatial Controls
+
+Run the decisive all-city comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_matched_spatial_nulls:12:band_image_norm+band_image_spatial_gram+band_image_projector_distance+band_image_cross_reconstruction+smoothed_pca_sigma1+multiscale_pca_sigma0_1_2+ir_mad+rank_fusion_pca_band_irmad" --output-dir "phase1/outputs/band_image_matched_nulls_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Run the fixed equal-rank complementarity variants:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_spatial_complementarity:12:band_image_norm+band_image_cross_reconstruction+smoothed_pca_sigma1+ir_mad+rank_fusion_smoothed_pca_band+rank_fusion_smoothed_pca_irmad+rank_fusion_smoothed_pca_band_irmad+rank_fusion_smoothed_pca_cross_irmad" --output-dir "phase1/outputs/spatial_complementarity_fusions_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Interpretation and exact statistics:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.

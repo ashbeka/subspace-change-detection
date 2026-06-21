@@ -179,7 +179,34 @@ Temporal replication and context result, 2026-06-20:
 
 ## 5. Immediate Next Decision
 
-Before more long U-Net sweeps, continue the Sensei-aligned temporal study:
+The matched spatial-null experiment selected by the 2026-06-22 cross-branch
+review is complete.
+
+```text
+Does the OSCD spatial sample-construction result transfer under a frozen
+protocol to an external multispectral change benchmark?
+```
+
+Band-Image DS is the strongest tested DS construction on OSCD (rank-12 AUROC
+`0.8477`, AP `0.2410`). It significantly beats PCA-matched normalized full
+spatial Gram, projector-row, and cross-reconstruction scores, but remains
+below PCA-diff (`0.2541`) and spatially filtered PCA (`0.2679-0.2680`).
+Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`; the DS gain
+beyond a cross-reconstruction substitute is supported internally; improvement
+beyond smoothed PCA alone is not confirmed.
+
+The next performance claim requires an external labeled multispectral dataset
+with preprocessing, rank, spatial scales, controls, and metrics frozen before
+scoring. Until then, use the result as a sample-construction and candidate-
+ranking study, not a validated new detector.
+
+See
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+### Completed Temporal And HSI Evidence Path
+
+Before more long U-Net sweeps, the project completed this Sensei-aligned
+temporal sequence:
 
 ```text
 whole-scene first/second/geodesic DS [done]
@@ -221,10 +248,11 @@ reached AP `0.7052` and `0.6596`, below development-selected global-shift RMS
 task-specific RTW delta was negative, including hard within-group crop pairs
 and timing invariance. RTW is therefore closed as the current positive
 satellite route, though not invalidated for motion recognition or untested RTW
-variants. The strongest remaining positive-method gate is moment-factorized
-local hyperspectral orientation and wavelength attribution with covariance/SPD,
-MMD, unmixing, and per-band falsifiers; the accumulated negative results remain
-the diagnostic paper spine.
+variants. The subsequent moment-factorized local hyperspectral orientation and
+wavelength-attribution gate is also complete. Its frozen orientation, DS
+projection, and factor-fusion scores lost to direct controls on Hermiston,
+Farmland, and Shenzhen. It remains useful formula/attribution verification, not
+a positive detector result.
 
 The 2026-06-20 seasonal-observation stress test found that rank-1 geometry can
 rank an injected abrupt boundary within a sequence but is weaker than simple
@@ -240,8 +268,8 @@ eigenspectrum reached AP `0.688`, NDMI `0.680`, and first DS `0.456`. This is a
 competitive invariance tradeoff, not superiority: eigenspectrum rejected tested
 gain/offset but still responded to missing composites and translation. The
 independent-label gate has now been completed and rejected the strong detection
-hypothesis. The project is blocked on selecting a new mechanism and fresh
-evaluation data, not on more tuning of the same RGB trajectory detector.
+hypothesis. The current spatial-axis experiment above supersedes further
+tuning of the same RGB trajectory detector.
 
 Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
 

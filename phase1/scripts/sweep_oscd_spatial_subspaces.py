@@ -238,6 +238,9 @@ def method_display_name(method: str) -> str:
         "pca_diff": "PCA-diff",
         "band_image_ds": "Band-Image DS energy",
         "band_image_norm": "Band-Image DS",
+        "band_image_spatial_gram": "Band-Image Spatial Gram",
+        "band_image_projector_distance": "Band-Image Projector Distance",
+        "band_image_cross_reconstruction": "Band-Image Cross Reconstruction",
         "celik_pca_kmeans": "Celik PCA-k-means",
         "ir_mad": "IR-MAD",
         "chronochrome": "Chronochrome",
@@ -285,6 +288,10 @@ def method_display_name(method: str) -> str:
         "rank_fusion_band_irmad": "Band-Image + IR-MAD",
         "rank_fusion_pca_irmad": "PCA + IR-MAD",
         "rank_fusion_pca_band_irmad": "PCA + Band-Image + IR-MAD",
+        "rank_fusion_smoothed_pca_band": "Smoothed PCA + Band-Image",
+        "rank_fusion_smoothed_pca_irmad": "Smoothed PCA + IR-MAD",
+        "rank_fusion_smoothed_pca_band_irmad": "Smoothed PCA + Band-Image + IR-MAD",
+        "rank_fusion_smoothed_pca_cross_irmad": "Smoothed PCA + Cross-Reconstruction + IR-MAD",
         "spatial_pyramid_1_2_4_energy": "Grid Pyramid 1/2/4 energy",
         "spatial_pyramid_1_2_4_norm": "Grid Pyramid 1/2/4 norm",
         "spatial_pyramid_1_2_4_8_norm": "Grid Pyramid 1/2/4/8 norm",
@@ -472,7 +479,7 @@ def write_report(
             f"{row['family']} | {fmt(row['value'])} |"
         )
     lines.append("")
-    lines.append("## 5. Best DS-Family Method Per City/Config By Average Precision")
+    lines.append("## 5. Best Non-Baseline Method Per City/Config By Average Precision")
     lines.append("")
     lines.append("| city | config | rank | method | AP |")
     lines.append("|---|---|---:|---|---:|")
@@ -482,23 +489,23 @@ def write_report(
     lines.append("## 6. Interpretation")
     lines.append("")
     pca_rows = [x for x in summary if x.get("method") == "pca_diff"]
-    ds_rows = [x for x in summary if x.get("method") not in {"raw_l2", "pca_diff"}]
+    ds_rows = [x for x in summary if x.get("family") != "baseline"]
     best_pca = max(pca_rows, key=lambda x: float_or_nan(x.get("mean_average_precision"))) if pca_rows else None
     best_ds = max(ds_rows, key=lambda x: float_or_nan(x.get("mean_average_precision"))) if ds_rows else None
     if best_pca and best_ds:
         ds_ap = float_or_nan(best_ds.get("mean_average_precision"))
         pca_ap = float_or_nan(best_pca.get("mean_average_precision"))
         lines.append(
-            f"- Best DS-family mean AP: `{best_ds['method']}` in `{best_ds['config']}` "
+            f"- Best non-baseline mean AP: `{best_ds['method']}` in `{best_ds['config']}` "
             f"with AP `{fmt(ds_ap)}`."
         )
         lines.append(
             f"- Best PCA-diff mean AP: `{best_pca['config']}` with AP `{fmt(pca_ap)}`."
         )
         if ds_ap > pca_ap:
-            lines.append("- Preliminary read: a DS-family spatial construction beats PCA-diff on mean AP in this sweep. Verify maps and per-city stability before claiming improvement.")
+            lines.append("- Preliminary read: a non-baseline construction beats PCA-diff on mean AP in this sweep. Check its recorded method family before making a DS claim, then verify maps and per-city stability.")
         else:
-            lines.append("- Preliminary read: PCA-diff remains stronger on mean AP. Spatial DS may still be useful for interpretation or specific cities, but it is not yet a performance winner.")
+            lines.append("- Preliminary read: PCA-diff remains stronger on mean AP. A non-baseline method may still be useful for interpretation or specific cities, but it is not yet a performance winner.")
     lines.append("- Treat this as Phase 1 score-map evidence only. It does not prove Phase 2 neural segmentation improvement.")
     lines.append("- Inspect `comparison_grid.png` files for qualitative failure modes before deciding whether to train U-Net with any new prior.")
     lines.append("")
@@ -510,6 +517,9 @@ def write_report(
     lines.append("|---|---|---|---:|---:|---|---:|---:|")
     pressure_methods = {
         "band_image_norm",
+        "band_image_spatial_gram",
+        "band_image_projector_distance",
+        "band_image_cross_reconstruction",
         "pca_diff",
         "raw_l2",
         "celik_pca_kmeans",
@@ -547,7 +557,7 @@ def write_report(
     lines.append(f"- Full row summary: `{path.parent / 'sweep_metrics_all.csv'}`")
     lines.append(f"- Mean summary: `{path.parent / 'sweep_summary_by_config_method.csv'}`")
     lines.append(f"- Best AP rows: `{path.parent / 'sweep_best_ap_by_city_config.csv'}`")
-    lines.append(f"- Best DS AP rows: `{path.parent / 'sweep_best_ds_ap_by_city_config.csv'}`")
+    lines.append(f"- Best non-baseline AP rows (legacy filename): `{path.parent / 'sweep_best_ds_ap_by_city_config.csv'}`")
     lines.append(f"- Paired city-wise comparisons: `{path.parent / 'sweep_pairwise_method_comparisons.csv'}`")
     lines.append("")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")

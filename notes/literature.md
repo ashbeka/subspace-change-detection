@@ -12,6 +12,7 @@
 - [8. Reference Leads](#8-reference-leads)
 - [9. Reset Literature Problem Map](#9-reset-literature-problem-map)
 - [10. Temporal Satellite Subspace Reading Spine](#10-temporal-satellite-subspace-reading-spine)
+- [11. Evidence-Selected Reading Priorities](#11-evidence-selected-reading-priorities)
 
 ## 1. Must-Cite Core Sources
 
@@ -446,3 +447,61 @@ of:
 - a registration-robust/local multiscale construction;
 - or an empirical result explaining what these geometric quantities detect and
   where they fail relative to NFA/MOSUM/BFAST/JUST and learned methods.
+
+## 11. Evidence-Selected Reading Priorities
+
+The 2026-06-22 cross-branch review changes reading priority from collecting
+more method families to pressure-testing the surviving spatial result.
+
+| Priority | Source/concept | Why read now |
+|---:|---|---|
+| 1 | Fukui and Maki, TPAMI 2015 DS/GDS/KDS/KGDS | Defines the exact pairwise DS object used by Band-Image DS and prevents incorrectly calling it GDS. |
+| 2 | Wu, Du, and Zhang 2013, DOI `10.1109/JSTARS.2013.2241396` | Establishes prior subspace-based HSI change detection; blocks generic novelty claims. |
+| 3 | Nielsen 2007 IR-MAD and paired CCA | Strong correlation/invariance baseline and a model for paper-to-code verification. |
+| 4 | Celik 2009 PCA-k-means and classical CVA/PCA-diff | Defines established unsupervised spatial/radiometric pressure baselines. |
+| 5 | Spatial Gram/correlation, local covariance, SiROC, and patch-tensor CD | Supplies the decisive nulls for whether Band-Image DS geometry adds information beyond full second moments. |
+| 6 | Remote-sensing CD reviews, including DOI `10.3390/rs16132355` and `10.3390/rs14040871` | Positions evaluation protocols, deep/classical baselines, and current open problems. |
+| 7 | Fukui second-order DS and time-series DS | Supports explaining the completed first/second/geodesic experiment; not currently the positive detector route. |
+| 8 | S3CCA/TRCCA | Remaining Sensei/senpai method gap; reproduce the original structured/temporal CCA object before satellite adaptation. |
+
+### 11.1 External Validation Candidate: xBD-S12
+
+Official resources:
+
+- repository and dataset instructions: https://github.com/prs-eth/xbd-s12
+- dataset record: https://zenodo.org/records/18960454
+- paper preprint: https://arxiv.org/abs/2511.05461
+
+Why it is the strongest current transfer candidate:
+
+- co-registered pre/post Sentinel-1 and Sentinel-2 imagery linked to xBD
+  disaster labels;
+- Sentinel-2 L2A contains 12 spectral bands (B10 is unavailable) resampled to
+  10 m before 128x128 patching at about 4 m output GSD;
+- event-based train/test split and metadata include disaster type, dates,
+  cloud score, class counts, and no-data counts;
+- the local machine already holds the original xBD archives needed for mask
+  creation.
+
+Constraints:
+
+- the Zenodo Sentinel archive is about `8.87 GB`, so acquisition requires an
+  explicit large-download decision;
+- the target is building localization/damage, not generic OSCD change;
+- Band-Image rank must be adapted from 12 to at most 11;
+- evaluation must follow the official event split and damage/no-data mask
+  semantics rather than reusing OSCD thresholds;
+- success would demonstrate transfer to a real disaster application, while
+  failure would show that OSCD complementarity does not generalize to damage.
+
+Current novelty boundary:
+
+- spatial support, subspace CD, covariance CD, and score fusion are established
+  topics;
+- the plausible contribution is a precise satellite sample construction plus
+  evidence that its DS score is complementary after matched spatial nulls;
+- generic fusion is not novel by itself, so any fusion claim must identify the
+  distinct information and use a frozen protocol;
+- first/second DS on satellite sequences remains unusual, but current real
+  detection evidence is negative and should be presented as characterization,
+  not performance.

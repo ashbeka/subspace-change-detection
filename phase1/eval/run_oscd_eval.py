@@ -186,7 +186,7 @@ def eval_split(
         score_normalization=cfg["ds"]["score"].get("normalization", "percentile_99"),
         percentile=cfg["ds"]["score"].get("percentile", 99.0),
         nodata_value=cfg["dataset"].get("nodata_value", 0.0),
-        subspace_variant=cfg["ds"].get("subspace_variant", "residual"),
+        subspace_variant=cfg["ds"].get("subspace_variant", "canonical"),
     )
     results = {}
     for sample in dataset:
@@ -272,7 +272,7 @@ def main():
     args = parse_args()
     cfg = load_config(args.config)
     ensure_dir(args.output_dir)
-    configured_ds_variant = cfg["ds"].get("subspace_variant", "residual")
+    configured_ds_variant = cfg["ds"].get("subspace_variant", "canonical")
     resolved_ds_variant = pca_utils.resolve_subspace_variant(configured_ds_variant)
     print(f"DS variant: configured={configured_ds_variant}, resolved={resolved_ds_variant}")
     save_change_maps_flag = args.save_change_maps or cfg.get("output", {}).get("save_change_maps", False)

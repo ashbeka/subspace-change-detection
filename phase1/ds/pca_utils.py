@@ -178,7 +178,7 @@ def resolve_subspace_variant(variant: str) -> str:
     `residual` is retained as a backwards-compatible alias for the original
     residual-stack construction. New experiments should prefer `canonical`.
     """
-    key = str(variant or "legacy_residual_stack").strip().lower().replace("-", "_")
+    key = str(variant or "canonical").strip().lower().replace("-", "_")
     aliases = {
         "residual": "legacy_residual_stack",
         "residual_stack": "legacy_residual_stack",

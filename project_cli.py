@@ -114,6 +114,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-rtw-invariance-gate", "multisenge", "Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.", ["phase1-rtw-invariance-gate"]),
     CommandInfo("phase1-breizhcrops-download", "temporal", "Download and verify official BreizhCrops 2017 L2A geographic partitions.", ["phase1-breizhcrops-download", "--regions", "frh01,frh04"]),
     CommandInfo("phase1-rtw-breizhcrops-transfer", "temporal", "Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.", ["phase1-rtw-breizhcrops-transfer"]),
+    CommandInfo("phase1-hsi-moment-geometry", "hyperspectral", "Factor local HSI change into mean, scale, eigenspectrum, eigenspace orientation, DS projection, and covariance controls.", ["phase1-hsi-moment-geometry"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -999,6 +1000,38 @@ def cmd_phase1_breizhcrops_download(args: argparse.Namespace) -> int:
     ]
     if args.keep_archives:
         cmd.append("--keep_archives")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_hsi_moment_geometry(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/hsi_moment_geometry_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_hsi_moment_geometry",
+        "--data_root",
+        args.data_root,
+        "--output_dir",
+        out,
+        "--datasets",
+        args.datasets,
+        "--configs",
+        args.configs,
+        "--rff_features",
+        str(args.rff_features),
+        "--band_policy",
+        args.band_policy,
+        "--global_pca_rank",
+        str(args.global_pca_rank),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    if args.stability_seeds:
+        cmd.extend(["--stability_seeds", args.stability_seeds])
+    if args.smoke:
+        cmd.append("--smoke")
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1945,6 +1978,38 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=2718)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_rtw_breizhcrops_transfer)
+
+    p = sub.add_parser(
+        "phase1-hsi-moment-geometry",
+        help="Evaluate local HSI moment factors, DS projection, attribution, and falsifying controls.",
+    )
+    p.add_argument("--data-root", default="data/HSI_change")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--datasets", default="benton,hermiston,farmland,shenzhen")
+    p.add_argument(
+        "--configs",
+        default="joint_robust_zscore:5:3:3,joint_robust_zscore:5:3:5,"
+        "joint_robust_zscore:9:5:3,joint_robust_zscore:9:5:5,"
+        "joint_robust_zscore:9:5:8,joint_robust_zscore:13:7:5,"
+        "joint_robust_zscore:13:7:8,per_date_zscore:9:5:5",
+    )
+    p.add_argument("--rff-features", type=int, default=32)
+    p.add_argument(
+        "--band-policy",
+        default="nonconstant",
+        choices=("nonconstant", "common_hyperion_159"),
+    )
+    p.add_argument("--global-pca-rank", type=int, default=12)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--seed", type=int, default=314159)
+    p.add_argument(
+        "--stability-seeds",
+        default="",
+        help="Comma-separated alternate seeds for selected-map reproducibility checks.",
+    )
+    p.add_argument("--smoke", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_hsi_moment_geometry)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

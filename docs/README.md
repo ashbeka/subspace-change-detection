@@ -42,7 +42,16 @@ Read these first:
 10. `experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`
    - Natural-label and timing-invariance transfer study on all four official BreizhCrops regions with nested RTW selection and 22 killer controls.
 
-11. `research_learning_map.html`
+11. `experiment_reports/hsi_local_moment_geometry_2026-06-21.md`
+   - Four-dataset held-out test of local hyperspectral mean/scale/eigenspectrum/orientation factorization, DS projection, and basis-invariant band attribution.
+
+12. `experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`
+   - Consolidated Codex/Claude/Antigravity method-results matrix, Sensei-task status, ranked research problems, safe claims, and seminar recommendation.
+
+13. `experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`
+   - Decisive matched-null experiment for Band-Image DS versus spatial Gram, projector, cross-reconstruction, spatial PCA, IR-MAD, and label-free fusions.
+
+14. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

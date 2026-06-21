@@ -131,7 +131,7 @@ def main():
         score_normalization=cfg["ds"]["score"].get("normalization", "percentile_99"),
         percentile=cfg["ds"]["score"].get("percentile", 99.0),
         nodata_value=cfg["dataset"].get("nodata_value", 0.0),
-        subspace_variant=cfg["ds"].get("subspace_variant", "residual"),
+        subspace_variant=cfg["ds"].get("subspace_variant", "canonical"),
     )
 
     # Determine city list

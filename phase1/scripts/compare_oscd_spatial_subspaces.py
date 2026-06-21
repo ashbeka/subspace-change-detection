@@ -120,6 +120,7 @@ def parse_args() -> argparse.Namespace:
         help=(
             "Comma list: global_pixel, window128, window128s64, window128s64max, patch3, patch5, "
             "band_image_ds, band_image_norm, band_image_ratio, band_image_residual, "
+            "band_image_spatial_gram, band_image_projector_distance, band_image_cross_reconstruction, "
             "celik_pca_kmeans, ir_mad, rank_fusion_pca_band, rank_fusion_band_irmad, "
             "chronochrome, covariance_equalization, pif_radiometric_l2, pif_radiometric_pca, "
             "pif_nuisance_ds_r1, pif_nuisance_ds_r2, pif_nuisance_ds_r3, "
@@ -273,6 +274,10 @@ def parse_method_spec(text: str) -> MethodSpec:
         "rank_fusion_band_irmad": "band_image_norm+ir_mad",
         "rank_fusion_pca_irmad": "pca_diff+ir_mad",
         "rank_fusion_pca_band_irmad": "pca_diff+band_image_norm+ir_mad",
+        "rank_fusion_smoothed_pca_band": "smoothed_pca_sigma1+band_image_norm",
+        "rank_fusion_smoothed_pca_irmad": "smoothed_pca_sigma1+ir_mad",
+        "rank_fusion_smoothed_pca_band_irmad": "smoothed_pca_sigma1+band_image_norm+ir_mad",
+        "rank_fusion_smoothed_pca_cross_irmad": "smoothed_pca_sigma1+band_image_cross_reconstruction+ir_mad",
     }
     if key in fusion_dependencies:
         return MethodSpec(name=key, family="rank_fusion", score_mode=fusion_dependencies[key])
@@ -293,6 +298,24 @@ def parse_method_spec(text: str) -> MethodSpec:
         return MethodSpec(name="band_image_ratio", family="band_image", score_mode="energy_ratio")
     if key in {"band_image_residual", "band_image_residual_energy"}:
         return MethodSpec(name="band_image_residual", family="band_image", score_mode="residual_energy")
+    band_image_controls = {
+        "band_image_spatial_gram": "spatial_gram",
+        "band_image_gram": "spatial_gram",
+        "band_image_projector_distance": "projector_distance",
+        "band_image_projector": "projector_distance",
+        "band_image_cross_reconstruction": "cross_reconstruction",
+        "band_image_cross_residual": "cross_reconstruction",
+    }
+    if key in band_image_controls:
+        return MethodSpec(
+            name={
+                "spatial_gram": "band_image_spatial_gram",
+                "projector_distance": "band_image_projector_distance",
+                "cross_reconstruction": "band_image_cross_reconstruction",
+            }[band_image_controls[key]],
+            family="band_image_control",
+            score_mode=band_image_controls[key],
+        )
 
     m = re.fullmatch(r"window(?P<size>\d+)(?:s(?P<stride>\d+))?(?P<agg>max|mean)?", key)
     if m:
@@ -717,6 +740,178 @@ def band_image_ds_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, 
         verification="compared against global/patch/window DS, raw L2, PCA-diff, OSCD labels, raw-L2 correlation, runtime, and visual maps",
     )
     return out, card, band_maps
+
+
+def band_image_spatial_control_values(
+    first: np.ndarray,
+    second: np.ndarray,
+    *,
+    rank: int,
+    seed: int,
+    mode: str,
+    eps: float = 1e-12,
+) -> np.ndarray:
+    """Return a matched per-position null for a band-image DS construction.
+
+    ``first`` and ``second`` are shaped ``N_spatial x B_bands``. All controls
+    use the same centered matrices and rank as Band-Image DS:
+
+    - ``spatial_gram`` is the row norm of the difference between trace-
+      normalized full spatial Gram operators. It retains every singular mode.
+    - ``projector_distance`` is the row norm of ``P_pre-P_post`` for the
+      rank-matched projectors. It isolates subspace orientation without using
+      the observed spectral-difference vector.
+    - ``cross_reconstruction`` is the symmetric residual from reconstructing
+      each date's centered band images with the other date's subspace.
+
+    The formulas avoid materializing an ``N x N`` spatial operator.
+    """
+    if first.ndim != 2 or second.shape != first.shape:
+        raise ValueError(
+            f"Expected paired matrices shaped N x B, got {first.shape} and {second.shape}."
+        )
+    if first.shape[0] < 2 or first.shape[1] < 2:
+        raise ValueError(f"Band-image controls require at least 2x2 data, got {first.shape}.")
+
+    first64 = first.astype(np.float64, copy=False)
+    second64 = second.astype(np.float64, copy=False)
+    # ``fit_pca_basis`` receives (d, n) = (spatial positions, band images)
+    # and transposes it to 13 samples x N spatial features for sklearn.  PCA
+    # therefore subtracts the across-band mean at every spatial position.  The
+    # matched controls must use that identical centering convention; centering
+    # each band over space would define a different statistical object.
+    first_centered = first64 - np.mean(first64, axis=1, keepdims=True)
+    second_centered = second64 - np.mean(second64, axis=1, keepdims=True)
+
+    if mode == "spatial_gram":
+        first_scaled = first_centered / max(float(np.linalg.norm(first_centered)), eps)
+        second_scaled = second_centered / max(float(np.linalg.norm(second_centered)), eps)
+        first_gram_small = first_scaled.T @ first_scaled
+        second_gram_small = second_scaled.T @ second_scaled
+        cross_gram_small = first_scaled.T @ second_scaled
+        first_norm_sq = np.einsum(
+            "ni,ij,nj->n", first_scaled, first_gram_small, first_scaled, optimize=True
+        )
+        second_norm_sq = np.einsum(
+            "ni,ij,nj->n", second_scaled, second_gram_small, second_scaled, optimize=True
+        )
+        cross = np.einsum(
+            "ni,ij,nj->n", first_scaled, cross_gram_small, second_scaled, optimize=True
+        )
+        return np.sqrt(np.maximum(first_norm_sq + second_norm_sq - 2.0 * cross, 0.0)).astype(
+            np.float32
+        )
+
+    effective_rank = max(1, min(int(rank), first.shape[1] - 1))
+    first_basis = pca_utils.fit_pca_basis(
+        first,
+        rank=effective_rank,
+        variance_threshold=None,
+        random_state=seed,
+        use_randomized=True,
+    ).basis.astype(np.float64, copy=False)
+    second_basis = pca_utils.fit_pca_basis(
+        second,
+        rank=effective_rank,
+        variance_threshold=None,
+        random_state=seed,
+        use_randomized=True,
+    ).basis.astype(np.float64, copy=False)
+    # The PCA helper stores float32 bases. Re-orthonormalize in float64 before
+    # subtracting nearly equal projectors to prevent cancellation from
+    # appearing as a small false change on identical inputs.
+    first_basis = np.linalg.qr(first_basis, mode="reduced")[0]
+    second_basis = np.linalg.qr(second_basis, mode="reduced")[0]
+
+    if mode == "projector_distance":
+        cross_basis = first_basis.T @ second_basis
+        first_leverage = np.sum(first_basis * first_basis, axis=1)
+        second_leverage = np.sum(second_basis * second_basis, axis=1)
+        cross = np.einsum(
+            "ni,ij,nj->n", first_basis, cross_basis, second_basis, optimize=True
+        )
+        return np.sqrt(
+            np.maximum(first_leverage + second_leverage - 2.0 * cross, 0.0)
+        ).astype(np.float32)
+
+    if mode == "cross_reconstruction":
+        second_residual = second_centered - first_basis @ (first_basis.T @ second_centered)
+        first_residual = first_centered - second_basis @ (second_basis.T @ first_centered)
+        second_self_residual = second_centered - second_basis @ (second_basis.T @ second_centered)
+        first_self_residual = first_centered - first_basis @ (first_basis.T @ first_centered)
+        excess = (
+            np.sum(second_residual * second_residual, axis=1)
+            - np.sum(second_self_residual * second_self_residual, axis=1)
+            + np.sum(first_residual * first_residual, axis=1)
+            - np.sum(first_self_residual * first_self_residual, axis=1)
+        )
+        return np.sqrt(
+            np.maximum(excess, 0.0)
+        ).astype(np.float32)
+
+    raise ValueError(f"Unknown band-image spatial control mode: {mode!r}")
+
+
+def band_image_spatial_control_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    """Map a matched band-image null back to the original spatial grid."""
+    rows, cols = np.where(valid_mask)
+    if rows.size == 0:
+        raise RuntimeError("No valid pixels available for band-image spatial controls.")
+    first = x1[:, rows, cols].T.astype(np.float32, copy=False)
+    second = x2[:, rows, cols].T.astype(np.float32, copy=False)
+    values = band_image_spatial_control_values(
+        first,
+        second,
+        rank=args.rank,
+        seed=args.seed,
+        mode=str(spec.score_mode),
+    )
+    output = np.zeros(valid_mask.shape, dtype=np.float32)
+    output[rows, cols] = values
+
+    definitions = {
+        "spatial_gram": (
+            "row norm of trace-normalized full spatial Gram difference",
+            "full centered band-image matrices; no rank truncation",
+            "retains all spatial second-moment modes while removing total matrix scale",
+        ),
+        "projector_distance": (
+            "row norm of P_pre-P_post",
+            f"rank-{min(args.rank, first.shape[1] - 1)} pre/post spatial projectors",
+            "isolates spatial eigenspace orientation without projecting the spectral-difference vector",
+        ),
+        "cross_reconstruction": (
+            "symmetric excess cross-subspace reconstruction residual magnitude over self-reconstruction",
+            f"rank-{min(args.rank, first.shape[1] - 1)} pre/post spatial bases",
+            "tests cross-prediction from the same spatial subspaces without constructing DS directions",
+        ),
+    }
+    definition, basis, purpose = definitions[str(spec.score_mode)]
+    return output, ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "Matched linear-algebra null for the project Band-Image DS adaptation; "
+            "projector and Gram identities are standard subspace/covariance geometry."
+        ),
+        sample_unit="one full Sentinel-2 band image flattened over the common valid positions",
+        input_object=f"X_pre, X_post in R^({rows.size} x {first.shape[1]})",
+        subspace_count="zero for full Gram; one rank-matched pre/post pair for projector or cross-reconstruction",
+        basis_shape=basis,
+        fitting_method="center the 13 band-image samples at each spatial position, matching sklearn PCA on X.T; use the same requested rank/seed as Band-Image DS",
+        score_definition=definition,
+        spatial_information=f"preserves the same valid spatial-coordinate axis as Band-Image DS; {purpose}",
+        code_path="phase1.scripts.compare_oscd_spatial_subspaces.band_image_spatial_control_values",
+        verification=(
+            "equal-matrix, scale-invariance, explicit NxN formula-equivalence, and changed-support tests; "
+            "then paired OSCD city-wise pressure against Band-Image DS"
+        ),
+    )
 
 
 def celik_pca_kmeans_score(x1: np.ndarray, x2: np.ndarray, valid_mask: np.ndarray, args: argparse.Namespace) -> tuple[np.ndarray, ConstructionCard]:
@@ -1411,6 +1606,8 @@ def main() -> None:
                 save_band_attribution_grid(grid_path, band_maps, eval_mask, args.score_percentile)
                 write_band_attribution_csv(csv_attr_path, band_maps, eval_mask)
                 band_attribution_outputs.append({"method": spec.name, "grid": str(grid_path), "csv": str(csv_attr_path)})
+        elif spec.family == "band_image_control":
+            score, card = band_image_spatial_control_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "local_window":
             score, card = local_window_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "local_ds_magnitude":

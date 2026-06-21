@@ -38,6 +38,7 @@
   - [KDS and CCA implementation gaps](#kds-and-cca-implementation-gaps)
   - [Deep-feature subspace gap](#deep-feature-subspace-gap)
 - [15. Temporal Band-Image Difference-Subspace Dynamics](#15-temporal-band-image-difference-subspace-dynamics)
+- [16. Cross-Method Fidelity And Status](#16-cross-method-fidelity-and-status)
 
 ## 1. Current Project Scope
 
@@ -1398,3 +1399,70 @@ along had correlation `0.9596`, so total magnitude was largely governed by
 motion along the estimated geodesic. Orthogonal magnitude was distinct from
 raw second difference (`rho=-0.0314`) but nearly random for new-building cells
 (AUROC `0.5055`). Distinctness is not evidence of task relevance.
+
+## 16. Cross-Method Fidelity And Status
+
+The cross-branch evidence review corrected several method-category shortcuts:
+
+| Label | Correct status |
+|---|---|
+| Band-Image DS | Pairwise linear canonical DS on flattened band-image samples; **not GDS**. |
+| Material common-removal experiment | GDS-inspired proxy; not a complete formal multi-subspace GDS evaluation. |
+| RFF nonlinear DS | Explicit-feature kernel proxy; **not paper-faithful KDS/KGDS**. |
+| Autoencoder latent subspaces | Deep-feature proxy; **not Fukui's Signal Latent Subspace**. |
+| Fixed-grid DS pyramid | Spatial-support proxy; **not Green Learning, PixelHop, or wavelets**. |
+| Moving-average/slow features | Temporal smoothing/SFA proxy; **not S3CCA or TRCCA**. |
+
+Method completion as of 2026-06-22:
+
+- **Implemented and real-tested:** canonical first DS, second DS, geodesic
+  along/orthogonal decomposition, RTW, SFA, SSA/signal-subspace DS, MSM,
+  IR-MAD/CCA structure, spatial Band-Image/patch/window DS.
+- **Reference verified only:** Venus KDS/KGDS construction.
+- **Partial/proxy only:** GDS satellite adaptation, SLS, SFS, nonlinear kernel
+  DS, multiscale Green Learning.
+- **Untested faithfully:** satellite KDS/KGDS, standalone KCCA, S3CCA, TRCCA,
+  KMSM, product-Grassmann SLS, true wavelet/PixelHop construction.
+
+The local HSI moment experiment provides a construction example for method
+verification. For a local `w x w` window, each pixel is a `B`-band sample,
+`X_t in R^((w*w) x B)`, and exact dual PCA gives `U_t in R^(B x r)`. Mean,
+covariance scale, normalized eigenspectrum shape, leading-eigenspace
+orientation, canonical DS projection, and projector row-energy attribution
+were separated and tested with five controlled mechanisms. On Hermiston,
+Farmland, and Shenzhen, every frozen geometric hypothesis lost to the strongest
+direct control. The mathematics is usable; the detector hypothesis is rejected
+for this construction.
+
+General rule: a method is not credited by family name. It must preserve the
+exact mathematical object, sample definition, score, and evaluation protocol
+from its source, with project adaptations named separately.
+
+### 16.1 Band-Image Matched Spatial Controls
+
+The Band-Image DS null experiment uses `X_t in R^(N x 13)`, with rows as fixed
+spatial positions and columns as band-image samples. Because
+`fit_pca_basis(X_t)` fits sklearn PCA on `X_t^T`, centering subtracts the mean
+of the 13 band values at each spatial position. Every matched control uses the
+same centering axis.
+
+- **Normalized spatial Gram:** row norm of
+  `A_pre A_pre^T-A_post A_post^T`, where `A=X/||X||_F`. This retains all
+  singular modes and removes total matrix scale.
+- **Projector distance:** row norm of
+  `U_pre U_pre^T-U_post U_post^T`. This isolates rank-matched orientation and
+  does not use the spectral-difference vector.
+- **Cross-reconstruction novelty:** symmetric cross-subspace residual minus
+  each date's self-reconstruction residual. This is zero for equal subspaces
+  even when rank truncation leaves ordinary reconstruction error.
+
+The row formulas are evaluated through `13 x 13` products without forming an
+`N x N` matrix. Explicit small-matrix tests confirm the Gram/projector
+identities and common-permutation equivariance.
+
+Empirical boundary after correcting all controls to use the PCA sample-centering
+axis: Band-Image DS beats Gram, projector, and cross-reconstruction AP, but
+loses to spatially filtered PCA. Therefore spatial orientation alone is not
+the useful statistic. A DS-specific ranking contribution is isolated relative
+to the matched geometric nulls, but not as an improvement over the strongest
+individual spatial-PCA map.

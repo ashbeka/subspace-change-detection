@@ -10,6 +10,7 @@
 - [6. First Seminar Student Feedback](#6-first-seminar-student-feedback)
 - [7. First Seminar QA Report Follow-Up](#7-first-seminar-qa-report-follow-up)
 - [8. Paused Or Unsafe Claims](#8-paused-or-unsafe-claims)
+- [9. Sensei Task Completion Status](#9-sensei-task-completion-status)
 
 ## 1. Current Sensei Feedback
 
@@ -351,3 +352,23 @@ Do not currently claim:
 - OSCD binary change proves disaster damage performance.
 - Old residual-stack priors prove paper-faithful DS works.
 - Current global pixel DS preserves spatial structure during fitting.
+
+## 9. Sensei Task Completion Status
+
+Status after the 2026-06-22 cross-branch review:
+
+| Sensei request | Status | Evidence / remaining gap |
+|---|---|---|
+| Explain how a multi-channel image becomes a subspace | Completed for pixel, patch, local-window, band-image, and temporal variants | Construction cards are in `notes/methods.md`; Band-Image DS is the best current satellite construction. |
+| Address loss of spatial information | Experimentally addressed, not solved | OSCD global/patch/window/band-image/pyramid and matched Gram/projector/cross-reconstruction comparisons completed; external confirmation remains. |
+| Run nonlinear DS on the Venus data | Completed as reference verification | KDS/KGDS equations and dimensions reproduced; no satellite KDS claim. |
+| Generate sequential subspaces | Completed on MultiSenGE, SpaceNet 7, and BreizhCrops-derived temporal tasks | Specific Harmonized Sentinel-2 evaluation remains optional. |
+| Calculate first DS, second DS, and geodesic components | Completed and formula-tested | Controlled behavior is interpretable; SpaceNet 7 detection result is negative. |
+| Conduct various tests on first/second DS magnitudes | Completed across controlled nuisances and real temporal data | Report both successful mechanisms and failure under translation/radiometric controls. |
+| Investigate SSA/SFA/RTW | Completed for project adaptations | RTW and natural-transfer tests are negative; SFA/SSA synthetic behavior does not establish novelty. |
+| Investigate CCA | Partly completed through repaired IR-MAD | Standalone CCA explanation exists; S3CCA/TRCCA and KCCA remain untested faithfully. |
+| Investigate KPCA/KDS | Venus construction completed; satellite method incomplete | RFF proxy is not KDS; a nonlinear satellite question must be defined before implementation. |
+
+The next Sensei-facing result should show the subspace constructions, the
+first/second/geodesic objects, and the OSCD comparison without claiming that all
+requested methods improve detection.

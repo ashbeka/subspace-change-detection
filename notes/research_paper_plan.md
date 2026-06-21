@@ -18,6 +18,7 @@
 - [14. Research-Notes Ingestion Outcome](#14-research-notes-ingestion-outcome)
 - [15. File Sources](#15-file-sources)
 - [16. Ranked Research Problem Portfolio](#16-ranked-research-problem-portfolio)
+- [17. Cross-Branch Recommendation](#17-cross-branch-recommendation)
 
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
@@ -147,7 +148,7 @@ Contribution lanes to keep explicit:
 | Hybrid NN + geometry | Neural models localize or produce features; subspace/GDS methods interpret, cluster, diagnose, or summarize changed regions. | `H5`, `H6`, `H7`, `H9`, `H10`, `H11` in `notes/experiments.md`. | Evidence that geometry adds interpretation, label-efficiency, error insight, or temporal structure beyond the neural mask alone. |
 | Negative or diagnostic study | Even if DS does not beat PCA-diff, IR-MAD, or U-Net, the thesis can still show exactly where and why it fails or helps. | Spatial DS comparison, IR-MAD comparison, city-wise failure taxonomy, pseudo-change analysis. | Clear failure modes tied to sample construction, spatial information loss, pseudo-change, or dataset-label mismatch. |
 
-Post-mining priority, 2026-06-21:
+Post-mining priority, updated 2026-06-22:
 
 1. RTW phase/tempo-invariance gate is complete and negative as an incremental
    method. The controlled MultiSenGE result did not exceed snapshot PCA. A
@@ -157,17 +158,21 @@ Post-mining priority, 2026-06-21:
    global-shift RMS (`0.7789`, `0.7759`) and PCA cross-reconstruction
    (`0.8128`, `0.8264`). Keep RTW as a diagnostic row; reopen only for a
    materially different mechanism such as attention RTW and a justified task.
-2. Keep the diagnostic paper as the evidence-backed publication spine: direct
-   DS detection and first/second trajectory geometry have repeatedly failed to
-   add beyond simpler controls on real data.
+2. Use the diagnostic evidence as rigor, not as the seminar headline. The
+   positive anchor is the spatial sample-definition result: Band-Image DS is
+   the strongest tested DS construction and contributes complementary AUROC
+   ranking information in a PCA/IR-MAD fusion.
 3. Treat geometry features plus shallow learning as conditional, not the next
    default. It becomes defensible only through nested raw-only, geometry-only,
    raw-plus-geometry, and shuffled-geometry comparisons under held-out sites and
    label budgets.
-4. Moment-factorized local HSI orientation/wavelength attribution is now the
-   strongest remaining positive-method gate. Do not revive generic material-
-   subspace detection without covariance, MMD, unmixing, and per-band
-   falsifiers.
+4. The moment-factorized local HSI orientation/wavelength-attribution gate is
+   complete and negative on three held-out datasets. Retain its deterministic
+   solver, mechanism tests, and polarity controls as method-verification
+   evidence; do not present it as a detector.
+5. The immediate positive-method gate is a frozen OSCD comparison of
+   Band-Image DS against smoothed/multiscale PCA, matched spatial
+   Gram/correlation distance, cross-projection, and IR-MAD.
 
 ## 5. Research Gap
 
@@ -972,3 +977,52 @@ This is a sharper version of ranks 1-4, not a new eleventh project. It survives
 a negative outcome: if geometry does not improve localization, the empirical
 result can still explain which invariances, persistence cues, and failure modes
 temporal subspaces provide relative to established SITS detectors.
+
+## 17. Cross-Branch Recommendation
+
+The 2026-06-22 evidence synthesis supersedes any single-method narrative in
+Section 16. The recommended seminar framing is:
+
+> **How Subspace Construction Changes Spatial and Temporal Change Evidence in
+> Multispectral Satellite Imagery**
+
+Recommended seminar question:
+
+> Can a spatial-axis Difference Subspace provide complementary, interpretable
+> ranking evidence beyond matched spatial, radiometric, and correlation
+> controls for multispectral binary change detection?
+
+This directly answers Sensei's spatial-information criticism and has real
+all-city evidence. The matched-null experiment is now complete. Band-Image DS
+is the strongest tested DS construction (AUROC `0.8477`, AP `0.2410`) and beats
+normalized spatial Gram/projector maps and rank-matched cross-reconstruction,
+but remains below PCA-diff and spatially filtered PCA.
+Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`, but the DS gain
+beyond a cross-reconstruction substitute is supported internally; improvement
+beyond smoothed PCA alone is not confirmed.
+
+Seminar contribution boundary:
+
+1. We explicitly compare how the satellite sample unit changes the DS object.
+2. We show that global pixel DS loses required spatial evidence, while the
+   Band-Image construction is competitive and complementary in ranking.
+3. We implement Sensei's first/second DS and geodesic decomposition on
+   sequential data and report their current real-data limits honestly.
+4. We show the completed matched-null boundary: DS is not just projector/Gram
+   change or cross-reconstruction, but its standalone accuracy remains below
+   spatial PCA.
+
+The real current use case is label-free changed-region candidate ranking for
+analyst triage. Do not claim automatic damage segmentation, semantic change
+classification, or validated band attribution.
+
+Primary report:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+Publication-facing next question:
+
+> Does this sample-construction and complementarity pattern transfer under a
+> frozen protocol to an external multispectral change benchmark?
+
+Without that confirmation, present the work as a rigorous seminar construction
+study, not a validated new detector.

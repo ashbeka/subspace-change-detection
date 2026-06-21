@@ -3,6 +3,7 @@ import unittest
 import numpy as np
 
 from phase1.ds import pca_utils
+from phase1.ds.ds_scores import DSConfig
 
 
 def _random_basis(dim: int, rank: int, seed: int) -> np.ndarray:
@@ -73,6 +74,10 @@ class DifferenceSubspaceTests(unittest.TestCase):
         legacy = pca_utils.build_difference_subspace(phi, psi, variant="residual")
 
         self.assertEqual(legacy.shape, (13, 12))
+
+    def test_unconfigured_ds_defaults_to_canonical(self):
+        self.assertEqual(DSConfig().subspace_variant, "canonical")
+        self.assertEqual(pca_utils.resolve_subspace_variant(None), "canonical")
 
     def test_canonical_components_retain_first_order_magnitude(self):
         phi = _random_basis(13, 6, seed=7)

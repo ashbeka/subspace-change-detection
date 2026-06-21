@@ -50,26 +50,36 @@ Sources: `notes/my_notes.md`, `notes/feedback.md`, `notes/methods.md`, `notes/ex
 | Second-order/geodesic satellite trajectory | curvature | vector second difference, BFAST/CCDC | closed for top task |
 | Learned normal SSA-DS | normal-direction invariance | harmonic deseasonalization, SFA/IR-MAD | natural-data failure |
 | Material-subspace membership | intra-material tolerance | centroid SAM/Mahalanobis/unmixing | negative |
+| Band-Image/spatial-axis DS | spatial support inside flattened band vectors | smoothed PCA, spatial Gram/projector, cross-reconstruction | strongest DS result; distinct from matched geometric nulls, still below spatial PCA |
 | Generic spatial/tensor subspace | preserved structure | patch tensor, SiROC, raw local PCA/covariance | crowded |
-| RTW phenology | phase/warp invariance | TWDTW, phase-aware harmonic | open but data-gated |
+| RTW phenology | phase/warp invariance | snapshot subspace, global shift, PCA cross-reconstruction, TWDTW | tested negative on MultiSenGE and BreizhCrops |
 | S3CCA change attribution | contiguous wavelengths | sparse PCA, per-band score, ECDBS | open only after reformulation |
-| Local moment-factorized HSI change | separates mean/scale/orientation and attributes bands | covariance/SPD, MMD, unmixing, per-band attribution | strongest provisional task |
+| Local moment-factorized HSI change | separates mean/scale/orientation and attributes bands | covariance/SPD, MMD, unmixing, per-band attribution | mechanisms verified; held-out detector rejected |
 | Geometry on frozen features | label-efficient learned representation | same-encoder cosine/L2 | future, encoder-confounded |
 
 ## Decision Rule
 
-The top task is accepted only if all of the following hold:
+The spatial-axis result advances beyond OSCD only if all of the following hold:
 
-1. The orientation score is invariant to mean shift and isotropic scale by construction and in a toy check.
-2. It detects orientation-only changes with matched mean and eigenspectrum.
-3. It adds mechanism classification or wavelength attribution beyond shrinkage covariance/SPD and MMD/energy.
-4. The attribution is more stable/physically faithful than standardized per-band differences, sparse PCA, and unmixing.
-5. It does not collapse under eigengap degeneracy, one-pixel translation, or realistic sample scarcity.
+1. A compatible external multispectral dataset is selected before inspecting method scores.
+2. Preprocessing, rank, smoothing scales, controls, fusion, and primary metric are frozen.
+3. Band-Image DS is compared with spatial PCA, matched Gram/projector, cross-reconstruction, and IR-MAD.
+4. It adds repeatable AP or calibrated F1 beyond the strongest matched control.
+5. The claim remains candidate ranking if only AUROC improves.
 
 ## Honest Novelty Verdict
 
-The notes and experiments eliminate the broader subspace-detector narrative. They support one narrow research question about *factorized local spectral-distribution change and its explanation*. This is a hypothesis under severe null pressure, not an established method contribution.
+The notes and experiments eliminate the broad claim that a generic subspace
+detector is sufficient. Band-Image DS is the strongest DS construction, but
+the matched-null experiment finds no performance contribution unique to DS:
+cross-reconstruction is significantly weaker under matched centering, while
+spatial PCA is stronger.
+The remaining positive question is external transfer of the construction and
+its city-specific complementarity. The local HSI factorization is a negative
+detector result and a useful verification case.
 
 ## Next Falsifiable Step
 
-Write a paper-to-code construction card and a four-regime moment-matched toy protocol (mean-only, scale-only, orientation-only, null) before any real-data acquisition or model training.
+Select one compatible external labeled multispectral benchmark, freeze the
+OSCD-derived method definitions, and test transfer before another neural-prior
+experiment.
