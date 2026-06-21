@@ -74,6 +74,35 @@ critique), real use cases, an honest map of where it helps/fails, and a rich, co
 is NOT "subspace geometry doesn't work." The diagnostic is the rigorous backbone; the spatial Band-Image DS is
 the headline; the open killer-null test is the exciting next step.
 
+## 3b. UPDATE 2026-06-22 — Codex ran the decisive controls; CORRECTIONS to §1/§3
+Reviewed Codex's new commit `4feac02` (matched spatial controls, HSI local-moment geometry, its own
+cross-branch evidence matrix). Two corrections to my earlier read:
+
+**(i) Band-Image DS standalone does NOT match the best spatial baseline — it loses to SMOOTHED PCA.** My
+earlier "≈ PCA-diff (0.84/0.84)" compared to *un-smoothed* PCA-diff. With matched spatial controls (OSCD 24 cities, AP):
+- Multiscale PCA-diff **0.2680**, Smoothed PCA-diff **0.2679** (the strongest simple spatial maps)
+- PCA + Band-Image + IR-MAD **rank fusion** 0.2780 (best AUROC 0.871, best F1 0.326)
+- PCA-diff 0.2541 · **Band-Image DS 0.2410** · matched cross-reconstruction 0.2153 · Gram 0.1417 · projector 0.1024
+So standalone Band-Image DS LOSES to smoothed/multiscale PCA. BUT — the genuinely positive, surviving facts:
+- **Band-Image DS beats ALL matched GEOMETRIC nulls** (Gram 0.14, projector 0.10, cross-reconstruction 0.22) →
+  the canonical DS projection carries information those geometric controls do not.
+- **In rank-fusion it adds statistically-significant complementary evidence**: fusion AP 0.278 > smoothed-PCA
+  0.268 (+0.0115, p=0.0098, 24-city bootstrap interval entirely positive), and the matched cross-reconstruction
+  CANNOT replace the DS inside the fusion → the complementarity is DS-specific. This is a real *conditional* positive.
+- Status corrected: Band-Image DS = **~ conditional positive** (strongest DS construction; significant fusion
+  complementarity; spatially faithful, answering Sensei's concern) — NOT a standalone winner.
+
+**(ii) HSI local-moment / orientation factorization on REAL benchmarks (Bay Area-family: Hermiston/Farmland/
+Shenzhen) = NEGATIVE** (confirms my orientation finding). Orientation/DS-projection AP loses to direct controls
+on every holdout (Hermiston 0.13/0.22 vs 0.38; Farmland 0.57/0.50 vs 0.64; Shenzhen 0.09/0.05 vs 0.31; the
+Farmland "positive" was a score-polarity artifact — inverse raw-L2 beats it). "Negative detector; useful
+verification." Codex's own verdict: simple spatial PCA is the strongest map; Band-Image DS is the strongest DS
+construction; geodesic decomposition "mechanism works, no real detection gain — show visually, avoid perf claim."
+
+New experiments added to the ledger (Codex, 2026-06-22): matched-spatial-controls (above), HSI local-moment
+geometry (negative), spatial-DS pyramid (negative: best AP 0.077 vs global DS 0.079), cross-branch evidence matrix
+(concurs with this audit). **Both independent audits now agree on the same conclusion below.**
+
 ## 4. Honest caveat (so you can defend it)
 Band-Image DS does NOT strictly *beat* PCA-diff (PCA-diff wins 15/24 cities on AP); it *matches/ties* it and wins
 a minority of cities. The audit's prediction (consistent with the project's theorem) is that a spatial
