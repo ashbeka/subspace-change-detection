@@ -218,3 +218,5 @@ The user keeps adding raw notes (apple_notes, slack_notes_to_myself, slack_messa
 ingested `notes/` there). This worktree's own copies are STALE. RULE: always read the user's latest notes/
 knowledge from the **main-repo absolute path** (same disk, always readable from any session root). Write our
 experiments/method-docs to THIS worktree (claude/temporal-ds). notes = read from main repo; code+docs = write here.
+
+[BET 2 CLOSED 2026-06-21 — bet2_g1_trajectory] Recovery-path-type classification: trajectory GEOMETRY near-chance (0.34-0.40, WORST) vs multi-band trajectory 1.0 / scalar-index 0.67. Geometry angle falsified (consistent with H-B temporal failures). Secondary (non-geometry): multi-band recovery characterization beats single-index NBR/NDVI (1.0 vs 0.67) — valuable application point, not a subspace contribution. Bet 1 + Bet 2 both closed; subspace redundant in every cell. Remaining = H-C (deep-feature geometry; engineering-heavy; win attributable to features). Reports: bet2_g1_trajectory_2026-06-21. Design: docs/research/bet2_design.md.
