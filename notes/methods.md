@@ -453,6 +453,15 @@ Multi-date subspace methods:
   intervention that ordinary cross-band covariance also detected. Treat RTW as
   a closed detector route for the current data, not as evidence that temporal
   ordering never matters.
+- Natural-label BreizhCrops follow-up, 2026-06-21: a `snapshot subspace` means
+  the centered or uncentered PCA span of date-level ten-band spectra, compared
+  through MSM-style canonical correlations. The name is descriptive; it is not
+  DS or a distinct named Sensei method. After adding global-shift alignment,
+  correlation, PCA cross-reconstruction, shift-orbit, bandwise, seasonal,
+  DTW/TWDTW, and M-SSA controls, nested-selected RTW lost on two geographic
+  holdouts. PCA cross-reconstruction was strongest. This demonstrates that the
+  useful signal was largely spectral-distribution/phase alignment rather than
+  a capability unique to random ordered-subsequence geometry.
 - PCA-SFA and Slow Feature Subspace suggest a way to separate slow/background temporal variation from faster anomalous change. A satellite version would need same-season or dense time series so "slow" does not simply mean seasonal drift.
 - Product Grassmann and Hankel-like temporal embeddings suggest treating satellite data as factors, for example spectral subspace, local spatial/patch subspace, and temporal/date subspace, instead of flattening everything into one unordered pixel matrix.
 - G-LMSM and Signal Latent Subspace suggest a neural-subspace hybrid: extract CNN/foundation-model features, build subspaces from patch/date features, and either compare them geometrically or learn dictionary subspaces on the Grassmann manifold.

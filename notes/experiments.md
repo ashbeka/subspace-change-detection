@@ -375,6 +375,24 @@ MMD/energy, fused per-band effects, and unmixing are mandatory falsifiers.
   - decision: no-go for a natural-transition RTW study; retain the result in
     the diagnostic line;
   - report: `docs/experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`.
+- RTW natural-label transfer follow-up completed 2026-06-21:
+  - official BreizhCrops 2017 L2A data; seven adequately represented crop
+    classes, 560 sequences per region, and 2,720 pairs per run;
+  - two geographic rotations: FRH01->FRH04 and FRH02->FRH03;
+  - 22 controls include aligned Euclidean/RMS, global temporal shift,
+    correlation, DTW/TWDTW/soft-DTW, PCA cross-reconstruction, centered and
+    uncentered snapshot subspaces, deterministic shift-orbit and M-SSA
+    subspaces, bandwise differences, and seasonal summaries;
+  - nested RTW selection on development geography improved AP to `0.7052` and
+    `0.6596`, but development-selected global-shift RMS reached `0.7789` and
+    `0.7759`; paired RTW deltas were `-0.0737` and `-0.1163`, with wholly
+    negative 95% intervals;
+  - PCA cross-reconstruction was strongest on both holdouts (`0.8128`,
+    `0.8264` AP); selected RTW had higher timing-nuisance false positives;
+  - RTW also lost on natural-only, within-phenology-group hard pairs, and
+    timing-invariance tasks. Close RTW as the current positive satellite route;
+    do not generalize this negative result beyond the tested construction;
+  - report: `docs/experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`.
 - The requested first/second DS magnitude and geodesic decomposition were
   implemented and independently tested; the rolling RGB SpaceNet 7 detector
   lost to radiometric controls and did not improve their fusion.

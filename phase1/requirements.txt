@@ -4,3 +4,4 @@ scikit-learn
 rasterio
 matplotlib
 pyyaml
+h5py

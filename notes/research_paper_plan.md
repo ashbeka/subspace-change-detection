@@ -150,9 +150,13 @@ Contribution lanes to keep explicit:
 Post-mining priority, 2026-06-21:
 
 1. RTW phase/tempo-invariance gate is complete and negative as an incremental
-   method: held-out AP `0.8078` did not exceed snapshot-subspace AP `0.8156`,
-   and the paired interval crossed zero. Keep RTW as a diagnostic row; do not
-   advance to natural transitions from this result.
+   method. The controlled MultiSenGE result did not exceed snapshot PCA. A
+   larger follow-up then used official BreizhCrops natural crop labels, 22
+   controls, nested RTW tuning, two development/holdout geographic rotations,
+   and anchor bootstraps. Selected RTW AP (`0.7052`, `0.6596`) remained below
+   global-shift RMS (`0.7789`, `0.7759`) and PCA cross-reconstruction
+   (`0.8128`, `0.8264`). Keep RTW as a diagnostic row; reopen only for a
+   materially different mechanism such as attention RTW and a justified task.
 2. Keep the diagnostic paper as the evidence-backed publication spine: direct
    DS detection and first/second trajectory geometry have repeatedly failed to
    add beyond simpler controls on real data.

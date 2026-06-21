@@ -112,6 +112,8 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-temporal-registration-curve", "multisenge", "Measure temporal-context sensitivity to subpixel registration error and low-frequency controls.", ["phase1-temporal-registration-curve"]),
     CommandInfo("phase1-seasonal-regime-study", "multisenge", "Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.", ["phase1-seasonal-regime-study"]),
     CommandInfo("phase1-rtw-invariance-gate", "multisenge", "Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.", ["phase1-rtw-invariance-gate"]),
+    CommandInfo("phase1-breizhcrops-download", "temporal", "Download and verify official BreizhCrops 2017 L2A geographic partitions.", ["phase1-breizhcrops-download", "--regions", "frh01,frh04"]),
+    CommandInfo("phase1-rtw-breizhcrops-transfer", "temporal", "Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.", ["phase1-rtw-breizhcrops-transfer"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -252,7 +254,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         check_path("organized Chrome bookmarks", "docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html", kind="file"),
         check_path("retained non-public PDF", "references/reference_papers/MVA_2025_human_motion_analysis.pdf", kind="file"),
     ]
-    for module in ["numpy", "yaml", "torch", "rasterio", "sklearn", "phase1", "phase2"]:
+    for module in ["numpy", "yaml", "torch", "rasterio", "sklearn", "h5py", "phase1", "phase2"]:
         checks.append(check_import(module))
 
     try:
@@ -934,6 +936,69 @@ def cmd_phase1_rtw_invariance_gate(args: argparse.Namespace) -> int:
         "--seed",
         str(args.seed),
     ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_rtw_breizhcrops_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/breizhcrops_rtw_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_breizhcrops_rtw_transfer",
+        "--data_root",
+        args.data_root,
+        "--output_dir",
+        out,
+        "--development_region",
+        args.development_region,
+        "--holdout_region",
+        args.holdout_region,
+        "--max_fields_per_class",
+        str(args.max_fields_per_class),
+        "--anchors_per_class",
+        str(args.anchors_per_class),
+        "--min_steps",
+        str(args.min_steps),
+        "--quality_threshold",
+        str(args.quality_threshold),
+        "--rtw_replicates",
+        str(args.rtw_replicates),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    if args.search_rtw:
+        cmd.extend([
+            "--search_rtw",
+            "--rtw_search_anchors_per_class",
+            str(args.rtw_search_anchors_per_class),
+            "--rtw_search_subsequence_lengths",
+            args.rtw_search_subsequence_lengths,
+            "--rtw_search_n_samples",
+            args.rtw_search_n_samples,
+            "--rtw_search_ranks",
+            args.rtw_search_ranks,
+            "--rtw_search_preprocessing",
+            args.rtw_search_preprocessing,
+            "--rtw_finalists",
+            str(args.rtw_finalists),
+        ])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_breizhcrops_download(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.download_breizhcrops_l2a",
+        "--data_root",
+        args.data_root,
+        "--regions",
+        args.regions,
+    ]
+    if args.keep_archives:
+        cmd.append("--keep_archives")
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1843,6 +1908,43 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_rtw_invariance_gate)
+
+    p = sub.add_parser(
+        "phase1-breizhcrops-download",
+        help="Download and verify official BreizhCrops 2017 L2A partitions.",
+    )
+    p.add_argument("--data-root", default="data/BreizhCrops")
+    p.add_argument("--regions", default="frh01,frh02,frh03,frh04")
+    p.add_argument("--keep-archives", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_breizhcrops_download)
+
+    p = sub.add_parser(
+        "phase1-rtw-breizhcrops-transfer",
+        help="Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.",
+    )
+    p.add_argument("--data-root", default="data/BreizhCrops")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--development-region", default="frh01")
+    p.add_argument("--holdout-region", default="frh04")
+    p.add_argument("--max-fields-per-class", type=int, default=80)
+    p.add_argument("--anchors-per-class", type=int, default=40)
+    p.add_argument("--min-steps", type=int, default=12)
+    p.add_argument("--quality-threshold", type=float, default=0.5)
+    p.add_argument("--rtw-replicates", type=int, default=3)
+    p.add_argument("--search-rtw", action="store_true")
+    p.add_argument("--rtw-search-anchors-per-class", type=int, default=8)
+    p.add_argument("--rtw-search-subsequence-lengths", default="2,4,8,12")
+    p.add_argument("--rtw-search-n-samples", default="32,64,128")
+    p.add_argument("--rtw-search-ranks", default="2,5")
+    p.add_argument(
+        "--rtw-search-preprocessing", default="raw,per_sequence_zscore"
+    )
+    p.add_argument("--rtw-finalists", type=int, default=4)
+    p.add_argument("--bootstrap", type=int, default=1000)
+    p.add_argument("--seed", type=int, default=2718)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_rtw_breizhcrops_transfer)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

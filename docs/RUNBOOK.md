@@ -597,6 +597,31 @@ The completed 2026-06-21 gate was negative for incremental RTW value. Do not
 advance to natural irrigation/crop-transition claims unless a new mechanism and
 fresh preregistration justify reopening it.
 
+Run the stronger natural-label RTW transfer study on official BreizhCrops. The
+command performs nested RTW selection on FRH01, freezes the configuration, and
+evaluates FRH04 against global-shift, correlation, PCA reconstruction,
+snapshot/shift-orbit/M-SSA subspaces, DTW/TWDTW, and seasonal controls:
+
+Download and byte-size-verify the four official 2017 L2A partitions:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-breizhcrops-download --regions frh01,frh02,frh03,frh04
+```
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-breizhcrops-transfer --search-rtw --development-region frh01 --holdout-region frh04 --output-dir "phase1/outputs/breizhcrops_rtw_nested_search_frh01_frh04_$tag" --max-fields-per-class 80 --anchors-per-class 40 --rtw-replicates 3 --bootstrap 1000 --seed 2718
+```
+
+Geographic replication:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-breizhcrops-transfer --search-rtw --development-region frh02 --holdout-region frh03 --output-dir "phase1/outputs/breizhcrops_rtw_nested_search_frh02_frh03_$tag" --max-fields-per-class 80 --anchors-per-class 40 --rtw-replicates 3 --bootstrap 1000 --seed 3141
+```
+
+The official HDF5 files and index/class-mapping CSVs must exist under
+`data/BreizhCrops/2017/L2A/`. The completed study is negative for incremental
+RTW value and should not be retuned on the holdout regions.
+
 Run the strongest current local/off-grid controlled protocol with fair
 multispectral index controls:
 

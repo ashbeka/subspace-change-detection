@@ -39,7 +39,10 @@ Read these first:
 9. `experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`
    - Controlled MultiSenGE test of Randomized Time Warping against snapshot-subspace, Fourier/harmonic, DTW/TWDTW, M-SSA, and radiometric controls; records the no-go decision for a natural-transition RTW study.
 
-10. `research_learning_map.html`
+10. `experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`
+   - Natural-label and timing-invariance transfer study on all four official BreizhCrops regions with nested RTW selection and 22 killer controls.
+
+11. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

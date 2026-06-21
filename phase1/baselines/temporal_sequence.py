@@ -192,6 +192,94 @@ def harmonic_phase_aligned_distance(
   return float(np.min(distances))
 
 
+def best_circular_shift_rms_distance(
+  first: Array,
+  first_times: Array,
+  second: Array,
+  second_times: Array,
+  *,
+  length: int = 48,
+) -> float:
+  """Minimum RMS after an exhaustive global circular temporal shift.
+
+  This is the direct deterministic null for a claim that RTW adds useful
+  invariance to a single global seasonal phase offset.
+  """
+  left, right = pair_on_common_grid(
+    first, first_times, second, second_times, length=length
+  )
+  return float(min(
+    np.sqrt(np.mean((left - np.roll(right, shift, axis=0)) ** 2))
+    for shift in range(int(length))
+  ))
+
+
+def best_circular_shift_correlation_distance(
+  first: Array,
+  first_times: Array,
+  second: Array,
+  second_times: Array,
+  *,
+  length: int = 48,
+) -> float:
+  """Return ``1-max(correlation)`` over all global circular shifts."""
+  left, right = pair_on_common_grid(
+    first, first_times, second, second_times, length=length
+  )
+  left_flat = left.reshape(-1)
+  left_flat = left_flat - np.mean(left_flat)
+  left_norm = max(float(np.linalg.norm(left_flat)), 1e-12)
+  best = -1.0
+  for shift in range(int(length)):
+    shifted = np.roll(right, shift, axis=0).reshape(-1)
+    shifted = shifted - np.mean(shifted)
+    correlation = float(
+      np.dot(left_flat, shifted)
+      / (left_norm * max(float(np.linalg.norm(shifted)), 1e-12))
+    )
+    best = max(best, correlation)
+  return float(1.0 - np.clip(best, -1.0, 1.0))
+
+
+def bandwise_correlation_distance(
+  first: Array,
+  first_times: Array,
+  second: Array,
+  second_times: Array,
+  *,
+  length: int = 48,
+) -> float:
+  """Mean per-band ``1-correlation`` after common-grid interpolation."""
+  left, right = pair_on_common_grid(
+    first, first_times, second, second_times, length=length
+  )
+  distances = []
+  for band in range(left.shape[1]):
+    x = left[:, band] - np.mean(left[:, band])
+    y = right[:, band] - np.mean(right[:, band])
+    denominator = max(float(np.linalg.norm(x) * np.linalg.norm(y)), 1e-12)
+    distances.append(1.0 - np.clip(float(np.dot(x, y) / denominator), -1.0, 1.0))
+  return float(np.mean(distances))
+
+
+def seasonal_summary_distance(first: Array, second: Array) -> float:
+  """Euclidean distance between transparent per-band seasonal summaries."""
+  left, right = _validate(first), _validate(second)
+  if left.shape[1] != right.shape[1]:
+    raise ValueError("Feature dimensions differ.")
+
+  def summarize(values: Array) -> Array:
+    quantiles = np.quantile(values, [0.1, 0.25, 0.5, 0.75, 0.9], axis=0)
+    return np.concatenate([
+      np.mean(values, axis=0),
+      np.std(values, axis=0),
+      np.ptp(values, axis=0),
+      quantiles.reshape(-1),
+    ])
+
+  return float(np.linalg.norm(summarize(left) - summarize(right)))
+
+
 def _local_costs(first: Array, second: Array) -> Array:
   left, right = _validate(first), _validate(second)
   if left.shape[1] != right.shape[1]:
@@ -272,13 +360,99 @@ def soft_dtw_divergence(first: Array, second: Array, *, gamma: float = 0.1) -> f
 
 
 def snapshot_subspace_distance(first: Array, second: Array, *, rank: int = 3) -> float:
-  """Order-invariant PCA/MSM control using dates as spectral samples."""
+  """Order-invariant PCA/MSM-style control using dates as spectral samples.
+
+  This is a project adaptation of ordinary PCA plus canonical-angle/MSM
+  comparison. It is not Difference Subspace and is not presented as a new
+  named method from Fukui's work.
+  """
   left, right = _validate(first), _validate(second)
   if left.shape[1] != right.shape[1]:
     raise ValueError("Feature dimensions differ.")
   left_basis = np.linalg.svd(left.T, full_matrices=False)[0][:, :rank]
   right_basis = np.linalg.svd(right.T, full_matrices=False)[0][:, :rank]
   return rtw_dissimilarity(left_basis, right_basis)
+
+
+def centered_snapshot_subspace_distance(
+  first: Array,
+  second: Array,
+  *,
+  rank: int = 3,
+) -> float:
+  """Canonical-angle distance between ordinary centered PCA subspaces."""
+  left, right = _validate(first), _validate(second)
+  if left.shape[1] != right.shape[1]:
+    raise ValueError("Feature dimensions differ.")
+  left_centered = left - np.mean(left, axis=0, keepdims=True)
+  right_centered = right - np.mean(right, axis=0, keepdims=True)
+  left_basis = np.linalg.svd(left_centered.T, full_matrices=False)[0][:, :rank]
+  right_basis = np.linalg.svd(right_centered.T, full_matrices=False)[0][:, :rank]
+  return rtw_dissimilarity(left_basis, right_basis)
+
+
+def symmetric_pca_reconstruction_error(
+  first: Array,
+  second: Array,
+  *,
+  rank: int = 3,
+) -> float:
+  """Symmetric cross-reconstruction RMSE using centered PCA models."""
+  left, right = _validate(first), _validate(second)
+  if left.shape[1] != right.shape[1]:
+    raise ValueError("Feature dimensions differ.")
+
+  def fit(values: Array) -> tuple[Array, Array]:
+    mean = np.mean(values, axis=0, keepdims=True)
+    _, _, vectors = np.linalg.svd(values - mean, full_matrices=False)
+    return mean, vectors[: min(int(rank), vectors.shape[0])].T
+
+  def error(values: Array, mean: Array, basis: Array) -> float:
+    centered = values - mean
+    reconstructed = (centered @ basis) @ basis.T
+    return float(np.sqrt(np.mean((centered - reconstructed) ** 2)))
+
+  left_mean, left_basis = fit(left)
+  right_mean, right_basis = fit(right)
+  return 0.5 * (
+    error(right, left_mean, left_basis)
+    + error(left, right_mean, right_basis)
+  )
+
+
+def shift_orbit_subspace_distance(
+  first: Array,
+  first_times: Array,
+  second: Array,
+  second_times: Array,
+  *,
+  rank: int | None = None,
+  length: int = 32,
+) -> float:
+  """Compare subspaces generated from every circular shift of each sequence.
+
+  Each resampled ``(T,B)`` sequence is flattened to ``TB`` dimensions. All
+  ``T`` circular shifts form samples for an ordinary uncentered PCA subspace.
+  This is a deterministic simple-shift null for RTW's randomized ordered-
+  subsequence construction. By default it retains the full numerical orbit
+  span. Arbitrary truncation can split degenerate sine/cosine pairs and destroy
+  the invariance that this control is intended to test.
+  """
+  left, right = pair_on_common_grid(
+    first, first_times, second, second_times, length=length
+  )
+
+  def basis(values: Array) -> Array:
+    orbit = np.stack([
+      np.roll(values, shift, axis=0).reshape(-1)
+      for shift in range(int(length))
+    ], axis=1)
+    vectors, singular, _ = np.linalg.svd(orbit, full_matrices=False)
+    numerical_rank = int(np.sum(singular > 1e-9 * max(float(singular[0]), 1.0)))
+    effective_rank = numerical_rank if rank is None else min(int(rank), numerical_rank)
+    return vectors[:, :effective_rank]
+
+  return rtw_dissimilarity(basis(left), basis(right))
 
 
 def _hankel_basis(sequence: Array, lag: int, rank: int) -> Array:
