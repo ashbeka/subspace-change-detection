@@ -115,6 +115,8 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-breizhcrops-download", "temporal", "Download and verify official BreizhCrops 2017 L2A geographic partitions.", ["phase1-breizhcrops-download", "--regions", "frh01,frh04"]),
     CommandInfo("phase1-rtw-breizhcrops-transfer", "temporal", "Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.", ["phase1-rtw-breizhcrops-transfer"]),
     CommandInfo("phase1-hsi-moment-geometry", "hyperspectral", "Factor local HSI change into mean, scale, eigenspectrum, eigenspace orientation, DS projection, and covariance controls.", ["phase1-hsi-moment-geometry"]),
+    CommandInfo("phase1-xbd-s12-prepare", "external validation", "Verify and selectively prepare xBD-S12 Sentinel-2 data and original labels.", ["phase1-xbd-s12-prepare"]),
+    CommandInfo("phase1-xbd-s12-evaluate", "external validation", "Run the frozen event-disjoint xBD-S12 Band-Image DS validation.", ["phase1-xbd-s12-evaluate", "--split", "test"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -255,7 +257,7 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         check_path("organized Chrome bookmarks", "docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html", kind="file"),
         check_path("retained non-public PDF", "references/reference_papers/MVA_2025_human_motion_analysis.pdf", kind="file"),
     ]
-    for module in ["numpy", "yaml", "torch", "rasterio", "sklearn", "h5py", "phase1", "phase2"]:
+    for module in ["numpy", "yaml", "torch", "rasterio", "shapely", "sklearn", "h5py", "phase1", "phase2"]:
         checks.append(check_import(module))
 
     try:
@@ -1032,6 +1034,63 @@ def cmd_phase1_hsi_moment_geometry(args: argparse.Namespace) -> int:
         cmd.extend(["--stability_seeds", args.stability_seeds])
     if args.smoke:
         cmd.append("--smoke")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_prepare(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.prepare_xbd_s12_external",
+        "--archive",
+        args.archive,
+        "--output-root",
+        args.output_root,
+        "--original-xbd-root",
+        args.original_xbd_root,
+        "--labels-output",
+        args.labels_output,
+    ]
+    if args.skip_checksum:
+        cmd.append("--skip-checksum")
+    if args.skip_release_extraction:
+        cmd.append("--skip-release-extraction")
+    if args.skip_label_extraction:
+        cmd.append("--skip-label-extraction")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_evaluate(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_frozen_{args.split}_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_xbd_s12_external",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--split",
+        args.split,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--maps-per-event",
+        str(args.maps_per_event),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
+    ]
+    if args.maximum_patches is not None:
+        cmd.extend(["--maximum-patches", str(args.maximum_patches)])
+    if args.patches_per_event is not None:
+        cmd.extend(["--patches-per-event", str(args.patches_per_event)])
+    if args.include_metadata_nodata:
+        cmd.append("--include-metadata-nodata")
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -2010,6 +2069,39 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_hsi_moment_geometry)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-prepare",
+        help="Verify and selectively prepare xBD-S12 plus original xBD labels.",
+    )
+    p.add_argument("--archive", default="data/xbd_s12_download/xbd_s12.tar.gz")
+    p.add_argument("--output-root", default="data/xbd_s12")
+    p.add_argument("--original-xbd-root", default="data/xbd")
+    p.add_argument("--labels-output", default="data/xbd_s12_original_labels")
+    p.add_argument("--skip-checksum", action="store_true")
+    p.add_argument("--skip-release-extraction", action="store_true")
+    p.add_argument("--skip-label-extraction", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_prepare)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-evaluate",
+        help="Run the frozen event-disjoint xBD-S12 external validation.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--split", choices=("train", "test", "all"), default="test")
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--maximum-patches", type=int, default=None)
+    p.add_argument("--patches-per-event", type=int, default=None)
+    p.add_argument("--include-metadata-nodata", action="store_true")
+    p.add_argument("--maps-per-event", type=int, default=1)
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_evaluate)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

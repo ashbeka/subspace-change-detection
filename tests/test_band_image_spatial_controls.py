@@ -1,11 +1,17 @@
 import unittest
+from argparse import Namespace
 
 import numpy as np
 
 from phase1.ds import pca_utils
 from phase1.scripts.compare_oscd_spatial_subspaces import (
+    band_image_ds_score,
     band_image_spatial_control_values,
     parse_method_spec,
+)
+from phase1.subspace.band_image_geometry import (
+    band_image_ds_values,
+    band_image_spatial_control_values as shared_control_values,
 )
 
 
@@ -172,6 +178,54 @@ class BandImageSpatialControlTests(unittest.TestCase):
                 mode=mode,
             )
             self.assertTrue(np.allclose(permuted, original[permutation], atol=2e-5), mode)
+
+    def test_shared_controls_match_oscd_entrypoint(self) -> None:
+        for mode in ("spatial_gram", "projector_distance", "cross_reconstruction"):
+            expected = band_image_spatial_control_values(
+                self.first, self.second, rank=3, seed=7, mode=mode
+            )
+            actual = shared_control_values(
+                self.first, self.second, rank=3, seed=7, mode=mode
+            )
+            self.assertTrue(np.allclose(actual, expected, atol=1e-7), mode)
+
+    def test_shared_controls_can_reuse_ds_bases_without_changing_scores(self) -> None:
+        ds = band_image_ds_values(self.first, self.second, rank=3, seed=7)
+        for mode in ("projector_distance", "cross_reconstruction"):
+            refit = shared_control_values(
+                self.first, self.second, rank=3, seed=7, mode=mode
+            )
+            reused = shared_control_values(
+                self.first,
+                self.second,
+                rank=3,
+                seed=7,
+                mode=mode,
+                first_basis=ds.pre_basis,
+                second_basis=ds.post_basis,
+            )
+            self.assertTrue(np.allclose(reused, refit, atol=1e-7), mode)
+
+    def test_shared_ds_matches_oscd_band_image_score(self) -> None:
+        rng = np.random.default_rng(71)
+        first_cube = rng.normal(size=(13, 4, 5)).astype(np.float32)
+        second_cube = first_cube.copy()
+        second_cube[:, 1:3, 2:4] += rng.normal(size=(13, 2, 2)).astype(np.float32)
+        valid = np.ones((4, 5), dtype=bool)
+        spec = parse_method_spec("band_image_norm")
+        score, _, _ = band_image_ds_score(
+            first_cube,
+            second_cube,
+            valid,
+            Namespace(rank=6, seed=7),
+            spec,
+        )
+        first = first_cube[:, valid].T
+        second = second_cube[:, valid].T
+        shared = band_image_ds_values(first, second, rank=6, seed=7)
+        self.assertTrue(
+            np.allclose(score[valid], shared.projected_magnitude, atol=1e-6)
+        )
 
 
 if __name__ == "__main__":

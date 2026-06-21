@@ -59,6 +59,11 @@ view.
 - Use the release's `normalization.json`: per-band 1st/99th percentile min-max
   normalization, clipped to `[0,1]`, applied identically to both dates.
 - A pixel is input-valid only when all pre/post band values are finite.
+- The downloaded Sentinel archive does not redistribute the original xBD
+  no-data raster. For the first frozen run, exclude entire patches whose
+  metadata reports `N_px_no_data > 0`; do not guess the missing support from
+  method scores or labels. A later exact-nodata rerun may use the original VHR
+  rasters as a sensitivity check.
 - Do not use labels for normalization, masking, rank, or score calibration.
 - Band-Image DS receives `X_t in R^(N x 12)`, where each column is one flattened
   band-image sample and rows retain fixed spatial positions.
@@ -74,14 +79,15 @@ view.
 Individual maps:
 
 1. raw spectral L2 / CVA;
-2. PCA-diff;
-3. smoothed PCA-diff (`sigma=1`);
-4. multiscale PCA-diff (`sigma=0,1,2` mean);
-5. repaired IR-MAD;
-6. Band-Image canonical DS projection magnitude, rank `11`;
-7. Band-Image symmetric excess cross-reconstruction, rank `11`;
-8. normalized spatial Gram row distance;
-9. projector-row distance.
+2. spectral angle between paired twelve-band pixel vectors;
+3. PCA-diff;
+4. smoothed PCA-diff (`sigma=1`);
+5. multiscale PCA-diff (`sigma=0,1,2` mean);
+6. repaired IR-MAD;
+7. Band-Image canonical DS projection magnitude, rank `11`;
+8. Band-Image symmetric excess cross-reconstruction, rank `11`;
+9. normalized spatial Gram row distance;
+10. projector-row distance.
 
 Label-free percentile-rank fusions:
 
