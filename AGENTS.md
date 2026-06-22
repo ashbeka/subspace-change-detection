@@ -275,16 +275,19 @@ cross-reconstruction on five unseen test events but not consistently on 11
 training events, so the DS-specific effect is event-dependent. Raw L2 is
 stronger for damage-vs-intact discrimination.
 
+The HSI and SpaceNet7 transfer gates are complete. HSI behavior is
+scene-dependent, while tiled RGB building-appearance transfer is negative.
 The current experiment track is now:
 
 ```text
-another independent event gate
--> optional neural-prior test
+compatible multispectral event confirmation OR materially new mechanism
+-> fresh held-out gate
+-> neural-prior test only after a positive gate
 ```
 
 Rank/centering, naive geometry/radiometry fusion, IR-MAD pressure, fixed review
-budgets, object retrieval, registration shifts, and available cloud/date
-checks are complete. Do not tune new
+budgets, object retrieval, registration shifts, HSI transfer, RGB SpaceNet7
+transfer, and available cloud/date checks are complete. Do not tune new
 combinations on the five already inspected xBD-S12 test events. Develop any
 new mechanism on training disasters and seek another independent gate before
 making a confirmatory detector claim.

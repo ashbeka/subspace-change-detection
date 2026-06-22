@@ -222,18 +222,37 @@ Controlled 0-2 pixel post-image shifts on training events reduce projector AP
 and object recall significantly, but do not erase its absolute lead. The
 method is registration-sensitive candidate geometry, not invariant geometry.
 
-Immediate next decision:
+Two independent-task pressure gates are now complete:
+
+- Fixed rank-11 HSI transfer is mixed. Hermiston favors canonical DS
+  (`0.3707` AP versus smoothed PCA `0.2194`), but Benton and Shenzhen reject
+  the hypothesis and Farmland is polarity-confounded.
+- Tiled SpaceNet7 RGB transfer covers nine AOIs and 197 building-appearance
+  transitions. Raw L2 has the best mean AP (`0.05599`); projector AP is
+  `0.00891`, and canonical DS (`0.01575`) significantly loses to matched
+  cross-reconstruction (`0.03545`).
+
+Current decision:
 
 ```text
-another independent event gate
--> optional fixed projector neural-prior test
+generic transfer criterion failed
+-> do not run the projector neural-prior experiment
+-> seek a compatible multispectral event confirmation or a new mechanism
 ```
+
+The xBD-S12 result remains valid for that event task, but it is not a generic
+building-localization or cross-sensor detector claim.
 
 See
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
 
 External report:
 `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+Transfer reports:
+
+- `docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`
+- `docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
 
 ### Completed Temporal And HSI Evidence Path
 

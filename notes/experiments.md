@@ -13,6 +13,7 @@
 - [9. Source Ingestion Summary](#9-source-ingestion-summary)
 - [10. Active Temporal Difference-Subspace Study](#10-active-temporal-difference-subspace-study)
 - [11. Cross-Branch Evidence Decision](#11-cross-branch-evidence-decision)
+- [12. Cross-Sensor Band-Image Transfer Gates](#12-cross-sensor-band-image-transfer-gates)
 
 ## 1. Current Research Question
 
@@ -1506,3 +1507,59 @@ a mechanism and independent validation gate are specified.
 
 Report:
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+## 12. Cross-Sensor Band-Image Transfer Gates
+
+Two frozen pressure tests were completed on 2026-06-22 after the xBD-S12
+candidate-localization result.
+
+### 12.1 Hyperspectral Transfer
+
+The exact spatial-axis sample definition was transferred at fixed rank 11 to
+Benton, Hermiston, Farmland, and Shenzhen HSI pairs.
+
+- Hermiston is the only defensible positive DS scene: AP `0.3707` versus
+  smoothed PCA `0.2194` and IR-MAD `0.2298`; the spatial block-bootstrap
+  DS-minus-smoothed-PCA interval is `[+0.0970,+0.2008]`.
+- Benton and Shenzhen reject the DS hypothesis against direct controls.
+- Farmland is polarity-confounded: geometry AP remains below its `0.687`
+  changed-pixel prevalence and cannot support a positive claim.
+- Seeds `7/1234/2026` give geometry-map correlations above `0.9983`.
+- A post-hoc rank curve shows scene-specific optima, not a universal rank.
+
+Decision: broad HSI transfer is rejected. Hermiston supports a future
+conditional-regime hypothesis only after additional untouched scenes and a
+predeclared unlabeled regime predictor.
+
+### 12.2 SpaceNet7 RGB Building-Appearance Transfer
+
+The xBD tile scale was transferred directly to nine SpaceNet7 AOIs and 197
+monthly building-appearance transitions. Each `128 x 128` tile supplies three
+RGB band-image samples and a centered rank-two subspace.
+
+- raw L2 mean transition AP `0.05599`;
+- cross-reconstruction `0.03545`;
+- IR-MAD `0.01841`;
+- canonical DS `0.01575`;
+- projector distance `0.00891`.
+
+Projector-minus-IR-MAD AP is `-0.00950`, hierarchical interval
+`[-0.01991,-0.00162]`. DS-minus-cross-reconstruction is `-0.01970`, interval
+`[-0.03811,-0.00668]`.
+
+Decision: the xBD projector effect does not transfer to RGB construction
+localization, and canonical DS loses to its matched reconstruction control.
+The neural projector-prior gate is **not met**.
+
+[gap] The strongest positive result remains xBD-S12-specific candidate
+localization, while HSI transfer is conditional and RGB transfer is negative.
+[why it matters] A neural prior trained now would promote a representation
+that failed the predeclared transfer criterion.
+[next check] Obtain a genuinely comparable labeled multispectral event dataset
+or define a materially new mechanism. Do not retune rank, tile size, or fusion
+on the completed HSI/SpaceNet labels.
+
+Reports:
+
+- `docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`
+- `docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`

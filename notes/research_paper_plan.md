@@ -19,6 +19,7 @@
 - [15. File Sources](#15-file-sources)
 - [16. Ranked Research Problem Portfolio](#16-ranked-research-problem-portfolio)
 - [17. Cross-Branch Recommendation](#17-cross-branch-recommendation)
+- [18. Independent Transfer Decision](#18-independent-transfer-decision)
 
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
@@ -1058,3 +1059,28 @@ describe the method as registration-sensitive, not invariant.
 
 Primary external report:
 `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+## 18. Independent Transfer Decision
+
+The two post-xBD transfer gates do not support a generic detector or immediate
+neural-prior paper.
+
+1. Fixed rank-11 HSI transfer is scene-dependent. Hermiston favors canonical
+   DS, but Benton and Shenzhen favor simpler controls and Farmland is
+   polarity-confounded.
+2. Tiled rank-two RGB transfer on nine SpaceNet7 AOIs rejects both projector
+   and canonical DS for monthly building appearances. Raw L2 has the best AP;
+   IR-MAD has the best mean AUROC and 5% review-budget recall.
+
+The current defensible paper-level finding is therefore conditional:
+
+> Spatial band-image subspaces can provide complementary candidate evidence on
+> particular multispectral event tasks, but the benefit does not transfer
+> automatically across spectral dimensionality, sensors, or change semantics.
+
+This is not yet a sufficient positive contribution for the final thesis. The
+next publication-oriented route must either obtain a compatible multispectral
+event confirmation or explain and predict the conditions under which DS adds
+information beyond reconstruction and radiometric controls. Do not run a
+projector-prior neural experiment until one of those routes passes a fresh
+held-out gate.

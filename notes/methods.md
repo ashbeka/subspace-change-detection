@@ -39,6 +39,7 @@
   - [Deep-feature subspace gap](#deep-feature-subspace-gap)
 - [15. Temporal Band-Image Difference-Subspace Dynamics](#15-temporal-band-image-difference-subspace-dynamics)
 - [16. Cross-Method Fidelity And Status](#16-cross-method-fidelity-and-status)
+- [17. Cross-Sensor Band-Image Boundary](#17-cross-sensor-band-image-boundary)
 
 ## 1. Current Project Scope
 
@@ -1535,3 +1536,28 @@ pixels the drops are `-0.00414` and `-0.0358`. Projector remains the strongest
 absolute candidate method through the tested range, but degrades more clearly
 than low-performing PCA/raw controls. Use "registration-sensitive candidate
 geometry," never "registration-invariant geometry."
+
+## 17. Cross-Sensor Band-Image Boundary
+
+The same input convention can produce materially different objects as the
+number of band-image samples changes:
+
+```text
+xBD-S12:   X_t in R^(16384 x 12), centered rank 11
+HSI:       X_t in R^(N x 149..198), fixed transfer rank 11
+SpaceNet7: X_t in R^(tile_pixels x 3), centered rank 2
+```
+
+On HSI, canonical DS can isolate a useful spatial mode on Hermiston but not on
+Benton or Shenzhen. On SpaceNet7, three RGB samples create a severe rank-two
+bottleneck: cross-reconstruction is more useful than DS, while projector
+distance loses to IR-MAD. Therefore "preserves spatial coordinates" is not
+sufficient. The sample count, retained spectral diversity, rank, scene-change
+mechanism, and score semantics determine whether geometry is useful.
+
+The cross-sensor result forbids treating projector distance as a generic
+building-localization method. Its xBD behavior is currently specific to that
+12-band event task. Canonical DS and projector distance also remain distinct:
+DS projects the observed date difference onto principal-vector difference
+directions, while projector distance measures row-wise change of the fitted
+subspace operators without using the observed difference vector.

@@ -54,6 +54,12 @@ Read these first:
 14. `experiment_reports/xbd_s12_external_validation_2026-06-22.md`
    - Frozen event-disjoint xBD-S12 transfer, damage/localization task decomposition, matched-control statistics, and boundary stress test.
 
+15. `experiment_reports/hsi_band_image_transfer_2026-06-22.md`
+   - Fixed rank-11 transfer to four labeled HSI pairs, including the positive Hermiston regime and failed broad transfer.
+
+16. `experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
+   - Nine-AOI, 197-transition RGB building-appearance gate that rejects generic projector/DS transfer.
+
 15. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 

@@ -26,6 +26,8 @@
 - [19. Hyperspectral Moment Geometry Gate](#19-hyperspectral-moment-geometry-gate)
 - [20. Band-Image Matched Spatial Controls](#20-band-image-matched-spatial-controls)
 - [21. xBD-S12 External Spatial-Geometry Validation](#21-xbd-s12-external-spatial-geometry-validation)
+- [22. HSI Band-Image Transfer](#22-hsi-band-image-transfer)
+- [23. SpaceNet7 Band-Image Transfer](#23-spacenet7-band-image-transfer)
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
@@ -1134,3 +1136,21 @@ Regenerate the curated figures:
 
 Interpretation and evidence boundary:
 `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+## 22. HSI Band-Image Transfer
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-hsi-band-image-transfer --datasets "benton,hermiston,farmland,shenzhen" --rank 11 --seed 1234 --bootstrap 500 --output-dir phase1/outputs/hsi_band_image_transfer_frozen_complete_20260622_185629
+```
+
+Report:
+`docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`.
+
+## 23. SpaceNet7 Band-Image Transfer
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-band-image-transfer --workers 4 --bootstrap 3000 --output-dir phase1/outputs/spacenet7_band_image_transfer_frozen_20260622_191204
+```
+
+Report:
+`docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`.

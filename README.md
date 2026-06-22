@@ -99,8 +99,12 @@ Short interpretation:
   26.7% of intact buildings; PCA-diff is better for damage classification.
 - Controlled 0-2 pixel shifts reduce projector accuracy but retain its
   absolute candidate-ranking lead; registration invariance is not claimed.
-- Spatial geometry is therefore a promising candidate-localization prior, not
-  yet a stand-alone damage classifier.
+- Fixed HSI transfer is scene-dependent: Hermiston favors canonical DS, while
+  Benton/Shenzhen do not and Farmland is polarity-confounded.
+- On nine SpaceNet7 AOIs and 197 RGB building-appearance transitions, raw L2
+  leads AP and canonical DS loses to matched cross-reconstruction.
+- Spatial geometry is therefore an xBD-specific candidate-localization result,
+  not yet a generic detector or justified neural prior.
 
 ## 4. What To Do Next
 
@@ -111,13 +115,15 @@ Read the external report first, then reproduce the frozen xBD-S12 result:
 ```
 
 Do not start another long U-Net sweep yet. Rank/centering, naive fusion,
-IR-MAD pressure, fixed budgets, and available cloud/date checks are complete.
+IR-MAD pressure, fixed budgets, registration, HSI transfer, and RGB
+building-appearance transfer are complete.
 
 Current priority order:
 
-1. Seek another independent event set before a detector claim; cloud/date
-   analysis remains inconclusive rather than evidence of robustness.
-2. Test a fixed projector prior in a neural model only after that gate.
+1. Seek a genuinely comparable labeled multispectral event dataset, or define
+   a new mechanism that predicts when DS should help beyond reconstruction.
+2. Do not run the fixed projector neural-prior experiment unless a fresh
+   held-out gate supports that representation.
 
 ## 5. Central CLI
 
