@@ -13,9 +13,47 @@ from phase1.data.xbd_s12 import (
     select_records,
 )
 from phase1.scripts.evaluate_xbd_s12_external import spectral_angle_score
+from phase1.scripts.prepare_xbd_s12_external import (
+    ensure_normalization,
+    summarize_prepared_release,
+)
 
 
 class XBDS12DataTests(unittest.TestCase):
+    def test_model_config_supplies_missing_official_normalization(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            source = root / "config.json"
+            source.write_text(
+                json.dumps(
+                    {
+                        "normalization_stats": {
+                            "s2": {"1st": list(range(12)), "99th": list(range(12, 24))}
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = ensure_normalization(root, source)
+            package = json.loads((root / "normalization.json").read_text(encoding="utf-8"))
+            self.assertEqual(result["status"], "official_model_config_fallback")
+            self.assertEqual(len(package["s2"]["1st"]), 12)
+            repeated = ensure_normalization(root, source)
+            self.assertEqual(
+                repeated["status"], "official_model_config_fallback_existing"
+            )
+
+    def test_existing_release_summary_counts_only_release_inputs(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "s2").mkdir()
+            (root / "s2" / "a.tif").write_bytes(b"123")
+            (root / "xbd_s12_metadata.geojson").write_bytes(b"12345")
+            (root / "normalization.json").write_bytes(b"not-in-archive")
+            summary = summarize_prepared_release(root)
+            self.assertEqual(summary["files"], 2)
+            self.assertEqual(summary["bytes"], 8)
+
     def test_spectral_angle_is_zero_for_scale_and_positive_for_rotation(self) -> None:
         pre = np.asarray([[[1.0, 1.0]], [[0.0, 0.0]]], dtype=np.float32)
         post = np.asarray([[[2.0, 0.0]], [[0.0, 1.0]]], dtype=np.float32)
@@ -116,6 +154,27 @@ class XBDS12DataTests(unittest.TestCase):
             mask, valid, "building_conditional_damage"
         )
         self.assertTrue(np.array_equal(building_support, [[0, 1, 1], [1, 1, 0]]))
+        building_target, localization_support = damage_evaluation_mask(
+            mask, valid, "building_localization_diagnostic"
+        )
+        self.assertTrue(np.array_equal(building_target, [[0, 1, 1], [1, 1, 0]]))
+        self.assertTrue(np.array_equal(localization_support, [[1, 1, 1], [1, 1, 0]]))
+
+    def test_boundary_buffer_removes_both_sides_of_building_edge(self) -> None:
+        mask = np.zeros((11, 11), dtype=np.uint8)
+        mask[3:8, 3:8] = 3
+        valid = np.ones(mask.shape, dtype=bool)
+        target, support = damage_evaluation_mask(
+            mask,
+            valid,
+            "full_scene_damage",
+            boundary_buffer=1,
+        )
+        self.assertTrue(target[5, 5])
+        self.assertTrue(support[5, 5])
+        self.assertFalse(support[3, 5])
+        self.assertFalse(support[2, 5])
+        self.assertTrue(support[0, 0])
 
 
 if __name__ == "__main__":

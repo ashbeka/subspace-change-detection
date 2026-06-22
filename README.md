@@ -55,14 +55,17 @@ Implemented now:
 - Spatial DS comparison:
   - global pixel DS;
   - local-window DS;
-  - patch-vector DS.
+  - patch-vector DS;
+  - Band-Image DS and matched projector/Gram/reconstruction controls.
+- Frozen xBD-S12 event-disjoint external score-map evaluation with damage,
+  building-conditional, and localization views.
 - Phase 2 supervised binary segmentation using U-Net/Siamese-style models with raw bands and optional prior channels.
 - Central CLI wrapper: [project_cli.py](project_cli.py).
 
 Not implemented as a completed claim:
 
 - End-to-end disaster damage segmentation.
-- xBD/xBD-S12 building damage-level evaluation.
+- Supervised xBD/xBD-S12 building damage-level classification or segmentation.
 - Multi-class building damage metrics.
 - Full KDS/KGDS satellite pipeline.
 - Verified temporal GDS/KGDS on MultiSenGE or Harmonized Sentinel-2.
@@ -70,42 +73,43 @@ Not implemented as a completed claim:
 
 ## 3. Current Most Important Result
 
-Spatial DS comparison has moved from a one-city check to a five-city core sweep:
+The OSCD matched-control study and xBD-S12 external transfer are complete:
 
 ```text
-phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823/
-docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
+docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md
+docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md
 ```
 
 Short interpretation:
 
-- Patch-vector DS is better than global pixel DS on average.
-- Local-window DS with `128x128` windows is weak as configured.
-- PCA-diff and raw L2 still outperform the DS-family maps overall.
-- Best DS-family mean AP was `0.1966` (`rank8_core / patch5`).
-- Best PCA-diff mean AP was `0.3953`.
-- This is useful diagnostic evidence, not a claim that DS improves OSCD.
-
-The next experiment must inspect failure modes and score definitions before any long Phase 2 training.
+- Band-Image DS is the strongest tested DS construction on OSCD, but remains
+  below spatially filtered PCA-diff as a stand-alone map.
+- On all `1,577` xBD-S12 test patches, canonical DS beats matched
+  cross-reconstruction in all five unseen events.
+- Band-image projector distance leads full-scene damaged-pixel retrieval and
+  building localization; raw L2 leads damage-vs-intact discrimination.
+- Spatial geometry is therefore a promising candidate-localization prior, not
+  yet a stand-alone damage classifier.
 
 ## 4. What To Do Next
 
-Reproduce or resume the completed core5 sweep:
+Read the external report first, then reproduce the frozen xBD-S12 result:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
 ```
 
-Do not start another long U-Net sweep yet. The DS-family maps need analysis and ablations first.
+Do not start another long U-Net sweep yet. The new two-stage hypothesis must be
+developed on training events without tuning on the inspected five test events.
 
 Current priority order:
 
-1. Inspect comparison grids and failure modes for the five core cities.
-2. Score-definition and normalization ablation for patch DS.
-3. Compare against Celik-style patch PCA-kmeans.
-4. PCA rank sensitivity: ranks 2, 4, 6, 8, 10, 12.
-5. Projection/band/patch visual explanation.
-6. Phase 2 raw vs raw+best-spatial-prior only if the prior survives the previous checks.
+1. Training-event centered-rank sensitivity: `2,4,6,8,10,11`.
+2. Compare centered PCA with uncentered autocorrelation subspaces.
+3. Event-group validation of fixed projector + raw-radiometry combinations.
+4. Registration/cloud/date-gap failure analysis.
+5. Seek another independent event set before a confirmatory detector claim.
+6. Test a neural prior only if the label-free score survives these gates.
 
 ## 5. Central CLI
 
@@ -193,7 +197,7 @@ Generic utilities do not need citation-level comments. Niche method implementati
 Do not claim:
 
 - completed disaster damage segmentation;
-- xBD/xBD-S12 damage evaluation;
+- end-to-end supervised xBD/xBD-S12 damage segmentation or severity evaluation;
 - building damage severity classification;
 - DS is invented by this project;
 - DS reliably improves OSCD segmentation;

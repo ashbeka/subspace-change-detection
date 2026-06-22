@@ -1466,3 +1466,36 @@ loses to spatially filtered PCA. Therefore spatial orientation alone is not
 the useful statistic. A DS-specific ranking contribution is isolated relative
 to the matched geometric nulls, but not as an improvement over the strongest
 individual spatial-PCA map.
+
+### 16.2 xBD-S12 Transfer And Task Decomposition
+
+The 12-band xBD-S12 adaptation uses `X_t in R^(N_spatial x 12)` and centered
+rank 11. Three targets must remain separate:
+
+1. full-scene damaged-pixel retrieval (`2-4` vs `0-1`);
+2. damage discrimination inside buildings (`2-4` vs `1`);
+3. building localization diagnostic (`1-4` vs `0`).
+
+The frozen external result shows that row-wise projector distance is strongest
+for targets 1 and 3, while raw spectral L2 is strongest for target 2. Thus
+projector distance should be interpreted as spatial candidate/localization
+evidence. It is invariant to basis rotation because it evaluates the row norm
+of `P_pre-P_post`, not individual PCA vector signs.
+
+Canonical DS is weaker than projector distance as a stand-alone xBD-S12 map,
+but beats a centering- and rank-matched symmetric cross-reconstruction control
+on all five unseen events, before and after the boundary stress test. This
+isolates a transferable DS-specific ranking component without proving direct
+damage classification.
+
+Next method hypothesis:
+
+```text
+projector rank map = candidate/localization evidence
+raw L2 or spectral-angle rank map = conditional radiometric evidence
+fixed combination = full-scene damaged-candidate score
+```
+
+Develop this only on training events with event-group validation. Centered PCA
+rank and uncentered autocorrelation construction are method choices requiring
+explicit pressure tests; they are not interchangeable definitions of DS.

@@ -16,6 +16,7 @@ from pathlib import Path, PurePosixPath
 
 EXPECTED_SIZE = 9_523_531_926
 EXPECTED_MD5 = "891b86000caa6019c20a95fc2f3f4e68"
+EXPECTED_S2_BANDS = 12
 ORIGINAL_ARCHIVES = (
     "train_images_labels_targets.tar",
     "test_images_labels_targets.tar",
@@ -37,6 +38,15 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--original-xbd-root", type=Path, default=Path("data/xbd"))
     parser.add_argument(
         "--labels-output", type=Path, default=Path("data/xbd_s12_original_labels")
+    )
+    parser.add_argument(
+        "--normalization-source",
+        type=Path,
+        default=Path("data/xbd_s12_download/xbd_s12_loc_seed1_config.json"),
+        help=(
+            "Official xBD-S12 model config containing normalization_stats. "
+            "Used only when the Zenodo archive omits normalization.json."
+        ),
     )
     parser.add_argument("--skip-checksum", action="store_true")
     parser.add_argument("--skip-release-extraction", action="store_true")
@@ -105,6 +115,19 @@ def extract_release(archive: Path, output_root: Path) -> dict[str, int]:
     return counts
 
 
+def summarize_prepared_release(output_root: Path) -> dict[str, int | str]:
+    """Summarize an already extracted release without reopening the archive."""
+    files = list((output_root / "s2").glob("*.tif"))
+    metadata = output_root / "xbd_s12_metadata.geojson"
+    if metadata.exists():
+        files.append(metadata)
+    return {
+        "files": len(files),
+        "bytes": sum(path.stat().st_size for path in files),
+        "status": "existing",
+    }
+
+
 def extract_original_labels(original_root: Path, labels_output: Path) -> dict[str, int]:
     labels_output.mkdir(parents=True, exist_ok=True)
     counts: dict[str, int] = {}
@@ -137,6 +160,59 @@ def extract_original_labels(original_root: Path, labels_output: Path) -> dict[st
     return counts
 
 
+def ensure_normalization(output_root: Path, source: Path) -> dict[str, str]:
+    """Ensure official percentile statistics exist in the prepared release.
+
+    The June 2026 Zenodo archive contains the rasters and metadata but omits the
+    ``normalization.json`` file documented by the official xBD-S12 repository.
+    Official Hugging Face model configs embed the same training-set statistics
+    under ``normalization_stats``; this fallback copies that object verbatim.
+    """
+    destination = output_root / "normalization.json"
+    if destination.exists():
+        package = json.loads(destination.read_text(encoding="utf-8"))
+        source_package = None
+        if source.exists():
+            source_package = json.loads(source.read_text(encoding="utf-8")).get(
+                "normalization_stats"
+            )
+        if source_package == package:
+            status = "official_model_config_fallback_existing"
+            used_source = str(source)
+        else:
+            status = "archive"
+            used_source = str(destination)
+    else:
+        if not source.exists():
+            raise FileNotFoundError(
+                "The release omitted normalization.json and the official model "
+                f"config fallback is missing: {source}"
+            )
+        model_config = json.loads(source.read_text(encoding="utf-8"))
+        package = model_config.get("normalization_stats")
+        if not isinstance(package, dict):
+            raise ValueError(f"No normalization_stats object in {source}")
+        destination.write_text(json.dumps(package, indent=2), encoding="utf-8")
+        status = "official_model_config_fallback"
+        used_source = str(source)
+
+    s2 = package.get("s2") if isinstance(package, dict) else None
+    if not isinstance(s2, dict):
+        raise ValueError("Normalization package has no Sentinel-2 statistics.")
+    for percentile in ("1st", "99th"):
+        values = s2.get(percentile)
+        if not isinstance(values, list) or len(values) != EXPECTED_S2_BANDS:
+            raise ValueError(
+                f"Expected {EXPECTED_S2_BANDS} Sentinel-2 {percentile} values, "
+                f"got {values!r}."
+            )
+    return {
+        "status": status,
+        "source": used_source,
+        "destination": str(destination),
+    }
+
+
 def main() -> None:
     args = parse_args()
     if not args.archive.exists():
@@ -150,10 +226,11 @@ def main() -> None:
         if checksum != EXPECTED_MD5:
             raise RuntimeError(f"Archive MD5 mismatch: {checksum} != {EXPECTED_MD5}")
     release = (
-        {"files": 0, "bytes": 0, "status": "skipped"}
+        summarize_prepared_release(args.output_root)
         if args.skip_release_extraction
         else extract_release(args.archive, args.output_root)
     )
+    normalization = ensure_normalization(args.output_root, args.normalization_source)
     labels = (
         {"status": "skipped"}
         if args.skip_label_extraction
@@ -166,6 +243,7 @@ def main() -> None:
         "expected_md5": EXPECTED_MD5,
         "output_root": str(args.output_root),
         "release_extraction": release,
+        "normalization": normalization,
         "labels_output": str(args.labels_output),
         "label_counts": labels,
     }

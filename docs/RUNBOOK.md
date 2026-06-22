@@ -25,12 +25,17 @@
 - [18. SpaceNet 7 Temporal Subspace Gate](#18-spacenet-7-temporal-subspace-gate)
 - [19. Hyperspectral Moment Geometry Gate](#19-hyperspectral-moment-geometry-gate)
 - [20. Band-Image Matched Spatial Controls](#20-band-image-matched-spatial-controls)
+- [21. xBD-S12 External Spatial-Geometry Validation](#21-xbd-s12-external-spatial-geometry-validation)
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
 Primary environment: Windows PowerShell, repo root `E:\research_projects\subspace-change-detection`
 
-This is the operational cheat sheet for reproducing the current project. It is deliberately practical: commands, expected paths, outputs, and failure checks. The project's truthful current scope is OSCD Sentinel-2 binary change segmentation with optional unsupervised prior channels. It is not yet an end-to-end xBD/xBD-S12 damage segmentation system.
+This is the operational cheat sheet for reproducing the current project. It
+is deliberately practical: commands, expected paths, outputs, and failure
+checks. The project includes OSCD binary change experiments and unsupervised
+xBD-S12 external score-map evaluation. It is not an end-to-end supervised
+xBD/xBD-S12 damage-segmentation system.
 
 ## 0. Golden Rules
 
@@ -167,7 +172,8 @@ data/MultiSenGE/
   s2/
 ```
 
-xBD is currently future work only. The generic adapter expects CSV indexes that are not present:
+The generic supervised xBD adapter remains future work and expects CSV indexes
+that are not present:
 
 ```text
 data/xbd/train.csv
@@ -175,7 +181,8 @@ data/xbd/val.csv
 data/xbd/test.csv
 ```
 
-If those CSVs are absent, do not claim xBD training/evaluation is implemented.
+Their absence does not block the separate xBD-S12 unsupervised external
+evaluator in Section 21. Do not claim supervised xBD training is implemented.
 
 ## 4. One-Command Liveness Check
 
@@ -979,7 +986,8 @@ xBD CSVs missing:
 data/xbd/train.csv, val.csv, test.csv absent
 ```
 
-This is expected right now. xBD is future work.
+This is expected for the generic supervised adapter. It is separate from the
+implemented xBD-S12 external evaluator in Section 21.
 
 Long command quoting on Windows:
 
@@ -1066,3 +1074,38 @@ $tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.
 
 Interpretation and exact statistics:
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+## 21. xBD-S12 External Spatial-Geometry Validation
+
+Prepare the official archive after downloading it to
+`data/xbd_s12_download/xbd_s12.tar.gz`:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-prepare --skip-label-extraction
+```
+
+The official Zenodo archive omits its documented normalization JSON. Place the
+official Hugging Face `prs-eth/xbd-s12_loc_seed1` model config at
+`data/xbd_s12_download/xbd_s12_loc_seed1_config.json`; preparation extracts
+and validates its embedded `normalization_stats`.
+
+Run the frozen unbuffered test:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
+```
+
+Run the extreme three-pixel boundary sensitivity without patch-level metrics:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 0 --boundary-buffer 3 --event-only --output-dir phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715
+```
+
+Regenerate the curated figures:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+```
+
+Interpretation and evidence boundary:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.

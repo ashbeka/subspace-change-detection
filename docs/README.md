@@ -51,7 +51,10 @@ Read these first:
 13. `experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`
    - Decisive matched-null experiment for Band-Image DS versus spatial Gram, projector, cross-reconstruction, spatial PCA, IR-MAD, and label-free fusions.
 
-14. `research_learning_map.html`
+14. `experiment_reports/xbd_s12_external_validation_2026-06-22.md`
+   - Frozen event-disjoint xBD-S12 transfer, damage/localization task decomposition, matched-control statistics, and boundary stress test.
+
+15. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

@@ -28,6 +28,7 @@ import numpy as np
 import rasterio
 from affine import Affine
 from rasterio.features import rasterize
+from scipy.ndimage import distance_transform_edt
 from shapely import wkt
 
 
@@ -250,8 +251,22 @@ def load_patch(
     return XBDS12Patch(record=record, pre=pre, post=post, mask=mask, input_valid=valid)
 
 
-def damage_evaluation_mask(mask: Array, input_valid: Array, view: str) -> tuple[Array, Array]:
-    """Return binary target and evaluation support for one declared label view."""
+def damage_evaluation_mask(
+    mask: Array,
+    input_valid: Array,
+    view: str,
+    *,
+    boundary_buffer: int = 0,
+) -> tuple[Array, Array]:
+    """Return binary target and evaluation support for one declared label view.
+
+    ``boundary_buffer`` removes pixels within that Euclidean distance, in
+    4-metre output pixels, of any labeled building boundary. It is a
+    sensitivity check for xBD-to-Sentinel alignment uncertainty; unbuffered
+    evaluation remains primary.
+    """
+    if int(boundary_buffer) < 0:
+        raise ValueError("boundary_buffer must be non-negative.")
     damage = (mask >= 2) & (mask <= 4)
     if view == "full_scene_damage":
         support = input_valid & (mask <= 4)
@@ -262,4 +277,15 @@ def damage_evaluation_mask(mask: Array, input_valid: Array, view: str) -> tuple[
         damage = (mask >= 1) & (mask <= 4)
     else:
         raise ValueError(f"Unknown xBD-S12 label view: {view!r}")
+    if boundary_buffer:
+        # Unclassified objects are still building footprints, so they define
+        # boundaries even though class 5 is excluded from evaluation.
+        building = (mask >= 1) & (mask <= 5)
+        if np.any(building):
+            inside_distance = distance_transform_edt(building)
+            outside_distance = distance_transform_edt(~building)
+            boundary_zone = np.where(building, inside_distance, outside_distance) <= float(
+                boundary_buffer
+            )
+            support &= ~boundary_zone
     return damage.astype(np.uint8), support

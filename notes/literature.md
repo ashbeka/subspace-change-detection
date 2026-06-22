@@ -26,7 +26,7 @@
 | Close et al. 2021 Sentinel-2 LULUCF change detection | Shows Sentinel-2 change analysis can be affected by rare true change and radiometric/seasonal variability. | Supports the pseudo-change and seasonality-risk discussion. |
 | Metric-CD, WACV 2025 | Modern unsupervised deep metric change detection. | Raises comparison pressure for unsupervised CD claims. |
 | xBD / Gupta et al. 2019 | Building damage dataset. | Future damage extension only. |
-| xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset. | Future extension only. |
+| Dietrich et al., xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset with event-disjoint split and xBD labels. | Implemented external unsupervised score-map validation; cite for data, split, normalization, and damage semantics. |
 | ChangeOS | Object-based semantic change/damage framework. | Future damage comparison if xBD work resumes. |
 | Remote-sensing change-detection surveys | Needed to answer Sensei's request to understand the broader method landscape. | Read before novelty claims; use to place DS among classical and deep CD methods. |
 | Fukui et al. second-order DS / time-series DS | Supports multi-date subspace progression/recovery ideas. | Future MultiSenGE/GDS/second-order track, not current OSCD evidence. |
@@ -194,7 +194,7 @@ When Chrome bookmarks are imported later, classify each item as one of:
 - `implementation-reference`: useful for code or math.
 - `baseline`: method to compare against.
 - `background`: useful context, not urgent.
-- `future`: xBD, greenhouses, MultiSenGE, semantic change, or broader application.
+- `future`: supervised xBD severity, greenhouses, MultiSenGE, semantic change, or broader application; xBD-S12 unsupervised external scoring is now active evidence.
 - `discard`: duplicate, weak, unrelated, or no longer useful.
 
 The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
@@ -207,7 +207,7 @@ Use this section as the bridge between literature concepts and the organized Chr
 |---|---|---|
 | DS, GDS, KDS, KGDS, CCA/KCCA, and Sensei's subspace-method leads | Defines the mathematical family this project must understand before claiming any subspace contribution. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` |
 | OSCD, FC-Siamese, Metric-CD, Celik PCA-kmeans, IR-MAD, and CVA | Defines the current binary change-detection benchmark and the classical/deep baselines that pressure novelty claims. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines` |
-| OSCD, MultiSenGE, HR/SCD, xBD/xBD-S12, and candidate EO datasets | Clarifies which dataset supports which claim: OSCD for binary change, MultiSenGE/Harmonized Sentinel-2 for temporal ideas, xBD/xBD-S12 for future damage work. | `Research / 01 Read First - Thesis Core / 03 Datasets And Problem Setting` and `Research / 04 Datasets - Current Candidate Future` |
+| OSCD, MultiSenGE, HR/SCD, xBD/xBD-S12, and candidate EO datasets | Clarifies which dataset supports which claim: OSCD for binary change, xBD-S12 for external candidate/damage evidence, and MultiSenGE/Harmonized Sentinel-2 for temporal ideas. | `Research / 01 Read First - Thesis Core / 03 Datasets And Problem Setting` and `Research / 04 Datasets - Current Candidate Future` |
 | Change-detection surveys and reality checks | Prevents method-forcing and helps state what is already known before proposing DS-based priors or spatial subspace variants. | `Research / 01 Read First - Thesis Core / 04 Review Papers And Reality Checks` |
 | Spatial information, semantic change, patch/local DS, and prior-guided CD | Directly answers Sensei's criticism that global pixel subspaces may break spatial information. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
 | Spatial-spectral subspace and tensor/n-mode subspace methods | Important novelty boundary: related methods already exist, but they are not the same as the current Sentinel-2 DS adaptation. | `Research / 02 Methods - Subspace Geometry` and `Research / 03 Methods - Change Detection / 01 Binary And Unsupervised Change Detection` |
@@ -231,7 +231,7 @@ Keep these as literature or implementation leads:
 - MapFormer and other prior-/semantic-guided CD work: evidence that adding priors is not automatically novel.
 - CGNet / Change Guiding Network: named comparison pressure for "change-prior-guided" neural CD because it generates change maps from deep features and uses them as prior information for multi-scale fusion. Use it as related work if this project claims prior-guided fusion, not as evidence that DS priors are useful.
 - AdaSemiCD and mean-teacher semi-supervised CD papers: named comparison pressure for pseudo-label experiments because they explicitly evaluate or filter pseudo-labels for remote-sensing CD. Use them to justify why DS/PCA/IR-MAD pseudo-labels must be quality-checked before training.
-- xBD and xBD-S12: future damage-dataset bridge; do not claim active damage evaluation until implemented.
+- xBD-S12: implemented event-disjoint unsupervised external evaluation; supervised xBD/xBD-S12 severity training remains future work.
 - Transfer learning for emergency building-damage assessment: useful disaster-evaluation realism.
 - ChangeOS: future object-level damage/change comparison, not active implementation.
 - FC-Siam / Siamese FCN: supervised OSCD-style change-detection baseline family; use as comparison pressure for any DS-only or prior-assisted segmentation claim.
@@ -242,7 +242,7 @@ Keep these as literature or implementation leads:
 Second-pass details from `research-notes/refs_links/benchmark_watchlist.md`:
 
 - Metric-CD is useful comparison pressure because it optimizes per image and thresholds its saved map at `0.5`; do not compare its F1/IoU directly to this repo without aligning thresholding, masking, averaging, bands, normalization, and compute.
-- xBD-S12 was logged as a warm extension because it reportedly provides `10,315` aligned Sentinel-1/Sentinel-2 pre/post pairs connected to xBD-style damage labels; capture the official release repo before implementation.
+- xBD-S12 was promoted from a warm extension after verifying and preparing all `10,315` aligned pairs and completing the frozen five-event test.
 - Emergency-context transfer-learning work should be used to discuss disaster generalization and emergency-realistic evaluation, not as evidence that this repo already solves damage mapping.
 - MapFormer and other prior-guided / semantic-guided change-detection papers are important because they weaken any novelty claim based only on "adding prior information."
 - External benchmark tables should start with a protocol-alignment note before score comparison.
@@ -255,7 +255,7 @@ Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
 - Celik 2009 PCA-kmeans.
 - Nielsen MAD / IR-MAD family.
 - U-Net and ResNet only when the corresponding models are discussed.
-- Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
+- Gupta et al. xBD for label provenance and Dietrich et al. xBD-S12 for the implemented external damage/candidate-ranking evaluation.
 
 ## 8. Reference Leads
 
@@ -294,7 +294,7 @@ This section connects the refined `Research` bookmark tree and the online reset 
 | Prior-guided and pseudo-label CD | MapFormer, CGNet / Change Guiding Network, AdaSemiCD, and mean-teacher semi-supervised CD papers | Prior information and pseudo-labels are already active ideas in remote-sensing CD, so the project must distinguish DS-style geometric priors from generic prior fusion or teacher-student pseudo-labeling. | Use to frame DS/PCA/IR-MAD maps as interpretable geometric prior candidates; do not claim novelty from "adding a prior map" alone. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` and `Research / 03 Methods - Change Detection` |
 | Multi-date DS/GDS/KGDS | Second-order DS, GDS, RTW, SFA/SSA, Harmonized Sentinel-2, MultiSenGE | GDS/KGDS need more than two subspaces; OSCD does not naturally support that beyond pre/post. | Future stronger research path if a multi-date dataset and evaluation proxy are defined. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` and `Research / 04 Datasets - Current Candidate Future / 01 Sentinel OSCD MultiSenGE And EO Datasets` |
 | Abandoned greenhouse mapping | Global-PCG-10, Sentinel-2 greenhouse index, two-temporal Sentinel-2 greenhouse mapping | Greenhouse mapping is real and Sentinel-2-relevant, but the task may be object mapping/classification rather than generic change detection. | Use as application motivation or future dataset only after labels/evaluation exist. | `Research / 05 Applications - Use Cases And Problem Framing / 01 Greenhouses Agriculture Environmental Monitoring` |
-| xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | Future pivot/warm extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
+| xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | xBD-S12 now supplies external score-map evidence; supervised damage severity remains future work, and OSCD alone is not damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
 | Object/building-level descriptors | xBD, ChangeOS, object-level CD and greenhouse resources | Object units may preserve spatial/semantic information better than global pixel subspaces. | Candidate pivot if pixel/patch DS is too weak or if an object-labeled dataset is chosen. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` and `Research / 05 Applications` |
 
 ### 9.1 Geometry Versus Neural-Network Framing
@@ -464,7 +464,7 @@ more method families to pressure-testing the surviving spatial result.
 | 7 | Fukui second-order DS and time-series DS | Supports explaining the completed first/second/geodesic experiment; not currently the positive detector route. |
 | 8 | S3CCA/TRCCA | Remaining Sensei/senpai method gap; reproduce the original structured/temporal CCA object before satellite adaptation. |
 
-### 11.1 External Validation Candidate: xBD-S12
+### 11.1 External Validation Dataset: xBD-S12
 
 Official resources:
 
@@ -472,7 +472,7 @@ Official resources:
 - dataset record: https://zenodo.org/records/18960454
 - paper preprint: https://arxiv.org/abs/2511.05461
 
-Why it is the strongest current transfer candidate:
+Why it was selected for external transfer:
 
 - co-registered pre/post Sentinel-1 and Sentinel-2 imagery linked to xBD
   disaster labels;
@@ -485,14 +485,24 @@ Why it is the strongest current transfer candidate:
 
 Constraints:
 
-- the Zenodo Sentinel archive is about `8.87 GB`, so acquisition requires an
-  explicit large-download decision;
+- the verified Zenodo Sentinel archive is about `8.87 GB`; it is now prepared
+  locally with complete S2-pair and original-label coverage;
 - the target is building localization/damage, not generic OSCD change;
 - Band-Image rank must be adapted from 12 to at most 11;
 - evaluation must follow the official event split and damage/no-data mask
   semantics rather than reusing OSCD thresholds;
-- success would demonstrate transfer to a real disaster application, while
-  failure would show that OSCD complementarity does not generalize to damage.
+- results must separate full-scene damaged-pixel retrieval, damage-vs-intact
+  discrimination, and building localization.
+
+Completed evidence:
+
+- canonical DS beats matched cross-reconstruction across all five unseen test
+  events, including the boundary stress test;
+- projector distance leads candidate/building localization but not
+  damage-vs-intact discrimination;
+- raw radiometric difference is stronger inside known building support;
+- use `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md` for
+  exact values and claim limits.
 
 Current novelty boundary:
 

@@ -1082,6 +1082,8 @@ def cmd_phase1_xbd_s12_evaluate(args: argparse.Namespace) -> int:
         str(args.maps_per_event),
         "--bootstrap",
         str(args.bootstrap),
+        "--boundary-buffer",
+        str(args.boundary_buffer),
         "--output-dir",
         out,
     ]
@@ -1091,6 +1093,23 @@ def cmd_phase1_xbd_s12_evaluate(args: argparse.Namespace) -> int:
         cmd.extend(["--patches-per-event", str(args.patches_per_event)])
     if args.include_metadata_nodata:
         cmd.append("--include-metadata-nodata")
+    if args.event_only:
+        cmd.append("--event-only")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_summarize(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.summarize_xbd_s12_external",
+        "--unbuffered",
+        args.unbuffered,
+        "--boundary",
+        args.boundary,
+        "--output-dir",
+        args.output_dir,
+    ]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -2097,11 +2116,23 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--maximum-patches", type=int, default=None)
     p.add_argument("--patches-per-event", type=int, default=None)
     p.add_argument("--include-metadata-nodata", action="store_true")
+    p.add_argument("--boundary-buffer", type=int, default=0)
+    p.add_argument("--event-only", action="store_true")
     p.add_argument("--maps-per-event", type=int, default=1)
     p.add_argument("--bootstrap", type=int, default=5000)
     p.add_argument("--output-dir", default="")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_xbd_s12_evaluate)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-summarize",
+        help="Summarize frozen xBD-S12 primary and boundary-stress outputs.",
+    )
+    p.add_argument("--unbuffered", required=True)
+    p.add_argument("--boundary", required=True)
+    p.add_argument("--output-dir", required=True)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_summarize)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

@@ -1409,5 +1409,37 @@ labels ordinary binary change. The Sentinel archive is `8.87 GB`; download and
 extraction require explicit approval. Original xBD archives are already under
 `data/xbd/`.
 
+External gate completed 2026-06-22:
+
+- Official xBD-S12 archive checksum verified; `10,315` S2 pairs prepared and
+  all records matched to original xBD post-event polygon labels.
+- Frozen test: `1,577/1,577` patches, five unseen disaster events, zero method
+  failures, rank 11, official percentile normalization.
+- Full-scene damaged-pixel retrieval: projector distance leads global AP
+  (`0.03675`) and mean event AP (`0.03015`), ahead of IR-MAD (`0.03194` global,
+  `0.02649` event mean) and PCA-diff (`0.02123`, `0.01840`).
+- Canonical DS beats matched cross-reconstruction in all five events:
+  event-mean AP delta `+0.00448`, bootstrap interval
+  `[+0.00074,+0.01099]`. The corresponding DS fusion also wins 5/5.
+- Task diagnosis: projector distance leads building localization, while raw L2
+  leads damage-vs-intact discrimination. Interpret projector geometry as a
+  candidate-localization prior, not a damage-severity score.
+- Three-pixel boundary stress removes almost all small-building pixels but DS
+  still beats cross-reconstruction 5/5. Projector AUROC remains high while its
+  AP lead disappears, confirming strong boundary/localization sensitivity.
+
+Report:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+[gap] The test events were inspected while forming the new two-stage
+geometry-plus-radiometry hypothesis.
+[why it matters] The same five events cannot honestly select and confirm a new
+fusion.
+[next check] Develop fixed projector-plus-raw-radiometry combinations by
+event-group cross-validation on xBD-S12 training disasters. First pressure-test
+centered rank `{2,4,6,8,10,11}` and uncentered autocorrelation construction on
+training events. Seek another independent event set before a confirmatory
+publication claim.
+
 Report:
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.

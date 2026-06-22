@@ -81,7 +81,11 @@ FUSION_DEPENDENCIES = {
     ),
 }
 ALL_METHODS = INDIVIDUAL_METHODS + tuple(FUSION_DEPENDENCIES)
-LABEL_VIEWS = ("full_scene_damage", "building_conditional_damage")
+LABEL_VIEWS = (
+    "full_scene_damage",
+    "building_conditional_damage",
+    "building_localization_diagnostic",
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -100,8 +104,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--maximum-patches", type=int, default=None)
     parser.add_argument("--patches-per-event", type=int, default=None)
     parser.add_argument("--include-metadata-nodata", action="store_true")
+    parser.add_argument(
+        "--boundary-buffer",
+        type=int,
+        default=0,
+        help="Ignore pixels within this Euclidean distance of building boundaries.",
+    )
     parser.add_argument("--maps-per-event", type=int, default=1)
     parser.add_argument("--bootstrap", type=int, default=5000)
+    parser.add_argument(
+        "--event-only",
+        action="store_true",
+        help="Skip patch-level metrics while retaining exact event/global evaluation.",
+    )
     parser.add_argument("--output-dir", type=Path, required=True)
     return parser.parse_args()
 
@@ -260,15 +275,19 @@ def rgb_preview(cube: Array) -> Array:
 def save_comparison_grid(path: Path, patch: XBDS12Patch, maps: dict[str, Array]) -> None:
     names = (
         "raw_l2",
+        "spectral_angle",
         "pca_diff",
         "smoothed_pca_sigma1",
+        "multiscale_pca_sigma0_1_2",
         "ir_mad",
         "band_image_ds",
         "band_image_cross_reconstruction",
+        "band_image_projector_distance",
+        "band_image_spatial_gram",
         "fusion_smoothed_pca_band_irmad",
         "fusion_smoothed_pca_cross_irmad",
     )
-    fig, axes = plt.subplots(3, 4, figsize=(14, 10), constrained_layout=True)
+    fig, axes = plt.subplots(4, 4, figsize=(14, 14), constrained_layout=True)
     axes = axes.ravel()
     axes[0].imshow(rgb_preview(patch.pre)); axes[0].set_title("S2 pre")
     axes[1].imshow(rgb_preview(patch.post)); axes[1].set_title("S2 post")
@@ -434,27 +453,33 @@ def main() -> None:
             )
             maps = compute_score_maps(patch, args.rank, args.seed, args.ir_mad_iters)
             for view in LABEL_VIEWS:
-                target, support = damage_evaluation_mask(patch.mask, patch.input_valid, view)
+                target, support = damage_evaluation_mask(
+                    patch.mask,
+                    patch.input_valid,
+                    view,
+                    boundary_buffer=args.boundary_buffer,
+                )
                 target_buffers[(view, record.disaster)].append(target[support].astype(np.uint8))
                 for method in ALL_METHODS:
-                    metrics = score_metrics(maps[method], target, support)
-                    patch_rows.append(
-                        {
-                            "split": record.event_split,
-                            "disaster": record.disaster,
-                            "disaster_type": record.properties.get("disaster_type", ""),
-                            "peril": record.properties.get("peril", ""),
-                            "uid": record.uid,
-                            "s2_cloud_score_pre": record.properties.get("s2_cs_pre", ""),
-                            "s2_cloud_score_post": record.properties.get("s2_cs_post", ""),
-                            "s2_date_pre": record.properties.get("s2_date_pre", ""),
-                            "s2_date_post": record.properties.get("s2_date_post", ""),
-                            "building_count": record.properties.get("N_total", ""),
-                            "label_view": view,
-                            "method": method,
-                            **metrics,
-                        }
-                    )
+                    if not args.event_only:
+                        metrics = score_metrics(maps[method], target, support)
+                        patch_rows.append(
+                            {
+                                "split": record.event_split,
+                                "disaster": record.disaster,
+                                "disaster_type": record.properties.get("disaster_type", ""),
+                                "peril": record.properties.get("peril", ""),
+                                "uid": record.uid,
+                                "s2_cloud_score_pre": record.properties.get("s2_cs_pre", ""),
+                                "s2_cloud_score_post": record.properties.get("s2_cs_post", ""),
+                                "s2_date_pre": record.properties.get("s2_date_pre", ""),
+                                "s2_date_post": record.properties.get("s2_date_post", ""),
+                                "building_count": record.properties.get("N_total", ""),
+                                "label_view": view,
+                                "method": method,
+                                **metrics,
+                            }
+                        )
                     event_buffers[(view, record.disaster, method)].append(
                         percentile_rank_map(maps[method], support)[support].astype(np.float32)
                     )
@@ -493,12 +518,40 @@ def main() -> None:
                 }
             )
 
+    global_rows: list[dict[str, object]] = []
+    for view in LABEL_VIEWS:
+        disasters = sorted(
+            disaster for candidate_view, disaster in target_buffers if candidate_view == view
+        )
+        if not disasters:
+            continue
+        target = np.concatenate(
+            [np.concatenate(target_buffers[(view, disaster)]) for disaster in disasters]
+        )
+        support = np.ones(target.shape, dtype=bool)
+        for method in ALL_METHODS:
+            score = np.concatenate(
+                [
+                    np.concatenate(event_buffers[(view, disaster, method)])
+                    for disaster in disasters
+                ]
+            )
+            global_rows.append(
+                {
+                    "split": args.split,
+                    "label_view": view,
+                    "method": method,
+                    **score_metrics(score, target, support),
+                }
+            )
+
     pairwise = event_pairwise(event_rows, args.bootstrap, args.seed + 901)
     summary = summarize_event_metrics(event_rows)
     write_csv(args.output_dir / "patch_metrics.csv", patch_rows)
     write_csv(args.output_dir / "event_metrics.csv", event_rows)
     write_csv(args.output_dir / "event_pairwise_comparisons.csv", pairwise)
     write_csv(args.output_dir / "summary_by_view_method.csv", summary)
+    write_csv(args.output_dir / "global_metrics.csv", global_rows)
     write_csv(args.output_dir / "failures.csv", failures)
     metadata_out = {
         "protocol": "docs/experiment_reports/xbd_s12_frozen_external_protocol_2026-06-22.md",
@@ -508,6 +561,8 @@ def main() -> None:
         "rank": args.rank,
         "seed": args.seed,
         "ir_mad_iters": args.ir_mad_iters,
+        "boundary_buffer": args.boundary_buffer,
+        "event_only": args.event_only,
         "patches_requested": len(records),
         "patches_completed": len(records) - len(failures),
         "events": sorted(set(record.disaster for record in records)),

@@ -514,14 +514,16 @@ Current novelty boundary:
 8. Conclusion
    - honest contribution
    - limitations
-   - future work: KDS, GDS/KGDS, MultiSenGE, xBD-S12, abandoned greenhouses
+   - future work: KDS, GDS/KGDS, MultiSenGE, supervised damage severity, abandoned greenhouses
 
 ## 12. Open Decisions
 
 High priority:
 
-- What spatial subspace construction should become the main method?
-- Is rank 6 defensible, or should rank be selected by sensitivity/variance?
+- Is projector-plus-radiometric candidate ranking stable under training-event
+  cross-validation?
+- Which centered rank or uncentered construction survives training-event
+  sensitivity without tuning on the inspected xBD-S12 test events?
 - Does valid masking exclude any meaningful changed pixels?
 - Should Phase 2 continue only after Phase 1 maps are strong?
 
@@ -534,7 +536,7 @@ Medium priority:
 
 Low priority for now:
 
-- xBD/xBD-S12 damage pipeline.
+- supervised xBD/xBD-S12 damage-severity pipeline.
 - abandoned greenhouse benchmark.
 - foundation-model extensions.
 
@@ -553,7 +555,7 @@ Main guardrails:
 
 Future hooks to keep out of the main claim for now:
 
-- xBD/xBD-S12 damage severity mapping.
+- supervised xBD/xBD-S12 damage severity mapping.
 - abandoned-greenhouse mapping.
 - UAV/edge deployment.
 - MCDA/IoT/DMaaS/operational dashboard ideas.
@@ -566,13 +568,14 @@ The nested `research-notes/` repo was ingested on 2026-06-07. It preserved a bro
 What survives as active:
 
 - Interpretable subspace-based change detection for multispectral satellite images.
-- OSCD as the current implemented binary change benchmark.
-- The immediate need to test spatially aware subspace construction.
+- OSCD as the construction benchmark and xBD-S12 as external transfer evidence.
+- The immediate need to validate the geometry-plus-radiometry hypothesis on
+  training events and another independent gate.
 - Careful comparison against raw pre/post, PCA-diff, Siamese, and modern CD baselines.
 
 What survives as warm/future:
 
-- xBD-S12 or another Sentinel-scale damage dataset as the cleanest future damage bridge.
+- another independent Sentinel-scale event dataset as the next confirmatory bridge; supervised xBD-S12 severity remains future work.
 - MultiSenGE GDS/KGDS or second-order DS if multi-date evaluation becomes central.
 - SSC as a future unsupervised change-type clustering baseline or pseudo-label source.
 - Band-group attribution, PCA reconstruction, geodesic/SPD change scores, RTW/SSA/SFA/DMD, and period-subspace DS as future method hooks.
@@ -1026,3 +1029,23 @@ Publication-facing next question:
 
 Without that confirmation, present the work as a rigorous seminar construction
 study, not a validated new detector.
+
+### 17.1 External Transfer Update (2026-06-22)
+
+xBD-S12 supplies the first independent event-disjoint transfer result. The
+external finding supports a narrower positive paper direction:
+
+> Spatial band-image subspace geometry provides transferable label-free
+> candidate-localization evidence, and canonical DS adds a repeatable
+> component beyond matched reconstruction; radiometric evidence remains
+> necessary for damage discrimination.
+
+This is stronger than an OSCD-only construction study but still short of a
+detector paper. Absolute damaged-pixel AP is low, only five independent test
+events exist, and the best projector map is partly a building-localization
+signal. The next contribution test is an event-validated two-stage
+geometry-plus-radiometry score, not another arbitrary weighted fusion on the
+already inspected test events.
+
+Primary external report:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.

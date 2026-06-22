@@ -29,7 +29,11 @@ pre/post Sentinel-2 images -> Phase 1 prior maps -> Phase 2 supervised segmentat
 
 `Phase 1` and `Phase 2` are current workflow labels and folder names. They should be read as "geometric/classical prior generation" and "neural segmentation/downstream learning," not as a fixed research structure.
 
-OSCD is the current concrete benchmark and evidence source, not a permanent boundary on the thesis. xBD, xBD-S12, MultiSenGE semantic change, Harmonized Sentinel-2 L2A, and abandoned-greenhouse mapping are future or candidate directions unless their own data pipeline, labels, and evaluation are implemented.
+OSCD is the main construction benchmark, not a permanent thesis boundary.
+xBD-S12 now provides an implemented external event-disjoint validation path;
+MultiSenGE semantic change, Harmonized Sentinel-2 L2A, abandoned-greenhouse
+mapping, and other damage datasets remain candidates unless their own pipeline
+and evaluation are implemented.
 
 ## 2. Problem Statement
 
@@ -179,8 +183,8 @@ Temporal replication and context result, 2026-06-20:
 
 ## 5. Immediate Next Decision
 
-The matched spatial-null experiment selected by the 2026-06-22 cross-branch
-review is complete.
+The matched OSCD spatial-null experiment and frozen xBD-S12 external transfer
+are complete.
 
 ```text
 Does the OSCD spatial sample-construction result transfer under a frozen
@@ -195,13 +199,26 @@ Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`; the DS gain
 beyond a cross-reconstruction substitute is supported internally; improvement
 beyond smoothed PCA alone is not confirmed.
 
-The next performance claim requires an external labeled multispectral dataset
-with preprocessing, rank, spatial scales, controls, and metrics frozen before
-scoring. Until then, use the result as a sample-construction and candidate-
-ranking study, not a validated new detector.
+On `1,577` xBD-S12 test patches from five unseen disasters, Band-Image DS beats
+its matched cross-reconstruction control in all five events. Projector distance
+leads full-scene damaged-pixel retrieval and building localization, while raw
+L2 leads damage-vs-intact discrimination. The defensible interpretation is
+candidate-localization geometry plus a smaller DS-specific component, not a
+stand-alone damage detector.
+
+Immediate next decision:
+
+```text
+training-event rank/centering pressure test
+-> event-group validation of projector + radiometric evidence
+-> independent confirmation before a new detector claim
+```
 
 See
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+External report:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
 
 ### Completed Temporal And HSI Evidence Path
 

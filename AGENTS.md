@@ -258,7 +258,7 @@ Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial 
 Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
 ```
 
-The immediate experiment track is:
+The original immediate experiment track was:
 
 ```text
 global pixel DS -> patch-vector DS -> local-window DS -> multiscale spatial subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
@@ -267,3 +267,23 @@ global pixel DS -> patch-vector DS -> local-window DS -> multiscale spatial subs
 This directly answers Sensei's concern that the current global pixel-based subspace may break spatial information.
 
 The comparison should report metrics and maps against OSCD labels and simple baselines such as raw spectral L2 and PCA-diff.
+
+As of 2026-06-22, the OSCD matched-control study and frozen xBD-S12 external
+transfer are complete. Spatial band-image projector distance behaves mainly as
+candidate/building-localization evidence; canonical DS adds a smaller but
+event-consistent component beyond matched cross-reconstruction. Raw L2 is
+stronger for damage-vs-intact discrimination.
+
+The current experiment track is now:
+
+```text
+training-event rank and centering pressure test
+-> event-group validation of fixed projector + radiometric combinations
+-> nuisance/failure analysis
+-> independent confirmation
+-> optional neural-prior test
+```
+
+Do not tune new combinations on the five already inspected xBD-S12 test
+events. Develop them on training disasters and seek another independent gate
+before making a confirmatory detector claim.

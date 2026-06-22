@@ -49,15 +49,20 @@ Two predeclared evaluations are required:
 Building localization (`1-4` versus `0`) is diagnostic only because it is not
 the project's change-detection question.
 
-The official categorical downsampling rule is retained. A three-pixel ignore
-buffer around building boundaries is reported separately because it changes
-the evaluation support; unbuffered results remain the primary transparent
-view.
+The official categorical downsampling rule is retained. A three-pixel
+Euclidean-distance ignore buffer on both sides of labeled building boundaries
+is reported in a separate sensitivity run because it changes the evaluation
+support; unbuffered results remain the primary transparent view.
 
 ## 4. Frozen Preprocessing And Rank
 
-- Use the release's `normalization.json`: per-band 1st/99th percentile min-max
-  normalization, clipped to `[0,1]`, applied identically to both dates.
+- Use the authors' official `normalization_stats`: per-band 1st/99th
+  percentile min-max normalization, clipped to `[0,1]`, applied identically
+  to both dates. The Zenodo archive unexpectedly omits the documented
+  `normalization.json`; the identical statistics are recovered from the
+  official Hugging Face config for `prs-eth/xbd-s12_loc_seed1` and recorded by
+  the preparation manifest. The downloaded config SHA-256 is
+  `f85fa0b67dd52657c419b141503776c77ae0804b11017eb3c0a3ddc13cc05585`.
 - A pixel is input-valid only when all pre/post band values are finite.
 - The downloaded Sentinel archive does not redistribute the original xBD
   no-data raster. For the first frozen run, exclude entire patches whose
@@ -130,6 +135,8 @@ dataset-specific and the publication direction must be narrowed or changed.
 
 - Dataset/code: `https://github.com/prs-eth/xbd-s12`
 - Release: `https://zenodo.org/records/18960454`
+- Official model/config fallback:
+  `https://huggingface.co/prs-eth/xbd-s12_loc_seed1`
 - Paper: Dietrich et al., *The Potential of Copernicus Satellites for Disaster
   Response: Retrieving Building Damage from Sentinel-1 and Sentinel-2*, arXiv
   `2511.05461`, ISPRS Congress 2026.
