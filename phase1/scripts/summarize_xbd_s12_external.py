@@ -65,6 +65,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--test-budget", type=Path, default=None)
     parser.add_argument("--object-train", type=Path, default=None)
     parser.add_argument("--object-test", type=Path, default=None)
+    parser.add_argument("--registration-near", type=Path, default=None)
+    parser.add_argument("--registration-large", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, required=True)
     return parser.parse_args()
 
@@ -688,6 +690,80 @@ def object_size_sensitivity(
     plt.close(fig)
 
 
+def registration_profile(
+    near_folder: Path,
+    large_folder: Path,
+    output_figure: Path,
+    output_csv: Path,
+) -> None:
+    methods = (
+        "band_image_projector_distance",
+        "ir_mad",
+        "pca_diff",
+        "raw_l2",
+    )
+    pixel_rows = read_csv(near_folder / "summary_pixel_metrics.csv") + [
+        row
+        for row in read_csv(large_folder / "summary_pixel_metrics.csv")
+        if float(row["magnitude"]) > 0
+    ]
+    object_rows = read_csv(near_folder / "summary_object_metrics.csv") + [
+        row
+        for row in read_csv(large_folder / "summary_object_metrics.csv")
+        if float(row["magnitude"]) > 0
+    ]
+    pixel_lookup = {
+        (float(row["magnitude"]), row["method"]): float(
+            row["mean_event_direction_average_precision"]
+        )
+        for row in pixel_rows
+    }
+    object_lookup = {
+        (float(row["magnitude"]), row["method"]): float(
+            row["mean_event_direction_damaged_object_recall"]
+        )
+        for row in object_rows
+        if row["statistic"] == "p90"
+    }
+    magnitudes = sorted({key[0] for key in pixel_lookup})
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5), constrained_layout=True)
+    for method in methods:
+        axes[0].plot(
+            magnitudes,
+            [pixel_lookup[(magnitude, method)] for magnitude in magnitudes],
+            marker="o",
+            label=DISPLAY[method],
+        )
+        axes[1].plot(
+            magnitudes,
+            [object_lookup[(magnitude, method)] for magnitude in magnitudes],
+            marker="o",
+            label=DISPLAY[method],
+        )
+    axes[0].set_title("Full-scene damaged-pixel AP")
+    axes[1].set_title("Damaged-building p90 hit recall at 5%")
+    for axis in axes:
+        axis.set_xlabel("Injected post-image shift (Sentinel pixels)")
+        axis.set_xticks(magnitudes)
+        axis.grid(alpha=0.25)
+    axes[0].set_ylabel("Mean training event/direction metric")
+    axes[1].set_ylabel("Mean training event/direction metric")
+    axes[0].legend()
+    fig.suptitle("xBD-S12 controlled registration sensitivity")
+    fig.savefig(output_figure, dpi=180)
+    plt.close(fig)
+
+    degradation = read_csv(near_folder / "registration_degradation.csv") + [
+        row
+        for row in read_csv(large_folder / "registration_degradation.csv")
+        if float(row["magnitude"]) > 0
+    ]
+    with output_csv.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(degradation[0]))
+        writer.writeheader()
+        writer.writerows(degradation)
+
+
 def write_summary(unbuffered: Path, boundary: Path, output: Path) -> None:
     primary = global_lookup(unbuffered)
     stress = global_lookup(boundary)
@@ -746,6 +822,13 @@ def main() -> None:
             args.object_test,
             args.output_dir / "object_size_sensitivity.png",
             args.output_dir / "object_size_sensitivity.csv",
+        )
+    if args.registration_near is not None and args.registration_large is not None:
+        registration_profile(
+            args.registration_near,
+            args.registration_large,
+            args.output_dir / "registration_sensitivity.png",
+            args.output_dir / "registration_degradation.csv",
         )
     write_summary(args.unbuffered, args.boundary, args.output_dir / "analysis_summary.json")
     print(f"Wrote xBD-S12 evidence summary to {args.output_dir}")

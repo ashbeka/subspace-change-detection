@@ -1486,13 +1486,23 @@ Object-level gate completed 2026-06-22:
 - Size-stratified and p90 checks retain the projector recall advantage, but
   larger buildings are easier for every maximum/p90 hit metric.
 
-[gap] Registration sensitivity remains unmeasured on xBD-S12, and only five
-unseen event clusters are available.
-[why it matters] A high-coverage building proposal can still be driven by
-misregistration or event-specific structures.
-[next check] Quantify registration perturbation/estimated shift and add one
-independent event gate before a detector claim. Do not invent another score
-fusion unless a mechanism and independent validation gate are specified.
+Registration gate completed 2026-06-22 on 20 patches from each of 11 training
+events and four directions per magnitude:
+
+- projector AP: `0.03612` at zero shift, `0.03379` at 1 pixel, `0.03198` at
+  2 pixels;
+- projector p90 damaged-building recall: `0.4755`, `0.4519`, `0.4396`;
+- 1-pixel AP delta `-0.00233`, interval `[-0.00496,-0.00055]`; 2-pixel delta
+  `-0.00414`, interval `[-0.00891,-0.00096]`;
+- the projector retains the absolute lead but is not registration invariant.
+
+[gap] Only five unseen event clusters are available, and synthetic shifts do
+not model every natural co-registration error.
+[why it matters] The current evidence can support a candidate-ranking study,
+but not a general new detector claim without another independent event set.
+[next check] Add one independent event gate. Only after that, test a fixed
+projector channel as a neural prior. Do not invent another score fusion unless
+a mechanism and independent validation gate are specified.
 
 Report:
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.

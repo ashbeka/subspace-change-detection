@@ -28,6 +28,7 @@ from pathlib import Path
 
 import numpy as np
 from scipy.stats import wilcoxon
+from threadpoolctl import threadpool_limits
 
 from phase1.data.xbd_s12 import (
     build_label_index,
@@ -278,17 +279,18 @@ def main() -> None:
 
     object_rows: list[dict[str, object]] = []
     failures: list[dict[str, object]] = []
-    with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
-        for index, (rows, failure) in enumerate(executor.map(task, records), start=1):
-            object_rows.extend(rows)
-            if failure is not None:
-                failures.append(failure)
-            if index % 25 == 0 or index == len(records):
-                print(
-                    f"[{index}/{len(records)}] objects={len(object_rows)//len(METHODS)} "
-                    f"failures={len(failures)}",
-                    flush=True,
-                )
+    with threadpool_limits(limits=1):
+        with ThreadPoolExecutor(max_workers=max(1, args.workers)) as executor:
+            for index, (rows, failure) in enumerate(executor.map(task, records), start=1):
+                object_rows.extend(rows)
+                if failure is not None:
+                    failures.append(failure)
+                if index % 25 == 0 or index == len(records):
+                    print(
+                        f"[{index}/{len(records)}] objects={len(object_rows)//len(METHODS)} "
+                        f"failures={len(failures)}",
+                        flush=True,
+                    )
 
     classification = classification_rows(object_rows)
     hit_rates = hit_rate_rows(object_rows)

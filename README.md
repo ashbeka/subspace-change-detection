@@ -97,6 +97,8 @@ Short interpretation:
 - Object polygons confirm the same coverage/specificity tradeoff: at a 5%
   scene threshold projector hits 35.8% of damaged test buildings, but also
   26.7% of intact buildings; PCA-diff is better for damage classification.
+- Controlled 0-2 pixel shifts reduce projector accuracy but retain its
+  absolute candidate-ranking lead; registration invariance is not claimed.
 - Spatial geometry is therefore a promising candidate-localization prior, not
   yet a stand-alone damage classifier.
 
@@ -113,10 +115,9 @@ IR-MAD pressure, fixed budgets, and available cloud/date checks are complete.
 
 Current priority order:
 
-1. Quantify registration sensitivity; cloud/date analysis is currently
-   inconclusive rather than evidence of robustness.
-2. Seek another independent event set before a detector claim.
-3. Test a fixed projector prior in a neural model only after those gates.
+1. Seek another independent event set before a detector claim; cloud/date
+   analysis remains inconclusive rather than evidence of robustness.
+2. Test a fixed projector prior in a neural model only after that gate.
 
 ## 5. Central CLI
 

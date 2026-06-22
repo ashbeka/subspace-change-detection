@@ -1118,10 +1118,18 @@ that remain visible in the official 128×128 categorical mask:
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split test --seed 1234 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_test_20260622_140133
 ```
 
+Run controlled registration shifts on training events. The post image is
+shifted with bilinear interpolation while invalid entering borders are removed:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 0.25,0.5,1.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 1.5,2.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_large_20260622_143254
+```
+
 Regenerate the curated figures:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --registration-near phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433 --registration-large phase1/outputs/xbd_s12_registration_train20_large_20260622_143254 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
 ```
 
 Interpretation and evidence boundary:

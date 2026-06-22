@@ -257,7 +257,36 @@ explanation of the method difference.
 
 ![Object size sensitivity](assets/xbd_s12_external_2026-06-22/object_size_sensitivity.png)
 
-## 13. Next Hypothesis And Decision Gate
+## 13. Controlled Registration Sensitivity
+
+Registration stress was developed on 20 hash-selected patches from each of 11
+training events. The post image was shifted by `0.25, 0.5, 1.0, 1.5, 2.0`
+Sentinel pixels in four directions using bilinear interpolation; shifted border
+support was excluded. One Sentinel output pixel is 4 m in xBD-S12.
+
+Projector performance degrades monotonically but retains the absolute lead:
+
+| Shift | Projector AP | IR-MAD AP | Projector p90 object recall | IR-MAD recall |
+|---:|---:|---:|---:|---:|
+| 0 px | 0.03612 | 0.02407 | 0.4755 | 0.2895 |
+| 1 px | 0.03379 | 0.02292 | 0.4519 | 0.2808 |
+| 2 px | 0.03198 | 0.02264 | 0.4396 | 0.2698 |
+
+At 1 pixel, projector AP degradation is `-0.00233`, interval
+`[-0.00496,-0.00055]`, and p90 object-recall degradation is `-0.0236`,
+interval `[-0.0442,-0.0072]`. At 2 pixels the corresponding deltas are
+`-0.00414` (`[-0.00891,-0.00096]`) and `-0.0358`
+(`[-0.0684,-0.0024]`). Projector geometry is more shift-sensitive than the
+lower-performing PCA/raw controls, but the tested shifts do not erase its
+ranking advantage.
+
+This supports the phrase **registration-sensitive candidate geometry**. It
+does not support registration invariance, and synthetic shifts do not replace
+evaluation on naturally misregistered independent events.
+
+![Registration sensitivity](assets/xbd_s12_external_2026-06-22/registration_sensitivity.png)
+
+## 14. Next Hypothesis And Decision Gate
 
 The naive two-stage mean/product composition has been tested and rejected. The
 surviving hypothesis is narrower:
@@ -270,12 +299,11 @@ raw radiometry = a separate conditional descriptor, not a score to average
 The identical-sample IR-MAD comparison, fixed review budgets, and available
 cloud/date nuisance checks are complete. The next decisive checks are:
 
-1. explicit registration-error estimation or perturbation sensitivity;
-2. another independent event set before promoting projector geometry as a new
+1. another independent event set before promoting projector geometry as a new
    detector;
-3. only then, a neural-prior test using a fixed projector channel.
+2. only then, a neural-prior test using a fixed projector channel.
 
-## 14. Reproduction
+## 15. Reproduction
 
 Primary run:
 
@@ -292,7 +320,7 @@ Boundary stress:
 Figures:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --registration-near phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433 --registration-large phase1/outputs/xbd_s12_registration_train20_large_20260622_143254 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
 ```
 
 Training-event rank sweep and confirmation:
@@ -304,4 +332,6 @@ Training-event rank sweep and confirmation:
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --seed 1234 --event-only --maps-per-event 0 --rank 11 --bootstrap 5000 --metric-workers 4 --output-dir phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split train --patches-per-event 100 --seed 24680 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_train100_20260622_140604
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split test --seed 1234 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_test_20260622_140133
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 0.25,0.5,1.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 1.5,2.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_large_20260622_143254
 ```

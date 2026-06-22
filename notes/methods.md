@@ -1527,3 +1527,11 @@ Maximum-within-object aggregation is size-sensitive. The projector advantage
 over IR-MAD persists under p90 aggregation and within event-relative object
 size tertiles, including small test objects (`0.1965` versus `0.1346` p90 hit
 recall at 5%), but all object-recall claims must state the size sensitivity.
+
+Controlled registration shifts on training events show a bounded sensitivity.
+At one 4 m Sentinel pixel, projector AP drops by `-0.00233` and p90 object
+recall by `-0.0236`, with both event-bootstrap intervals below zero. At two
+pixels the drops are `-0.00414` and `-0.0358`. Projector remains the strongest
+absolute candidate method through the tested range, but degrades more clearly
+than low-performing PCA/raw controls. Use "registration-sensitive candidate
+geometry," never "registration-invariant geometry."

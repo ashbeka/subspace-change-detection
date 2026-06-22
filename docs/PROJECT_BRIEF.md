@@ -218,11 +218,14 @@ scene threshold, projector damaged-building recall is `0.452` on training and
 rates are also high. PCA-diff is better for damage-versus-intact object
 classification. The method is a candidate generator, not a damage classifier.
 
+Controlled 0-2 pixel post-image shifts on training events reduce projector AP
+and object recall significantly, but do not erase its absolute lead. The
+method is registration-sensitive candidate geometry, not invariant geometry.
+
 Immediate next decision:
 
 ```text
-registration sensitivity
--> another independent event gate
+another independent event gate
 -> optional fixed projector neural-prior test
 ```
 

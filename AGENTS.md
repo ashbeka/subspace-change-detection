@@ -278,13 +278,13 @@ stronger for damage-vs-intact discrimination.
 The current experiment track is now:
 
 ```text
-explicit registration sensitivity
--> another independent event gate
+another independent event gate
 -> optional neural-prior test
 ```
 
 Rank/centering, naive geometry/radiometry fusion, IR-MAD pressure, fixed review
-budgets, and available cloud/date checks are complete. Do not tune new
+budgets, object retrieval, registration shifts, and available cloud/date
+checks are complete. Do not tune new
 combinations on the five already inspected xBD-S12 test events. Develop any
 new mechanism on training disasters and seek another independent gate before
 making a confirmatory detector claim.

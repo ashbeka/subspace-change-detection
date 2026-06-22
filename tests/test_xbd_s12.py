@@ -19,9 +19,27 @@ from phase1.scripts.prepare_xbd_s12_external import (
     ensure_normalization,
     summarize_prepared_release,
 )
+from phase1.scripts.stress_xbd_s12_registration import ShiftCondition, shifted_patch
 
 
 class XBDS12DataTests(unittest.TestCase):
+    def test_registration_shift_marks_entering_border_invalid(self) -> None:
+        from phase1.data.xbd_s12 import XBDS12Patch, XBDS12Record
+
+        record = XBDS12Record("u", "event", "train", "train", 0, {})
+        cube = np.arange(12 * 3 * 3, dtype=np.float32).reshape(12, 3, 3)
+        patch = XBDS12Patch(
+            record=record,
+            pre=cube,
+            post=cube,
+            mask=np.zeros((3, 3), dtype=np.uint8),
+            input_valid=np.ones((3, 3), dtype=bool),
+        )
+        shifted = shifted_patch(patch, ShiftCondition("down1", 1.0, 1.0, 0.0))
+        self.assertTrue(np.all(~shifted.input_valid[0]))
+        self.assertTrue(np.all(shifted.input_valid[1:]))
+        self.assertTrue(np.allclose(shifted.post[:, 1], patch.post[:, 0]))
+
     def test_deterministic_event_sample_is_balanced_and_order_independent(self) -> None:
         from phase1.data.xbd_s12 import XBDS12Record
 

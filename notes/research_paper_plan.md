@@ -1052,7 +1052,9 @@ damaged-building hit recall than IR-MAD at fixed scene thresholds on both train
 and test events, but also more intact-building hits; PCA-diff is stronger for
 damage classification. The plausible contribution is therefore interpretable
 high-coverage candidate localization with explicit specificity limits, pending
-registration and another independent event gate.
+another independent event gate. Controlled 0-2 pixel shifts show statistically
+detectable projector degradation but do not erase its absolute candidate lead;
+describe the method as registration-sensitive, not invariant.
 
 Primary external report:
 `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
