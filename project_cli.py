@@ -117,6 +117,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-hsi-moment-geometry", "hyperspectral", "Factor local HSI change into mean, scale, eigenspectrum, eigenspace orientation, DS projection, and covariance controls.", ["phase1-hsi-moment-geometry"]),
     CommandInfo("phase1-xbd-s12-prepare", "external validation", "Verify and selectively prepare xBD-S12 Sentinel-2 data and original labels.", ["phase1-xbd-s12-prepare"]),
     CommandInfo("phase1-xbd-s12-evaluate", "external validation", "Run the frozen event-disjoint xBD-S12 Band-Image DS validation.", ["phase1-xbd-s12-evaluate", "--split", "test"]),
+    CommandInfo("phase1-xbd-s12-object-retrieval", "external validation", "Evaluate damaged-building candidate retrieval and object damage discrimination.", ["phase1-xbd-s12-object-retrieval", "--split", "test"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -1082,6 +1083,8 @@ def cmd_phase1_xbd_s12_evaluate(args: argparse.Namespace) -> int:
         str(args.maps_per_event),
         "--bootstrap",
         str(args.bootstrap),
+        "--metric-workers",
+        str(args.metric_workers),
         "--boundary-buffer",
         str(args.boundary_buffer),
         "--output-dir",
@@ -1109,6 +1112,74 @@ def cmd_phase1_xbd_s12_summarize(args: argparse.Namespace) -> int:
         args.boundary,
         "--output-dir",
         args.output_dir,
+    ]
+    if args.train_sweep:
+        cmd.extend(["--train-sweep", args.train_sweep])
+    if args.train_confirmation:
+        cmd.extend(["--train-confirmation", args.train_confirmation])
+    if args.train_classical:
+        cmd.extend(["--train-classical", args.train_classical])
+    if args.test_budget:
+        cmd.extend(["--test-budget", args.test_budget])
+    if args.object_train:
+        cmd.extend(["--object-train", args.object_train])
+    if args.object_test:
+        cmd.extend(["--object-test", args.object_test])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_object_retrieval(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_object_{args.split}_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_xbd_s12_object_retrieval",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--split",
+        args.split,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--workers",
+        str(args.workers),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
+    ]
+    if args.patches_per_event is not None:
+        cmd.extend(["--patches-per-event", str(args.patches_per_event)])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_develop_geometry(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_train_geometry_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.develop_xbd_s12_geometry_radiometry",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--ranks",
+        args.ranks,
+        "--basis-modes",
+        args.basis_modes,
+        "--patches-per-event",
+        str(args.patches_per_event),
+        "--seed",
+        str(args.seed),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
     ]
     return run_command(cmd, dry_run=args.dry_run)
 
@@ -2120,9 +2191,27 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--event-only", action="store_true")
     p.add_argument("--maps-per-event", type=int, default=1)
     p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--metric-workers", type=int, default=4)
     p.add_argument("--output-dir", default="")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_xbd_s12_evaluate)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-object-retrieval",
+        help="Evaluate fixed xBD-S12 score maps at building-object level.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--split", choices=("train", "test"), required=True)
+    p.add_argument("--patches-per-event", type=int, default=None)
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=24680)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--workers", type=int, default=4)
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_object_retrieval)
 
     p = sub.add_parser(
         "phase1-xbd-s12-summarize",
@@ -2130,9 +2219,32 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--unbuffered", required=True)
     p.add_argument("--boundary", required=True)
+    p.add_argument("--train-sweep", default="")
+    p.add_argument("--train-confirmation", default="")
+    p.add_argument("--train-classical", default="")
+    p.add_argument("--test-budget", default="")
+    p.add_argument("--object-train", default="")
+    p.add_argument("--object-test", default="")
     p.add_argument("--output-dir", required=True)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_xbd_s12_summarize)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-develop-geometry",
+        help="Develop rank, centering, and geometry+radiometry hypotheses on train events.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--ranks", default="2,4,6,8,10,11")
+    p.add_argument(
+        "--basis-modes", default="centered_pca,uncentered_autocorrelation"
+    )
+    p.add_argument("--patches-per-event", type=int, default=20)
+    p.add_argument("--seed", type=int, default=24680)
+    p.add_argument("--bootstrap", type=int, default=3000)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_develop_geometry)
 
     p = sub.add_parser(
         "phase1-spacenet7-temporal-subspaces",

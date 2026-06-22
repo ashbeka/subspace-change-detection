@@ -7,12 +7,14 @@ import numpy as np
 
 from phase1.data.xbd_s12 import (
     damage_evaluation_mask,
+    deterministic_event_sample,
     load_metadata,
     normalize_s2,
+    rasterize_xbd_instances,
     rasterize_xbd_label,
     select_records,
 )
-from phase1.scripts.evaluate_xbd_s12_external import spectral_angle_score
+from phase1.scripts.evaluate_xbd_s12_external import score_metrics, spectral_angle_score
 from phase1.scripts.prepare_xbd_s12_external import (
     ensure_normalization,
     summarize_prepared_release,
@@ -20,6 +22,48 @@ from phase1.scripts.prepare_xbd_s12_external import (
 
 
 class XBDS12DataTests(unittest.TestCase):
+    def test_deterministic_event_sample_is_balanced_and_order_independent(self) -> None:
+        from phase1.data.xbd_s12 import XBDS12Record
+
+        records = [
+            XBDS12Record(
+                uid=f"{event}-{index}",
+                disaster=event,
+                event_split="train",
+                xbd_tier="train",
+                no_data_pixels=0,
+                properties={},
+            )
+            for event in ("event-a", "event-b")
+            for index in range(5)
+        ]
+        first = deterministic_event_sample(records, per_event=2, seed=17)
+        second = deterministic_event_sample(reversed(records), per_event=2, seed=17)
+        self.assertEqual([record.uid for record in first], [record.uid for record in second])
+        self.assertEqual(
+            {event: sum(record.disaster == event for record in first) for event in ("event-a", "event-b")},
+            {"event-a": 2, "event-b": 2},
+        )
+
+    def test_score_metrics_fixed_budget_retrieval(self) -> None:
+        score = np.asarray([[0.1, 0.9, 0.8, 0.2, 0.7]], dtype=np.float32)
+        target = np.asarray([[0, 1, 0, 0, 1]], dtype=np.uint8)
+        support = np.ones(score.shape, dtype=bool)
+        metrics = score_metrics(score, target, support)
+        self.assertEqual(metrics["top_1pct_pixels"], 1)
+        self.assertAlmostEqual(metrics["top_1pct_recall"], 0.5)
+        self.assertAlmostEqual(metrics["top_1pct_precision"], 1.0)
+        self.assertAlmostEqual(metrics["top_1pct_enrichment"], 2.5)
+
+    def test_score_metrics_budget_is_tie_aware(self) -> None:
+        score = np.ones((1, 100), dtype=np.float32)
+        target = np.zeros((1, 100), dtype=np.uint8)
+        target[0, :10] = 1
+        metrics = score_metrics(score, target, np.ones(score.shape, dtype=bool))
+        self.assertAlmostEqual(metrics["top_1pct_recall"], 0.01)
+        self.assertAlmostEqual(metrics["top_1pct_precision"], 0.1)
+        self.assertAlmostEqual(metrics["top_1pct_enrichment"], 1.0)
+
     def test_model_config_supplies_missing_official_normalization(self) -> None:
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -143,6 +187,36 @@ class XBDS12DataTests(unittest.TestCase):
             self.assertEqual(mask.shape, (128, 128))
             self.assertGreater(int(np.sum(mask == 3)), 0)
             self.assertGreater(int(np.sum(mask == 5)), 0)
+
+    def test_instance_rasterization_keeps_only_visible_class_pixels(self) -> None:
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "sample_post_disaster.json"
+            path.write_text(
+                json.dumps(
+                    {
+                        "features": {
+                            "xy": [
+                                {
+                                    "wkt": "POLYGON ((0 0, 63 0, 63 63, 0 63, 0 0))",
+                                    "properties": {"uid": "damaged", "subtype": "major-damage"},
+                                },
+                                {
+                                    "wkt": "POLYGON ((64 64, 127 64, 127 127, 64 127, 64 64))",
+                                    "properties": {"uid": "intact", "subtype": "no-damage"},
+                                },
+                            ]
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            categorical = np.zeros((128, 128), dtype=np.uint8)
+            categorical[:8, :8] = 3
+            categorical[8:16, 8:16] = 1
+            objects = rasterize_xbd_instances(path, categorical)
+            self.assertEqual([obj.object_id for obj in objects], ["damaged", "intact"])
+            self.assertTrue(np.all(categorical[objects[0].mask] == 3))
+            self.assertTrue(np.all(categorical[objects[1].mask] == 1))
 
     def test_damage_views_keep_semantics_separate(self) -> None:
         mask = np.asarray([[0, 1, 2], [3, 4, 5]], dtype=np.uint8)

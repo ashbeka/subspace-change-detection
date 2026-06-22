@@ -20,6 +20,8 @@ from __future__ import annotations
 
 import json
 import math
+import hashlib
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
@@ -27,6 +29,7 @@ from typing import Iterable
 import numpy as np
 import rasterio
 from affine import Affine
+from rasterio.errors import NotGeoreferencedWarning
 from rasterio.features import rasterize
 from scipy.ndimage import distance_transform_edt
 from shapely import wkt
@@ -83,6 +86,13 @@ class XBDS12Patch:
     post: Array
     mask: Array
     input_valid: Array
+
+
+@dataclass(frozen=True)
+class XBDObject:
+    object_id: str
+    damage_class: int
+    mask: Array
 
 
 def _properties_from_geojson(path: Path) -> list[dict[str, object]]:
@@ -151,6 +161,32 @@ def select_records(
     return selected if maximum is None else selected[: max(0, int(maximum))]
 
 
+def deterministic_event_sample(
+    records: Iterable[XBDS12Record],
+    *,
+    per_event: int,
+    seed: int,
+) -> list[XBDS12Record]:
+    """Select a reproducible UID-hash sample independently inside each event.
+
+    The selection uses no image values, labels, or method scores. Hash ranking
+    avoids the geographic/order bias of taking the first records in metadata.
+    """
+    grouped: dict[str, list[XBDS12Record]] = {}
+    for record in records:
+        grouped.setdefault(record.disaster, []).append(record)
+    output: list[XBDS12Record] = []
+    for event in sorted(grouped):
+        ranked = sorted(
+            grouped[event],
+            key=lambda record: hashlib.sha256(
+                f"{int(seed)}:{record.uid}".encode("utf-8")
+            ).digest(),
+        )
+        output.extend(ranked[: max(0, int(per_event))])
+    return sorted(output, key=lambda record: (record.disaster, record.uid))
+
+
 def load_normalization(root: Path) -> tuple[Array, Array]:
     path = root / "normalization.json"
     package = json.loads(path.read_text(encoding="utf-8"))
@@ -195,17 +231,20 @@ def rasterize_xbd_label(label_path: Path, output_size: int = 128) -> Array:
             continue
         geometry = wkt.loads(str(feature["wkt"]))
         shapes.append((geometry, DAMAGE_CLASS[subtype]))
-    full = (
-        rasterize(
-            shapes,
-            out_shape=(1024, 1024),
-            fill=0,
-            transform=Affine.identity(),
-            dtype=np.uint8,
+    with warnings.catch_warnings():
+        # xBD WKT coordinates are image pixels, not map coordinates.
+        warnings.simplefilter("ignore", NotGeoreferencedWarning)
+        full = (
+            rasterize(
+                shapes,
+                out_shape=(1024, 1024),
+                fill=0,
+                transform=Affine.identity(),
+                dtype=np.uint8,
+            )
+            if shapes
+            else np.zeros((1024, 1024), dtype=np.uint8)
         )
-        if shapes
-        else np.zeros((1024, 1024), dtype=np.uint8)
-    )
     if 1024 % output_size:
         raise ValueError(f"output_size={output_size} must divide 1024.")
     factor = 1024 // output_size
@@ -213,6 +252,59 @@ def rasterize_xbd_label(label_path: Path, output_size: int = 128) -> Array:
     blocks = blocks.reshape(output_size, output_size, factor * factor)
     counts = np.stack([(blocks == value).sum(axis=-1) for value in range(7)], axis=-1)
     return np.argmax(counts, axis=-1).astype(np.uint8)
+
+
+def rasterize_xbd_instances(label_path: Path, categorical_mask: Array) -> list[XBDObject]:
+    """Rasterize visible xBD building instances at Sentinel output scale.
+
+    Each polygon is sampled at output-pixel centers, then intersected with the
+    official project categorical mask for its damage class. Objects that do
+    not survive the 1024-to-output reduction are excluded. This prevents tiny
+    VHR-only polygons from being counted as retrievable Sentinel-2 objects.
+    """
+    if categorical_mask.ndim != 2 or categorical_mask.shape[0] != categorical_mask.shape[1]:
+        raise ValueError("categorical_mask must be a square 2-D array.")
+    output_size = int(categorical_mask.shape[0])
+    if 1024 % output_size:
+        raise ValueError(f"Output size {output_size} must divide 1024.")
+    factor = 1024 // output_size
+    package = json.loads(label_path.read_text(encoding="utf-8"))
+    output: list[XBDObject] = []
+    for index, feature in enumerate(package.get("features", {}).get("xy", [])):
+        properties = feature.get("properties") or {}
+        subtype = str(properties.get("subtype") or "")
+        if subtype not in DAMAGE_CLASS:
+            continue
+        damage_class = DAMAGE_CLASS[subtype]
+        geometry = wkt.loads(str(feature["wkt"]))
+        with warnings.catch_warnings():
+            # xBD WKT coordinates are image pixels, not map coordinates.
+            warnings.simplefilter("ignore", NotGeoreferencedWarning)
+            sampled = rasterize(
+                [(geometry, 1)],
+                out_shape=categorical_mask.shape,
+                fill=0,
+                transform=Affine.scale(factor, factor),
+                all_touched=False,
+                dtype=np.uint8,
+            ).astype(bool)
+        visible = sampled & (categorical_mask == damage_class)
+        if not np.any(visible):
+            continue
+        object_id = str(
+            properties.get("uid")
+            or properties.get("feature_id")
+            or properties.get("id")
+            or index
+        )
+        output.append(
+            XBDObject(
+                object_id=object_id,
+                damage_class=damage_class,
+                mask=visible,
+            )
+        )
+    return output
 
 
 def build_label_index(labels_root: Path) -> dict[str, Path]:

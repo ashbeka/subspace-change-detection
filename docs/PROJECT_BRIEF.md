@@ -206,12 +206,24 @@ L2 leads damage-vs-intact discrimination. The defensible interpretation is
 candidate-localization geometry plus a smaller DS-specific component, not a
 stand-alone damage detector.
 
+On an identical 1,100-patch sample from 11 training events, centered rank-11
+projector distance beats IR-MAD full-scene AP by `+0.00814` with interval
+`[+0.00470,+0.01171]` and 10/11 wins. At a fixed 5% review budget, projector
+damage recall/lift is `0.382/7.64x` on training events and `0.247/4.93x` on
+unseen test events. Naive projector-plus-raw score fusion is rejected.
+
+Object-level xBD polygons confirm a coverage/specificity tradeoff. At a 5%
+scene threshold, projector damaged-building recall is `0.452` on training and
+`0.358` on test events, substantially above IR-MAD, but intact-building hit
+rates are also high. PCA-diff is better for damage-versus-intact object
+classification. The method is a candidate generator, not a damage classifier.
+
 Immediate next decision:
 
 ```text
-training-event rank/centering pressure test
--> event-group validation of projector + radiometric evidence
--> independent confirmation before a new detector claim
+registration sensitivity
+-> another independent event gate
+-> optional fixed projector neural-prior test
 ```
 
 See

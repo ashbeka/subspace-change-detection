@@ -1036,16 +1036,23 @@ xBD-S12 supplies the first independent event-disjoint transfer result. The
 external finding supports a narrower positive paper direction:
 
 > Spatial band-image subspace geometry provides transferable label-free
-> candidate-localization evidence, and canonical DS adds a repeatable
-> component beyond matched reconstruction; radiometric evidence remains
-> necessary for damage discrimination.
+> candidate-localization evidence. Canonical DS adds beyond matched
+> reconstruction on the five test events, but that direction is not stable on
+> training disasters; radiometric evidence remains necessary for damage
+> discrimination.
 
 This is stronger than an OSCD-only construction study but still short of a
 detector paper. Absolute damaged-pixel AP is low, only five independent test
 events exist, and the best projector map is partly a building-localization
-signal. The next contribution test is an event-validated two-stage
-geometry-plus-radiometry score, not another arbitrary weighted fusion on the
-already inspected test events.
+signal. A 1,100-patch training-event check nevertheless shows projector AP
+above IR-MAD in 10/11 events and candidate-recall enrichment at fixed review
+budgets on both train and unseen test events. Naive projector/radiometry score
+fusion is rejected. Object-level evaluation further shows substantially higher
+damaged-building hit recall than IR-MAD at fixed scene thresholds on both train
+and test events, but also more intact-building hits; PCA-diff is stronger for
+damage classification. The plausible contribution is therefore interpretable
+high-coverage candidate localization with explicit specificity limits, pending
+registration and another independent event gate.
 
 Primary external report:
 `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.

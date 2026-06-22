@@ -270,20 +270,21 @@ The comparison should report metrics and maps against OSCD labels and simple bas
 
 As of 2026-06-22, the OSCD matched-control study and frozen xBD-S12 external
 transfer are complete. Spatial band-image projector distance behaves mainly as
-candidate/building-localization evidence; canonical DS adds a smaller but
-event-consistent component beyond matched cross-reconstruction. Raw L2 is
+candidate/building-localization evidence. Canonical DS beats matched
+cross-reconstruction on five unseen test events but not consistently on 11
+training events, so the DS-specific effect is event-dependent. Raw L2 is
 stronger for damage-vs-intact discrimination.
 
 The current experiment track is now:
 
 ```text
-training-event rank and centering pressure test
--> event-group validation of fixed projector + radiometric combinations
--> nuisance/failure analysis
--> independent confirmation
+explicit registration sensitivity
+-> another independent event gate
 -> optional neural-prior test
 ```
 
-Do not tune new combinations on the five already inspected xBD-S12 test
-events. Develop them on training disasters and seek another independent gate
-before making a confirmatory detector claim.
+Rank/centering, naive geometry/radiometry fusion, IR-MAD pressure, fixed review
+budgets, and available cloud/date checks are complete. Do not tune new
+combinations on the five already inspected xBD-S12 test events. Develop any
+new mechanism on training disasters and seek another independent gate before
+making a confirmatory detector claim.

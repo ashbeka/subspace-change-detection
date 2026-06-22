@@ -114,6 +114,43 @@ class BandImageSpatialControlTests(unittest.TestCase):
         )
         self.assertTrue(np.allclose(score, explicit, atol=1e-6))
 
+    def test_uncentered_projector_matches_autocorrelation_bases(self) -> None:
+        rank = 3
+        score = shared_control_values(
+            self.first,
+            self.second,
+            rank=rank,
+            seed=7,
+            mode="projector_distance",
+            basis_mode="uncentered_autocorrelation",
+        )
+        first_basis = pca_utils.fit_autocorrelation_basis(self.first, rank).basis
+        second_basis = pca_utils.fit_autocorrelation_basis(self.second, rank).basis
+        explicit = np.linalg.norm(
+            first_basis @ first_basis.T - second_basis @ second_basis.T,
+            axis=1,
+        )
+        self.assertTrue(np.allclose(score, explicit, atol=1e-6))
+
+    def test_uncentered_equal_matrices_produce_zero_geometry(self) -> None:
+        ds = band_image_ds_values(
+            self.first,
+            self.first,
+            rank=3,
+            seed=7,
+            basis_mode="uncentered_autocorrelation",
+        )
+        projector = shared_control_values(
+            self.first,
+            self.first,
+            rank=3,
+            seed=7,
+            mode="projector_distance",
+            basis_mode="uncentered_autocorrelation",
+        )
+        self.assertTrue(np.allclose(ds.projected_magnitude, 0.0, atol=1e-6))
+        self.assertTrue(np.allclose(projector, 0.0, atol=1e-6))
+
     def test_cross_reconstruction_matches_pca_centering_convention(self) -> None:
         rank = 3
         score = band_image_spatial_control_values(

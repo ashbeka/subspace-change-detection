@@ -88,6 +88,15 @@ Short interpretation:
   cross-reconstruction in all five unseen events.
 - Band-image projector distance leads full-scene damaged-pixel retrieval and
   building localization; raw L2 leads damage-vs-intact discrimination.
+- On 11 training events, projector distance beats IR-MAD full-scene AP in
+  10/11 events; at a 5% pixel-review budget it retrieves 38.2% of damaged
+  pixels, versus IR-MAD's 30.2%.
+- On five unseen test events, the corresponding secondary budget recalls are
+  24.7% versus 17.8%. These are candidate-ranking results, not segmentation or
+  severity estimates.
+- Object polygons confirm the same coverage/specificity tradeoff: at a 5%
+  scene threshold projector hits 35.8% of damaged test buildings, but also
+  26.7% of intact buildings; PCA-diff is better for damage classification.
 - Spatial geometry is therefore a promising candidate-localization prior, not
   yet a stand-alone damage classifier.
 
@@ -99,17 +108,15 @@ Read the external report first, then reproduce the frozen xBD-S12 result:
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
 ```
 
-Do not start another long U-Net sweep yet. The new two-stage hypothesis must be
-developed on training events without tuning on the inspected five test events.
+Do not start another long U-Net sweep yet. Rank/centering, naive fusion,
+IR-MAD pressure, fixed budgets, and available cloud/date checks are complete.
 
 Current priority order:
 
-1. Training-event centered-rank sensitivity: `2,4,6,8,10,11`.
-2. Compare centered PCA with uncentered autocorrelation subspaces.
-3. Event-group validation of fixed projector + raw-radiometry combinations.
-4. Registration/cloud/date-gap failure analysis.
-5. Seek another independent event set before a confirmatory detector claim.
-6. Test a neural prior only if the label-free score survives these gates.
+1. Quantify registration sensitivity; cloud/date analysis is currently
+   inconclusive rather than evidence of robustness.
+2. Seek another independent event set before a detector claim.
+3. Test a fixed projector prior in a neural model only after those gates.
 
 ## 5. Central CLI
 

@@ -1482,20 +1482,48 @@ projector distance should be interpreted as spatial candidate/localization
 evidence. It is invariant to basis rotation because it evaluates the row norm
 of `P_pre-P_post`, not individual PCA vector signs.
 
-Canonical DS is weaker than projector distance as a stand-alone xBD-S12 map,
-but beats a centering- and rank-matched symmetric cross-reconstruction control
-on all five unseen events, before and after the boundary stress test. This
-isolates a transferable DS-specific ranking component without proving direct
-damage classification.
+Canonical DS is weaker than projector distance as a stand-alone xBD-S12 map.
+It beats a centering- and rank-matched cross-reconstruction control on all five
+unseen test events, before and after the boundary stress test, but this
+direction does not repeat consistently across 11 training disasters. Treat it
+as event-dependent DS evidence, not a universal transferable advantage.
 
-Next method hypothesis:
+The first fixed-combination hypothesis was tested and rejected:
 
 ```text
-projector rank map = candidate/localization evidence
-raw L2 or spectral-angle rank map = conditional radiometric evidence
-fixed combination = full-scene damaged-candidate score
+projector rank map = candidate/localization evidence [supported]
+raw L2 = conditional radiometric evidence [supported]
+mean/product of both maps = improved candidate score [rejected]
 ```
 
-Develop this only on training events with event-group validation. Centered PCA
-rank and uncentered autocorrelation construction are method choices requiring
-explicit pressure tests; they are not interchangeable definitions of DS.
+High-rank centered PCA and dual uncentered autocorrelation projectors behave
+similarly; ranks 8-11 form a plateau on training events. Keep the two signals
+separate until a mechanism stronger than score averaging is defined. Centered
+PCA and uncentered autocorrelation remain different mathematical objects even
+when their high-rank empirical behavior is similar.
+
+On an identical deterministic 100-patch sample from each of 11 training
+events, centered rank-11 projector distance exceeds IR-MAD full-scene AP by
+`+0.00814` on average, interval `[+0.00470,+0.01171]`, with 10/11 wins. At a
+fixed 5% pixel-review budget it retrieves 38.2% of damaged pixels with 7.64x
+prevalence lift, versus IR-MAD's 30.2% and 6.03x. The unseen-event values are
+24.7%/4.93x versus 17.8%/3.55x. These are candidate-ranking statistics; they
+do not turn projector distance into a damage-severity classifier.
+
+The fixed-budget metric uses the top-scoring fraction of each patch. If a
+score tie crosses the budget, expected positives from the tied group are used
+instead of selecting pixels by flattened index. This matters because
+percentile-rank maps can contain large tied groups.
+
+Object-level evaluation samples original xBD polygons at Sentinel-2 pixel
+centers and intersects each instance with the official downsampled class mask.
+At a 5% scene threshold, projector geometry has the highest damaged-building
+hit recall on both train (`0.452`) and test (`0.358`) events, but also a high
+intact-building hit rate (`0.377` and `0.267`). PCA-diff is better for
+damaged-versus-intact object classification. The projector is therefore a
+high-coverage region proposal signal rather than an object damage score.
+
+Maximum-within-object aggregation is size-sensitive. The projector advantage
+over IR-MAD persists under p90 aggregation and within event-relative object
+size tertiles, including small test objects (`0.1965` versus `0.1346` p90 hit
+recall at 5%), but all object-recall claims must state the size sensitivity.

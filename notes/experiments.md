@@ -1441,5 +1441,58 @@ centered rank `{2,4,6,8,10,11}` and uncentered autocorrelation construction on
 training events. Seek another independent event set before a confirmatory
 publication claim.
 
+Training-event pressure test completed 2026-06-22:
+
+- Rank sweep: 20 deterministic patches from each of 11 training events;
+  confirmation: 100/event, `1,100/1,100`, zero failures.
+- Projector AP rises through rank 8 and then plateaus. Centered and uncentered
+  high-rank constructions are practically similar.
+- Uncentered rank-11 projector beats raw L2 for full-scene retrieval in 11/11
+  events: delta `+0.01804`, interval `[+0.01017,+0.02651]`.
+- Mean/product projector + raw-L2 fusions are rejected: mean fusion loses to
+  projector in 0/11 events, delta `-0.01339`, interval
+  `[-0.02079,-0.00662]`.
+- DS-minus-cross is not stable on training events (uncentered rank 11:
+  `+0.00089`, interval `[-0.00036,+0.00239]`, 5/11 wins). Restrict the 5/5
+  test-event DS finding to those events.
+
+Classical and operational gate completed 2026-06-22:
+
+- On the identical 100/event training sample, centered rank-11 projector beats
+  IR-MAD full-scene AP by `+0.00814`, interval `[+0.00470,+0.01171]`, with
+  10/11 wins (`p=0.00293`). It beats IR-MAD building-localization AP by
+  `+0.03077` with 11/11 wins.
+- At a 5% review budget, projector recall/lift is `0.382/7.64x` on training
+  events and `0.247/4.93x` on unseen test events. IR-MAD reaches
+  `0.302/6.03x` and `0.178/3.55x` respectively.
+- The test budget metrics are post-hoc secondary analysis because they were
+  added after primary test AP was inspected.
+- Event-relative cloud-score strata show only weak correlations and all
+  five-event high-minus-low intervals cross zero. Date gaps have insufficient
+  within-event levels for a paired tertile conclusion.
+
+Object-level gate completed 2026-06-22:
+
+- 75,802 visible objects on the 1,100-patch train sample and 103,653 on the
+  complete test split; zero patch failures.
+- At a 5% scene threshold, projector damaged-building recall is `0.452` train
+  and `0.358` test, versus IR-MAD `0.307/0.209`, PCA-diff `0.170/0.181`, and
+  raw L2 `0.109/0.100`.
+- Projector-minus-IR-MAD recall delta is `+0.1456`, interval
+  `[+0.1077,+0.1885]`, 11/11 training-event wins; test delta is `+0.1487`,
+  interval `[+0.0876,+0.2250]`, 5/5 wins.
+- Projector also hits more intact buildings. PCA-diff gives the best test
+  damaged-vs-intact object AP (`0.3616` mean score versus projector `0.3166`).
+- Size-stratified and p90 checks retain the projector recall advantage, but
+  larger buildings are easier for every maximum/p90 hit metric.
+
+[gap] Registration sensitivity remains unmeasured on xBD-S12, and only five
+unseen event clusters are available.
+[why it matters] A high-coverage building proposal can still be driven by
+misregistration or event-specific structures.
+[next check] Quantify registration perturbation/estimated shift and add one
+independent event gate before a detector claim. Do not invent another score
+fusion unless a mechanism and independent validation gate are specified.
+
 Report:
 `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.

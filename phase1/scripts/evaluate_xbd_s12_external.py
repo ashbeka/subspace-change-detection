@@ -23,6 +23,7 @@ import json
 import math
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import matplotlib
@@ -40,6 +41,7 @@ from phase1.data.xbd_s12 import (
     XBDS12Patch,
     build_label_index,
     damage_evaluation_mask,
+    deterministic_event_sample,
     load_metadata,
     load_normalization,
     load_patch,
@@ -112,6 +114,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--maps-per-event", type=int, default=1)
     parser.add_argument("--bootstrap", type=int, default=5000)
+    parser.add_argument(
+        "--metric-workers",
+        type=int,
+        default=4,
+        help="Shared-memory workers for exact event/global metric aggregation.",
+    )
     parser.add_argument(
         "--event-only",
         action="store_true",
@@ -242,6 +250,33 @@ def score_metrics(score: Array, target: Array, support: Array) -> dict[str, floa
         "score_mean": float(np.mean(values)) if values.size else float("nan"),
         "score_p99": float(np.percentile(values, 99.0)) if values.size else float("nan"),
     }
+    for fraction in (0.01, 0.05, 0.10):
+        label = f"top_{int(fraction * 100)}pct"
+        budget = min(labels.size, max(1, int(math.ceil(fraction * labels.size))))
+        # Fixed-budget retrieval is tie-aware. If a threshold tie crosses the
+        # budget, count the expected positives from the tied group instead of
+        # giving arbitrary preference to low flattened pixel indices. This is
+        # O(n) per budget and avoids three full sorts of multi-million-pixel
+        # event/global arrays.
+        cutoff = float(np.partition(values, labels.size - budget)[labels.size - budget])
+        above = values > cutoff
+        tied = values == cutoff
+        selected_above = int(np.sum(above))
+        remaining = max(0, budget - selected_above)
+        tied_count = int(np.sum(tied))
+        tied_positives = int(np.sum(labels[tied]))
+        retrieved = float(np.sum(labels[above]))
+        if remaining and tied_count:
+            retrieved += float(remaining * tied_positives / tied_count)
+        precision_at_budget = float(retrieved / max(1, budget))
+        recall_at_budget = float(retrieved / max(1, positives))
+        prevalence = float(positives / max(1, labels.size))
+        result[f"{label}_pixels"] = budget
+        result[f"{label}_recall"] = recall_at_budget
+        result[f"{label}_precision"] = precision_at_budget
+        result[f"{label}_enrichment"] = float(
+            precision_at_budget / prevalence if prevalence > 0 else float("nan")
+        )
     if positives == 0 or negatives == 0:
         result.update(
             auroc=float("nan"),
@@ -325,6 +360,9 @@ def event_pairwise(event_rows: list[dict[str, object]], bootstrap: int, seed: in
         if math.isfinite(float(row["average_precision"]))
     }
     comparisons = (
+        ("band_image_projector_distance", "ir_mad"),
+        ("band_image_projector_distance", "raw_l2"),
+        ("band_image_projector_distance", "pca_diff"),
         ("band_image_ds", "band_image_cross_reconstruction"),
         ("band_image_ds", "pca_diff"),
         ("band_image_ds", "smoothed_pca_sigma1"),
@@ -390,20 +428,14 @@ def summarize_event_metrics(event_rows: list[dict[str, object]]) -> list[dict[st
                 "mean_event_average_precision": mean_finite("average_precision"),
                 "mean_event_best_f1": mean_finite("best_f1"),
                 "mean_event_otsu_f1": mean_finite("otsu_f1"),
+                "mean_event_top_1pct_recall": mean_finite("top_1pct_recall"),
+                "mean_event_top_1pct_enrichment": mean_finite("top_1pct_enrichment"),
+                "mean_event_top_5pct_recall": mean_finite("top_5pct_recall"),
+                "mean_event_top_5pct_enrichment": mean_finite("top_5pct_enrichment"),
+                "mean_event_top_10pct_recall": mean_finite("top_10pct_recall"),
+                "mean_event_top_10pct_enrichment": mean_finite("top_10pct_enrichment"),
             }
         )
-    return output
-
-
-def _select_per_event(records: list, maximum: int | None) -> list:
-    if maximum is None:
-        return records
-    counts: dict[str, int] = defaultdict(int)
-    output = []
-    for record in records:
-        if counts[record.disaster] < maximum:
-            output.append(record)
-            counts[record.disaster] += 1
     return output
 
 
@@ -417,7 +449,12 @@ def main() -> None:
         exclude_metadata_nodata=not args.include_metadata_nodata,
         maximum=None,
     )
-    records = _select_per_event(records, args.patches_per_event)
+    if args.patches_per_event is not None:
+        records = deterministic_event_sample(
+            records,
+            per_event=args.patches_per_event,
+            seed=args.seed,
+        )
     if args.maximum_patches is not None:
         records = records[: args.maximum_patches]
     labels = build_label_index(args.labels_root)
@@ -503,47 +540,65 @@ def main() -> None:
             flush=True,
         )
 
-    for (view, disaster), target_parts in sorted(target_buffers.items()):
-        target = np.concatenate(target_parts)
-        support = np.ones(target.shape, dtype=bool)
-        for method in ALL_METHODS:
-            score = np.concatenate(event_buffers[(view, disaster, method)])
-            event_rows.append(
-                {
-                    "split": args.split,
-                    "disaster": disaster,
-                    "label_view": view,
-                    "method": method,
-                    **score_metrics(score, target, support),
-                }
-            )
+    metric_workers = max(1, int(args.metric_workers))
+    event_targets = {
+        key: np.concatenate(parts) for key, parts in target_buffers.items()
+    }
+    event_jobs = [
+        (view, disaster, method)
+        for view, disaster in sorted(event_targets)
+        for method in ALL_METHODS
+    ]
+
+    def evaluate_event(job: tuple[str, str, str]) -> dict[str, object]:
+        view, disaster, method = job
+        target = event_targets[(view, disaster)]
+        score = np.concatenate(event_buffers[(view, disaster, method)])
+        return {
+            "split": args.split,
+            "disaster": disaster,
+            "label_view": view,
+            "method": method,
+            **score_metrics(score, target, np.ones(target.shape, dtype=bool)),
+        }
+
+    with ThreadPoolExecutor(max_workers=metric_workers) as executor:
+        event_rows.extend(executor.map(evaluate_event, event_jobs))
 
     global_rows: list[dict[str, object]] = []
-    for view in LABEL_VIEWS:
-        disasters = sorted(
-            disaster for candidate_view, disaster in target_buffers if candidate_view == view
+    view_disasters = {
+        view: sorted(
+            disaster for candidate_view, disaster in event_targets if candidate_view == view
         )
-        if not disasters:
-            continue
-        target = np.concatenate(
-            [np.concatenate(target_buffers[(view, disaster)]) for disaster in disasters]
+        for view in LABEL_VIEWS
+    }
+    global_targets = {
+        view: np.concatenate([event_targets[(view, disaster)] for disaster in disasters])
+        for view, disasters in view_disasters.items()
+        if disasters
+    }
+    global_jobs = [
+        (view, method) for view in LABEL_VIEWS if view in global_targets for method in ALL_METHODS
+    ]
+
+    def evaluate_global(job: tuple[str, str]) -> dict[str, object]:
+        view, method = job
+        target = global_targets[view]
+        score = np.concatenate(
+            [
+                np.concatenate(event_buffers[(view, disaster, method)])
+                for disaster in view_disasters[view]
+            ]
         )
-        support = np.ones(target.shape, dtype=bool)
-        for method in ALL_METHODS:
-            score = np.concatenate(
-                [
-                    np.concatenate(event_buffers[(view, disaster, method)])
-                    for disaster in disasters
-                ]
-            )
-            global_rows.append(
-                {
-                    "split": args.split,
-                    "label_view": view,
-                    "method": method,
-                    **score_metrics(score, target, support),
-                }
-            )
+        return {
+            "split": args.split,
+            "label_view": view,
+            "method": method,
+            **score_metrics(score, target, np.ones(target.shape, dtype=bool)),
+        }
+
+    with ThreadPoolExecutor(max_workers=metric_workers) as executor:
+        global_rows.extend(executor.map(evaluate_global, global_jobs))
 
     pairwise = event_pairwise(event_rows, args.bootstrap, args.seed + 901)
     summary = summarize_event_metrics(event_rows)
@@ -563,6 +618,11 @@ def main() -> None:
         "ir_mad_iters": args.ir_mad_iters,
         "boundary_buffer": args.boundary_buffer,
         "event_only": args.event_only,
+        "metric_workers": metric_workers,
+        "sampling": (
+            "uid_sha256_per_event" if args.patches_per_event is not None else "all_records"
+        ),
+        "patches_per_event": args.patches_per_event,
         "patches_requested": len(records),
         "patches_completed": len(records) - len(failures),
         "events": sorted(set(record.disaster for record in records)),

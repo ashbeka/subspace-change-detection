@@ -79,8 +79,10 @@ that the rank- and input-matched cross-reconstruction substitute does not:
 | DS-fusion - cross-fusion, unbuffered | +0.00173 | [+0.00014,+0.00413] | 5/5 | 0.0625 |
 | DS - cross-reconstruction, 3-pixel stress | +0.00121 | [+0.00005,+0.00285] | 5/5 | 0.0625 |
 
-This is transferable directional evidence for a DS-specific component. It is
-not evidence that DS alone is a competitive damage segmenter.
+This is consistent directional evidence on the five official test events. A
+later training-event pressure test (Section 9) shows that the DS-minus-control
+direction is not universal across disasters, so it must not be generalized as
+a dataset-wide DS advantage.
 
 ![Paired event AP differences](assets/xbd_s12_external_2026-06-22/paired_event_ap_deltas.png)
 
@@ -129,9 +131,10 @@ The current defensible finding is:
 
 > A spatial band-image subspace representation transfers across OSCD and
 > xBD-S12 as label-free changed-structure evidence. Projector geometry is most
-> useful for candidate localization, while canonical DS contributes a smaller
-> but event-consistent component beyond matched cross-reconstruction. Neither
-> should yet be described as a stand-alone damage classifier.
+> useful for candidate localization. Canonical DS contributes beyond matched
+> cross-reconstruction on the five test events, but that direction is not
+> stable across training disasters. Neither should yet be described as a
+> stand-alone damage classifier.
 
 Do not claim:
 
@@ -141,28 +144,138 @@ Do not claim:
 - statistical significance beyond the five available independent test events;
 - novelty for DS itself.
 
-## 9. Next Hypothesis And Decision Gate
+## 9. Training-Event Rank And Construction Pressure Test
 
-The next experiment should test a two-stage, label-free composition developed
-on training events only:
+New hypotheses were developed only on official training disasters. A balanced
+rank sweep used 20 hash-selected patches per each of 11 events; a larger
+confirmation used 100 per event (`1,100/1,100`, zero failures).
+
+Findings:
+
+1. Projector evidence increases strongly from rank 2 to rank 8 and then
+   plateaus. Rank 8 and rank 11 are practically similar.
+2. Centered PCA and dual uncentered-autocorrelation constructions are also
+   similar at high rank. On the 1,100-patch run, uncentered rank 11 exceeds
+   centered rank 11 by only `+0.00046` mean event AP for full-scene retrieval.
+3. Uncentered rank-11 projector beats raw L2 on all 11 training events:
+   delta `+0.01804`, bootstrap interval `[+0.01017,+0.02651]`.
+4. Equal-rank mean/product combinations of projector and raw L2 are rejected.
+   Mean fusion loses to projector by `-0.01339` AP, interval
+   `[-0.02079,-0.00662]`, with 0/11 wins.
+5. DS does **not** consistently beat cross-reconstruction on training events.
+   At uncentered rank 11 the delta is `+0.00089`, interval
+   `[-0.00036,+0.00239]`, with 5/11 wins. The test-event 5/5 result is therefore
+   event-dependent.
+6. On the identical 100-per-event hash sample, centered rank-11 projector
+   distance beats IR-MAD for full-scene retrieval by `+0.00814` mean event AP,
+   event-bootstrap interval `[+0.00470,+0.01171]`, with 10/11 wins and
+   Wilcoxon `p=0.00293`. It also beats IR-MAD for building localization by
+   `+0.03077` AP with 11/11 wins. This does not extend to damage versus intact
+   buildings, where raw L2 and spectral angle are stronger.
+
+![Training rank sensitivity](assets/xbd_s12_external_2026-06-22/train_projector_rank_sensitivity.png)
+
+![Training task confirmation](assets/xbd_s12_external_2026-06-22/train_task_confirmation.png)
+
+## 10. Fixed Review-Budget Interpretation
+
+For an analyst-triage interpretation, pixels are ranked within each patch and
+only the top 1%, 5%, or 10% are treated as a fixed review budget. Ties crossing
+the budget receive an expected fractional count, avoiding arbitrary flattened
+pixel-order preference. These metrics were introduced after the primary test
+AP result, so unseen-test values are secondary post-hoc operational analysis,
+not predeclared confirmatory endpoints.
+
+| Split | Method | Recall at 1% | Lift at 1% | Recall at 5% | Lift at 5% | Recall at 10% | Lift at 10% |
+|---|---|---:|---:|---:|---:|---:|---:|
+| 11 training events | Projector | **0.170** | **17.04x** | **0.382** | **7.64x** | **0.504** | **5.04x** |
+| 11 training events | IR-MAD | 0.106 | 10.60x | 0.302 | 6.03x | 0.434 | 4.34x |
+| 5 unseen test events | Projector | **0.078** | **7.84x** | **0.247** | **4.93x** | **0.373** | **3.73x** |
+| 5 unseen test events | IR-MAD | 0.049 | 4.91x | 0.178 | 3.55x | 0.321 | 3.21x |
+
+Reviewing the highest-scoring 5% of test pixels retrieves about 24.7% of
+labeled damaged pixels on average. This supports candidate ranking, not
+automatic segmentation or damage-severity estimation.
+
+![Operational budget metrics](assets/xbd_s12_external_2026-06-22/operational_budget_metrics.png)
+
+## 11. Exploratory Nuisance Check
+
+Patch-level AP deltas were stratified by event-relative tertiles of minimum
+pre/post CloudScore+, absolute CloudScore+ change, and date gap. The analysis
+uses 1,159 test patches containing both positive and negative full-scene
+pixels. The observed within-event correlations are small (`|rho| <= 0.113`).
+All five-event bootstrap intervals for high-minus-low cloud strata cross zero.
+Date gaps have too few distinct within-event levels to support a paired
+high-versus-low event interval.
+
+No cloud/date robustness claim is therefore supported. The result does not
+collapse under an obvious tested cloud-score stratum, but registration quality
+and another independent event collection remain open gates.
+
+![Nuisance strata](assets/xbd_s12_external_2026-06-22/nuisance_stratification.png)
+
+## 12. Building-Object Candidate Retrieval
+
+Original xBD polygons were sampled at Sentinel-2 pixel centers and intersected
+with the official downsampled categorical mask. Objects that do not survive at
+128×128 resolution are excluded. This yields 75,802 visible objects in the
+1,100-patch training confirmation and 103,653 in the complete test split.
+
+An object is counted as hit when any retained polygon pixel exceeds a fixed
+scene percentile. At the 5% threshold:
+
+| Split | Method | Damaged-building recall | Intact-building hit rate |
+|---|---|---:|---:|
+| 11 training events | Projector | **0.452** | 0.377 |
+| 11 training events | IR-MAD | 0.307 | 0.252 |
+| 11 training events | PCA-diff | 0.170 | **0.133** |
+| 11 training events | Raw L2 | 0.109 | **0.087** |
+| 5 unseen test events | Projector | **0.358** | 0.267 |
+| 5 unseen test events | IR-MAD | 0.209 | 0.200 |
+| 5 unseen test events | PCA-diff | 0.181 | 0.081 |
+| 5 unseen test events | Raw L2 | 0.100 | **0.051** |
+
+Projector recall exceeds IR-MAD at 5% by `+0.1456` on training events,
+interval `[+0.1077,+0.1885]`, 11/11 wins. On unseen events the delta is
+`+0.1487`, interval `[+0.0876,+0.2250]`, 5/5 wins. The smallest available
+two-sided Wilcoxon p-value remains `0.0625` for five test events.
+
+The coverage comes with lower specificity. For damaged-versus-intact object
+classification using mean polygon score, PCA-diff is strongest on test events
+(mean AP `0.3616`) and projector is lower (`0.3166`). Projector also hits more
+intact buildings. It is therefore a high-coverage candidate generator, not an
+object damage classifier.
+
+Maximum aggregation favors large polygons, but the projector lead over IR-MAD
+persists for event-relative small, medium, and large objects and under p90
+aggregation. On test small objects at 5%, p90 recall is `0.1965` for projector
+and `0.1346` for IR-MAD. Object size is a strong sensitivity, not a complete
+explanation of the method difference.
+
+![Object candidate tradeoff](assets/xbd_s12_external_2026-06-22/object_candidate_tradeoff.png)
+
+![Object size sensitivity](assets/xbd_s12_external_2026-06-22/object_size_sensitivity.png)
+
+## 13. Next Hypothesis And Decision Gate
+
+The naive two-stage mean/product composition has been tested and rejected. The
+surviving hypothesis is narrower:
 
 ```text
-spatial projector evidence (where changed structures may be)
-    + radiometric evidence (how strongly their spectra changed)
-    -> full-scene damaged-candidate ranking
+high-rank projector map = label-free changed-structure candidate evidence
+raw radiometry = a separate conditional descriptor, not a score to average
 ```
 
-Candidate fixed combinations are equal percentile-rank averaging and
-multiplication of projector distance with raw L2 or spectral angle. They must
-be evaluated by event-group cross-validation on training disasters. The five
-test events have already been inspected and must not select the combination.
+The identical-sample IR-MAD comparison, fixed review budgets, and available
+cloud/date nuisance checks are complete. The next decisive checks are:
 
-Before another external claim, also pressure-test centered rank
-`{2,4,6,8,10,11}` versus uncentered autocorrelation construction on training
-events. Continue only if the qualitative conclusion is stable across rank,
-event, and boundary support.
+1. explicit registration-error estimation or perturbation sensitivity;
+2. another independent event set before promoting projector geometry as a new
+   detector;
+3. only then, a neural-prior test using a fixed projector channel.
 
-## 10. Reproduction
+## 14. Reproduction
 
 Primary run:
 
@@ -179,5 +292,16 @@ Boundary stress:
 Figures:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+```
+
+Training-event rank sweep and confirmation:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-develop-geometry --ranks 2,4,6,8,10,11 --basis-modes centered_pca,uncentered_autocorrelation --patches-per-event 20 --bootstrap 3000 --output-dir phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-develop-geometry --ranks 8,11 --basis-modes centered_pca,uncentered_autocorrelation --patches-per-event 100 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split train --patches-per-event 100 --seed 24680 --event-only --maps-per-event 0 --rank 11 --bootstrap 5000 --metric-workers 4 --output-dir phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --seed 1234 --event-only --maps-per-event 0 --rank 11 --bootstrap 5000 --metric-workers 4 --output-dir phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split train --patches-per-event 100 --seed 24680 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_train100_20260622_140604
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split test --seed 1234 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_test_20260622_140133
 ```

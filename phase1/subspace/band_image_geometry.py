@@ -24,6 +24,7 @@ from phase1.ds import pca_utils
 
 
 Array = np.ndarray
+BASIS_MODES = ("centered_pca", "uncentered_autocorrelation")
 
 
 @dataclass(frozen=True)
@@ -41,12 +42,53 @@ class BandImageDSResult:
     post_rank: int
 
 
+def fit_band_image_basis(
+    data: Array,
+    *,
+    rank: int,
+    seed: int,
+    basis_mode: str,
+) -> pca_utils.PCABasis:
+    """Fit one declared band-image subspace construction."""
+    if basis_mode == "centered_pca":
+        return pca_utils.fit_pca_basis(
+            data,
+            rank=rank,
+            variance_threshold=None,
+            random_state=seed,
+            use_randomized=True,
+        )
+    if basis_mode == "uncentered_autocorrelation":
+        # For band images d=N_spatial can be very large while n=B is only
+        # 12/13. The left singular vectors of X are exactly the nonzero
+        # eigenvectors of XX^T/n, without materializing an N x N operator.
+        effective_rank = max(1, min(int(rank), min(data.shape)))
+        values = data.astype(np.float64, copy=False)
+        basis, singular_values, _ = np.linalg.svd(values, full_matrices=False)
+        energy = singular_values * singular_values
+        total = float(np.sum(energy))
+        explained = (
+            energy[:effective_rank] / total
+            if total > 0.0
+            else np.zeros(effective_rank, dtype=np.float64)
+        )
+        return pca_utils.PCABasis(
+            basis=basis[:, :effective_rank].astype(np.float32, copy=False),
+            explained_variance_ratio=explained.astype(np.float32, copy=False),
+            rank=effective_rank,
+        )
+    raise ValueError(
+        f"Unknown basis_mode={basis_mode!r}; expected one of {BASIS_MODES}."
+    )
+
+
 def band_image_ds_values(
     first: Array,
     second: Array,
     *,
     rank: int,
     seed: int = 1234,
+    basis_mode: str = "centered_pca",
     eps: float = 1e-8,
 ) -> BandImageDSResult:
     """Return canonical DS evidence for paired ``N_spatial x B`` matrices."""
@@ -60,19 +102,17 @@ def band_image_ds_values(
         raise ValueError("Band-image DS input contains non-finite values.")
 
     effective_rank = max(1, min(int(rank), first.shape[1] - 1))
-    pre = pca_utils.fit_pca_basis(
+    pre = fit_band_image_basis(
         first,
         rank=effective_rank,
-        variance_threshold=None,
-        random_state=seed,
-        use_randomized=True,
+        seed=seed,
+        basis_mode=basis_mode,
     )
-    post = pca_utils.fit_pca_basis(
+    post = fit_band_image_basis(
         second,
         rank=effective_rank,
-        variance_threshold=None,
-        random_state=seed,
-        use_randomized=True,
+        seed=seed,
+        basis_mode=basis_mode,
     )
     difference_basis = pca_utils.build_difference_subspace(
         pre.basis,
@@ -123,6 +163,7 @@ def band_image_spatial_control_values(
     rank: int,
     seed: int,
     mode: str,
+    basis_mode: str = "centered_pca",
     eps: float = 1e-12,
     first_basis: Array | None = None,
     second_basis: Array | None = None,
@@ -137,14 +178,22 @@ def band_image_spatial_control_values(
 
     first64 = first.astype(np.float64, copy=False)
     second64 = second.astype(np.float64, copy=False)
-    # fit_pca_basis(X) fits sklearn PCA on X.T: the B columns are samples, so
-    # centering subtracts the across-band mean at every spatial coordinate.
-    first_centered = first64 - np.mean(first64, axis=1, keepdims=True)
-    second_centered = second64 - np.mean(second64, axis=1, keepdims=True)
+    # Centered PCA subtracts the across-band mean at every spatial coordinate;
+    # autocorrelation subspaces intentionally retain that mean direction.
+    if basis_mode == "centered_pca":
+        first_working = first64 - np.mean(first64, axis=1, keepdims=True)
+        second_working = second64 - np.mean(second64, axis=1, keepdims=True)
+    elif basis_mode == "uncentered_autocorrelation":
+        first_working = first64
+        second_working = second64
+    else:
+        raise ValueError(
+            f"Unknown basis_mode={basis_mode!r}; expected one of {BASIS_MODES}."
+        )
 
     if mode == "spatial_gram":
-        first_scaled = first_centered / max(float(np.linalg.norm(first_centered)), eps)
-        second_scaled = second_centered / max(float(np.linalg.norm(second_centered)), eps)
+        first_scaled = first_working / max(float(np.linalg.norm(first_working)), eps)
+        second_scaled = second_working / max(float(np.linalg.norm(second_working)), eps)
         first_gram_small = first_scaled.T @ first_scaled
         second_gram_small = second_scaled.T @ second_scaled
         cross_gram_small = first_scaled.T @ second_scaled
@@ -163,20 +212,18 @@ def band_image_spatial_control_values(
 
     effective_rank = max(1, min(int(rank), first.shape[1] - 1))
     if first_basis is None:
-        first_basis = pca_utils.fit_pca_basis(
+        first_basis = fit_band_image_basis(
             first,
             rank=effective_rank,
-            variance_threshold=None,
-            random_state=seed,
-            use_randomized=True,
+            seed=seed,
+            basis_mode=basis_mode,
         ).basis
     if second_basis is None:
-        second_basis = pca_utils.fit_pca_basis(
+        second_basis = fit_band_image_basis(
             second,
             rank=effective_rank,
-            variance_threshold=None,
-            random_state=seed,
-            use_randomized=True,
+            seed=seed,
+            basis_mode=basis_mode,
         ).basis
     if first_basis.shape != (first.shape[0], effective_rank) or second_basis.shape != (
         second.shape[0],
@@ -202,10 +249,10 @@ def band_image_spatial_control_values(
         ).astype(np.float32)
 
     if mode == "cross_reconstruction":
-        second_cross = second_centered - first_basis @ (first_basis.T @ second_centered)
-        first_cross = first_centered - second_basis @ (second_basis.T @ first_centered)
-        second_self = second_centered - second_basis @ (second_basis.T @ second_centered)
-        first_self = first_centered - first_basis @ (first_basis.T @ first_centered)
+        second_cross = second_working - first_basis @ (first_basis.T @ second_working)
+        first_cross = first_working - second_basis @ (second_basis.T @ first_working)
+        second_self = second_working - second_basis @ (second_basis.T @ second_working)
+        first_self = first_working - first_basis @ (first_basis.T @ first_working)
         excess = (
             np.sum(second_cross * second_cross, axis=1)
             - np.sum(second_self * second_self, axis=1)
