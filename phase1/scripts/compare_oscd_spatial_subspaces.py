@@ -69,6 +69,19 @@ from phase1.subspace.pif_nuisance import (
     multiscale_pif_delta_residual_score,
     multiscale_spatial_features,
 )
+from phase1.subspace.multiscale_band_image import (
+    DEFAULT_OFFSETS,
+    SHIFTED_OFFSETS,
+    multiscale_band_image_geometry,
+)
+from phase1.subspace.successive_subspace_features import (
+    successive_saab_band_image_geometry,
+)
+from phase1.subspace.wavelet_band_image import (
+    decimated_wavelet_band_image_ds,
+    fill_invalid_nearest,
+    stationary_wavelet_band_image_geometry,
+)
 
 
 BAND_ORDER = ["B01", "B02", "B03", "B04", "B05", "B06", "B07", "B08", "B09", "B10", "B11", "B12", "B8A"]
@@ -87,6 +100,11 @@ class MethodSpec:
     score_mode: str = "energy_sq"
     pyramid_levels: tuple[int, ...] | None = None
     spatial_sigmas: tuple[float, ...] | None = None
+    offset_mode: str = "fixed"
+    output_mode: str = "fused"
+    wavelet: str = "haar"
+    wavelet_levels: int = 0
+    hops: int = 0
 
 
 @dataclass
@@ -134,7 +152,14 @@ def parse_args() -> argparse.Namespace:
             "smoothed_pif_delta_residual_sigma1_r1, multiscale_l2_sigma0_1_2, "
             "multiscale_pca_sigma0_1_2, multiscale_pif_delta_residual_sigma0_1_2_r1, "
             "rank_fusion_pca_irmad, rank_fusion_pca_band_irmad, "
-            "spatial_pyramid_1_2_4_energy, spatial_pyramid_1_2_4_norm, spatial_pyramid_1_2_4_8_norm. "
+            "spatial_pyramid_1_2_4_energy, spatial_pyramid_1_2_4_norm, spatial_pyramid_1_2_4_8_norm, "
+            "multiscale_band_image_l1, multiscale_band_image_l2, multiscale_band_image_l4, "
+            "multiscale_band_image_1_2_4_fixed, multiscale_band_image_1_2_4_shifted, "
+            "multiscale_band_image_product_1_2_4_shifted, "
+            "multiscale_band_image_projector_1_2_4_shifted, multiscale_band_image_cross_1_2_4_shifted, "
+            "wavelet_swt_haar_l2_ds_fused, wavelet_swt_haar_l2_ds_ll, "
+            "wavelet_swt_haar_l2_ds_detail, wavelet_dwt_haar_l2_ds_fused, "
+            "successive_saab_h2_ds_fused, successive_saab_h2_ds_product. "
             "Legacy aliases such as flatbands are still accepted."
         ),
     )
@@ -153,6 +178,16 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
     ap.add_argument("--pif_probability", "--pif-probability", type=float, default=0.9)
     ap.add_argument("--pif_fallback_fraction", "--pif-fallback-fraction", type=float, default=0.1)
+    ap.add_argument("--ssl_energy_threshold", "--ssl-energy-threshold", type=float, default=0.95)
+    ap.add_argument("--ssl_max_channels", "--ssl-max-channels", type=int, default=16)
+    ap.add_argument("--ssl_max_fit_samples", "--ssl-max-fit-samples", type=int, default=30000)
+    ap.add_argument(
+        "--feature_device",
+        "--feature-device",
+        choices=("auto", "cpu", "cuda"),
+        default="auto",
+        help="Device for successive Saab convolutions; PCA/DS fitting remains on CPU.",
+    )
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=True)
     return ap.parse_args()
 
@@ -289,6 +324,76 @@ def parse_method_spec(text: str) -> MethodSpec:
     if key in pyramid_specs:
         levels, score_mode = pyramid_specs[key]
         return MethodSpec(name=key, family="spatial_pyramid", score_mode=score_mode, pyramid_levels=levels)
+
+    hierarchy_specs = {
+        "multiscale_band_image_l1": ((1,), "fixed", "raw_scale", "ds_magnitude"),
+        "multiscale_band_image_l2": ((2,), "fixed", "raw_scale", "ds_magnitude"),
+        "multiscale_band_image_l4": ((4,), "fixed", "raw_scale", "ds_magnitude"),
+        "multiscale_band_image_1_2_4_fixed": ((1, 2, 4), "fixed", "fused", "ds_magnitude"),
+        "multiscale_band_image_1_2_4_shifted": ((1, 2, 4), "shifted", "fused", "ds_magnitude"),
+        "multiscale_band_image_product_1_2_4_shifted": ((1, 2, 4), "shifted", "product", "ds_magnitude"),
+        "multiscale_band_image_projector_1_2_4_shifted": ((1, 2, 4), "shifted", "product", "projector_distance"),
+        "multiscale_band_image_cross_1_2_4_shifted": ((1, 2, 4), "shifted", "fused", "cross_reconstruction"),
+        "multiscale_band_image_pca_1_2_4_shifted": ((1, 2, 4), "shifted", "fused", "pca_diff"),
+    }
+    if key in hierarchy_specs:
+        levels, offset_mode, output_mode, score_mode = hierarchy_specs[key]
+        return MethodSpec(
+            name=key,
+            family="multiscale_band_image",
+            pyramid_levels=levels,
+            offset_mode=offset_mode,
+            output_mode=output_mode,
+            score_mode=score_mode,
+        )
+
+    wavelet_match = re.fullmatch(
+        r"wavelet_(?P<transform>swt|dwt)_(?P<wavelet>haar|db2)_l(?P<levels>\d+)_"
+        r"(?P<geometry>ds|projector|cross|l2|pca)_(?P<output>fused|ll|detail)",
+        key,
+    )
+    if wavelet_match:
+        geometry_modes = {
+            "ds": "ds_magnitude",
+            "projector": "projector_distance",
+            "cross": "cross_reconstruction",
+            "l2": "raw_l2",
+            "pca": "pca_diff",
+        }
+        transform = wavelet_match.group("transform")
+        geometry = wavelet_match.group("geometry")
+        if transform == "dwt" and geometry != "ds":
+            raise ValueError("DWT inverse reconstruction currently supports canonical DS only.")
+        return MethodSpec(
+            name=key,
+            family="wavelet_band_image",
+            aggregator=transform,
+            score_mode=geometry_modes[geometry],
+            output_mode=wavelet_match.group("output"),
+            wavelet=wavelet_match.group("wavelet"),
+            wavelet_levels=int(wavelet_match.group("levels")),
+        )
+
+    successive_match = re.fullmatch(
+        r"successive_saab_h(?P<hops>\d+)_(?P<geometry>ds|projector|cross|l2|pca)_"
+        r"(?P<output>fused|product|hop1|hop2)",
+        key,
+    )
+    if successive_match:
+        geometry_modes = {
+            "ds": "ds_magnitude",
+            "projector": "projector_distance",
+            "cross": "cross_reconstruction",
+            "l2": "raw_l2",
+            "pca": "pca_diff",
+        }
+        return MethodSpec(
+            name=key,
+            family="successive_saab",
+            score_mode=geometry_modes[successive_match.group("geometry")],
+            output_mode=successive_match.group("output"),
+            hops=int(successive_match.group("hops")),
+        )
 
     if key in {"band_image_ds", "band_image", "band_images", "band_image_energy", "flatbands", "flat_bands", "flattened_band", "flattened_bands"}:
         return MethodSpec(name="band_image_ds", family="band_image", score_mode="energy_sq")
@@ -566,6 +671,343 @@ def spatial_pyramid_ds_score(
         verification="must beat or explain global/window/patch DS and be pressure-tested against PCA-diff, IR-MAD, labels, maps, and grid-boundary artifacts",
     )
     return output, card
+
+
+def _save_subcomponent_maps(
+    output_dir: Path,
+    method: str,
+    maps: dict[str, np.ndarray],
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+) -> dict[str, str]:
+    component_dir = output_dir / "subcomponents" / method
+    component_dir.mkdir(parents=True, exist_ok=True)
+    outputs: dict[str, str] = {}
+    for name, score in maps.items():
+        safe_name = re.sub(r"[^a-zA-Z0-9_.-]+", "_", str(name))
+        png_path = component_dir / f"{safe_name}.png"
+        save_score_png(png_path, score, valid_mask, args.score_percentile)
+        outputs[name] = str(png_path)
+        if args.save_npy:
+            np.save(component_dir / f"{safe_name}.npy", score.astype(np.float32))
+    return outputs
+
+
+def multiscale_band_image_hierarchy_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    if not spec.pyramid_levels:
+        raise ValueError(f"No hierarchy levels configured for {spec.name}.")
+    offsets = SHIFTED_OFFSETS if spec.offset_mode == "shifted" else DEFAULT_OFFSETS
+    cache = getattr(args, "_multiscale_band_image_cache", None)
+    if cache is None:
+        cache = {}
+        setattr(args, "_multiscale_band_image_cache", cache)
+    cache_key = (
+        tuple(spec.pyramid_levels),
+        tuple(offsets),
+        int(args.rank),
+        int(args.seed),
+        spec.score_mode,
+    )
+    if cache_key not in cache:
+        cache[cache_key] = multiscale_band_image_geometry(
+            x1,
+            x2,
+            valid_mask,
+            rank=args.rank,
+            levels=spec.pyramid_levels,
+            offsets=offsets,
+            seed=args.seed,
+            score_mode=spec.score_mode,
+            min_valid_pixels=max(32, args.rank + 1),
+        )
+    result = cache[cache_key]
+    if spec.output_mode == "product":
+        score = result.product_weighted_map
+        score_definition = (
+            "quantile-scaled local maps weighted by label-free cell principal-angle "
+            "distance, averaged as product-Grassmann factors across levels"
+        )
+    elif spec.output_mode == "raw_scale":
+        if len(result.scale_maps) != 1:
+            raise ValueError("raw_scale output requires exactly one hierarchy level.")
+        score = next(iter(result.scale_maps.values()))
+        score_definition = "raw cellwise spatial Band-Image score at one grid level"
+    elif spec.output_mode == "fused":
+        score = result.fused_map
+        score_definition = "equal mean of unlabeled 99.5%-quantile-scaled level maps"
+    else:
+        raise ValueError(f"Unknown hierarchy output mode: {spec.output_mode}.")
+
+    _save_subcomponent_maps(
+        args.output_dir,
+        spec.name,
+        {f"level_{level}": score_map for level, score_map in result.scale_maps.items()},
+        valid_mask,
+        args,
+    )
+    diagnostics = {
+        "method": spec.name,
+        "levels": list(result.levels),
+        "offsets": [list(offset) for offset in result.offsets],
+        "score_mode": result.score_mode,
+        "rank": result.rank,
+        "product_geodesic_distance": result.product_geodesic_distance,
+        "product_chordal_distance": result.product_chordal_distance,
+        "cell_records": [asdict(record) for record in result.cell_records],
+    }
+    diagnostics_path = args.output_dir / f"geometry_{spec.name}.json"
+    diagnostics_path.write_text(json.dumps(diagnostics, indent=2), encoding="utf-8")
+    level_text = ", ".join(f"{level}x{level}" for level in result.levels)
+    card = ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "Fukui/Maki canonical first-order DS with the project's senpai-motivated "
+            "global-to-local spatial hierarchy; product distance uses principal angles "
+            "between corresponding Grassmann factors."
+        ),
+        sample_unit="one complete flattened band image inside one corresponding spatial cell",
+        input_object=f"per date/cell: X_(t,g,c) in R^(N_cell x 13), levels {level_text}",
+        subspace_count=f"one pre/post spatial subspace pair per cell and grid phase; factors={len(result.cell_records)}",
+        basis_shape=f"per cell U_pre,U_post in R^(N_cell x <= {args.rank})",
+        fitting_method=(
+            f"centered rank-{args.rank} PCA across 13 band-image samples; "
+            f"grid phases={spec.offset_mode}"
+        ),
+        score_definition=score_definition,
+        spatial_information=(
+            "preserves pixel coordinates inside each cell and coarse-to-fine regional support; "
+            "fixed grids remain phase-sensitive and shifted phases are explicitly tested"
+        ),
+        code_path="phase1.subspace.multiscale_band_image.multiscale_band_image_geometry",
+        verification=(
+            f"formula tests plus OSCD labels and matched local controls; geometry diagnostics={diagnostics_path}"
+        ),
+    )
+    return score.astype(np.float32, copy=False), card
+
+
+def wavelet_band_image_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    cache = getattr(args, "_wavelet_band_image_cache", None)
+    if cache is None:
+        cache = {}
+        setattr(args, "_wavelet_band_image_cache", cache)
+    cache_key = (
+        spec.aggregator,
+        spec.wavelet,
+        int(spec.wavelet_levels),
+        int(args.rank),
+        int(args.seed),
+        spec.score_mode,
+    )
+    if cache_key not in cache:
+        if spec.aggregator == "swt":
+            cache[cache_key] = stationary_wavelet_band_image_geometry(
+                x1,
+                x2,
+                valid_mask,
+                rank=args.rank,
+                levels=spec.wavelet_levels,
+                wavelet=spec.wavelet,
+                score_mode=spec.score_mode,
+                seed=args.seed,
+            )
+        elif spec.aggregator == "dwt":
+            cache[cache_key] = decimated_wavelet_band_image_ds(
+                x1,
+                x2,
+                valid_mask,
+                rank=args.rank,
+                levels=spec.wavelet_levels,
+                wavelet=spec.wavelet,
+                seed=args.seed,
+            )
+        else:
+            raise ValueError(f"Unknown wavelet transform: {spec.aggregator}.")
+    result = cache[cache_key]
+    if spec.output_mode == "ll":
+        score = result.approximation_map
+    elif spec.output_mode == "detail":
+        score = result.detail_map
+    elif spec.output_mode == "fused":
+        score = result.fused_map
+    else:
+        raise ValueError(f"Unknown wavelet output mode: {spec.output_mode}.")
+    outputs = _save_subcomponent_maps(
+        args.output_dir,
+        spec.name,
+        result.component_maps,
+        valid_mask,
+        args,
+    )
+    diagnostics_path = args.output_dir / f"geometry_{spec.name}.json"
+    diagnostics_path.write_text(
+        json.dumps(
+            {
+                "method": spec.name,
+                "transform": result.transform,
+                "wavelet": result.wavelet,
+                "levels": result.levels,
+                "rank": result.rank,
+                "score_mode": result.score_mode,
+                "component_geodesic": result.component_geodesic,
+                "component_outputs": outputs,
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
+    transform_name = (
+        "stationary undecimated wavelet"
+        if result.transform == "swt"
+        else "critically sampled DWT with inverse reconstruction"
+    )
+    card = ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "Mallat multiresolution wavelet analysis implemented by PyWavelets; "
+            "Fukui/Maki canonical DS applied separately to matching coefficient groups."
+        ),
+        sample_unit="one flattened wavelet coefficient map for each Sentinel-2 band",
+        input_object=(
+            f"per date/scale/orientation: X_(t,s,o) in R^(N_coeff x 13), "
+            f"wavelet={spec.wavelet}, levels={spec.wavelet_levels}"
+        ),
+        subspace_count="one pre/post spatial subspace pair for LL and each LH/HL/HH scale component",
+        basis_shape=f"U_pre,U_post in R^(N_coeff x <= {args.rank}) per component",
+        fitting_method=f"{transform_name}, then centered rank-{args.rank} band-image PCA",
+        score_definition=(
+            f"{spec.score_mode} component maps; output={spec.output_mode}; equal unlabeled quantile fusion"
+        ),
+        spatial_information=(
+            "retains localized scale/orientation support; SWT remains full resolution, while DWT "
+            "uses inverse reconstruction of projected signed coefficients"
+        ),
+        code_path="phase1.subspace.wavelet_band_image",
+        verification=f"equal-image and synthetic tests plus component diagnostics={diagnostics_path}",
+    )
+    return score.astype(np.float32, copy=False), card
+
+
+def successive_saab_score(
+    x1: np.ndarray,
+    x2: np.ndarray,
+    valid_mask: np.ndarray,
+    args: argparse.Namespace,
+    spec: MethodSpec,
+) -> tuple[np.ndarray, ConstructionCard]:
+    requested_device = str(args.feature_device)
+    if requested_device == "auto":
+        import torch
+
+        device = "cuda" if torch.cuda.is_available() else "cpu"
+    else:
+        device = requested_device
+    cache = getattr(args, "_successive_saab_cache", None)
+    if cache is None:
+        cache = {}
+        setattr(args, "_successive_saab_cache", cache)
+    cache_key = (
+        int(spec.hops),
+        int(args.rank),
+        int(args.seed),
+        spec.score_mode,
+        float(args.ssl_energy_threshold),
+        int(args.ssl_max_channels),
+        int(args.ssl_max_fit_samples),
+        device,
+    )
+    if cache_key not in cache:
+        first_filled = fill_invalid_nearest(x1, valid_mask)
+        second_filled = fill_invalid_nearest(x2, valid_mask)
+        cache[cache_key] = successive_saab_band_image_geometry(
+            first_filled,
+            second_filled,
+            valid_mask,
+            rank=args.rank,
+            hops=spec.hops,
+            patch_size=3,
+            pool_size=2,
+            energy_threshold=args.ssl_energy_threshold,
+            max_output_channels=tuple([args.ssl_max_channels] * spec.hops),
+            max_fit_samples=args.ssl_max_fit_samples,
+            seed=args.seed,
+            score_mode=spec.score_mode,
+            device=device,
+        )
+    result = cache[cache_key]
+    if spec.output_mode == "fused":
+        score = result.fused_map
+    elif spec.output_mode == "product":
+        score = result.product_weighted_map
+    elif spec.output_mode.startswith("hop"):
+        hop = int(spec.output_mode.replace("hop", ""))
+        if hop not in result.hop_maps:
+            raise ValueError(f"Requested hop {hop}, but only {len(result.hop_maps)} hops exist.")
+        score = result.hop_maps[hop]
+    else:
+        raise ValueError(f"Unknown successive output mode: {spec.output_mode}.")
+    outputs = _save_subcomponent_maps(
+        args.output_dir,
+        spec.name,
+        {f"hop_{hop}": score_map for hop, score_map in result.hop_maps.items()},
+        valid_mask,
+        args,
+    )
+    diagnostics = {
+        "method": spec.name,
+        "device": device,
+        "hops": spec.hops,
+        "rank": args.rank,
+        "score_mode": spec.score_mode,
+        "output_mode": spec.output_mode,
+        "hop_geodesic": result.hop_geodesic,
+        "hop_outputs": outputs,
+        "stages": [
+            {
+                "patch_size": stage.patch_size,
+                "pool_size": stage.pool_size,
+                "input_channels": stage.input_channels,
+                "output_channels": stage.output_channels,
+                "ac_explained_variance_ratio": stage.ac_explained_variance_ratio.tolist(),
+            }
+            for stage in result.stages
+        ],
+    }
+    diagnostics_path = args.output_dir / f"geometry_{spec.name}.json"
+    diagnostics_path.write_text(json.dumps(diagnostics, indent=2), encoding="utf-8")
+    card = ConstructionCard(
+        method=spec.name,
+        source_reference=(
+            "PixelHop successive-subspace representation: 3x3 near-to-far neighborhood "
+            "expansion, shared unsupervised DC/AC Saab-PCA stages, and 2x2 max pooling. "
+            "No LAG/classifier is used, so this is not a full PixelHop classifier."
+        ),
+        sample_unit="one flattened shared Saab response map at each hop",
+        input_object="per hop/date: X_(t,h) in R^(N_h x K_h), with one column per response channel",
+        subspace_count=f"one pre/post spatial subspace pair at each of {spec.hops} hops",
+        basis_shape=f"U_pre,U_post in R^(N_h x <= {args.rank})",
+        fitting_method=(
+            f"pair-shared DC/AC transform, energy={args.ssl_energy_threshold}, "
+            f"max channels={args.ssl_max_channels}, device={device}"
+        ),
+        score_definition=f"{spec.score_mode} per hop; output={spec.output_mode}",
+        spatial_information="successive 3x3 neighborhoods enlarge receptive field; pooling produces explicit multiscale response maps",
+        code_path="phase1.subspace.successive_subspace_features",
+        verification=f"DC/AC orthogonality and equal-pair tests plus diagnostics={diagnostics_path}",
+    )
+    return score.astype(np.float32, copy=False), card
 
 
 def patch_valid_mask(valid_mask: np.ndarray, patch_size: int) -> np.ndarray:
@@ -1614,6 +2056,18 @@ def main() -> None:
             score, card = local_ds_magnitude_score(x1_norm, x2_norm, eval_mask, args, spec)
         elif spec.family == "spatial_pyramid":
             score, card = spatial_pyramid_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
+        elif spec.family == "multiscale_band_image":
+            score, card = multiscale_band_image_hierarchy_score(
+                x1_norm, x2_norm, eval_mask, args, spec
+            )
+        elif spec.family == "wavelet_band_image":
+            score, card = wavelet_band_image_score(
+                x1_norm, x2_norm, eval_mask, args, spec
+            )
+        elif spec.family == "successive_saab":
+            score, card = successive_saab_score(
+                x1_norm, x2_norm, eval_mask, args, spec
+            )
         elif spec.family == "patch_vector":
             score, card, method_mask = patch_vector_ds_score(x1_norm, x2_norm, eval_mask, args, spec)
             method_mask = method_mask & eval_mask

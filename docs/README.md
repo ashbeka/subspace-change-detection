@@ -24,43 +24,46 @@ Read these first:
 4. `SECOND_OPINION_RESEARCH_CONTEXT.md`
    - Neutral context package for Claude/Gemini/another reviewer. Use it when asking an external model or person to challenge the project direction.
 
-5. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
+5. `experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`
+   - Current strongest internal OSCD result: exact successive Saab-DS construction, matched-feature controls, frozen test metrics, seed stability, pyramid/wavelet negative gates, and failure cases.
+
+6. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
    - Current spatial-DS decision report: corrected Celik/IR-MAD pressure baselines, Band-Image rank sensitivity, label-free fusion, fixed-grid pyramid stop decision, and next evidence gate.
 
-6. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
+7. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
    - Synthetic and real-background controlled tests of unordered, trajectory, first/second DS, local eigenspectrum, nuisance robustness, and the independent-label evidence gate.
 
-7. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
+8. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
    - Curated report for the historical OSCD 3-seed neural sweep.
 
-8. `experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`
+9. `experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`
    - Independent-label SpaceNet 7 gate for rolling first/second trajectory DS; records the negative result against standardized radiometric controls.
 
-9. `experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`
+10. `experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`
    - Controlled MultiSenGE test of Randomized Time Warping against snapshot-subspace, Fourier/harmonic, DTW/TWDTW, M-SSA, and radiometric controls; records the no-go decision for a natural-transition RTW study.
 
-10. `experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`
+11. `experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`
    - Natural-label and timing-invariance transfer study on all four official BreizhCrops regions with nested RTW selection and 22 killer controls.
 
-11. `experiment_reports/hsi_local_moment_geometry_2026-06-21.md`
+12. `experiment_reports/hsi_local_moment_geometry_2026-06-21.md`
    - Four-dataset held-out test of local hyperspectral mean/scale/eigenspectrum/orientation factorization, DS projection, and basis-invariant band attribution.
 
-12. `experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`
+13. `experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`
    - Consolidated Codex/Claude/Antigravity method-results matrix, Sensei-task status, ranked research problems, safe claims, and seminar recommendation.
 
-13. `experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`
+14. `experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`
    - Decisive matched-null experiment for Band-Image DS versus spatial Gram, projector, cross-reconstruction, spatial PCA, IR-MAD, and label-free fusions.
 
-14. `experiment_reports/xbd_s12_external_validation_2026-06-22.md`
+15. `experiment_reports/xbd_s12_external_validation_2026-06-22.md`
    - Frozen event-disjoint xBD-S12 transfer, damage/localization task decomposition, matched-control statistics, and boundary stress test.
 
-15. `experiment_reports/hsi_band_image_transfer_2026-06-22.md`
+16. `experiment_reports/hsi_band_image_transfer_2026-06-22.md`
    - Fixed rank-11 transfer to four labeled HSI pairs, including the positive Hermiston regime and failed broad transfer.
 
-16. `experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
+17. `experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
    - Nine-AOI, 197-transition RGB building-appearance gate that rejects generic projector/DS transfer.
 
-15. `research_learning_map.html`
+18. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records

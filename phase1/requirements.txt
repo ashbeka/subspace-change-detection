@@ -2,6 +2,7 @@ numpy
 scipy
 scikit-learn
 rasterio
+PyWavelets
 matplotlib
 pyyaml
 h5py

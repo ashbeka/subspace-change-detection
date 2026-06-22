@@ -94,6 +94,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch/band-image DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
+    CommandInfo("phase1-multiresolution-summarize", "visualization", "Create curated figures from completed multiresolution OSCD sweeps.", ["phase1-multiresolution-summarize"]),
     CommandInfo("phase1-score-calibration", "phase1", "Fit score-map changed-area fractions on OSCD train cities and evaluate them on test cities.", ["phase1-score-calibration", "--sweep-root", "<saved_npy_sweep>"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
@@ -423,6 +424,14 @@ def cmd_phase1_spatial_subspace_compare(args: argparse.Namespace) -> int:
         str(args.max_fit_samples),
         "--score_chunk_size",
         str(args.score_chunk_size),
+        "--ssl_energy_threshold",
+        str(args.ssl_energy_threshold),
+        "--ssl_max_channels",
+        str(args.ssl_max_channels),
+        "--ssl_max_fit_samples",
+        str(args.ssl_max_fit_samples),
+        "--feature_device",
+        str(args.feature_device),
     ]
     if not args.save_npy:
         cmd.append("--no-save-npy")
@@ -454,6 +463,14 @@ def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
         str(args.max_fit_samples),
         "--score_chunk_size",
         str(args.score_chunk_size),
+        "--ssl_energy_threshold",
+        str(args.ssl_energy_threshold),
+        "--ssl_max_channels",
+        str(args.ssl_max_channels),
+        "--ssl_max_fit_samples",
+        str(args.ssl_max_fit_samples),
+        "--feature_device",
+        str(args.feature_device),
     ]
     if args.save_npy:
         cmd.append("--save-npy")
@@ -466,6 +483,26 @@ def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
     if args.dry_run:
         cmd.append("--dry-run")
     return run_command(cmd, dry_run=False)
+
+
+def cmd_phase1_multiresolution_summarize(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/summarize_multiresolution_subspace_experiment.py",
+        "--rank-sweep",
+        args.rank_sweep,
+        "--feature-root",
+        args.feature_root,
+        "--pyramid-sweep",
+        args.pyramid_sweep,
+        "--wavelet-sweep",
+        args.wavelet_sweep,
+        "--test-sweep",
+        args.test_sweep,
+        "--output-dir",
+        args.output_dir,
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
 
 
 def cmd_phase1_score_calibration(args: argparse.Namespace) -> int:
@@ -1910,6 +1947,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--max-fit-samples", type=int, default=20000)
     p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--ssl-energy-threshold", type=float, default=0.95)
+    p.add_argument("--ssl-max-channels", type=int, default=16)
+    p.add_argument("--ssl-max-fit-samples", type=int, default=30000)
+    p.add_argument("--feature-device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--save-band-attribution", action="store_true", help="For band-image DS methods, save per-band projected-energy attribution PNG/CSV.")
     p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=True)
     p.add_argument("--dry-run", action="store_true")
@@ -1918,7 +1959,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("phase1-spatial-subspace-sweep", help="Run spatial DS comparison across multiple OSCD cities/configs.")
     p.add_argument("--oscd-root", default="data/OSCD")
     p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
-    p.add_argument("--cities", default="core5", help="Comma list, 'core5' for beirut,dubai,lasvegas,milano,norcia, or 'all' for the 24 local OSCD cities.")
+    p.add_argument("--cities", default="core5", help="Comma list, 'core5', official 'train', official 'test', or 'all'.")
     p.add_argument(
         "--configs",
         default="rank4_core:4:global_pixel+patch3+patch5;rank6_spatial:6:global_pixel+window128+patch3+patch5;rank8_core:8:global_pixel+patch3+patch5",
@@ -1929,11 +1970,28 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--max-fit-samples", type=int, default=20000)
     p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--ssl-energy-threshold", type=float, default=0.95)
+    p.add_argument("--ssl-max-channels", type=int, default=16)
+    p.add_argument("--ssl-max-fit-samples", type=int, default=30000)
+    p.add_argument("--feature-device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=False)
     p.add_argument("--resume", action="store_true")
     p.add_argument("--continue-on-error", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spatial_subspace_sweep)
+
+    p = sub.add_parser(
+        "phase1-multiresolution-summarize",
+        help="Create curated figures from completed multiresolution OSCD sweeps.",
+    )
+    p.add_argument("--rank-sweep", default="phase1/outputs/successive_saab_rank_sensitivity_train14_20260623")
+    p.add_argument("--feature-root", default="phase1/outputs/successive_saab_feature_sensitivity_train14_20260623")
+    p.add_argument("--pyramid-sweep", default="phase1/outputs/multiscale_band_image_rank_sensitivity_train14_20260623")
+    p.add_argument("--wavelet-sweep", default="phase1/outputs/wavelet_band_image_sensitivity_train14_20260623")
+    p.add_argument("--test-sweep", default="phase1/outputs/multiresolution_frozen_test10_20260623")
+    p.add_argument("--output-dir", default="docs/experiment_reports/assets/multiresolution_subspace_2026-06-23")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiresolution_summarize)
 
     p = sub.add_parser("phase1-score-calibration", help="Fit changed-area fractions on OSCD train cities and evaluate them unchanged on test cities.")
     p.add_argument("--sweep-root", required=True, help="Spatial sweep root generated with --save-npy.")

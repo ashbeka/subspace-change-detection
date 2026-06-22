@@ -16,6 +16,7 @@
 - [12. Cross-Sensor Band-Image Transfer Gates](#12-cross-sensor-band-image-transfer-gates)
 - [13. Post-Seminar Validation Gate](#13-post-seminar-validation-gate)
 - [14. Pre-Seminar Multiscale Band-Image Pyramid](#14-pre-seminar-multiscale-band-image-pyramid)
+  - [14.1 Completed Result And Decision](#141-completed-result-and-decision)
 
 ## 1. Current Research Question
 
@@ -1652,3 +1653,50 @@ DS and either improve the best matched multiscale PCA control or add a stable
 gain when fused with it. A metric gain caused only by threshold tuning or one
 city is insufficient. If it fails, retain the result as evidence that local
 support alone does not rescue DS and stop the branch.
+
+### 14.1 Completed Result And Decision
+
+Completed 2026-06-23 on the official OSCD 14-city training and 10-city test
+split. Full report:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.
+
+Decision by hypothesis:
+
+- **Literal Band-Image pyramid:** rejected as the primary detector. Best
+  training AP `0.2070`, below smoothed PCA `0.2340`. Shifted grids help only
+  slightly, and product-Grassmann weighting does not improve equal fusion.
+- **Wavelet Band-Image DS:** rejected as the primary detector. Best training
+  variant is rank-12 db2 SWT level-2 LL at AP `0.2067`; detail and equal
+  LL/detail fusion are much worse.
+- **Successive local subspace representation:** passes the internal gate.
+  Shared two-hop Saab features followed by canonical DS reach frozen test AP
+  `0.3420`, versus smoothed PCA `0.3141`, PCA-diff `0.3067`, matched feature
+  L2 `0.3067`, matched feature PCA `0.3051`, and matched cross-reconstruction
+  `0.3279`.
+- **Mechanism:** on held-out cities, DS beats matched L2 in 9/10 cities and
+  matched PCA in 10/10. The paired AP bootstrap interval against matched
+  cross-reconstruction is also positive, but Wilcoxon `p=0.084` with only ten
+  cities; claim complementary DS evidence, not definitive universal
+  superiority.
+- **Stability:** seeds 7/1234/2026 give test AP
+  `0.3438/0.3420/0.3405`.
+
+Frozen construction:
+
+```text
+two shared pre/post 3x3 Saab hops
+2x2 max pooling between hops
+95% AC energy, maximum 16 channels per hop
+rank-12 canonical DS on spatial response-map subspaces
+unlabeled 99.5%-quantile scaling and equal hop fusion
+```
+
+[gap] The transform is pair-adaptive/transductive and the evidence is still
+OSCD-only.
+
+[why it matters] A paper claim needs to separate the value of local successive
+features, DS geometry, and pair adaptation, then show transfer beyond OSCD.
+
+[next check] Fit one shared transform using training cities only; evaluate the
+frozen transform on a second labeled multispectral dataset; design any
+hop-reliability gate on training data and validate it externally.

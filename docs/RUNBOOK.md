@@ -28,6 +28,7 @@
 - [21. xBD-S12 External Spatial-Geometry Validation](#21-xbd-s12-external-spatial-geometry-validation)
 - [22. HSI Band-Image Transfer](#22-hsi-band-image-transfer)
 - [23. SpaceNet7 Band-Image Transfer](#23-spacenet7-band-image-transfer)
+- [24. Successive Saab-DS Spatial Experiment](#24-successive-saab-ds-spatial-experiment)
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
@@ -1154,3 +1155,27 @@ Report:
 
 Report:
 `docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`.
+
+## 24. Successive Saab-DS Spatial Experiment
+
+Formula and mechanism tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest tests.test_multiresolution_subspaces tests.test_difference_subspace -v
+```
+
+Reproduce the frozen official OSCD test comparison after development choices
+have already been fixed:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities test --configs "frozen_rank12:12:global_pixel+patch3+window128s64mean+smoothed_pca_sigma1+celik_pca_kmeans+ir_mad+band_image_norm+wavelet_swt_db2_l2_ds_ll+successive_saab_h2_ds_hop1+successive_saab_h2_ds_hop2+successive_saab_h2_ds_fused+successive_saab_h2_l2_fused+successive_saab_h2_pca_fused+successive_saab_h2_cross_fused;senpai_pyramid_rank6:6:smoothed_pca_sigma1+band_image_norm+multiscale_band_image_l2+multiscale_band_image_l4+multiscale_band_image_1_2_4_fixed+multiscale_band_image_1_2_4_shifted+multiscale_band_image_product_1_2_4_shifted+multiscale_band_image_cross_1_2_4_shifted+multiscale_band_image_pca_1_2_4_shifted" --output-dir phase1/outputs/multiresolution_frozen_test10_reproduction --ssl-energy-threshold 0.95 --ssl-max-channels 16 --ssl-max-fit-samples 30000 --feature-device auto --continue-on-error --no-save-npy
+```
+
+Regenerate curated figures from the completed sweeps:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-multiresolution-summarize
+```
+
+Interpretation and exact construction:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.

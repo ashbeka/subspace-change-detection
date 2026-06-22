@@ -20,6 +20,7 @@
   - [Spatial-subspace novelty boundary](#spatial-subspace-novelty-boundary)
   - [Tensor / n-mode GDS idea](#tensor--n-mode-gds-idea)
   - [Multiscale subspace pyramid / Green Learning lead](#multiscale-subspace-pyramid--green-learning-lead)
+  - [Successive Saab-DS construction](#successive-saab-ds-construction)
 - [13. Projection Back To Image Space](#13-projection-back-to-image-space)
 - [14. Method Caveats](#14-method-caveats)
   - [Subspace construction card](#subspace-construction-card)
@@ -699,6 +700,38 @@ Relation to the cited ideas:
   subspace approximation/Saab transforms, and feature selection. Merely fitting
   independent tile PCA models is not PixelHop or Green Learning;
 - the project's immediate method name remains `multiscale_band_image_ds`.
+
+#### Successive Saab-DS construction
+
+The positive 2026-06-23 spatial experiment uses a narrower, source-labeled
+adaptation of PixelHop/Successive Subspace Learning:
+
+1. Extract overlapping `3x3` spatial-spectral neighborhoods from both dates.
+2. Fit one shared DC plus AC-PCA transform jointly from unlabeled paired
+   neighborhoods; applying the same kernels avoids incomparable feature
+   rotations between dates.
+3. Retain 95% AC energy with at most 16 total channels and apply `2x2` max
+   pooling.
+4. Repeat once, producing near-context hop 1 and larger-receptive-field hop 2.
+5. At each hop, flatten every response map into one spatial sample:
+   `X_t^(h) in R^(N_h x K_h)`.
+6. Fit a rank-12 spatial basis per date/hop, construct canonical first-order
+   DS, and score rows of `D_h D_h^T (X_post^(h)-X_pre^(h))`.
+7. Resize, quantile-scale without labels, and average the two hop maps.
+
+This is **successive Saab-DS**, not full PixelHop. It omits supervised LAG,
+classification, and the original task-specific aggregation. The adjusted Saab
+bias is omitted because one shared additive response bias cancels in paired
+differences. The current transform is pair-adaptive and must be described as
+transductive unsupervised feature fitting.
+
+Matched controls use the same hop features with row-wise L2, PCA-diff, or
+cross-reconstruction. Their lower held-out AP is the current evidence that DS
+adds something beyond local representation alone.
+
+Code: `phase1/subspace/successive_subspace_features.py`.
+Verification: `tests/test_multiresolution_subspaces.py` and
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.
 
 Open implementation questions:
 

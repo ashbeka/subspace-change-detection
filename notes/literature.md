@@ -13,6 +13,7 @@
 - [9. Reset Literature Problem Map](#9-reset-literature-problem-map)
 - [10. Temporal Satellite Subspace Reading Spine](#10-temporal-satellite-subspace-reading-spine)
 - [11. Evidence-Selected Reading Priorities](#11-evidence-selected-reading-priorities)
+- [12. Successive Spatial Subspace Reading Spine](#12-successive-spatial-subspace-reading-spine)
 
 ## 1. Must-Cite Core Sources
 
@@ -515,3 +516,31 @@ Current novelty boundary:
 - first/second DS on satellite sequences remains unusual, but current real
   detection evidence is negative and should be presented as characterization,
   not performance.
+
+## 12. Successive Spatial Subspace Reading Spine
+
+The 2026-06-23 OSCD result promotes the following sources from optional leads
+to the immediate method/citation spine:
+
+| Source | Exact concept used | Project boundary |
+|---|---|---|
+| Fukui and Maki, TPAMI 2015, [IEEE 7053916](https://ieeexplore.ieee.org/document/7053916) | Canonical principal-vector Difference Subspace and projection onto `D`. | DS is established; novelty can only concern sample construction, adaptation, evidence, or downstream use. |
+| Kuo et al., [PixelHop / SSL](https://arxiv.org/abs/1909.08190) | Successive `3x3` near-to-far expansion, Saab DC/AC subspace approximation, and `2x2` inter-hop pooling. | Current method omits supervised LAG/classifier and must be called PixelHop-inspired successive Saab, not full PixelHop. |
+| Kuo and Madni, [Green Learning](https://doi.org/10.1016/j.jvcir.2022.103685) | Interpretable, feed-forward, low-footprint learning motivation. | Green Learning is an umbrella philosophy, not the exact algorithm implemented here. |
+| Mallat, [multiresolution wavelet representation](https://doi.org/10.1109/34.192463) | Faithful low-pass/detail decomposition and scale/orientation interpretation. | Haar/db2 SWT/DWT were tested as separate controls; the fixed pyramid is not a wavelet transform. |
+| OSCD / Daudt et al. | Official 14-city train and 10-city test protocol used for the frozen internal result. | A second labeled multispectral dataset is still required for generalization. |
+
+Immediate reading priorities:
+
+1. PixelHop Section 2.1–2.2 for the exact successive-unit and Saab
+   construction.
+2. Fukui/Maki Section 3 for canonical DS and the distinction from GDS/KDS.
+3. Remote-sensing unsupervised CD reviews for modern comparison pressure and
+   accepted protocols.
+4. Seasonal/radiometric pseudo-change literature to explain the Norcia and
+   Brasilia failures.
+
+[gap] Find the closest published remote-sensing method combining an
+unsupervised successive Saab/SSL representation with subspace-geometric
+pre/post comparison. A scoped novelty search is still required before claiming
+the combination is new.

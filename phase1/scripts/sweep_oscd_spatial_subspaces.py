@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import subprocess
 import sys
 import time
@@ -34,8 +35,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import rankdata, wilcoxon
 
-
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from phase1.data.oscd_dataset import OFFICIAL_TEST, OFFICIAL_TRAIN
+
+
 DEFAULT_CITIES = "beirut,dubai,lasvegas,milano,norcia"
 ALL_CITIES = (
     "abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,"
@@ -91,7 +97,11 @@ def parse_args() -> argparse.Namespace:
     )
     ap.add_argument("--oscd_root", "--oscd-root", default="data/OSCD")
     ap.add_argument("--stats_path", "--stats-path", default="phase1/data/oscd_band_stats.json")
-    ap.add_argument("--cities", default=DEFAULT_CITIES, help="Comma-separated city list, 'core5', or 'all'.")
+    ap.add_argument(
+        "--cities",
+        default=DEFAULT_CITIES,
+        help="Comma-separated city list, 'core5', 'train', 'test', or 'all'.",
+    )
     ap.add_argument(
         "--configs",
         default=DEFAULT_CONFIGS,
@@ -110,6 +120,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--celik_max_fit_samples", "--celik-max-fit-samples", type=int, default=20000)
     ap.add_argument("--ir_mad_iters", "--ir-mad-iters", type=int, default=10)
     ap.add_argument("--ir_mad_downsample_max_pixels", "--ir-mad-downsample-max-pixels", type=int, default=200000)
+    ap.add_argument("--ssl_energy_threshold", "--ssl-energy-threshold", type=float, default=0.95)
+    ap.add_argument("--ssl_max_channels", "--ssl-max-channels", type=int, default=16)
+    ap.add_argument("--ssl_max_fit_samples", "--ssl-max-fit-samples", type=int, default=30000)
+    ap.add_argument("--feature_device", "--feature-device", choices=("auto", "cpu", "cuda"), default="auto")
     ap.add_argument("--save_npy", "--save-npy", action=argparse.BooleanOptionalAction, default=False)
     ap.add_argument("--resume", action="store_true", help="Skip a city/config run if its metrics CSV already exists.")
     ap.add_argument("--continue_on_error", "--continue-on-error", action="store_true")
@@ -296,7 +310,32 @@ def method_display_name(method: str) -> str:
         "spatial_pyramid_1_2_4_norm": "Grid Pyramid 1/2/4 norm",
         "spatial_pyramid_1_2_4_8_norm": "Grid Pyramid 1/2/4/8 norm",
     }
-    return names.get(method, method.replace("_", " "))
+    if method in names:
+        return names[method]
+    successive = re.fullmatch(
+        r"successive_saab_h(\d+)_(ds|l2|pca|cross)_(fused|product|hop\d+)",
+        method,
+    )
+    if successive:
+        hops, score, output = successive.groups()
+        score_label = {
+            "ds": "DS",
+            "l2": "L2",
+            "pca": "PCA-diff",
+            "cross": "Cross reconstruction",
+        }[score]
+        return f"Successive Saab h{hops} {score_label} {output}"
+    wavelet = re.fullmatch(
+        r"wavelet_(swt|dwt)_([a-z0-9]+)_l(\d+)_(ds|l2|pca|cross)_(fused|ll|detail)",
+        method,
+    )
+    if wavelet:
+        transform, family, level, score, output = wavelet.groups()
+        return f"{transform.upper()} {family} L{level} {score.upper()} {output.upper()}"
+    hierarchy = re.fullmatch(r"multiscale_band_image_(.+)", method)
+    if hierarchy:
+        return "Band-Image pyramid " + hierarchy.group(1).replace("_", " ")
+    return method.replace("_", " ")
 
 
 def aggregate_by_config_method(rows: list[dict[str, object]]) -> list[dict[str, object]]:
@@ -568,6 +607,10 @@ def main() -> None:
     city_key = args.cities.lower()
     if city_key == "core5":
         cities = parse_csv_list(DEFAULT_CITIES)
+    elif city_key == "train":
+        cities = list(OFFICIAL_TRAIN)
+    elif city_key == "test":
+        cities = list(OFFICIAL_TEST)
     elif city_key == "all":
         cities = parse_csv_list(ALL_CITIES)
     else:
@@ -642,6 +685,14 @@ def main() -> None:
                     str(args.ir_mad_iters),
                     "--ir_mad_downsample_max_pixels",
                     str(args.ir_mad_downsample_max_pixels),
+                    "--ssl_energy_threshold",
+                    str(args.ssl_energy_threshold),
+                    "--ssl_max_channels",
+                    str(args.ssl_max_channels),
+                    "--ssl_max_fit_samples",
+                    str(args.ssl_max_fit_samples),
+                    "--feature_device",
+                    str(args.feature_device),
                 ]
                 if not args.save_npy:
                     cmd.append("--no-save-npy")

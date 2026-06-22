@@ -183,13 +183,31 @@ Temporal replication and context result, 2026-06-20:
 
 ## 5. Immediate Next Decision
 
-The matched OSCD spatial-null experiment and frozen xBD-S12 external transfer
-are complete.
+The matched OSCD spatial-null experiment, frozen xBD-S12 external transfer,
+and successive multiresolution OSCD experiment are complete.
 
 ```text
-Does the OSCD spatial sample-construction result transfer under a frozen
-protocol to an external multispectral change benchmark?
+Does successive Saab-DS transfer under a frozen protocol to an external
+labeled multispectral change benchmark, and does a train-fitted transform
+retain the pair-adaptive result?
 ```
+
+New strongest internal OSCD evidence, 2026-06-23:
+
+- A two-hop pair-shared Saab representation followed by rank-12 canonical DS
+  reaches held-out test AP `0.3420`, AUROC `0.8861`, and Otsu F1 `0.3312`.
+- Smoothed PCA reaches AP `0.3141`; PCA-diff `0.3067`; the same successive
+  features with L2 `0.3067`, PCA `0.3051`, and cross-reconstruction `0.3279`.
+- DS beats matched L2 in 9/10 and matched PCA in 10/10 test cities. The paired
+  AP bootstrap interval against cross-reconstruction is positive, while the
+  Wilcoxon value is `p=0.084` with ten cities.
+- Three neighborhood-sampling seeds give AP `0.3438/0.3420/0.3405`.
+- Literal spatial pyramids and wavelet Band-Image DS fail their positive gates.
+- Full report:
+  `docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.
+
+This is the current positive method candidate. It remains pair-adaptive,
+OSCD-only, and unsupervised; it is not yet an external or neural result.
 
 Band-Image DS is the strongest tested DS construction on OSCD (rank-12 AUROC
 `0.8477`, AP `0.2410`). It significantly beats PCA-matched normalized full

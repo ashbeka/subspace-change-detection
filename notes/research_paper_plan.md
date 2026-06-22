@@ -21,6 +21,7 @@
 - [17. Cross-Branch Recommendation](#17-cross-branch-recommendation)
 - [18. Independent Transfer Decision](#18-independent-transfer-decision)
 - [19. Seminar Direction Decision](#19-seminar-direction-decision)
+- [20. Successive Spatial Subspace Result](#20-successive-spatial-subspace-result)
 
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
@@ -1206,3 +1207,50 @@ Sensei, but not yet a positive detector result.
 Forbidden tomorrow: SOTA, universal transfer, damage severity, automatic
 semantic interpretation, registration invariance, or a proven first-ever
 satellite method.
+
+## 20. Successive Spatial Subspace Result
+
+The 2026-06-23 experiment provides a stronger concrete candidate than the
+earlier global Band-Image result.
+
+Provisional working title:
+
+```text
+Successive Spatial Subspace Learning With Difference-Subspace Geometry for
+Unsupervised Multispectral Satellite Change Detection
+```
+
+Provisional research question:
+
+```text
+Does a shared successive local Saab representation make canonical Difference
+Subspace useful for spatially attributable multispectral change evidence, and
+does DS add information beyond L2, PCA, and cross-reconstruction on the same
+features?
+```
+
+Current contribution candidate:
+
+1. A clearly specified pair-shared successive spatial-spectral representation
+   for bitemporal multispectral images.
+2. Spatial Band-Image DS applied at multiple receptive-field hops.
+3. Matched-feature controls that isolate DS from the representation itself.
+4. A frozen OSCD train/test experiment showing positive macro AP, threshold,
+   and seed-stability evidence, together with seasonal failure cases.
+5. Negative evidence that literal grid pyramids and wavelet coefficient DS do
+   not provide the same benefit.
+
+Safe current claim:
+
+> On the official held-out OSCD cities, a two-hop pair-shared Saab
+> representation followed by canonical DS improves mean changed-pixel AP over
+> raw/PCA baselines and matched L2/PCA controls. The advantage over matched
+> cross-reconstruction is positive but still statistically limited by ten
+> test cities. External transfer and non-transductive fitting remain open.
+
+Do not yet claim novelty or publication readiness. Required next gates are a
+scoped closest-work search, a train-fitted transform, and one external labeled
+multispectral benchmark.
+
+Full evidence:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.

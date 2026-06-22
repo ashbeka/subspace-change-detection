@@ -56,7 +56,8 @@ Implemented now:
   - global pixel DS;
   - local-window DS;
   - patch-vector DS;
-  - Band-Image DS and matched projector/Gram/reconstruction controls.
+  - Band-Image DS and matched projector/Gram/reconstruction controls;
+  - multiscale Band-Image pyramids, wavelet subspaces, and successive Saab-DS.
 - Frozen xBD-S12 event-disjoint external score-map evaluation with damage,
   building-conditional, and localization views.
 - Phase 2 supervised binary segmentation using U-Net/Siamese-style models with raw bands and optional prior channels.
@@ -72,6 +73,26 @@ Not implemented as a completed claim:
 - A validated new "satellite subspace method."
 
 ## 3. Current Most Important Result
+
+The strongest current internal OSCD result is the frozen successive Saab-DS
+experiment:
+
+```text
+docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md
+```
+
+- A pair-shared two-hop unsupervised Saab representation followed by canonical
+  DS reaches official held-out test AP `0.3420`, AUROC `0.8861`, and Otsu F1
+  `0.3312`.
+- Smoothed PCA-diff reaches AP `0.3141`; PCA-diff and matched-feature L2 both
+  reach about `0.3067`; matched cross-reconstruction reaches `0.3279`.
+- Three feature-fitting seeds produce AP `0.3438`, `0.3420`, and `0.3405`.
+- Literal spatial pyramids and wavelet Band-Image DS did not pass their
+  positive gates.
+- The result is pair-adaptive and OSCD-only. External transfer and a
+  train-fitted transform are still required.
+
+Earlier matched-control and transfer evidence remains relevant:
 
 The OSCD matched-control study and xBD-S12 external transfer are complete:
 
@@ -108,7 +129,15 @@ Short interpretation:
 
 ## 4. What To Do Next
 
-Read the external report first, then reproduce the frozen xBD-S12 result:
+Read the successive spatial report first. The next evidence gate is to compare
+the current pair-adaptive transform against a transform fitted only on training
+cities, then reproduce the frozen method on a second labeled multispectral
+change dataset.
+
+Reproduce the current frozen OSCD comparison with the command in
+`docs/RUNBOOK.md`, Section 24.
+
+The earlier xBD-S12 result can be reproduced with:
 
 ```powershell
 .\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
@@ -120,10 +149,12 @@ building-appearance transfer are complete.
 
 Current priority order:
 
-1. Seek a genuinely comparable labeled multispectral event dataset, or define
-   a new mechanism that predicts when DS should help beyond reconstruction.
-2. Do not run the fixed projector neural-prior experiment unless a fresh
-   held-out gate supports that representation.
+1. Implement and test a training-city-fitted successive transform against the
+   current pair-adaptive version.
+2. Seek a genuinely comparable labeled multispectral change dataset for a
+   frozen external test.
+3. Investigate seasonal/radiometric failures in Brasilia and Norcia.
+4. Only after external confirmation, test successive Saab-DS as a neural prior.
 
 ## 5. Central CLI
 
