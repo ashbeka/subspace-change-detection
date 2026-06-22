@@ -20,12 +20,13 @@
 - [16. Ranked Research Problem Portfolio](#16-ranked-research-problem-portfolio)
 - [17. Cross-Branch Recommendation](#17-cross-branch-recommendation)
 - [18. Independent Transfer Decision](#18-independent-transfer-decision)
+- [19. Seminar Direction Decision](#19-seminar-direction-decision)
 
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
 ## 1. Working Title
 
-Temporal Difference-Subspace Dynamics for Multispectral Satellite Image Time Series
+Spatially Faithful Difference-Subspace Geometry for Multispectral Satellite Change Analysis
 
 Alternative titles:
 
@@ -1084,3 +1085,124 @@ event confirmation or explain and predict the conditions under which DS adds
 information beyond reconstruction and radiometric controls. Do not run a
 projector-prior neural experiment until one of those routes passes a fresh
 held-out gate.
+
+## 19. Seminar Direction Decision
+
+Decision date: 2026-06-23. This decision was made after comparing the Codex,
+Claude, Antigravity, research-mining, and legacy branches; the complete
+experiment-report set; Sensei's Slack requests; seminar feedback; and a scoped
+literature search.
+
+### 19.1 One Research Problem
+
+Use this as the primary seminar problem:
+
+> **Can each multispectral satellite acquisition be represented as a spatially
+> faithful subspace so that Difference Subspace geometry supplies
+> complementary, label-free changed-area evidence, and can first- and
+> second-order Difference Subspaces describe how that evidence evolves through
+> a satellite image sequence?**
+
+The first clause is the evidenced core. The temporal clause is the
+Sensei-aligned extension. Do not present them as two unrelated projects.
+
+The concrete limitation being addressed is not simply that pixelwise
+difference is "naive." The old global pixel-spectrum construction used
+`X_t in R^(B x N)` and discarded pixel position while fitting the subspace.
+The selected construction instead uses:
+
+```text
+X_t in R^(N x B)
+column = one flattened, aligned band image
+U_t in R^(N x r)
+```
+
+The ambient coordinates of `U_t` are therefore fixed image locations. Its
+basis vectors are spatial eigenimages. Pairwise canonical DS yields a spatial
+change-evidence map; a sequence of these per-date subspaces yields first-DS
+magnitude, second-DS magnitude, and geodesic along/orthogonal components.
+
+### 19.2 Why This Ranks First
+
+| Candidate | Sensei alignment | Real evidence | Novelty headroom | Seminar clarity | Decision |
+|---|---|---|---|---|---|
+| Spatial-axis DS as complementary prior, with temporal extension | Directly answers spatial-construction, DS, DNN-combination, and sequential-DS asks | Positive but conditional on OSCD; narrow xBD transfer | Specific construction/role, not DS itself | One matrix construction connects maps and sequences | **Select** |
+| First/second DS and geodesic as a detector | Sensei's most repeated explicit request | Formulas and curves verified; real detection generally loses to radiometric controls | High as satellite analysis | Clear math, weak performance headline | Show as extension, not detector win |
+| xBD-S12 projector candidate localization | Strong reconstruction motivation | Frozen event-disjoint positive with high recall; specificity is weak | Moderate; best method is projector distance, not canonical DS | Concrete application | Supporting result only |
+| Diagnostic study of when geometry fails | Honest and strongly evidenced | Broadest evidence base | Potentially publishable empirical boundary | Negative-first story may distract tomorrow | Safety-net contribution |
+| HSI, RTW, SFA, SSA, material MSM/GDS, deep-feature, kernel-proxy routes | Several named Sensei methods covered | Predominantly negative against stronger controls | Individual hypotheses remain possible | Too scattered | Do not headline |
+
+### 19.3 Evidence That May Be Shown
+
+1. Global pixel DS is unsuitable on OSCD under the tested score: AP `0.0625`.
+2. Spatial-axis Band-Image DS reaches AP `0.2410`, beats its matched Gram,
+   projector-row, and cross-reconstruction controls, but remains below
+   smoothed PCA (`0.2679`).
+3. Equal-rank fusion of smoothed PCA, Band-Image DS, and IR-MAD reaches AP
+   `0.2780`. On the ten official test cities it beats the matched
+   cross-reconstruction substitute by `+0.0115` AP (`p=0.0098`). This supports
+   complementarity, not standalone superiority.
+4. A preliminary three-seed FC-EF U-Net experiment reaches AP `0.5128` with
+   DS+PCA+IR-MAD priors versus `0.4825` for raw bands, `0.4804` without DS, and
+   `0.4870` when DS is replaced by cross-reconstruction. This is internal OSCD
+   evidence and must not be called externally validated.
+5. On xBD-S12, spatial projector geometry retrieves about `24.7%` of damaged
+   pixels in the top `5%` review budget and has high damaged-building recall,
+   but also hits more intact buildings. It is candidate localization, not
+   damage classification.
+6. First/second DS and geodesic quantities have been generated on real
+   sequences. Their mathematical behavior is verified, but current event
+   detection/localization evidence is negative or unlabeled. Show the curves
+   as completed analysis and the next validation problem.
+
+### 19.4 Literature Boundary
+
+- The 2024 remote-sensing CD review identifies image quality, noise,
+  registration error, illumination, complex landscapes, and spatial
+  heterogeneity as real difficulties
+  ([DOI](https://doi.org/10.3390/rs16132355)).
+- Pseudo-change from illumination/noise/scale and limited datasets are also
+  explicit problems in established deep CD work
+  ([DSAMNet](https://doi.org/10.1109/TGRS.2021.3085870)).
+- Subspace learning already exists in hyperspectral anomalous change
+  detection, so "the first subspace method for satellite imagery" is unsafe
+  ([SMSL](https://doi.org/10.1109/TGRS.2022.3220814)).
+- Satellite time-series event detection already has strong breakpoint and
+  trend methods. First/second DS must be positioned as an interpretable
+  geometric descriptor and compared with BFAST/CCDC/MOSUM/DRMAT-style
+  controls, not as the first temporal satellite detector
+  ([DRMAT](https://doi.org/10.1016/j.rse.2024.114402)).
+- Fukui et al.'s second-order DS demonstrates temporal/spatial subspace
+  dynamics on 3D shape and biometric signals, not satellite imagery
+  ([paper](https://arxiv.org/abs/2409.08563)). A scoped search did not find the
+  same first/second/geodesic construction on satellite sequences, but this is
+  not enough to authorize a universal "first" claim.
+
+### 19.5 Position Relative To Claude's Recommendation
+
+Agree with Claude that the strongest positive direction is **DS as
+complementary evidence in a hybrid pipeline**, not DS as a standalone SOTA
+detector. Do not make the xBD projector result the whole thesis: projector
+distance is not canonical DS, its specificity is weak, and the effect did not
+transfer to SpaceNet7 RGB. Do not make the U-Net fusion a final claim yet:
+its evidence is internal to the repeatedly inspected OSCD split.
+
+The safer synthesis is broader but still precise: the main contribution is the
+spatially faithful sample construction and the evidence boundary for how its
+geometry can complement radiometric and learned features. First/second DS and
+geodesic analysis are the natural multi-date extension that directly answers
+Sensei, but not yet a positive detector result.
+
+### 19.6 Safe Seminar Claim
+
+> Changing the satellite sample definition from unordered pixel spectra to
+> aligned band images changes DS from a weak global spectral-distribution score
+> into spatial candidate evidence. It is not the best standalone detector, but
+> matched controls and internal hybrid experiments show that it can contribute
+> information not supplied by reconstruction or radiometric maps alone. The
+> same per-date subspaces also let us compute first- and second-order temporal
+> geometry, whose event-level value is the next open test.
+
+Forbidden tomorrow: SOTA, universal transfer, damage severity, automatic
+semantic interpretation, registration invariance, or a proven first-ever
+satellite method.

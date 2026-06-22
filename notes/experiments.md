@@ -14,6 +14,7 @@
 - [10. Active Temporal Difference-Subspace Study](#10-active-temporal-difference-subspace-study)
 - [11. Cross-Branch Evidence Decision](#11-cross-branch-evidence-decision)
 - [12. Cross-Sensor Band-Image Transfer Gates](#12-cross-sensor-band-image-transfer-gates)
+- [13. Post-Seminar Validation Gate](#13-post-seminar-validation-gate)
 
 ## 1. Current Research Question
 
@@ -1563,3 +1564,26 @@ Reports:
 
 - `docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`
 - `docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
+
+## 13. Post-Seminar Validation Gate
+
+Do not run this before the seminar. The selected research program is a
+spatial-axis DS prior with first/second temporal geometry as its multi-date
+extension.
+
+After the seminar, choose one of two falsifiable gates with Sensei:
+
+1. **Hybrid-prior confirmation:** freeze the OSCD U-Net architecture and prior
+   definitions; reproduce the preliminary three-seed result from the currently
+   untracked experiment code; add city-level uncertainty; then test the same
+   fixed prior on a genuinely compatible multispectral event benchmark. Stop
+   if DS does not beat both the no-DS fusion and matched cross-reconstruction.
+2. **Temporal event confirmation:** acquire Harmonized Sentinel-2 sequences
+   with documented event dates and stable control regions; freeze the per-date
+   spatial-axis construction; compare first/second/geodesic curves with raw
+   spectral change, indices, SSA minimum angle, MOSUM/BFAST/CCDC or DRMAT-style
+   controls; report event-time localization and nuisance false alarms. Stop if
+   geometry does not add timing or characterization beyond those controls.
+
+Sensei should choose which gate is the immediate thesis priority. Do not start
+another unconstrained method search before this decision.
