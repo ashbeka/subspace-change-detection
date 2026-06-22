@@ -120,6 +120,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-xbd-s12-evaluate", "external validation", "Run the frozen event-disjoint xBD-S12 Band-Image DS validation.", ["phase1-xbd-s12-evaluate", "--split", "test"]),
     CommandInfo("phase1-xbd-s12-object-retrieval", "external validation", "Evaluate damaged-building candidate retrieval and object damage discrimination.", ["phase1-xbd-s12-object-retrieval", "--split", "test"]),
     CommandInfo("phase1-xbd-s12-registration-stress", "external validation", "Stress-test fixed xBD-S12 maps under controlled post-image shifts.", ["phase1-xbd-s12-registration-stress"]),
+    CommandInfo("phase1-spacenet7-band-image-transfer", "external validation", "Test tiled Band-Image DS/projector maps on monthly RGB building appearances.", ["phase1-spacenet7-band-image-transfer"]),
     CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
@@ -1278,6 +1279,40 @@ def cmd_phase1_spacenet7_hybrid_analysis(args: argparse.Namespace) -> int:
     return run_command(cmd, dry_run=args.dry_run)
 
 
+def cmd_phase1_spacenet7_band_image_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_band_image_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_spacenet7_band_image_transfer",
+        "--data-roots",
+        args.data_roots,
+        "--tile-size",
+        str(args.tile_size),
+        "--rank",
+        str(args.rank),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--minimum-valid-pixels",
+        str(args.minimum_valid_pixels),
+        "--minimum-positive-pixels",
+        str(args.minimum_positive_pixels),
+        "--workers",
+        str(args.workers),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--output-dir",
+        out,
+    ]
+    if args.maximum_aois is not None:
+        cmd.extend(["--maximum-aois", str(args.maximum_aois)])
+    if args.maximum_transitions is not None:
+        cmd.extend(["--maximum-transitions", str(args.maximum_transitions)])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
 def cmd_phase1_irrigation_data_feasibility(args: argparse.Namespace) -> int:
     out = args.output_dir or f"phase1/outputs/irrigation_regime_data_feasibility_{timestamp()}"
     cmd = [
@@ -2399,6 +2434,28 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=90210)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spacenet7_hybrid_analysis)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-band-image-transfer",
+        help="Test tiled Band-Image DS/projector maps on monthly RGB building appearances.",
+    )
+    p.add_argument(
+        "--data-roots",
+        default="data/SpaceNet7_sample,data/SpaceNet7_validation,data/SpaceNet7_confirmation",
+    )
+    p.add_argument("--tile-size", type=int, default=128)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--minimum-valid-pixels", type=int, default=256)
+    p.add_argument("--minimum-positive-pixels", type=int, default=2)
+    p.add_argument("--workers", type=int, default=3)
+    p.add_argument("--bootstrap", type=int, default=3000)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--maximum-aois", type=int, default=None)
+    p.add_argument("--maximum-transitions", type=int, default=None)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_band_image_transfer)
 
     p = sub.add_parser(
         "phase1-irrigation-data-feasibility",
