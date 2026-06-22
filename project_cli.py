@@ -115,6 +115,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-breizhcrops-download", "temporal", "Download and verify official BreizhCrops 2017 L2A geographic partitions.", ["phase1-breizhcrops-download", "--regions", "frh01,frh04"]),
     CommandInfo("phase1-rtw-breizhcrops-transfer", "temporal", "Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.", ["phase1-rtw-breizhcrops-transfer"]),
     CommandInfo("phase1-hsi-moment-geometry", "hyperspectral", "Factor local HSI change into mean, scale, eigenspectrum, eigenspace orientation, DS projection, and covariance controls.", ["phase1-hsi-moment-geometry"]),
+    CommandInfo("phase1-hsi-band-image-transfer", "hyperspectral", "Run the frozen rank-11 Band-Image DS/projector transfer pressure test on labeled HSI pairs.", ["phase1-hsi-band-image-transfer"]),
     CommandInfo("phase1-xbd-s12-prepare", "external validation", "Verify and selectively prepare xBD-S12 Sentinel-2 data and original labels.", ["phase1-xbd-s12-prepare"]),
     CommandInfo("phase1-xbd-s12-evaluate", "external validation", "Run the frozen event-disjoint xBD-S12 Band-Image DS validation.", ["phase1-xbd-s12-evaluate", "--split", "test"]),
     CommandInfo("phase1-xbd-s12-object-retrieval", "external validation", "Evaluate damaged-building candidate retrieval and object damage discrimination.", ["phase1-xbd-s12-object-retrieval", "--split", "test"]),
@@ -1034,6 +1035,38 @@ def cmd_phase1_hsi_moment_geometry(args: argparse.Namespace) -> int:
     ]
     if args.stability_seeds:
         cmd.extend(["--stability_seeds", args.stability_seeds])
+    if args.smoke:
+        cmd.append("--smoke")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_hsi_band_image_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/hsi_band_image_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_hsi_band_image_transfer",
+        "--data-root",
+        args.data_root,
+        "--datasets",
+        args.datasets,
+        "--preprocessing",
+        args.preprocessing,
+        "--band-policy",
+        args.band_policy,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--bootstrap-block",
+        str(args.bootstrap_block),
+        "--output-dir",
+        out,
+    ]
     if args.smoke:
         cmd.append("--smoke")
     return run_command(cmd, dry_run=args.dry_run)
@@ -2196,6 +2229,28 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--smoke", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_hsi_moment_geometry)
+
+    p = sub.add_parser(
+        "phase1-hsi-band-image-transfer",
+        help="Run the frozen Band-Image DS/projector transfer pressure test on labeled HSI pairs.",
+    )
+    p.add_argument("--data-root", default="data/HSI_change")
+    p.add_argument("--datasets", default="benton,hermiston,farmland,shenzhen")
+    p.add_argument("--preprocessing", default="joint_robust_zscore")
+    p.add_argument(
+        "--band-policy",
+        default="nonconstant",
+        choices=("nonconstant", "common_hyperion_159"),
+    )
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--bootstrap-block", type=int, default=16)
+    p.add_argument("--smoke", action="store_true")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_hsi_band_image_transfer)
 
     p = sub.add_parser(
         "phase1-xbd-s12-prepare",
