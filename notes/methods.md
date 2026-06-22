@@ -648,6 +648,20 @@ level 3: split image into 8 x 8 cells        -> 64 subspaces
 
 For each spatial cell, build a pre-date subspace and a post-date subspace from the valid 13-band pixels or patch vectors inside that cell, then compute a DS-style score for that cell or for pixels inside it.
 
+The literal pixel-spectrum version above has already been tested and failed:
+it repeatedly fit `X_cell in R^(13 x N_cell)` and preserved only grid
+membership. The corrected Senpai-inspired experiment changes the sample
+definition. For each cell, it instead forms
+
+```text
+X_(t,g,c) in R^(N_cell x 13)
+```
+
+where every column is one flattened band image restricted to that cell. Its
+PCA basis therefore lives in cell-pixel coordinates and consists of spatial
+eigenimages. Corresponding pre/post cell bases are compared with canonical DS,
+and their pixel-resolved score maps are lifted back to the full scene.
+
 Why this matters:
 
 - coarse levels preserve global scene context;
@@ -667,6 +681,24 @@ Possible score aggregation:
 ```text
 score_pixel = weighted_sum(level_0_score, level_1_cell_score, level_2_cell_score, ...)
 ```
+
+Do not directly add subspace bases. Bases from different cells have different
+ambient pixel coordinates, and a subspace is a Grassmann point rather than a
+Euclidean vector. The first defensible aggregation is score-level fusion after
+unlabeled robust normalization. A later geometric formulation can treat the
+cell subspaces as a product-Grassmann object or use a weighted sum of embedded
+projectors followed by eigendecomposition, but that is a separate method and
+requires matched controls.
+
+Relation to the cited ideas:
+
+- fixed spatial tiling is a spatial pyramid, not a wavelet transform;
+- a true wavelet variant must decompose each band into low-pass and oriented
+  detail coefficients across scales before constructing/comparing subspaces;
+- PixelHop/PixelHop++ uses successive neighborhood expansion, unsupervised
+  subspace approximation/Saab transforms, and feature selection. Merely fitting
+  independent tile PCA models is not PixelHop or Green Learning;
+- the project's immediate method name remains `multiscale_band_image_ds`.
 
 Open implementation questions:
 

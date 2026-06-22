@@ -15,6 +15,7 @@
 - [11. Cross-Branch Evidence Decision](#11-cross-branch-evidence-decision)
 - [12. Cross-Sensor Band-Image Transfer Gates](#12-cross-sensor-band-image-transfer-gates)
 - [13. Post-Seminar Validation Gate](#13-post-seminar-validation-gate)
+- [14. Pre-Seminar Multiscale Band-Image Pyramid](#14-pre-seminar-multiscale-band-image-pyramid)
 
 ## 1. Current Research Question
 
@@ -1587,3 +1588,67 @@ After the seminar, choose one of two falsifiable gates with Sensei:
 
 Sensei should choose which gate is the immediate thesis priority. Do not start
 another unconstrained method search before this decision.
+
+## 14. Pre-Seminar Multiscale Band-Image Pyramid
+
+Senpai's whole-image -> `2x2` -> `4x4` -> `8x8` proposal receives one
+source-linked, falsifiable test before the seminar. This is not a rerun of the
+failed fixed-grid pixel-spectrum pyramid.
+
+Research question:
+
+```text
+Does a hierarchy of global-to-local spatial band-image subspaces provide
+complementary changed-area evidence beyond global Band-Image DS and matched
+multiscale PCA controls?
+```
+
+Construction:
+
+1. At level `g`, partition each aligned date image into `g x g` corresponding
+   cells, initially `g in {1,2,4}`.
+2. In one cell with `N_c` valid pixels, flatten each of the `13` band images
+   and form `X_(t,g,c) in R^(N_c x 13)`.
+3. Fit a centered rank-`r` spatial basis `U_(t,g,c) in R^(N_c x r)` for each
+   date; compare corresponding pre/post bases with canonical DS.
+4. Project the paired band differences to obtain a pixel-resolved cell map.
+5. Lift cell maps to the full image, robustly normalize each scale using only
+   unlabeled scores, and fuse score maps. Do not add basis matrices from
+   different cells or scales as ordinary Euclidean vectors.
+
+Predeclared ablations:
+
+- ranks `3, 6, 9, 12` on development cities; freeze one rank for test cities;
+- single levels `1`, `2`, `4`, followed by equal-weight `1+2+4` fusion;
+- half-cell shifted grids to measure boundary/alignment sensitivity;
+- optional `8x8` only if `4x4` improves evidence without severe seams;
+- a separate Haar-wavelet experiment using `LL`, `LH`, `HL`, and `HH`
+  coefficient maps; do not describe fixed tiling as a wavelet transform;
+- a PixelHop/Green Learning implementation only after matching the successive
+  neighborhood-expansion and unsupervised subspace-transform equations in the
+  source papers.
+
+Required pressure controls use the same preprocessing and spatial support:
+
+- raw L2/CVA, PCA-diff, smoothed/multiscale PCA-diff, and IR-MAD;
+- global Band-Image DS;
+- the failed pixel-spectrum pyramid as a historical control;
+- local Band-Image projector distance and cross-reconstruction to test whether
+  any gain is DS-specific rather than merely caused by tiling.
+
+Evaluation:
+
+- OSCD official development/test split; labels may select rank/weights only on
+  development cities;
+- city-wise AP, AUROC, frozen-threshold F1/IoU, Otsu F1/IoU, runtime, and
+  qualitative maps;
+- paired city bootstrap/permutation intervals for AP differences;
+- seam score, shifted-grid map correlation, scale-map correlation, and
+  pseudo-change failure inspection;
+- per-level maps and a winning-scale/contribution visualization.
+
+Positive gate: the frozen pyramid must improve test AP over global Band-Image
+DS and either improve the best matched multiscale PCA control or add a stable
+gain when fused with it. A metric gain caused only by threshold tuning or one
+city is insufficient. If it fails, retain the result as evidence that local
+support alone does not rescue DS and stop the branch.
