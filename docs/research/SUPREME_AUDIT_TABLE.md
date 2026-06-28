@@ -103,6 +103,23 @@ New experiments added to the ledger (Codex, 2026-06-22): matched-spatial-control
 geometry (negative), spatial-DS pyramid (negative: best AP 0.077 vs global DS 0.079), cross-branch evidence matrix
 (concurs with this audit). **Both independent audits now agree on the same conclusion below.**
 
+## 3c. UPDATE 2026-06-22 (later) — the LEARNED rung now tested (Claude, OSCD U-Net)
+Added the missing top rung of the naive->complex ladder: a CNN (FC-EF U-Net), and tested DS as a label-free
+prior. Code `phase1/experiments/unet_ds_prior.py`; full run 3 seeds x 2500 steps, 10 official test cities.
+
+- A **single DS channel does NOT help a well-trained CNN**: bands_ds 0.4788 ~ bands 0.4825 AP (the big early
+  30-step gap vanished). Same for every single prior. The CNN learns what one map provides.
+- **The multi-prior fusion gain IS DS-specific**: bands+DS+sPCA+IR-MAD **0.5128** vs bands+sPCA+IR-MAD (no DS)
+  **0.4804** vs bands+cross+sPCA+IR-MAD (DS->matched null) **0.4870**; per-seed non-overlapping. So DS adds
+  DS-specific complementary evidence a trained CNN does not capture, and matched controls cannot substitute —
+  **the classical-rung matched-controls finding REPLICATED at the learned rung.** Modest (+0.03 AP) but
+  consistent + DS-specific (first-trial bar, not SOTA).
+- Single-channel label-scarcity sweep (n_train 2/4/7/14) is NOISY/inconclusive — not claimed.
+- In progress: fusion-scarcity sweep; subspace-TEACHER self-training (DS-fusion teacher -> pseudo-labels ->
+  student; teacher comparison CVA/IR-MAD/sPCA/DS-fusion + DS-specificity controls) — the fully-unsupervised,
+  label-scarce pipeline that matches the disaster driver. Codex is running the COMPLEMENTARY external transfer
+  on xBD-S12 (disaster dataset, same matched-controls question, frozen protocol).
+
 ## 4. Honest caveat (so you can defend it)
 Band-Image DS does NOT strictly *beat* PCA-diff (PCA-diff wins 15/24 cities on AP); it *matches/ties* it and wins
 a minority of cities. The audit's prediction (consistent with the project's theorem) is that a spatial
