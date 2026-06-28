@@ -1757,6 +1757,12 @@ successive local DS and Band-Image/projector geometry without labels.
 Updated 2026-06-28 after cross-worktree status management and review of the
 latest experiment reports.
 
+Update 2026-06-29 after absorbing Claude's temporal work and removing stale
+worktrees: the repo is now clean enough to stop managing folders and return to
+evidence. The next action is not another broad method search. First reproduce
+the most consequential unverified positive claim, then decide whether it enters
+the thesis story.
+
 The project should not continue by adding more unrelated subspace variants.
 The completed evidence now says:
 
