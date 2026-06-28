@@ -18,6 +18,7 @@
 - [14. Pre-Seminar Multiscale Band-Image Pyramid](#14-pre-seminar-multiscale-band-image-pyramid)
   - [14.1 Completed Result And Decision](#141-completed-result-and-decision)
   - [14.2 Train-Fitted And External Transfer Gate](#142-train-fitted-and-external-transfer-gate)
+- [15. Current Next-Task Agenda](#15-current-next-task-agenda)
 
 ## 1. Current Research Question
 
@@ -1735,3 +1736,95 @@ prefers Band-Image projector geometry.
 [next check] For seminar, present both gates clearly. For further research,
 test whether a learned selector or dataset/task descriptor can choose between
 successive local DS and Band-Image/projector geometry without labels.
+
+## 15. Current Next-Task Agenda
+
+Updated 2026-06-28 after cross-worktree status management and review of the
+latest experiment reports.
+
+The project should not continue by adding more unrelated subspace variants.
+The completed evidence now says:
+
+- global pixel DS, patch DS, local-window DS, fixed-grid pyramid DS, wavelet
+  DS, RTW, broad HSI transfer, SpaceNet7 RGB transfer, and several temporal
+  detector variants are not current positive detector routes;
+- Successive Saab-DS is the strongest internal OSCD changed-area result;
+- xBD-S12 supports Band-Image/projector geometry as candidate-localization
+  evidence, not direct damage classification;
+- first/second DS and geodesic decomposition are implemented and useful for
+  characterization, but not yet a stronger real changed-area detector;
+- Claude's latest learned-rung result claims a DS-specific multi-prior U-Net
+  fusion gain, but it must be independently reproduced before it becomes a
+  thesis claim;
+- antigravity's component-wise DS/NDVI diagnostic is useful failure analysis,
+  but its current filtering logic uses labels and should not be presented as a
+  deployable unsupervised method.
+
+Ordered tasks:
+
+1. **Consolidate current evidence into one branch/report before new claims.**
+   - Pull the latest Claude and antigravity results into the main evidence
+     ledger or a new synthesis report.
+   - Mark branch-local results as `reported`, `verified`, or `needs rerun`.
+   - Do not mix them into the thesis story until code path, data split, seed
+     count, and baselines are checked.
+
+2. **Independently reproduce the learned-rung DS-specific fusion result.**
+   - Inspect Claude's `phase1/experiments/unet_ds_prior.py` and exact configs.
+   - Re-run or reproduce the 3-seed OSCD comparison:
+     `bands`, `bands+DS`, `bands+sPCA+IR-MAD`, `bands+DS+sPCA+IR-MAD`, and
+     `bands+cross+sPCA+IR-MAD`.
+   - Primary check: does DS improve multi-prior U-Net AP beyond the no-DS and
+     matched-cross controls?
+   - Go: consistent city/seed gain with no leakage and clear runtime/logs.
+   - No-go: no-DS or matched-cross catches up; then keep neural fusion as
+     exploratory only.
+
+3. **Use the seminar story as a scoped evidence story, not a final thesis
+   claim.**
+   - Lead with: spatial sample construction matters; Successive Saab-DS fixes
+     OSCD's local-feature weakness better than raw global pixel DS.
+   - Show xBD as the boundary: disaster candidate localization favors projector
+     geometry and IR-MAD/Band-Image controls, not universal Successive DS.
+   - Show first/second/geodesic DS as Sensei-aligned characterization objects.
+   - Avoid claiming SOTA, damage segmentation, semantic change, or universal
+     transfer.
+
+4. **Choose the next external confirmation dataset before more tuning.**
+   - Need a labeled multispectral change dataset compatible with frozen
+     Successive Saab-DS or Band-Image/projector geometry.
+   - Freeze the OSCD-fitted method before scoring the new labels.
+   - If no compatible dataset is feasible quickly, state that the current
+     contribution is an OSCD construction study plus xBD candidate-localization
+     boundary, not a publication-ready universal detector.
+
+5. **If continuing the xBD route, frame it as analyst-triage/candidate
+   localization.**
+   - Next evidence should be another independent event set or a stronger
+     object-level candidate-retrieval protocol.
+   - Required comparisons: IR-MAD, raw L2, PCA-diff, Band-Image DS,
+     projector distance, and fixed review-budget recall/lift.
+   - Do not optimize on the five already inspected xBD-S12 test events.
+
+6. **Convert component-wise DS into diagnostics, not a method claim.**
+   - Use the antigravity script to explain why global DS mixes target change
+     and vegetation/pseudo-change.
+   - If promoted beyond diagnosis, derive component-selection rules on training
+     cities only and test them frozen on held-out cities.
+   - Keep NDVI/label-correlation filtering out of unsupervised method claims.
+
+7. **Keep the temporal DS line as characterization unless a labeled sequence
+   arrives.**
+   - Present first-DS magnitude, second-DS magnitude, and geodesic
+     along/orthogonal decomposition visually.
+   - For a future detector claim, acquire a manageable labeled multi-date
+     sequence and compare against MOSUM/BFAST/CCDC/SSA, raw residuals, and
+     index curvature.
+
+8. **Explicitly close or pause weak routes.**
+   - Closed/deprioritized for now: RTW as implemented, fixed-grid pyramid,
+     wavelet DS, generic HSI transfer, SpaceNet7 RGB transfer, global pixel DS
+     as a detector, and satellite KDS/KGDS without a specific nonlinear
+     question.
+   - Reopen only if a materially new mechanism, dataset, or advisor request
+     changes the problem.

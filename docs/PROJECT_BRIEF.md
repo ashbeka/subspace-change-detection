@@ -258,6 +258,24 @@ generic transfer criterion failed
 -> seek a compatible multispectral event confirmation or a new mechanism
 ```
 
+Operational next task order as of 2026-06-28:
+
+1. Consolidate the latest pushed Claude and antigravity branch evidence into
+   the main evidence ledger, marking what is verified versus branch-reported.
+2. Independently reproduce Claude's reported learned-rung result where
+   `bands+DS+sPCA+IR-MAD` improves over both `bands+sPCA+IR-MAD` and
+   `bands+cross+sPCA+IR-MAD`. This is the strongest current candidate for a
+   "geometry complements learning" claim, but it is not a claim until rerun.
+3. Use the seminar framing as a scoped evidence story: Successive Saab-DS is
+   the best internal OSCD spatial-support result; xBD-S12 shows candidate
+   localization rather than damage classification; first/second DS and geodesic
+   quantities are characterization tools.
+4. Choose a compatible external multispectral change dataset before tuning new
+   variants. If no dataset is feasible quickly, present the current work as an
+   OSCD construction study plus xBD boundary analysis.
+5. Keep component-wise DS/NDVI analysis as failure diagnosis unless a
+   train-only component-selection rule is frozen and tested on held-out cities.
+
 The xBD-S12 result remains valid for that event task, but it is not a generic
 building-localization or cross-sensor detector claim.
 
