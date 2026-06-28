@@ -394,5 +394,28 @@ Domain-Specific & Environmental Benchmarks
 * RB-SCD (2025): Formulated explicitly for Road and Bridge Semantic Change Detection, charting 11 unique structural and infrastructure alterations across diverse international cities.
 * xBD: The prominent gold standard for building damage assessment following natural disasters, using 4 distinct categorical severity levels. [1, 2, 3, 4, 5]
 To help tailor this to your requirements, are you looking to test algorithms for satellite remote sensing, autonomous driving/street views, or 3D indoor environments? Let me know if you would also like to see the current leaderboards or metric frameworks (e.g., F1, IoU, CA-TIoU) for any of these specific datasets. [1, 2]
-
 ”
+* Hyperspectral unmixing seems like an appropriate task for GDS/Geodesic
+* Do we hunt Spatial context?
+* Ideas:
+multitemporal change detection;
+change-point or anomaly detection;
+temporal dynamics analysis;
+detecting abrupt changes in an otherwise gradual process.
+time-series decomposition;
+denoising;
+trend and periodicity extraction;
+forecasting;
+anomaly or change-point detection.
+
+* “Subspace method for 3D/PointCloud reconstruction of multiple satellite imagery (angels) from different resources for a single patch (DGM)
+* “Does the scene's subspace trajectory respond, at the right time, to a physically documented event — and stay quiet when nothing happens — and can we tell an abrupt disturbance from gradual drift/recovery?”
+* Kanai 2023: clean-prefix + threshold-free AUC vs SSA-min-angle baselines + Grassmann-MDS separability; Fukui 2024: internal self-consistency + qualitative event alignment
+If: “The "set of samples" is fake. DS, MSM, CMSM, KMSM, KGDS — the entire CVLab family, and every piece of reference code on your disk (Venus sculptures, hand-pose, motion3D, faces) — are image-set methods. A subspace is meaningful when you have a set of related observations: 300 views of a sculpture, many frames of a face, a motion sequence. Bi-temporal change detection gives you one image per date. To manufacture a subspace, the project treats the ~1.26M pixels of a single image as the "set." That subspace describes the global spectral distribution of the whole scene — it has no notion of where anything is. This is the category error, and it is the literal content of Sensei's warning: "your algorithm can make a subspace, but it can break the spatial information.”” Then how about using hyper-spectral satellite images that have hundreds of bands and treating those bands as the “300 faces of Venus”?
+“A hyperspectral spectrum is a rich, near-continuous signal of 200–300+ bands, yet classical change detectors crush it to a single scalar — the spectral angle (its direction) or the change-vector magnitude (its amplitude). Both discard the spectrum's higher-order geometric structure. We ask: does that discarded structure carry change information, and can a Difference-Subspace representation — which encodes the full, illumination-invariant geometry of the spectral signal — detect and characterize change more faithfully than these scalar measures? And how does that advantage depend on spectral dimensionality?”
+How It's Used (pixel spectrum)
+
+Earth Observation: Satellites and drones use this technology to map forest health, detect crop diseases, or identify water pollution.
+Mineralogy & Geology: Used to pinpoint the exact chemical composition of rock formations or discover trace minerals.
+Medical Imaging: Helps distinguish between healthy and diseased tissues (like cancerous cells) based on their distinct spectral signatures
+* "Lack of Temporal Subspace Methods for Multi-Date Satellite Image Analysis in Rapid Disaster Assessment... track damage progression... predict recovery trajectories.

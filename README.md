@@ -55,14 +55,18 @@ Implemented now:
 - Spatial DS comparison:
   - global pixel DS;
   - local-window DS;
-  - patch-vector DS.
+  - patch-vector DS;
+  - Band-Image DS and matched projector/Gram/reconstruction controls;
+  - multiscale Band-Image pyramids, wavelet subspaces, and successive Saab-DS.
+- Frozen xBD-S12 event-disjoint external score-map evaluation with damage,
+  building-conditional, and localization views.
 - Phase 2 supervised binary segmentation using U-Net/Siamese-style models with raw bands and optional prior channels.
 - Central CLI wrapper: [project_cli.py](project_cli.py).
 
 Not implemented as a completed claim:
 
 - End-to-end disaster damage segmentation.
-- xBD/xBD-S12 building damage-level evaluation.
+- Supervised xBD/xBD-S12 building damage-level classification or segmentation.
 - Multi-class building damage metrics.
 - Full KDS/KGDS satellite pipeline.
 - Verified temporal GDS/KGDS on MultiSenGE or Harmonized Sentinel-2.
@@ -70,42 +74,87 @@ Not implemented as a completed claim:
 
 ## 3. Current Most Important Result
 
-Spatial DS comparison has moved from a one-city check to a five-city core sweep:
+The strongest current internal OSCD result is the frozen successive Saab-DS
+experiment:
 
 ```text
-phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823/
-docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
+docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md
+```
+
+- A pair-shared two-hop unsupervised Saab representation followed by canonical
+  DS reaches official held-out test AP `0.3420`, AUROC `0.8861`, and Otsu F1
+  `0.3312`.
+- Smoothed PCA-diff reaches AP `0.3141`; PCA-diff and matched-feature L2 both
+  reach about `0.3067`; matched cross-reconstruction reaches `0.3279`.
+- Three feature-fitting seeds produce AP `0.3438`, `0.3420`, and `0.3405`.
+- Literal spatial pyramids and wavelet Band-Image DS did not pass their
+  positive gates.
+- The result is pair-adaptive and OSCD-only. External transfer and a
+  train-fitted transform are still required.
+
+Earlier matched-control and transfer evidence remains relevant:
+
+The OSCD matched-control study and xBD-S12 external transfer are complete:
+
+```text
+docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md
+docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md
 ```
 
 Short interpretation:
 
-- Patch-vector DS is better than global pixel DS on average.
-- Local-window DS with `128x128` windows is weak as configured.
-- PCA-diff and raw L2 still outperform the DS-family maps overall.
-- Best DS-family mean AP was `0.1966` (`rank8_core / patch5`).
-- Best PCA-diff mean AP was `0.3953`.
-- This is useful diagnostic evidence, not a claim that DS improves OSCD.
-
-The next experiment must inspect failure modes and score definitions before any long Phase 2 training.
+- Band-Image DS is the strongest tested DS construction on OSCD, but remains
+  below spatially filtered PCA-diff as a stand-alone map.
+- On all `1,577` xBD-S12 test patches, canonical DS beats matched
+  cross-reconstruction in all five unseen events.
+- Band-image projector distance leads full-scene damaged-pixel retrieval and
+  building localization; raw L2 leads damage-vs-intact discrimination.
+- On 11 training events, projector distance beats IR-MAD full-scene AP in
+  10/11 events; at a 5% pixel-review budget it retrieves 38.2% of damaged
+  pixels, versus IR-MAD's 30.2%.
+- On five unseen test events, the corresponding secondary budget recalls are
+  24.7% versus 17.8%. These are candidate-ranking results, not segmentation or
+  severity estimates.
+- Object polygons confirm the same coverage/specificity tradeoff: at a 5%
+  scene threshold projector hits 35.8% of damaged test buildings, but also
+  26.7% of intact buildings; PCA-diff is better for damage classification.
+- Controlled 0-2 pixel shifts reduce projector accuracy but retain its
+  absolute candidate-ranking lead; registration invariance is not claimed.
+- Fixed HSI transfer is scene-dependent: Hermiston favors canonical DS, while
+  Benton/Shenzhen do not and Farmland is polarity-confounded.
+- On nine SpaceNet7 AOIs and 197 RGB building-appearance transitions, raw L2
+  leads AP and canonical DS loses to matched cross-reconstruction.
+- Spatial geometry is therefore an xBD-specific candidate-localization result,
+  not yet a generic detector or justified neural prior.
 
 ## 4. What To Do Next
 
-Reproduce or resume the completed core5 sweep:
+Read the successive spatial report first. The next evidence gate is to compare
+the current pair-adaptive transform against a transform fitted only on training
+cities, then reproduce the frozen method on a second labeled multispectral
+change dataset.
+
+Reproduce the current frozen OSCD comparison with the command in
+`docs/RUNBOOK.md`, Section 24.
+
+The earlier xBD-S12 result can be reproduced with:
 
 ```powershell
-.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities core5 --output-dir phase1/outputs/oscd_spatial_subspace_sweep_core5_20260614_004823 --resume --no-save-npy
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
 ```
 
-Do not start another long U-Net sweep yet. The DS-family maps need analysis and ablations first.
+Do not start another long U-Net sweep yet. Rank/centering, naive fusion,
+IR-MAD pressure, fixed budgets, registration, HSI transfer, and RGB
+building-appearance transfer are complete.
 
 Current priority order:
 
-1. Inspect comparison grids and failure modes for the five core cities.
-2. Score-definition and normalization ablation for patch DS.
-3. Compare against Celik-style patch PCA-kmeans.
-4. PCA rank sensitivity: ranks 2, 4, 6, 8, 10, 12.
-5. Projection/band/patch visual explanation.
-6. Phase 2 raw vs raw+best-spatial-prior only if the prior survives the previous checks.
+1. Implement and test a training-city-fitted successive transform against the
+   current pair-adaptive version.
+2. Seek a genuinely comparable labeled multispectral change dataset for a
+   frozen external test.
+3. Investigate seasonal/radiometric failures in Brasilia and Norcia.
+4. Only after external confirmation, test successive Saab-DS as a neural prior.
 
 ## 5. Central CLI
 
@@ -193,7 +242,7 @@ Generic utilities do not need citation-level comments. Niche method implementati
 Do not claim:
 
 - completed disaster damage segmentation;
-- xBD/xBD-S12 damage evaluation;
+- end-to-end supervised xBD/xBD-S12 damage segmentation or severity evaluation;
 - building damage severity classification;
 - DS is invented by this project;
 - DS reliably improves OSCD segmentation;

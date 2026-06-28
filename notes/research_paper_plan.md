@@ -17,22 +17,33 @@
 - [13. Guardrails](#13-guardrails)
 - [14. Research-Notes Ingestion Outcome](#14-research-notes-ingestion-outcome)
 - [15. File Sources](#15-file-sources)
+- [16. Ranked Research Problem Portfolio](#16-ranked-research-problem-portfolio)
+- [17. Cross-Branch Recommendation](#17-cross-branch-recommendation)
+- [18. Independent Transfer Decision](#18-independent-transfer-decision)
+- [19. Seminar Direction Decision](#19-seminar-direction-decision)
+- [20. Successive Spatial Subspace Result](#20-successive-spatial-subspace-result)
 
 This file is the paper-facing synthesis of the project. It is not a frozen thesis plan. It should evolve when code, experiments, advisor feedback, or literature change the argument.
 
 ## 1. Working Title
 
-Interpretable Subspace Priors for Sentinel-2 Change Detection
+Spatially Faithful Difference-Subspace Geometry for Multispectral Satellite Change Analysis
 
 Alternative titles:
 
+- Time-Aware First- and Second-Order Difference Subspaces for Multispectral Satellite Sequences
+- Multiscale Geodesic Subspace Dynamics for Interpretable Satellite Time-Series Change Analysis
 - Spatially Aware Difference Subspace Priors for Multispectral Change Detection
 - Evaluating Subspace-Based Change Priors for Supervised Sentinel-2 Binary Segmentation
 - When Do Interpretable Unsupervised Priors Help Remote-Sensing Change Segmentation?
 
 ## 2. One-Sentence Thesis
 
-This project tests whether Difference Subspace-based unsupervised representations can provide interpretable and spatially meaningful change evidence for supervised Sentinel-2 binary change detection, and what subspace construction is appropriate for satellite imagery.
+This project tests whether registered multispectral satellite sequences can be
+represented as high-dimensional band-image subspaces whose first/second
+Difference-Subspace and geodesic dynamics provide spatially attributable
+evidence of temporal change, and how cadence, radiometry, seasonality, and
+misregistration limit that evidence.
 
 ## 3. Problem Setting
 
@@ -45,23 +56,30 @@ interpretable subspace-based change detection for multispectral satellite imager
 Input:
 
 ```text
-pre-event Sentinel-2 image with 13 bands
-post-event Sentinel-2 image with 13 bands
+registered multispectral images at dates t_1 ... t_T
+with a common spatial grid and B aligned bands per date
 ```
 
 Output:
 
 ```text
-binary changed / unchanged map
+first-order temporal magnitudes between dates
+second-order and geodesic along/orthogonal magnitudes for date triples
+spatial contribution maps and optional detected-event maps
 ```
 
-Current benchmark:
+Current evidence datasets:
 
 ```text
-OSCD: Sentinel-2 before/after image pairs with binary change labels
+MultiSenGE: 23-date Sentinel-2 exploratory sequences without temporal labels
+IPOL registered SITS: 20-frame RGBI sequences with published qualitative events
+OSCD: secondary labeled two-date spatial verification benchmark
 ```
 
-OSCD is the current implemented benchmark, not a permanent boundary. Future datasets such as Harmonized Sentinel-2 L2A, MultiSenGE, xBD-S12, or domain-specific greenhouse data should be admitted only when the research question, data pipeline, labels or evaluation proxy, and baseline comparisons are clear.
+Harmonized Sentinel-2 L2A is the next Sensei-requested independent sequence,
+but it should be admitted only after documenting region, dates, actual cadence,
+cloud/no-data filtering, alignment, event source, and evaluation protocol.
+MultiSenGE and IPOL are first trials, not permanent thesis boundaries.
 
 Likewise, `Phase 1` and `Phase 2` are current workflow names, not the paper's fixed conceptual structure. In the paper, describe them by function when possible:
 
@@ -71,10 +89,12 @@ geometric/classical prior generation -> supervised neural segmentation/downstrea
 
 Current task boundary:
 
-- This is binary change detection.
-- This is not yet building damage classification.
-- This is not yet semantic change detection.
-- This is not yet xBD/xBD-S12 damage mapping.
+- This is temporal multispectral change analysis and changed-area attribution.
+- It is not yet a calibrated binary event detector.
+- It is not building damage classification or semantic change detection.
+- It is not yet xBD/xBD-S12 damage mapping.
+- OSCD binary experiments remain valid negative/diagnostic evidence, but no
+  longer define the primary novelty question.
 
 ## 4. Motivation
 
@@ -130,6 +150,32 @@ Contribution lanes to keep explicit:
 | Temporal or multi-date analysis | GDS/geodesic methods can describe how subspaces evolve across many dates, which is different from ordinary binary pre/post segmentation. | MultiSenGE or Harmonized Sentinel-2 date-window GDS, second-order DS, geodesic trajectory plots, temporal clustering. | Coherent temporal trajectories, seasonality checks, manual/weak-label validation, or labels if a dataset supports them. |
 | Hybrid NN + geometry | Neural models localize or produce features; subspace/GDS methods interpret, cluster, diagnose, or summarize changed regions. | `H5`, `H6`, `H7`, `H9`, `H10`, `H11` in `notes/experiments.md`. | Evidence that geometry adds interpretation, label-efficiency, error insight, or temporal structure beyond the neural mask alone. |
 | Negative or diagnostic study | Even if DS does not beat PCA-diff, IR-MAD, or U-Net, the thesis can still show exactly where and why it fails or helps. | Spatial DS comparison, IR-MAD comparison, city-wise failure taxonomy, pseudo-change analysis. | Clear failure modes tied to sample construction, spatial information loss, pseudo-change, or dataset-label mismatch. |
+
+Post-mining priority, updated 2026-06-22:
+
+1. RTW phase/tempo-invariance gate is complete and negative as an incremental
+   method. The controlled MultiSenGE result did not exceed snapshot PCA. A
+   larger follow-up then used official BreizhCrops natural crop labels, 22
+   controls, nested RTW tuning, two development/holdout geographic rotations,
+   and anchor bootstraps. Selected RTW AP (`0.7052`, `0.6596`) remained below
+   global-shift RMS (`0.7789`, `0.7759`) and PCA cross-reconstruction
+   (`0.8128`, `0.8264`). Keep RTW as a diagnostic row; reopen only for a
+   materially different mechanism such as attention RTW and a justified task.
+2. Use the diagnostic evidence as rigor, not as the seminar headline. The
+   positive anchor is the spatial sample-definition result: Band-Image DS is
+   the strongest tested DS construction and contributes complementary AUROC
+   ranking information in a PCA/IR-MAD fusion.
+3. Treat geometry features plus shallow learning as conditional, not the next
+   default. It becomes defensible only through nested raw-only, geometry-only,
+   raw-plus-geometry, and shuffled-geometry comparisons under held-out sites and
+   label budgets.
+4. The moment-factorized local HSI orientation/wavelength-attribution gate is
+   complete and negative on three held-out datasets. Retain its deterministic
+   solver, mechanism tests, and polarity controls as method-verification
+   evidence; do not present it as a detector.
+5. The immediate positive-method gate is a frozen OSCD comparison of
+   Band-Image DS against smoothed/multiscale PCA, matched spatial
+   Gram/correlation distance, cross-projection, and IR-MAD.
 
 ## 5. Research Gap
 
@@ -311,7 +357,11 @@ Spatially aware Difference Subspace priors for interpretable Sentinel-2 changed-
 Status:
 
 - This is the strongest current candidate, not a proven contribution.
-- The claim becomes strong only if experiments show that patch/local/object/tensor-aware subspace construction improves spatial meaning, robustness, or downstream prior usefulness.
+- Global, patch, local-window, and fixed-grid pyramid DS have now been tested. Patch/local variants improve over global pixel DS but remain well below PCA-diff; the exact fixed-grid pixel-spectral pyramid is a negative result.
+- Band-Image DS is the strongest current DS construction, but even rank 12 remains below PCA-diff on mean AP. It should be retained as a component/diagnostic, not presented as a superior standalone detector.
+- Label-free PCA/Band-Image/IR-MAD rank fusion provides statistically reliable AUROC complementarity but not a reliable AP or thresholded-segmentation improvement.
+- Split-safe changed-area calibration makes fusion the best held-out test mask in the current comparison, but its F1 gain over PCA-diff is not significant across 10 test cities. Calibration alone is not the contribution.
+- The next contribution gate is whether pseudo-change analysis or a genuinely different nuisance-aware spatial feature representation makes the complementary signal useful and interpretable.
 - Existing remote-sensing literature already contains spatial-spectral subspace and low-rank/sparse ideas, so novelty must be framed as a specific DS/GDS-style adaptation and evaluation, not as the invention of spatial satellite subspaces.
 
 Possible sharper thesis question:
@@ -467,14 +517,16 @@ Current novelty boundary:
 8. Conclusion
    - honest contribution
    - limitations
-   - future work: KDS, GDS/KGDS, MultiSenGE, xBD-S12, abandoned greenhouses
+   - future work: KDS, GDS/KGDS, MultiSenGE, supervised damage severity, abandoned greenhouses
 
 ## 12. Open Decisions
 
 High priority:
 
-- What spatial subspace construction should become the main method?
-- Is rank 6 defensible, or should rank be selected by sensitivity/variance?
+- Is projector-plus-radiometric candidate ranking stable under training-event
+  cross-validation?
+- Which centered rank or uncentered construction survives training-event
+  sensitivity without tuning on the inspected xBD-S12 test events?
 - Does valid masking exclude any meaningful changed pixels?
 - Should Phase 2 continue only after Phase 1 maps are strong?
 
@@ -487,7 +539,7 @@ Medium priority:
 
 Low priority for now:
 
-- xBD/xBD-S12 damage pipeline.
+- supervised xBD/xBD-S12 damage-severity pipeline.
 - abandoned greenhouse benchmark.
 - foundation-model extensions.
 
@@ -506,7 +558,7 @@ Main guardrails:
 
 Future hooks to keep out of the main claim for now:
 
-- xBD/xBD-S12 damage severity mapping.
+- supervised xBD/xBD-S12 damage severity mapping.
 - abandoned-greenhouse mapping.
 - UAV/edge deployment.
 - MCDA/IoT/DMaaS/operational dashboard ideas.
@@ -519,13 +571,14 @@ The nested `research-notes/` repo was ingested on 2026-06-07. It preserved a bro
 What survives as active:
 
 - Interpretable subspace-based change detection for multispectral satellite images.
-- OSCD as the current implemented binary change benchmark.
-- The immediate need to test spatially aware subspace construction.
+- OSCD as the construction benchmark and xBD-S12 as external transfer evidence.
+- The immediate need to validate the geometry-plus-radiometry hypothesis on
+  training events and another independent gate.
 - Careful comparison against raw pre/post, PCA-diff, Siamese, and modern CD baselines.
 
 What survives as warm/future:
 
-- xBD-S12 or another Sentinel-scale damage dataset as the cleanest future damage bridge.
+- another independent Sentinel-scale event dataset as the next confirmatory bridge; supervised xBD-S12 severity remains future work.
 - MultiSenGE GDS/KGDS or second-order DS if multi-date evaluation becomes central.
 - SSC as a future unsupervised change-type clustering baseline or pseudo-label source.
 - Band-group attribution, PCA reconstruction, geodesic/SPD change scores, RTW/SSA/SFA/DMD, and period-subspace DS as future method hooks.
@@ -559,3 +612,645 @@ Use these files when expanding this plan:
 - `docs/source_records/qa_report_response_2025-11-20.pdf`: submitted QA answers; useful for spectral-vs-semantic explanation, MultiSenGE pairing caveats, seasonal-risk framing, and IR-MAD caution.
 - `docs/source_records/legacy_cs_seminar_report_ds_damage_segmentation_2025.tex`: earlier seminar-report source; useful as historical writing material, but it overuses old Phase 1/2 and damage-segmentation framing compared with the current truth.
 - `docs/source_records/student_feedback_channel4_2025-11-20.xlsx`: original student feedback source; extracted into `notes/feedback.md`.
+
+## 16. Ranked Research Problem Portfolio
+
+This ranking was rebuilt on 2026-06-19 from the active notes, Apple Notes,
+Sensei Slack messages, senpai feedback, the old research reset, reference-code
+inventory, completed OSCD experiments, the new temporal experiments, and a
+targeted literature search. It supersedes the ordering in the 2026-06-13 reset
+audit because Sensei later gave a much more explicit time-sequential task.
+
+The scores are decision aids, not probabilities. The weighting is:
+
+- Sensei/advisor alignment: 25%.
+- Evidence of a real literature or methodological problem: 20%.
+- Dataset and evaluation feasibility: 20%.
+- Existing implementation and preliminary evidence: 15%.
+- Scope feasibility: 10%.
+- Scientific value even if the hypothesis fails: 10%.
+
+| Rank | Research problem | Decision score | Current role |
+|---:|---|---:|---|
+| 1 | Time-aware first/second DS and geodesic decomposition for multispectral satellite time series | 91/100 | active core |
+| 2 | Radiometrically invariant but registration-robust temporal subspace change | 88/100 | required method refinement |
+| 3 | Multiscale local temporal subspaces for changed-area localization | 85/100 | required spatial extension |
+| 4 | What do temporal DS quantities actually detect versus established SITS change methods? | 82/100 | evaluation spine / safe paper |
+| 5 | Slow pseudo-change versus abrupt structural change using SFA/SSA plus DS | 78/100 | strong follow-up |
+| 6 | Spatially supported bi-temporal DS for multispectral binary change detection | 73/100 | existing diagnostic track |
+| 7 | Neural localization followed by geometric temporal interpretation | 70/100 | hybrid follow-up |
+| 8 | Deep latent and product-Grassmann subspace dynamics | 66/100 | higher-risk hybrid |
+| 9 | Nonlinear KDS/KGDS for multi-date multispectral trajectories | 61/100 | method-understanding/future |
+| 10 | First/second variation of VLM explanation subspaces for satellite sequences | 55/100 | exploratory high-risk idea |
+
+The list does **not** authorize ten parallel implementations. Work now on ranks
+1-4 as one coherent study. Rank 5 is the first planned extension. Ranks 6-10
+remain available if the active study fails or a later paper needs a new route.
+
+### 16.1 Time-Aware First/Second DS And Geodesic Decomposition
+
+**Problem statement:** Can first-order DS magnitude, second-order DS magnitude,
+and geodesic along/orthogonal decomposition identify and explain temporal
+changes in registered multispectral satellite sequences when acquisition times
+are irregular?
+
+**Why this is first:** Sensei explicitly requested a time-sequential satellite
+set, full channel-image subspaces in a super-high-dimensional space, changes in
+first/second magnitudes, geodesic decomposition, and varied tests. The
+second-order paper itself assumes equal time intervals, while real satellite
+sequences often do not. That creates a concrete adaptation problem rather than
+the generic claim "apply DS to satellite images."
+
+**Hypothesis:** One date can be represented by the span of its aligned band
+images, `S_t in Gr(r, N_pixels)`. First-order magnitude measures movement of
+that spatial-band span; second-order magnitude measures departure from the
+endpoint mean; the geodesic split distinguishes along-trajectory speed change
+from off-trajectory change. For irregular dates, an additional time-aware
+deviation from the endpoint geodesic at the observed acquisition fraction is
+needed.
+
+**Minimum experiment:** use full-rank channel-image subspaces on a registered
+20+ frame sequence; report first, paper-faithful second, along, orthogonal,
+time-aware deviation, and spatial contribution maps. Compare known event dates
+and equal/unequal-gap controls.
+
+**Baselines:** raw reflectance/index curvature, IPOL novelty/NFA, MOSUM,
+BFAST/JUST/CCDC where applicable, and simple spatial PCA/chronochrome controls.
+
+**Falsifier:** curves only track acquisition gaps, seasonal indices, or raw
+pixel RMSE; contribution maps remain diffuse and miss known events.
+
+**Curiosity:** does a structural event appear primarily as motion orthogonal to
+the normal seasonal geodesic, while ordinary phenology remains along it?
+
+**Stronger sample construction to test next:** build one annual/seasonal
+subspace from repeated date composites of the same aligned patch or field:
+`X_y in R^((B*N) x M_dates)`. This makes the temporal observations the genuine
+sample set. Irrigation start/stop is the first candidate phenomenon because it
+adds or removes a seasonal cycle. IrrMapper can propose annual transitions, but
+its outputs are weak labels and require manual/independent verification.
+
+### 16.2 Radiometrically Invariant, Registration-Robust Temporal Subspace Change
+
+**Problem statement:** Can the useful invariance of full-channel band-image
+subspaces to global per-band gain/offset be retained while suppressing their
+extreme sensitivity to subpixel spatial misregistration?
+
+**Why it is defensible:** controlled tests already show a sharp, reproducible
+boundary: rank-full centered band-image DS is exactly invariant to tested
+global gain/offset but a one-pixel translation produces more response than a
+localized synthetic change. Registration is a recognized remote-sensing CD
+failure mode, so this is not a project-invented weakness.
+
+**Method candidates:** pre-registration, phase-correlation alignment,
+translation-tolerant local pooling, multiscale tiles, low-frequency/wavelet
+band-image bases, or minimizing DS over a small displacement neighborhood.
+
+**Evaluation:** controlled gain/offset/translation/local-change injections,
+real registered sequences, residual registration perturbations, runtime, and
+event-localization maps.
+
+**Success:** registration response falls substantially without destroying the
+radiometric invariance or local-change response.
+
+**Falsifier:** every robustification also removes the structural change signal.
+
+**Curiosity:** which geometric information is truly invariant and useful, and
+which information is merely a fragile consequence of pixel correspondence?
+
+### 16.3 Multiscale Local Temporal Subspaces For Localization
+
+**Problem statement:** Can a hierarchy of local band-image subspaces preserve
+the temporal/geodesic information of DS while localizing changed regions more
+cleanly than one whole-scene subspace?
+
+**Motivation:** whole-scene temporal DS produces one interpretable global
+magnitude but its IPOL Las Vegas contribution maps respond broadly to roofs,
+roads, and scene texture. The IPOL baseline itself reports that local tiling
+helps when change is global/frequent. Senpai's Green Learning/wavelet idea also
+motivates whole image -> 2x2 -> 4x4 -> finer spatial support.
+
+**Construction:** for each date and tile, flatten each band image inside that
+tile into one spatial vector; construct one full/low-rank tile subspace; compute
+first/second/time-aware quantities per tile; overlap and fuse multiple scales.
+
+**Baselines:** whole-scene temporal DS, post-smoothed contribution maps,
+multiscale PCA/chronochrome, IPOL patch novelty, and raw/index changes.
+
+**Success:** known events are localized with fewer scene-wide edge responses,
+and gains survive location/scale controls.
+
+**Falsifier:** improvement is entirely reproduced by smoothing or generic
+tiling without DS geometry.
+
+**Curiosity:** at what spatial scale does subspace curvature correspond to an
+object-level event rather than ordinary appearance fluctuation?
+
+### 16.4 What Do Temporal DS Quantities Actually Detect?
+
+**Problem statement:** Across registered satellite time series, what physical
+or statistical changes are ranked by first DS, second DS, geodesic orthogonal
+change, and time-aware geodesic deviation, and how do they differ from
+established temporal change detectors?
+
+**Contribution type:** a rigorous empirical/diagnostic study rather than a new
+algorithm claim. This is the safest paper if the method does not win.
+
+**Protocol:** compare on multiple sequences with event annotations or published
+visual cases; categorize construction, demolition, vegetation/seasonality,
+cloud/shadow, radiometric shifts, and registration errors. Include rank,
+preprocessing, cadence, scale, and attribution ablations.
+
+**Success:** identify repeatable regimes where each geometric component adds
+information or explainable failure evidence.
+
+**Falsifier:** all DS quantities are monotonic transformations of raw/index
+difference and provide no distinct attribution.
+
+**Curiosity:** is geodesic curvature a meaningful new signal, or only an
+expensive restatement of familiar temporal residuals?
+
+### 16.5 Slow Pseudo-Change Versus Abrupt Structural Change
+
+**Problem statement:** Can slow-feature or singular-spectrum subspaces model
+seasonal/background trajectories so that DS/geodesic residuals emphasize
+abrupt land-surface change?
+
+**Grounding:** Sensei suggested SSA/SFA-related directions; DSFA is an
+established remote-sensing change method; BFAST/JUST explicitly model temporal
+trend/seasonality. This route addresses the real pseudo-change problem rather
+than assuming every spectral difference is target change.
+
+**Experiment:** learn slow/background components from same-location sequences,
+construct subspaces from trajectory/Hankel matrices, and compare first/second
+DS residuals with DSFA, BFAST/JUST, raw indices, and the rank-1 temporal method.
+
+**Risk:** without sufficient seasonal coverage, "slow" may simply encode the
+wrong period or absorb gradual real change.
+
+**Curiosity:** can normal seasonal motion be represented as a low-curvature
+path whose departures reveal genuinely unusual events?
+
+### 16.6 Spatially Supported Bi-Temporal DS
+
+**Problem statement:** For two-date multispectral binary change detection,
+which DS sample definition, if any, preserves enough spatial structure to add
+useful evidence beyond PCA-diff, chronochrome, IR-MAD, and simple smoothing?
+
+**Current evidence:** patch construction changes DS behavior, Band-Image DS is
+stronger than old global pixel DS, but PCA-diff remains stronger on mean AP.
+Spatial PCA/smoothing explains much of the apparent spatial gain. Therefore
+this is now a diagnostic route, not the default novelty claim.
+
+**Remaining defensible work:** local intrinsic DS magnitude, displacement
+robustness, contribution attribution, and paired city-wise tests against
+matched non-DS spatial controls.
+
+**Falsifier:** matched PCA/chronochrome controls reproduce every gain.
+
+**Curiosity:** is there any spatial support where canonical-angle geometry adds
+information that linear projection residuals do not?
+
+### 16.7 Neural Localization Followed By Geometric Temporal Interpretation
+
+**Problem statement:** Can a neural/foundation detector localize candidate
+regions while DS/GDS/geodesic analysis explains how each region evolves over
+multiple dates?
+
+**Why it may work:** neural networks are stronger localizers; subspace geometry
+may be more defensible as a compact trajectory descriptor than as the sole
+pixel detector. This matches the lab pattern of learned features plus geometry.
+
+**Experiment:** detect objects/regions, construct one band/deep-feature
+subspace per region/date, then cluster or classify trajectories by first/second
+and GDS descriptors. Greenhouses, buildings, or semantic CD datasets are
+possible applications only after labels and region units are available.
+
+**Risk:** the neural model may do all useful work, leaving geometry decorative.
+
+**Curiosity:** can geometry reveal recovery, degradation, or stable change
+types that a single segmentation mask cannot express?
+
+### 16.8 Deep Latent And Product-Grassmann Dynamics
+
+**Problem statement:** Do subspaces built from remote-sensing encoder features
+provide more meaningful temporal geometry than subspaces built directly from
+raw band images?
+
+**Grounding:** Signal Latent Subspace and Grassmannian neural methods show how
+learned latent factors can become subspaces; tensor/product-Grassmann methods
+preserve multiple factors. The satellite adaptation could separate spectral,
+spatial, and temporal factors.
+
+**Experiment:** freeze a remote-sensing encoder, extract patch/date features,
+construct factor subspaces, compare raw versus latent first/second/GDS metrics,
+and test whether product factors improve event discrimination.
+
+**Risk:** high implementation complexity and unclear attribution; requires a
+strong raw temporal baseline first.
+
+**Curiosity:** does a learned manifold straighten nuisance variability enough
+that geometric acceleration becomes semantically meaningful?
+
+### 16.9 Nonlinear KDS/KGDS For Multi-Date Multispectral Trajectories
+
+**Problem statement:** When linear band-image subspaces are insufficient, can
+kernel subspaces capture nonlinear temporal change patterns without becoming
+computationally or interpretively unusable?
+
+**Grounding:** Sensei explicitly requested the TPAMI 2015 nonlinear KDS Venus
+exercise. KPCA/KDS is not novel by itself, and KPCA change detection already
+exists in remote sensing; novelty must come from a precise temporal/spatial
+construction and evaluation.
+
+**Experiment:** first reproduce Venus dimensions and equations; then use
+Nyström/sampled kernel subspaces on local/date features and compare with linear
+DS and ordinary KPCA change detection.
+
+**Risk:** kernel memory, parameter sensitivity, preimage/attribution difficulty,
+and weak novelty.
+
+**Curiosity:** are relevant satellite trajectories genuinely nonlinear in a
+way canonical angles in the original space cannot expose?
+
+### 16.10 VLM Explanation-Subspace Dynamics
+
+**Problem statement:** If a VLM produces multiple descriptions or embeddings
+for each satellite date, can their first/second subspace variations reveal
+semantic temporal change that raw spectral geometry misses?
+
+**Grounding:** Sensei proposed explanation subspaces and their first/second
+variation. Change captioning, ChangeCLIP, and open-vocabulary CD show that
+language-aware change analysis is active, but this exact subspace framing is
+unverified.
+
+**Experiment:** generate controlled prompt ensembles per date, construct text
+embedding subspaces, measure first/second/geodesic variation, and compare with
+known semantic transitions and image-feature baselines.
+
+**Risk:** prompt instability, hallucinated descriptions, weak reproducibility,
+and distance from the current verified computer-vision pipeline.
+
+**Curiosity:** can semantic explanations themselves form a smooth trajectory,
+with meaningful events appearing as geometric acceleration?
+
+### 16.11 Rejected Or Deprioritized Framings
+
+- **Generic DS prior + U-Net:** already tested; no reliable gain and prior-guided
+  fusion is not novel by itself.
+- **Global pixel DS as the thesis method:** loses spatial sample identity and is
+  weaker than matched classical baselines.
+- **"First satellite subspace method":** false; hyperspectral, tensor,
+  spatial-spectral, PCA/KPCA, MAD/CCA, and subspace CD literature exists.
+- **Label-efficient DS without low-label curves:** unsupported until an actual
+  10/25/50/100% label experiment is run.
+- **Broad disaster platform/MCDA/UAV/IoT framing:** too many tasks and no single
+  validated contribution.
+- **Greenhouse or xBD damage claims from OSCD:** application mismatch; require
+  their own data, labels, and metrics.
+- **Generic foundation-model pivot:** crowded and weakly aligned with current
+  implementation unless geometry has a clear, tested role.
+
+### 16.12 Immediate Decision
+
+The 2026-06-20 replication changes the active paper program. Whole-scene and
+bidirectional temporal-context DS contribution maps do not currently compete
+with raw difference or IPOL NFA for localization. Do not continue treating
+"DS change map" as the assumed contribution.
+
+The revised program separates two tasks:
+
+```text
+registered multi-date multispectral sequence
+-> sequence-level geometric characterization:
+     first/second DS + along/orthogonal + irregular-time geodesic deviation
+-> pixel localization:
+     projection novelty + raw/index/IPOL/classical/deep controls
+-> registration-robust spatial support
+-> labeled multi-temporal evaluation
+```
+
+The first labeled-data attempt is now the **seasonal observation subspace**
+study, not another per-date global-pixel map. It asks whether annual subspaces
+built from repeated Sentinel-2 date composites detect irrigation-regime
+transitions and distinguish them from ordinary seasonal variation. A small
+DynamicEarthNet slice remains the independent-label pressure test.
+
+Controlled evidence now narrows this framing. Seasonal DS is not the expected
+standalone winner: simple NDVI and singular-value controls dominate the current
+synthetic boundary task. The surviving paper hypothesis is that low-rank
+orientation geometry adds radiometrically robust within-sequence timing or
+trajectory evidence, while singular energy carries amplitude change. This must
+be demonstrated on verified real transitions and against temporal baselines.
+
+The real-background intervention study sharpens this again. Block-trajectory
+subspaces restore temporal-order sensitivity but did not improve controlled
+localization. At fine local support, a smoothed temporal eigenspectrum was
+competitive with NDMI/NBR and more invariant to tested gain/offset, while pure
+first/second DS orientation was weaker. The immediate paper question is now
+whether this orientation-versus-spectrum tradeoff repeats on independently
+labeled events; it is not yet a method claim.
+
+Current evidence:
+
+- second/time-aware geometry has slightly stronger macro temporal agreement
+  with IPOL event intensity than raw interpolation residual, but lower pixel AP;
+- temporal-context DS has poor localization and is rejected in its current form;
+- temporal projection novelty nearly matches raw localization, is invariant to
+  tested global gain/offset, and distinguishes persistent from transient
+  injected change;
+- all geometric variants remain strongly translation-sensitive;
+- low-frequency scale-space suppresses global translation response, but the
+  gain is event-scale dependent and raw difference has the same cross-scale
+  discrimination pattern;
+- IPOL agreement is not ground truth, so no performance claim is authorized.
+- In the off-grid MultiSenGE localization intervention, Gaussian-sigma-2 local
+  eigenspectrum AP was `0.688`, NDMI `0.680`, and first DS `0.456`; the
+  eigenspectrum/NDMI intervals overlap.
+- Eigenspectrum gain/offset false alarms were `0.050`, but missing-composite and
+  translation false alarms remained `0.358` and `0.292`.
+
+The strongest current paper hypothesis is therefore:
+
+```text
+Can local temporal subspace orientation and eigenspectrum descriptors separate
+(a) when/how a multispectral trajectory changes from (b) where a persistent
+spectral-mode change occurs, while remaining distinguishable from missing-data,
+radiometric, and registration artifacts?
+```
+
+This is a sharper version of ranks 1-4, not a new eleventh project. It survives
+a negative outcome: if geometry does not improve localization, the empirical
+result can still explain which invariances, persistence cues, and failure modes
+temporal subspaces provide relative to established SITS detectors.
+
+## 17. Cross-Branch Recommendation
+
+The 2026-06-22 evidence synthesis supersedes any single-method narrative in
+Section 16. The recommended seminar framing is:
+
+> **How Subspace Construction Changes Spatial and Temporal Change Evidence in
+> Multispectral Satellite Imagery**
+
+Recommended seminar question:
+
+> Can a spatial-axis Difference Subspace provide complementary, interpretable
+> ranking evidence beyond matched spatial, radiometric, and correlation
+> controls for multispectral binary change detection?
+
+This directly answers Sensei's spatial-information criticism and has real
+all-city evidence. The matched-null experiment is now complete. Band-Image DS
+is the strongest tested DS construction (AUROC `0.8477`, AP `0.2410`) and beats
+normalized spatial Gram/projector maps and rank-matched cross-reconstruction,
+but remains below PCA-diff and spatially filtered PCA.
+Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`, but the DS gain
+beyond a cross-reconstruction substitute is supported internally; improvement
+beyond smoothed PCA alone is not confirmed.
+
+Seminar contribution boundary:
+
+1. We explicitly compare how the satellite sample unit changes the DS object.
+2. We show that global pixel DS loses required spatial evidence, while the
+   Band-Image construction is competitive and complementary in ranking.
+3. We implement Sensei's first/second DS and geodesic decomposition on
+   sequential data and report their current real-data limits honestly.
+4. We show the completed matched-null boundary: DS is not just projector/Gram
+   change or cross-reconstruction, but its standalone accuracy remains below
+   spatial PCA.
+
+The real current use case is label-free changed-region candidate ranking for
+analyst triage. Do not claim automatic damage segmentation, semantic change
+classification, or validated band attribution.
+
+Primary report:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+Publication-facing next question:
+
+> Does this sample-construction and complementarity pattern transfer under a
+> frozen protocol to an external multispectral change benchmark?
+
+Without that confirmation, present the work as a rigorous seminar construction
+study, not a validated new detector.
+
+### 17.1 External Transfer Update (2026-06-22)
+
+xBD-S12 supplies the first independent event-disjoint transfer result. The
+external finding supports a narrower positive paper direction:
+
+> Spatial band-image subspace geometry provides transferable label-free
+> candidate-localization evidence. Canonical DS adds beyond matched
+> reconstruction on the five test events, but that direction is not stable on
+> training disasters; radiometric evidence remains necessary for damage
+> discrimination.
+
+This is stronger than an OSCD-only construction study but still short of a
+detector paper. Absolute damaged-pixel AP is low, only five independent test
+events exist, and the best projector map is partly a building-localization
+signal. A 1,100-patch training-event check nevertheless shows projector AP
+above IR-MAD in 10/11 events and candidate-recall enrichment at fixed review
+budgets on both train and unseen test events. Naive projector/radiometry score
+fusion is rejected. Object-level evaluation further shows substantially higher
+damaged-building hit recall than IR-MAD at fixed scene thresholds on both train
+and test events, but also more intact-building hits; PCA-diff is stronger for
+damage classification. The plausible contribution is therefore interpretable
+high-coverage candidate localization with explicit specificity limits, pending
+another independent event gate. Controlled 0-2 pixel shifts show statistically
+detectable projector degradation but do not erase its absolute candidate lead;
+describe the method as registration-sensitive, not invariant.
+
+Primary external report:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+## 18. Independent Transfer Decision
+
+The two post-xBD transfer gates do not support a generic detector or immediate
+neural-prior paper.
+
+1. Fixed rank-11 HSI transfer is scene-dependent. Hermiston favors canonical
+   DS, but Benton and Shenzhen favor simpler controls and Farmland is
+   polarity-confounded.
+2. Tiled rank-two RGB transfer on nine SpaceNet7 AOIs rejects both projector
+   and canonical DS for monthly building appearances. Raw L2 has the best AP;
+   IR-MAD has the best mean AUROC and 5% review-budget recall.
+
+The current defensible paper-level finding is therefore conditional:
+
+> Spatial band-image subspaces can provide complementary candidate evidence on
+> particular multispectral event tasks, but the benefit does not transfer
+> automatically across spectral dimensionality, sensors, or change semantics.
+
+This is not yet a sufficient positive contribution for the final thesis. The
+next publication-oriented route must either obtain a compatible multispectral
+event confirmation or explain and predict the conditions under which DS adds
+information beyond reconstruction and radiometric controls. Do not run a
+projector-prior neural experiment until one of those routes passes a fresh
+held-out gate.
+
+## 19. Seminar Direction Decision
+
+Decision date: 2026-06-23. This decision was made after comparing the Codex,
+Claude, Antigravity, research-mining, and legacy branches; the complete
+experiment-report set; Sensei's Slack requests; seminar feedback; and a scoped
+literature search.
+
+### 19.1 One Research Problem
+
+Use this as the primary seminar problem:
+
+> **Can each multispectral satellite acquisition be represented as a spatially
+> faithful subspace so that Difference Subspace geometry supplies
+> complementary, label-free changed-area evidence, and can first- and
+> second-order Difference Subspaces describe how that evidence evolves through
+> a satellite image sequence?**
+
+The first clause is the evidenced core. The temporal clause is the
+Sensei-aligned extension. Do not present them as two unrelated projects.
+
+The concrete limitation being addressed is not simply that pixelwise
+difference is "naive." The old global pixel-spectrum construction used
+`X_t in R^(B x N)` and discarded pixel position while fitting the subspace.
+The selected construction instead uses:
+
+```text
+X_t in R^(N x B)
+column = one flattened, aligned band image
+U_t in R^(N x r)
+```
+
+The ambient coordinates of `U_t` are therefore fixed image locations. Its
+basis vectors are spatial eigenimages. Pairwise canonical DS yields a spatial
+change-evidence map; a sequence of these per-date subspaces yields first-DS
+magnitude, second-DS magnitude, and geodesic along/orthogonal components.
+
+### 19.2 Why This Ranks First
+
+| Candidate | Sensei alignment | Real evidence | Novelty headroom | Seminar clarity | Decision |
+|---|---|---|---|---|---|
+| Spatial-axis DS as complementary prior, with temporal extension | Directly answers spatial-construction, DS, DNN-combination, and sequential-DS asks | Positive but conditional on OSCD; narrow xBD transfer | Specific construction/role, not DS itself | One matrix construction connects maps and sequences | **Select** |
+| First/second DS and geodesic as a detector | Sensei's most repeated explicit request | Formulas and curves verified; real detection generally loses to radiometric controls | High as satellite analysis | Clear math, weak performance headline | Show as extension, not detector win |
+| xBD-S12 projector candidate localization | Strong reconstruction motivation | Frozen event-disjoint positive with high recall; specificity is weak | Moderate; best method is projector distance, not canonical DS | Concrete application | Supporting result only |
+| Diagnostic study of when geometry fails | Honest and strongly evidenced | Broadest evidence base | Potentially publishable empirical boundary | Negative-first story may distract tomorrow | Safety-net contribution |
+| HSI, RTW, SFA, SSA, material MSM/GDS, deep-feature, kernel-proxy routes | Several named Sensei methods covered | Predominantly negative against stronger controls | Individual hypotheses remain possible | Too scattered | Do not headline |
+
+### 19.3 Evidence That May Be Shown
+
+1. Global pixel DS is unsuitable on OSCD under the tested score: AP `0.0625`.
+2. Spatial-axis Band-Image DS reaches AP `0.2410`, beats its matched Gram,
+   projector-row, and cross-reconstruction controls, but remains below
+   smoothed PCA (`0.2679`).
+3. Equal-rank fusion of smoothed PCA, Band-Image DS, and IR-MAD reaches AP
+   `0.2780`. On the ten official test cities it beats the matched
+   cross-reconstruction substitute by `+0.0115` AP (`p=0.0098`). This supports
+   complementarity, not standalone superiority.
+4. A preliminary three-seed FC-EF U-Net experiment reaches AP `0.5128` with
+   DS+PCA+IR-MAD priors versus `0.4825` for raw bands, `0.4804` without DS, and
+   `0.4870` when DS is replaced by cross-reconstruction. This is internal OSCD
+   evidence and must not be called externally validated.
+5. On xBD-S12, spatial projector geometry retrieves about `24.7%` of damaged
+   pixels in the top `5%` review budget and has high damaged-building recall,
+   but also hits more intact buildings. It is candidate localization, not
+   damage classification.
+6. First/second DS and geodesic quantities have been generated on real
+   sequences. Their mathematical behavior is verified, but current event
+   detection/localization evidence is negative or unlabeled. Show the curves
+   as completed analysis and the next validation problem.
+
+### 19.4 Literature Boundary
+
+- The 2024 remote-sensing CD review identifies image quality, noise,
+  registration error, illumination, complex landscapes, and spatial
+  heterogeneity as real difficulties
+  ([DOI](https://doi.org/10.3390/rs16132355)).
+- Pseudo-change from illumination/noise/scale and limited datasets are also
+  explicit problems in established deep CD work
+  ([DSAMNet](https://doi.org/10.1109/TGRS.2021.3085870)).
+- Subspace learning already exists in hyperspectral anomalous change
+  detection, so "the first subspace method for satellite imagery" is unsafe
+  ([SMSL](https://doi.org/10.1109/TGRS.2022.3220814)).
+- Satellite time-series event detection already has strong breakpoint and
+  trend methods. First/second DS must be positioned as an interpretable
+  geometric descriptor and compared with BFAST/CCDC/MOSUM/DRMAT-style
+  controls, not as the first temporal satellite detector
+  ([DRMAT](https://doi.org/10.1016/j.rse.2024.114402)).
+- Fukui et al.'s second-order DS demonstrates temporal/spatial subspace
+  dynamics on 3D shape and biometric signals, not satellite imagery
+  ([paper](https://arxiv.org/abs/2409.08563)). A scoped search did not find the
+  same first/second/geodesic construction on satellite sequences, but this is
+  not enough to authorize a universal "first" claim.
+
+### 19.5 Position Relative To Claude's Recommendation
+
+Agree with Claude that the strongest positive direction is **DS as
+complementary evidence in a hybrid pipeline**, not DS as a standalone SOTA
+detector. Do not make the xBD projector result the whole thesis: projector
+distance is not canonical DS, its specificity is weak, and the effect did not
+transfer to SpaceNet7 RGB. Do not make the U-Net fusion a final claim yet:
+its evidence is internal to the repeatedly inspected OSCD split.
+
+The safer synthesis is broader but still precise: the main contribution is the
+spatially faithful sample construction and the evidence boundary for how its
+geometry can complement radiometric and learned features. First/second DS and
+geodesic analysis are the natural multi-date extension that directly answers
+Sensei, but not yet a positive detector result.
+
+### 19.6 Safe Seminar Claim
+
+> Changing the satellite sample definition from unordered pixel spectra to
+> aligned band images changes DS from a weak global spectral-distribution score
+> into spatial candidate evidence. It is not the best standalone detector, but
+> matched controls and internal hybrid experiments show that it can contribute
+> information not supplied by reconstruction or radiometric maps alone. The
+> same per-date subspaces also let us compute first- and second-order temporal
+> geometry, whose event-level value is the next open test.
+
+Forbidden tomorrow: SOTA, universal transfer, damage severity, automatic
+semantic interpretation, registration invariance, or a proven first-ever
+satellite method.
+
+## 20. Successive Spatial Subspace Result
+
+The 2026-06-23 experiment provides a stronger concrete candidate than the
+earlier global Band-Image result.
+
+Provisional working title:
+
+```text
+Successive Spatial Subspace Learning With Difference-Subspace Geometry for
+Unsupervised Multispectral Satellite Change Detection
+```
+
+Provisional research question:
+
+```text
+Does a shared successive local Saab representation make canonical Difference
+Subspace useful for spatially attributable multispectral change evidence, and
+does DS add information beyond L2, PCA, and cross-reconstruction on the same
+features?
+```
+
+Current contribution candidate:
+
+1. A clearly specified pair-shared successive spatial-spectral representation
+   for bitemporal multispectral images.
+2. Spatial Band-Image DS applied at multiple receptive-field hops.
+3. Matched-feature controls that isolate DS from the representation itself.
+4. A frozen OSCD train/test experiment showing positive macro AP, threshold,
+   and seed-stability evidence, together with seasonal failure cases.
+5. Negative evidence that literal grid pyramids and wavelet coefficient DS do
+   not provide the same benefit.
+
+Safe current claim:
+
+> On the official held-out OSCD cities, a two-hop pair-shared Saab
+> representation followed by canonical DS improves mean changed-pixel AP over
+> raw/PCA baselines and matched L2/PCA controls. The advantage over matched
+> cross-reconstruction is positive but still statistically limited by ten
+> test cities. External transfer and non-transductive fitting remain open.
+
+Do not yet claim novelty or publication readiness. Required next gates are a
+scoped closest-work search, a train-fitted transform, and one external labeled
+multispectral benchmark.
+
+Full evidence:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.

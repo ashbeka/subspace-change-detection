@@ -41,6 +41,9 @@ phase1/**/*.tiff
 # Phase‑2 raw data (future) and outputs
 phase2/outputs/
 
+# Downloaded reference runs, rendered papers, and temporary experiment inputs
+/tmp/
+
 # research notes
 research-notes/
 

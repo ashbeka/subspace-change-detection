@@ -36,6 +36,13 @@ class PCABasis:
     rank: int
 
 
+@dataclass
+class CanonicalDifferenceComponents:
+    basis: Array  # normalized principal-vector differences, shape (d, k)
+    canonical_correlations: Array  # cos(theta_i), shape (k,)
+    squared_pair_magnitudes: Array  # ||u_i-v_i||^2 = 2(1-cos(theta_i))
+
+
 def fit_pca_basis(
     x: Array,
     rank: Optional[int] = None,
@@ -71,6 +78,58 @@ def fit_pca_basis(
     basis = pca_full.components_[:r].T  # (d, r)
     explained = pca_full.explained_variance_ratio_[:r]
     return PCABasis(basis=basis.astype(np.float32), explained_variance_ratio=explained.astype(np.float32), rank=r)
+
+
+def fit_autocorrelation_basis(x: Array, rank: int) -> PCABasis:
+    """Fit an uncentered subspace from ``R = X X^T / n``.
+
+    This matches the autocorrelation-matrix construction stated in
+    Fukui--Maki TPAMI 2015 Section 3.2.  It is intentionally separate from
+    ``fit_pca_basis``, whose scikit-learn PCA centers samples.  The distinction
+    is research-relevant for spectral pixels because an uncentered subspace can
+    retain the scene's mean spectral direction.
+    """
+    if x.ndim != 2:
+        raise ValueError(f"Expected (d, n) matrix, got {x.shape}")
+    if x.shape[1] == 0:
+        raise ValueError("Cannot fit an autocorrelation subspace without samples.")
+    effective_rank = max(1, min(int(rank), x.shape[0], x.shape[1]))
+    data = x.astype(np.float64, copy=False)
+    autocorrelation = (data @ data.T) / float(x.shape[1])
+    values, vectors = np.linalg.eigh(autocorrelation)
+    order = np.argsort(values)[::-1]
+    values = np.maximum(values[order], 0.0)
+    basis = vectors[:, order[:effective_rank]]
+    total = float(np.sum(values))
+    explained = values[:effective_rank] / total if total > 0.0 else np.zeros(effective_rank)
+    return PCABasis(
+        basis=basis.astype(np.float32, copy=False),
+        explained_variance_ratio=explained.astype(np.float32, copy=False),
+        rank=effective_rank,
+    )
+
+
+def fit_covariance_basis(x: Array, rank: int) -> PCABasis:
+    """Fit a centered covariance subspace with a small feature-space eigensolve."""
+    if x.ndim != 2:
+        raise ValueError(f"Expected (d, n) matrix, got {x.shape}")
+    if x.shape[1] < 2:
+        raise ValueError("At least two samples are required for a covariance subspace.")
+    effective_rank = max(1, min(int(rank), x.shape[0], x.shape[1] - 1))
+    data = x.astype(np.float64, copy=False)
+    centered = data - np.mean(data, axis=1, keepdims=True)
+    covariance = (centered @ centered.T) / float(x.shape[1] - 1)
+    values, vectors = np.linalg.eigh(covariance)
+    order = np.argsort(values)[::-1]
+    values = np.maximum(values[order], 0.0)
+    basis = vectors[:, order[:effective_rank]]
+    total = float(np.sum(values))
+    explained = values[:effective_rank] / total if total > 0.0 else np.zeros(effective_rank)
+    return PCABasis(
+        basis=basis.astype(np.float32, copy=False),
+        explained_variance_ratio=explained.astype(np.float32, copy=False),
+        rank=effective_rank,
+    )
 
 
 def orthonormalize(mat: Array) -> Array:
@@ -119,7 +178,7 @@ def resolve_subspace_variant(variant: str) -> str:
     `residual` is retained as a backwards-compatible alias for the original
     residual-stack construction. New experiments should prefer `canonical`.
     """
-    key = str(variant or "legacy_residual_stack").strip().lower().replace("-", "_")
+    key = str(variant or "canonical").strip().lower().replace("-", "_")
     aliases = {
         "residual": "legacy_residual_stack",
         "residual_stack": "legacy_residual_stack",
@@ -226,6 +285,54 @@ def difference_subspace_canonical(phi: Array, psi: Array, eps: float = 1e-6) -> 
         keep = diag > max(float(eps), 1e-8)
         q = q[:, keep] if np.any(keep) else q[:, :0]
     return q.astype(np.float32, copy=False)
+
+
+def difference_subspace_canonical_components(
+    phi: Array,
+    psi: Array,
+    eps: float = 1e-6,
+) -> CanonicalDifferenceComponents:
+    """Return canonical DS directions together with their geometric magnitude.
+
+    Fukui and Maki normalize each principal-vector difference ``u_i-v_i`` to
+    obtain an orthonormal DS basis.  The discarded pre-normalization magnitude
+    is ``||u_i-v_i||^2 = 2(1-cos(theta_i))``.  MagTool's first-order subspace
+    magnitude is the sum of these values.  Exposing both quantities permits a
+    project-specific magnitude-weighted score without mislabeling that score as
+    the paper's original DS projection.
+    """
+    if phi.ndim != 2 or psi.ndim != 2:
+        raise ValueError("Expected 2D basis matrices.")
+    if phi.shape[0] != psi.shape[0]:
+        raise ValueError("Bases must have same dimensionality.")
+    if phi.shape[1] == 0 or psi.shape[1] == 0:
+        empty = np.zeros((0,), dtype=np.float32)
+        return CanonicalDifferenceComponents(_empty_basis(phi.shape[0]), empty, empty)
+
+    a = phi
+    b = psi
+    if a.shape[1] > b.shape[1]:
+        a, b = b, a
+    u, correlations, vt = np.linalg.svd(a.T @ b, full_matrices=False)
+    correlations = np.clip(correlations.astype(np.float64, copy=False), 0.0, 1.0)
+    keep = (1.0 - correlations) > float(eps)
+    if not np.any(keep):
+        empty = np.zeros((0,), dtype=np.float32)
+        return CanonicalDifferenceComponents(_empty_basis(a.shape[0]), empty, empty)
+
+    difference = a @ u[:, keep] - b @ vt.T[:, keep]
+    squared_magnitude = 2.0 * (1.0 - correlations[keep])
+    basis = difference / np.sqrt(squared_magnitude)[None, :]
+    # Principal-pair difference directions are mutually orthogonal in exact
+    # arithmetic. Column normalization preserves their correspondence to the
+    # canonical correlations, unlike a general QR rotation.
+    norms = np.linalg.norm(basis, axis=0)
+    basis = basis / np.maximum(norms, 1e-12)[None, :]
+    return CanonicalDifferenceComponents(
+        basis=basis.astype(np.float32, copy=False),
+        canonical_correlations=correlations[keep].astype(np.float32, copy=False),
+        squared_pair_magnitudes=squared_magnitude.astype(np.float32, copy=False),
+    )
 
 
 def build_difference_subspace(phi: Array, psi: Array, variant: str = "canonical", eps: float = 1e-6) -> Array:

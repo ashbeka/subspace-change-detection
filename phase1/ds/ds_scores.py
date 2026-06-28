@@ -38,7 +38,7 @@ class DSConfig:
     score_normalization: str = "percentile_99"  # or "minmax" / None
     percentile: float = 99.0
     nodata_value: Optional[float] = 0.0
-    subspace_variant: str = "residual"  # legacy alias; prefer "canonical" for new DS runs
+    subspace_variant: str = "canonical"  # legacy residual-stack remains opt-in for reproduction
 
 
 def _normalize_score(score: Array, method: Optional[str], percentile: float = 99.0) -> Array:

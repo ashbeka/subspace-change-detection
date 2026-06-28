@@ -29,12 +29,14 @@ Can spatially aware Difference Subspace construction preserve the spatial struct
 
 The organized bookmark export is the main active resource map:
 
-- Importable organized Chrome file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`
-- Bookmark QA summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-17.json`
+- Importable organized Chrome file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`
+- Bookmark QA summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-20.json`
 - Active bookmark notes: `notes/reference_bookmarks.md`
 - Concept-to-reading table: `notes/literature.md`
 
-The 2026-06-17 merge added `186` unique URLs from the new research-uningested bookmark source. The final organized output preserved `1742` URLs total.
+The 2026-06-20 merge added `37` new URLs to the prior `1742` entries. The final
+organized output preserves `1779` bookmark entries. All `58` URLs in the
+essential knowledge-base source are represented in the final import file.
 
 ## 4. Concept-To-Resource Map
 
@@ -49,6 +51,8 @@ The 2026-06-17 merge added `186` unique URLs from the new research-uningested bo
 | Semantic/open-vocabulary CD | Pivot/comparison pressure if binary OSCD is too narrow. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` |
 | Greenhouse mapping | Possible application route; not current evidence. | `Research / 05 Applications - Use Cases And Problem Framing / 01 Greenhouses Agriculture Environmental Monitoring` |
 | xBD/xBD-S12 damage | Future extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
+| Seasonal irrigation-regime change | Candidate real-observation-set experiment: dates within one field/year form a subspace; annual subspaces are compared by first/second DS. | IrrMapper paper/catalog, temporal SITS resources, `notes/methods.md`, and `notes/experiments.md` |
+| Hyperspectral change and unmixing | Separate pivot testing spectral/spatial geometry with hundreds of bands and established HSI baselines. | `Research / 02 Methods - Subspace Geometry / 04 Hyperspectral Geometry Unmixing And Spectral Methods` and `Research / 04 Datasets - Current Candidate Future / 05 Hyperspectral Change And Analysis Datasets` |
 
 ## 5. Zotero Queue
 
@@ -70,4 +74,3 @@ Do not import every bookmarked tutorial or tool into Zotero. Keep general learni
 - If a paper only motivates a future idea, put it in `notes/literature.md` and leave it in Chrome/Zotero.
 - If a paper is physically copied into `references/reference_papers/`, explain why it must live in the repo instead of Zotero.
 - If a paper has supplementary code, connect the paper and code in `references/REFERENCE_CODE_INVENTORY.md`.
-

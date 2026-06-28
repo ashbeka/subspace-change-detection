@@ -20,6 +20,7 @@
   - [Spatial-subspace novelty boundary](#spatial-subspace-novelty-boundary)
   - [Tensor / n-mode GDS idea](#tensor--n-mode-gds-idea)
   - [Multiscale subspace pyramid / Green Learning lead](#multiscale-subspace-pyramid--green-learning-lead)
+  - [Successive Saab-DS construction](#successive-saab-ds-construction)
 - [13. Projection Back To Image Space](#13-projection-back-to-image-space)
 - [14. Method Caveats](#14-method-caveats)
   - [Subspace construction card](#subspace-construction-card)
@@ -37,6 +38,9 @@
   - [MultiSenGE caveat](#multisenge-caveat)
   - [KDS and CCA implementation gaps](#kds-and-cca-implementation-gaps)
   - [Deep-feature subspace gap](#deep-feature-subspace-gap)
+- [15. Temporal Band-Image Difference-Subspace Dynamics](#15-temporal-band-image-difference-subspace-dynamics)
+- [16. Cross-Method Fidelity And Status](#16-cross-method-fidelity-and-status)
+- [17. Cross-Sensor Band-Image Boundary](#17-cross-sensor-band-image-boundary)
 
 ## 1. Current Project Scope
 
@@ -183,12 +187,61 @@ The updated Apple Notes and Jang discussion introduced a second possible meaning
 | global pixel spectral subspace | one pixel location | `13 x N` | joint 13-band values at many pixels | ignores pixel position during PCA fitting |
 | patch-vector spectral-spatial subspace | one local patch | `(k*k*13) x N_patches` | local neighborhood around each pixel | high dimensional and slower |
 | local-window spectral subspace | all pixels inside one window | `13 x N_window` per window | local distribution without mixing whole city | block/window artifacts and runtime |
-| flattened-band spatial subspace | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
+| Band-Image DS | one Sentinel-2 band image | `N_pixels x 13` or local equivalent | spatial layout inside each band vector | only 13 band samples; rank and stability need checks |
 | band-group/product subspace | VIS/red-edge/NIR/SWIR groups | multiple group-specific matrices | separates physical band families | needs careful fusion and attribution |
 
-The flattened-band spatial variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands. This is closer to "one image/channel as a spatial vector," but it has few samples and must be tested with toy data, rank sensitivity, and fair baselines before being named as a method.
+The Band-Image DS variant is a concrete response to the concern that pixel samples destroy spatial layout. In that version, each column can be one flattened band image, so the vector entries are pixel positions rather than spectral bands:
+
+```text
+current global pixel DS:
+  one sample vector = one pixel location
+  vector dimension  = 13 Sentinel-2 band values
+  matrix shape      = 13 x N_pixels
+
+Band-Image DS spatial candidate:
+  one sample vector = one Sentinel-2 band image
+  vector dimension  = H x W pixel positions
+  matrix shape      = N_pixels x 13
+```
+
+For Beirut, this would be roughly:
+
+```text
+X_pre_flat_bands in R^(1,262,600 x 13)
+```
+
+where each of the 13 columns is one full flattened band image. This is closer to "one channel image as one high-dimensional spatial vector." It gives PCA a high-dimensional ambient space, but it also gives PCA only 13 samples. Therefore the maximum useful centered PCA rank is at most `12`, and practical rank may be unstable. This is not automatically more correct than pixel-vector DS; it is a different sample definition that should be tested.
+
+Why Senpai's suggestion is worth testing:
+
+- It preserves spatial layout inside each band vector instead of discarding pixel position during fitting.
+- It is closer to classical image-set language: each sample is a whole image-like object, not one pixel.
+- It may become more natural for hyperspectral imagery, where `B` could be hundreds of channels rather than 13.
+- It can answer a seminar question clearly: "What happens if each band is the vector, instead of each pixel?"
+
+Risks:
+
+- With Sentinel-2, 13 samples is very small for robust PCA in a million-dimensional space.
+- The learned subspace may describe band-to-band spatial similarity more than changed-area evidence.
+- Projection/scoring back to a pixel map must be defined carefully; otherwise it may become a global image-level score, not a local change map.
+- It must be compared against patch-vector, local-window, PCA-diff, raw L2/CVA, and IR-MAD before being promoted.
 
 Do not use "spectral subspace" as a thesis term until the sample unit, matrix shape, rank rule, scoring equation, and expected output map are fixed.
+
+2026-06-18 evidence update:
+
+- `flatbands` was renamed to `band_image_ds`; `flatbands` remains a compatibility alias only.
+- `band_image_ds` is implemented in `phase1/scripts/compare_oscd_spatial_subspaces.py::band_image_ds_score`.
+- It was swept over all 24 local OSCD cities at ranks 6, 8, 10, and 12, with additional core-city checks at ranks 2-5.
+- It became the strongest DS-family method by AP in 44 of 48 city/rank runs.
+- It still did not beat PCA-diff on mean AP, so it is a promising sample-definition candidate, not a proven detector.
+- The score map is produced by projecting the 13-column band-difference matrix into the spatial DS and summing projected energy per pixel across bands.
+- A follow-up score ablation showed that `band_image_norm` keeps the same AUROC/AP as `band_image_ds` but improves all-city Otsu F1 from `0.1129` to `0.2007`.
+- Per-band projected-energy attribution maps are available for selected cities to inspect which Sentinel-2 bands drive the projected score.
+- Rank 12 is the strongest tested setting: mean AUROC `0.8477`, AP `0.2410`, and best F1 `0.3021`. Its AP remains below PCA-diff (`0.2541`), and using the maximum centered rank weakens the interpretation that a compact DS alone explains the useful signal.
+- Against corrected pressure baselines, rank-8 Band-Image DS is significantly worse than PCA-diff by paired city AP, significantly better than the current Celik adaptation, and not reliably different from raw L2 or repaired IR-MAD.
+- Equal-weight within-image rank fusion of PCA-diff, Band-Image DS, and IR-MAD raises mean AUROC to `0.8708` and wins 21/24 cities against PCA-diff, but the AP gain is not significant and Otsu F1 falls. This is complementarity evidence, not a finished detector.
+- A fixed-grid `1x1 + 2x2 + 4x4` pixel-spectral DS pyramid did not improve core-city AP over global pixel DS. Stop that exact construction; it is not equivalent to Green Learning, PixelHop, or wavelet features.
 
 ## 4. Spectral Change Versus Semantic Change
 
@@ -386,7 +439,32 @@ Multi-date subspace methods:
 - Second-order DS is the natural next subspace idea for progression/recovery, but it requires at least three meaningful time points or period subspaces.
 - Period-subspace DS should use multiple images per side when available, for example early-month versus late-month, first half-year versus second half-year, or pre-event window versus post-event window.
 - SSA, SFA, DMD, RTW, and Fourier time-series analysis are future temporal tools. They need enough temporal depth and a clear target before implementation.
-- RTW/Deep RTW suggests a way to compare date sequences without assuming events happen at the same temporal speed: randomly sample ordered date subsequences, build a sequence subspace, and compare subspaces by canonical angles or DS/GDS. This is only meaningful for multi-date data, not OSCD's two dates.
+- RTW generates many Time Elastic features by repeatedly selecting `R` elements
+  from a sequence while retaining temporal order, concatenating them into
+  vectors in `R^(dR)`, and fitting a PCA "hypo subspace" to those vectors. Two
+  sequences are compared through the singular values `kappa_i` of `X^T Y`,
+  commonly summarized as `mean(kappa_i^2)`. The bundled MATLAB `TEfeatures.m`
+  confirms ordered random subsequence sampling; it is not arbitrary image
+  warping. For satellite use, timing/tempo tolerance must be demonstrated
+  against phase-aware harmonic, Fourier, DTW/TWDTW, and non-warped controls,
+  not assumed from the method name. This requires multi-date data, not OSCD's
+  two dates.
+- Controlled MultiSenGE result, 2026-06-21: the selected raw RTW construction
+  (`R=4`, `L=64`, rank `5`) was order-sensitive and nuisance-tolerant but did
+  not add beyond an order-invariant snapshot subspace on held-out structural
+  changes. The pooled positive signal was dominated by a relative-band-phase
+  intervention that ordinary cross-band covariance also detected. Treat RTW as
+  a closed detector route for the current data, not as evidence that temporal
+  ordering never matters.
+- Natural-label BreizhCrops follow-up, 2026-06-21: a `snapshot subspace` means
+  the centered or uncentered PCA span of date-level ten-band spectra, compared
+  through MSM-style canonical correlations. The name is descriptive; it is not
+  DS or a distinct named Sensei method. After adding global-shift alignment,
+  correlation, PCA cross-reconstruction, shift-orbit, bandwise, seasonal,
+  DTW/TWDTW, and M-SSA controls, nested-selected RTW lost on two geographic
+  holdouts. PCA cross-reconstruction was strongest. This demonstrates that the
+  useful signal was largely spectral-distribution/phase alignment rather than
+  a capability unique to random ordered-subsequence geometry.
 - PCA-SFA and Slow Feature Subspace suggest a way to separate slow/background temporal variation from faster anomalous change. A satellite version would need same-season or dense time series so "slow" does not simply mean seasonal drift.
 - Product Grassmann and Hankel-like temporal embeddings suggest treating satellite data as factors, for example spectral subspace, local spatial/patch subspace, and temporal/date subspace, instead of flattening everything into one unordered pixel matrix.
 - G-LMSM and Signal Latent Subspace suggest a neural-subspace hybrid: extract CNN/foundation-model features, build subspaces from patch/date features, and either compare them geometrically or learn dictionary subspaces on the Grassmann manifold.
@@ -479,6 +557,23 @@ road pixel, sea pixel, building pixel, vegetation pixel -> all columns in one ma
 
 This is not automatically wrong, but it may be too weak for spatial change detection.
 
+Working definition:
+
+```text
+A change map is spatially meaningful if high scores form coherent image regions
+that correspond to plausible changed objects or changed land-cover areas, while
+avoiding scores that are only scattered pixel noise, window/block artifacts, or
+global radiometric/seasonal shifts unrelated to the target change labels.
+```
+
+For this project, "spatially meaningful" is not a vague visual compliment. It means the method passes several checks:
+
+- Metric check: the map ranks OSCD changed pixels above unchanged pixels using AUROC/AP and improves or complements raw L2/PCA-diff.
+- Region check: high-score areas are spatially connected around actual changed regions, not isolated speckles.
+- Boundary check: the map is not dominated by artificial patch/window/grid boundaries.
+- Pseudo-change check: high scores are not mainly clouds, shadows, seasonal vegetation, water brightness, or registration artifacts.
+- Interpretation check: we can explain what sample unit produced the score, such as pixel spectra, patches, windows, or flattened band images.
+
 Spatial alternatives to test:
 
 - Patch-vector DS: one sample is a `3x3x13` or `5x5x13` local patch.
@@ -554,6 +649,20 @@ level 3: split image into 8 x 8 cells        -> 64 subspaces
 
 For each spatial cell, build a pre-date subspace and a post-date subspace from the valid 13-band pixels or patch vectors inside that cell, then compute a DS-style score for that cell or for pixels inside it.
 
+The literal pixel-spectrum version above has already been tested and failed:
+it repeatedly fit `X_cell in R^(13 x N_cell)` and preserved only grid
+membership. The corrected Senpai-inspired experiment changes the sample
+definition. For each cell, it instead forms
+
+```text
+X_(t,g,c) in R^(N_cell x 13)
+```
+
+where every column is one flattened band image restricted to that cell. Its
+PCA basis therefore lives in cell-pixel coordinates and consists of spatial
+eigenimages. Corresponding pre/post cell bases are compared with canonical DS,
+and their pixel-resolved score maps are lifted back to the full scene.
+
 Why this matters:
 
 - coarse levels preserve global scene context;
@@ -573,6 +682,75 @@ Possible score aggregation:
 ```text
 score_pixel = weighted_sum(level_0_score, level_1_cell_score, level_2_cell_score, ...)
 ```
+
+Do not directly add subspace bases. Bases from different cells have different
+ambient pixel coordinates, and a subspace is a Grassmann point rather than a
+Euclidean vector. The first defensible aggregation is score-level fusion after
+unlabeled robust normalization. A later geometric formulation can treat the
+cell subspaces as a product-Grassmann object or use a weighted sum of embedded
+projectors followed by eigendecomposition, but that is a separate method and
+requires matched controls.
+
+Relation to the cited ideas:
+
+- fixed spatial tiling is a spatial pyramid, not a wavelet transform;
+- a true wavelet variant must decompose each band into low-pass and oriented
+  detail coefficients across scales before constructing/comparing subspaces;
+- PixelHop/PixelHop++ uses successive neighborhood expansion, unsupervised
+  subspace approximation/Saab transforms, and feature selection. Merely fitting
+  independent tile PCA models is not PixelHop or Green Learning;
+- the project's immediate method name remains `multiscale_band_image_ds`.
+
+#### Successive Saab-DS construction
+
+The positive 2026-06-23 spatial experiment uses a narrower, source-labeled
+adaptation of PixelHop/Successive Subspace Learning:
+
+1. Extract overlapping `3x3` spatial-spectral neighborhoods from both dates.
+2. Fit one shared DC plus AC-PCA transform jointly from unlabeled paired
+   neighborhoods; applying the same kernels avoids incomparable feature
+   rotations between dates.
+3. Retain 95% AC energy with at most 16 total channels and apply `2x2` max
+   pooling.
+4. Repeat once, producing near-context hop 1 and larger-receptive-field hop 2.
+5. At each hop, flatten every response map into one spatial sample:
+   `X_t^(h) in R^(N_h x K_h)`.
+6. Fit a rank-12 spatial basis per date/hop, construct canonical first-order
+   DS, and score rows of `D_h D_h^T (X_post^(h)-X_pre^(h))`.
+7. Resize, quantile-scale without labels, and average the two hop maps.
+
+This is **successive Saab-DS**, not full PixelHop. It omits supervised LAG,
+classification, and the original task-specific aggregation. The adjusted Saab
+bias is omitted because one shared additive response bias cancels in paired
+differences.
+
+There are now two verified fitting modes:
+
+- **pair-adaptive:** fit the Saab filters from the same unlabeled pre/post pair
+  being evaluated; this is transductive and should not be the strongest claim;
+- **train-fitted:** fit one Saab hierarchy from training cities/events and apply
+  those filters unchanged to held-out pairs; this is the safer OSCD result.
+
+The DS basis is still pair-specific in both modes because DS compares that
+held-out pair's pre/post spatial feature subspaces. What is frozen is the local
+feature extractor, not the difference subspace itself.
+
+Matched controls use the same hop features with row-wise L2, PCA-diff, or
+cross-reconstruction. Their lower held-out AP is the current evidence that DS
+adds something beyond local representation alone.
+
+Code: `phase1/subspace/successive_subspace_features.py`.
+Verification: `tests/test_multiresolution_subspaces.py` and
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`,
+then the train-fitted/external gate in
+`docs/experiment_reports/successive_saab_trainfit_external_gate_2026-06-23.md`.
+
+Current evidence boundary:
+
+- OSCD train-fitted filters preserve the positive result: AP `0.3381`, close to
+  pair-adaptive AP `0.3420` and above matched frozen L2/PCA.
+- xBD-S12 transfer does not support successive Saab-DS as the best external
+  disaster detector; Band-Image projector geometry remains stronger there.
 
 Open implementation questions:
 
@@ -641,6 +819,7 @@ Current variant cards:
 | global pixel DS | one valid pixel | `X_pre, X_post in R^(13 x N)` | PCA on all valid 13-band pixels per date, giving `Phi, Psi in R^(13 x r)` | canonical/eig DS basis `D`, score `||D^T(x_post - x_pre)||^2` | loses pixel position during fitting; restores scores to map afterward |
 | local-window DS | one valid pixel inside a window | for each window, `X_pre_w, X_post_w in R^(13 x N_w)` | PCA per pre/post window | score pixels inside that window with the window's DS basis; aggregate overlaps | preserves regional context; may create boundary/block artifacts |
 | patch-vector DS | one local patch centered on a pixel | `3x3x13 = 117-D` or `5x5x13 = 325-D` sample vectors | PCA on flattened patch samples per date | score center pixel using DS in patch-feature space | preserves local layout inside each sample; higher dimensional |
+| Band-Image DS | one full Sentinel-2 band image | `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)` | PCA in pixel-position space from 13 band-image samples per date | project the `13` band-difference images into spatial DS, then reduce projected evidence per pixel | preserves global spatial layout inside each band vector; sample-limited on Sentinel-2 because there are only 13 bands |
 | multiscale subspace pyramid | one cell or pixel inside a pyramid cell | whole image, `2x2`, `4x4`, `8x8` grid cells | PCA/DS per spatial cell and date | combine per-scale DS scores into one map | preserves coarse and fine spatial support; weights and block artifacts must be audited |
 | tensor / n-mode GDS | tensor sample or tensor mode | e.g. `bands x height x width x time` | mode-wise subspaces instead of full flattening | n-mode GDS / tensor comparison | preserves explicit modes; future method track |
 | deep-feature subspace | encoder feature vector or patch embedding | feature matrix from CNN/foundation model | PCA/subspace over learned features | DS/GDS over latent feature subspaces | preserves whatever the encoder learned; source of interpretability is weaker unless audited |
@@ -767,11 +946,40 @@ Why it matters:
 - If IR-MAD outperforms DS, the project should not hide that. It would push the thesis toward spatial DS, KDS/KPCA, temporal GDS/KGDS, or an interpretability/diagnostic framing.
 - If patch DS and IR-MAD fail in different places, that may support a hybrid-prior or false-positive-diagnosis contribution.
 
-Current implementation caution:
+Current verification status:
 
-- `phase1/baselines/ir_mad.py` is a compact implementation, not yet a paper-faithful trusted baseline.
-- Before strong claims, check the generalized eigenproblem, covariance regularization, iterative weights, chi-square weighting, convergence, normalization, and threshold policy against Nielsen/MAD/iMAD references.
-- Until this audit is done, old weak IR-MAD numbers are not evidence that IR-MAD is weak.
+- `phase1/baselines/ir_mad.py` now uses paired CCA transforms, the two cross-covariance factors in the generalized eigenproblems, sign-aligned MAD variates, variance `2(1-rho)`, and chi-square survival weights that emphasize likely unchanged pixels.
+- Formula guards cover equal images and a synthetic changed block. This makes the implementation suitable for current comparison pressure, but it remains a compact project implementation rather than an independently certified reproduction of every Nielsen implementation detail.
+- On all 24 OSCD cities, repaired IR-MAD reaches mean AUROC `0.8471` and AP `0.2138`; its Otsu F1 is only `0.0547`. It ranks some changes well but is poorly calibrated by per-image Otsu and often responds to broad seasonal/agricultural variation.
+
+### Celik PCA-k-means verification status
+
+- The old code concatenated all bands inside every `9x9` patch, producing 1,053-dimensional vectors and excessive memory use. The corrected default follows the scalar difference-image family more closely: compute CVA/L2 magnitude, extract scalar patches, fit PCA and k-means on a seeded subset, and predict in chunks.
+- `multiband_patch` remains an explicit project variant; it is not the default Celik comparison.
+- Synthetic changed-block and reproducibility guards pass. The implementation is still an adaptation, not a line-by-line reproduction.
+- Mean all-city AP is `0.1621`, below Band-Image DS (`0.2340`). Qualitative failures include dominant water/radiometric regions that do not cover the full OSCD target.
+
+### Rank-fusion diagnostic
+
+For score maps `s_m`, the diagnostic fusion converts valid-pixel values to within-image percentile ranks and averages them with equal weights:
+
+```text
+f(x) = mean_m percentile_rank(s_m(x))
+```
+
+This uses no OSCD labels and avoids incompatible score scales. It is useful for testing whether methods carry complementary rankings. It is not calibrated probability fusion, and its weak Otsu result means it cannot yet be treated as a deployable binary change map.
+
+### Split-safe changed-area calibration
+
+To test whether threshold scale is the main bottleneck, score maps are converted into exact top-ranked-pixel decisions. For method `m`, a changed-area fraction `q_m` is selected by macro F1 on official OSCD training cities only:
+
+```text
+q_m* = argmax_q mean_city F1(top_q(score_m), label), city in OSCD train
+```
+
+The chosen `q_m*` is frozen and applied to every official test city. This is supervised calibration because it uses training labels, but it is split-safe because test labels do not select the fraction. It is a project evaluation rule, not part of DS/IR-MAD theory.
+
+Current evidence: three-way rank fusion improves held-out mean F1 from PCA-diff's `0.2452` to `0.2670`, but the 10-city paired test is not significant. Extensive false-positive regions remain, so the next issue is nuisance/pseudo-change representation rather than another threshold search.
 
 ### Phase 1 thresholding vs Phase 2 priors
 
@@ -911,3 +1119,529 @@ Possible satellite variants:
 - GDS projection to improve separation between known classes or pseudo-classes.
 
 This should wait until the raw/global/local DS audit is clear.
+
+## 15. Temporal Band-Image Difference-Subspace Dynamics
+
+### 15.1 Construction Card
+
+| Field | Current temporal construction |
+|---|---|
+| Variant | full/low-rank temporal band-image subspace |
+| Source | Fukui et al. 2024 second-order DS; Jang/senpai channel-flattening advice; standard Grassmann geodesic interpolation for the time-aware diagnostic |
+| Sample unit | one complete aligned band image at one date |
+| Date matrix | `X_t in R^(N_common_pixels x B_bands)` |
+| Subspace count | one `S_t` for every date and spatial region |
+| Basis | leading left singular vectors, `S_t in R^(N_common_pixels x r)` |
+| Full rank | `r=B` when all independent band-image directions are retained |
+| Comparison | adjacent first DS; triple second DS; geodesic along/orthogonal decomposition; irregular-time geodesic deviation |
+| Spatial information | fixed pixel coordinates are ambient dimensions; they are preserved only if all dates use the same mask/alignment |
+| Lost information | exact band identity is not preserved after taking the span; full-rank span is invariant to invertible mixing/scaling of its band vectors |
+| Code | `phase1/subspace/temporal_band_images.py`, `phase1/subspace/second_order_ds.py`, `phase1/subspace/geodesic.py` |
+| Verification | `tests/test_temporal_subspace_dynamics.py` plus controlled gain/offset/translation/local-change injections |
+
+This is not the old OSCD pixel-spectrum construction. The matrix orientation is
+the opposite:
+
+```text
+global OSCD pixel DS:     X_t in R^(B bands x N pixel samples)
+temporal band-image DS:   X_t in R^(N spatial coordinates x B band-image samples)
+```
+
+The temporal construction follows Sensei's requested first trial: a small
+channel-dimensional subspace in a super-high-dimensional spatial vector space.
+
+### 15.2 First And Second Magnitudes
+
+For orthonormal bases `S_a` and `S_b`, let singular values of
+`S_a^T S_b` be `cos(theta_i)`. The first DS magnitude is:
+
+```text
+Mag(D(S_a,S_b)) = 2 * sum_i (1 - cos(theta_i)).
+```
+
+Given equally spaced `S_{t-1}, S_t, S_{t+1}`, the paper defines:
+
+```text
+D2 = D(S_t, M(S_{t-1},S_{t+1})),
+```
+
+where `M` is the principal-component/Karcher-style mean subspace obtained from
+the endpoint principal vectors. The implementation uses the mathematically
+equivalent principal-vector form instead of allocating an infeasible
+`N_pixels x N_pixels` projector matrix.
+
+For the decomposition:
+
+```text
+W = span(S_{t-1}, S_{t+1})
+omega(S_t) = projection of S_t onto W
+orthogonal component = Mag(D(S_t, omega(S_t)))
+along component = Mag(D(omega(S_t), M))
+```
+
+The paper states that total magnitude is approximately the sum of these two
+components and explicitly leaves a proof for future work. The project therefore
+records the decomposition residual instead of asserting exact equality.
+
+### 15.3 Irregular-Cadence Diagnostic
+
+The paper derives second-order DS from a central difference with equal
+`Delta t` and then sets `Delta t=1`. Satellite acquisitions are often irregular.
+The paper-faithful number is retained, but a separate diagnostic is added:
+
+1. Let `h_left=t-t_left` and `h_right=t_right-t`.
+2. Set `alpha=h_left/(h_left+h_right)`.
+3. Interpolate the endpoint subspaces along their shortest Grassmann geodesic
+   to `Gamma(alpha)`.
+4. Measure `rho(S_t,Gamma(alpha))` and
+   `Mag(D(S_t,Gamma(alpha)))`.
+5. Report the small-angle acceleration proxy
+   `2*rho/(h_left*h_right)` separately.
+
+This asks whether the observed middle subspace departs from constant-speed
+endpoint motion at its actual acquisition time. It is a project adaptation,
+not a redefinition of Fukui et al.'s second-order DS.
+
+Source for geodesic interpolation: Edelman, Arias, and Smith 1998, *The
+Geometry of Algorithms with Orthogonality Constraints*.
+
+### 15.4 Spatial Attribution
+
+For each canonical principal-vector pair `u_i,v_i`, the DS magnitude contains
+`||u_i-v_i||^2`. The spatial contribution at ambient coordinate `j` is:
+
+```text
+c_j = sum_i (u_i[j] - v_i[j])^2.
+```
+
+Therefore `sum_j c_j = Mag(D)`. Reshaping `c` through the common spatial mask
+produces an attribution map without pretending that the DS is a pixel-wise
+classifier. These maps currently respond broadly to scene structure on IPOL
+Las Vegas, motivating local/multiscale subspaces.
+
+### 15.5 Verified Invariance And Failure Boundary
+
+With `r=B` and centered band images:
+
+- an invertible per-band scaling changes the basis vectors but not their span;
+- centering removes a constant per-band spatial offset;
+- consequently, tested global gain/offset changes produce zero or near-zero DS;
+- a spatial translation changes which ambient coordinate contains each value,
+  so the span changes strongly.
+
+This explains the controlled result: radiometric invariance and translation
+sensitivity are consequences of the representation, not accidental metrics.
+The next method question is how to reduce the latter while preserving the
+former and retaining localized-change sensitivity.
+
+### 15.6 Bidirectional Temporal-Context Construction
+
+The one-date construction above asks how the spatial-band span moves from one
+date to the next. A second construction, motivated by the backward/forward
+reference sets in Dagobert et al. 2022, compares date windows at boundary `t`.
+It is an adaptation, not a reproduction of their NNLS/NFA detector.
+
+| Field | Bidirectional temporal-context construction |
+|---|---|
+| Source | Fukui-Maki canonical DS; Dagobert et al. backward/forward temporal context |
+| Boundary | last pre-context date `t-1`; first post-context date `t` |
+| Context | `V` dates before and `V` dates after, with endpoint replication only at sequence ends |
+| Per-band matrix | `X^-_(t,c), X^+_(t,c) in R^(N_common_pixels x V_dates)` |
+| Joint matrix | `X^-_t, X^+_t in R^(N_common_pixels x (B_bands V_dates))` |
+| Basis | leading non-degenerate left singular vectors; rank is clipped to numerical rank |
+| DS score | mean canonical spatial DS contribution over band factors, or one joint contribution map |
+| Linear control | first post-date projected outside the backward basis plus last pre-date projected outside the forward basis |
+| Raw control | adjacent per-pixel RMS band difference |
+| Preserved | pixel coordinates, temporal side of the boundary, and per-band identity in the factorized version |
+| Lost | date order inside each context span and coefficient sign constraints used by IPOL NNLS |
+| Code | `phase1/subspace/temporal_context.py` |
+| Verification | endpoint indexing, equal contexts, persistent local change, and global gain/offset invariance in `tests/test_temporal_subspace_dynamics.py` |
+
+The tall matrices use the snapshot identity `X^T X v=sigma^2 v`, followed by
+`u=Xv/sigma`. This is mathematically the same left singular subspace as a full
+SVD but avoids decomposing an `N_pixels x N_pixels` object.
+
+The linear projection novelty score is deliberately separate from DS. It is a
+signed orthogonal-subspace residual; Dagobert et al. instead fit a non-negative
+cone and apply an a-contrario NFA decision. Similar behavior does not make the
+two methods equivalent.
+
+### 15.7 Current Method Boundary
+
+Four IPOL sequences reject the present temporal-context DS map as a competitive
+local detector. Its best tested configuration has much lower macro AP than raw
+adjacent RMS. The linear projection novelty control is stronger: rank-2,
+`V=3`, per-band context improves mean AUROC on all four sequences and nearly
+matches macro AP, but only beats raw AP on Piraeus. These are agreement results
+against IPOL output, not accuracy against ground truth.
+
+Controlled MultiSenGE interventions show a narrower useful property:
+
+- centered/L2 context geometry is effectively invariant to tested global gain
+  and offset;
+- temporal-context scores can distinguish a persistent injected change from
+  the same one-date transient, while adjacent raw difference cannot;
+- raw difference still localizes the injected region best;
+- one-pixel translation produces a much larger geometric response than the
+  local event.
+
+Therefore the viable hypotheses are now split:
+
+1. first/second/geodesic quantities as sequence-level event descriptors;
+2. projection novelty as a radiometrically invariant localization mechanism;
+3. registration-robust spatial support as the missing method component.
+
+Do not call the current temporal-context DS map a validated change detector.
+
+Registration scale-space result:
+
+- Gaussian low-pass support reduces translation response monotonically, but
+  robustness depends strongly on event size and strength.
+- Global phase correlation removes tested integer shifts, but its interpolation
+  and natural-context alignment reduce local-event AP.
+- The ratio of low-pass to native response separates the tested global shift
+  from persistent injections, but raw difference separates them too. This is a
+  generic scale-space cue, not evidence that DS uniquely solves registration.
+- Local deformation, parallax, seasonal boundaries, and real labels remain
+  untested. Those are required before a robustness claim.
+
+### 15.8 Seasonal Observation Subspaces
+
+The next temporal construction uses dates, not bands or pixels, as the sample
+set. For one fixed spatial support and one season/year `y`, let
+
+```text
+x_(y,m) in R^(B * N)
+```
+
+be the consistently flattened multispectral patch at composite date `m`, with
+`B` bands and `N` common valid spatial locations. Stack `M` date observations:
+
+```text
+X_y = [x_(y,1), ..., x_(y,M)] in R^((B*N) x M).
+```
+
+After per-feature temporal centering and optional per-observation L2
+normalization, the leading left singular vectors form the seasonal observation
+subspace:
+
+```text
+S_y in Gr(r, B*N),  r <= M - 1 after centering.
+```
+
+This is a genuine image-set-style construction: the columns are repeated
+observations of the same aligned region through one seasonal cycle. A sequence
+`S_(y-1), S_y, S_(y+1)` supports the paper-faithful first/second DS and geodesic
+decomposition already implemented in this project.
+
+Construction card:
+
+| Field | Definition |
+|---|---|
+| Variant | seasonal observation subspace |
+| Source | image-set PCA/MSM convention; Kanai et al. 2023 temporal signal subspaces; Fukui et al. 2024 first/second DS |
+| Sample unit | one aligned multispectral date composite of the same patch/field |
+| Matrix | `X_y in R^((B*N) x M)` |
+| Subspace count | one per patch/field per season or year |
+| Fitting | SVD/PCA over date columns; rank bounded by valid temporal samples |
+| Comparison | adjacent first DS; triple second DS; along/orthogonal and irregular-time geodesic diagnostics |
+| Preserved | spatial coordinates, band identity, and seasonal observation set |
+| Lost | ordering inside the season unless time/Hankel embedding is added |
+| Required controls | NDVI/amplitude, raw spectral mean, minimum principal angle, MOSUM/BFAST/JUST where data length permits |
+| Verification | synthetic seasonal-regime tests, no-event cycles, gain/offset, missing dates, phase shifts, gradual transitions, and real labeled/verified events |
+
+[gap] Ordinary PCA of `X_y` is order-invariant within the season.
+[why it matters] Irrigation and phenology are trajectories, not only unordered
+sets; two cycles with the same span but different ordering can look identical.
+[next check] Compare the snapshot subspace with a Hankel/SSA or product-Grassmann
+variant after the simpler construction passes the event-alignment gate.
+
+[gap] IrrMapper annual classes are model outputs and can inherit Landsat,
+growing-season, orchard/vineyard, wetland, and weak-NDVI errors.
+[why it matters] Derived start/stop transitions are weak labels, not direct event
+annotations.
+[next check] Manually verify selected fields in independent imagery and repeat
+the main result on DynamicEarthNet or another independently labeled sequence.
+
+Controlled result, 2026-06-20:
+
+- The rank-1 seasonal orientation score can identify the strongest boundary
+  within a synthetic event sequence, but its absolute calibration is weak.
+- Feature-centered geometry rejects tested global gain/offset and phase shifts,
+  yet false-alarms heavily on missing composites, gradual drift, and one-pixel
+  translation.
+- Singular energy and normalized singular-spectrum changes outperform DS in the
+  current synthetic event task. This supports an explicit orientation-plus-
+  energy representation rather than claiming DS alone contains all change
+  information.
+- At high noise, rank-2 second-order along change becomes competitive with NDVI
+  curvature, but bootstrap intervals overlap. Treat this as a real-data
+  hypothesis only.
+- Date permutation leaves the ordinary seasonal subspace unchanged. Order-aware
+  Hankel/SSA/product-Grassmann construction remains a justified follow-up, not a
+  current contribution.
+
+### 15.9 Order-Aware And Local Temporal Representations
+
+The unordered matrix `X=[x_1,...,x_T]` cannot encode date order because
+`span(XP)=span(X)` for a permutation matrix `P`. The order-aware adaptation now
+uses
+
+```text
+h_j = [x_j; ...; x_(j+L-1)]
+H_L = [h_1,...,h_(T-L+1)] in R^((D*L) x (T-L+1)).
+```
+
+Kanai et al. use a scalar SSA trajectory matrix. Replacing each scalar by one
+flattened multispectral observation is this project's multivariate satellite
+adaptation. First temporal differences are a simpler order-aware control.
+
+Construction card:
+
+| Field | Definition |
+|---|---|
+| Variants | unordered observations, first differences, block trajectory |
+| Sample unit | one aligned date observation of one fixed spatial cell |
+| Feature dimension | `D=B*N_cell`; trajectory dimension `D*L` |
+| Subspace | leading left singular vectors, usually rank 1-2 |
+| First comparison | canonical-angle DS magnitude / Grassmann distance |
+| Second comparison | Fukui second total, along, and orthogonal magnitudes |
+| Non-DS diagnostics | representation energy, normalized singular spectrum, normalized covariance operator |
+| Spatial extension | independent 2x2, 4x4, or 8x8 cell subspaces |
+| Preserved | fixed cell layout; trajectory variants also preserve local date neighborhoods |
+| Lost | unordered variant loses order; non-overlapping cells quantize boundaries |
+| Code | `phase1/subspace/temporal_trajectory.py`; MultiSenGE intervention runners |
+| Verification | eight invariance/formula tests plus controlled real-background nuisance studies |
+
+The normalized covariance diagnostic compares
+
+```text
+C_X = X X^T / trace(X X^T)
+d_cov(X,Y) = ||C_X-C_Y||_F.
+```
+
+It retains orientation and relative singular energy. It is not DS and must not
+be presented as Fukui's method. The implementation uses small Gram matrices so
+it does not form the huge ambient covariance.
+
+Controlled MultiSenGE findings:
+
+- trajectory/difference subspaces correctly respond to date permutations;
+- they did not outperform unordered seasonal descriptors on the current
+  localization task;
+- pure DS orientation discards amplitude changes that remain in the same span;
+- fine local support plus Gaussian sigma 2 raised unordered eigenspectrum AP to
+  `0.688`, versus NDMI `0.680` and first DS `0.456`;
+- eigenspectrum gain/offset false alarms were `0.050`, but missing-composite and
+  translation false alarms remained `0.358` and `0.292`;
+- these are controlled interventions, not natural-change accuracy.
+
+[gap] Does local eigenspectrum performance survive independently labeled
+temporal changes rather than injected spectral modes?
+[why it matters] Without this, the finding is a behavior study, not a remote-
+sensing result.
+[next check] Acquire one labeled DynamicEarthNet AOI or manually verify an
+IrrMapper/Sentinel-2 transition slice; compare DS, eigenspectrum, NDVI/NDMI/NBR,
+raw multispectral controls, and one established temporal-break baseline.
+
+### 15.10 Rolling Local Trajectory Subspaces On SpaceNet 7
+
+| Construction-card field | Definition |
+|---|---|
+| Variant | rolling local RGB trajectory subspace |
+| Source/reference | SpaceNet 7/MUDS data model; project trajectory construction; paper-guided first/second DS and geodesic decomposition |
+| Sample unit | one aligned RGB observation of one fixed AOI cell at one month |
+| Input | `x_t in R^(3*N_cell)`; lag-two `H_t in R^((6*N_cell) x 5)` over a six-month window |
+| Subspace count | one rank-two subspace per cell and rolling window |
+| Basis | two leading left singular vectors of feature-centered `H_t` in the frozen confirmation run |
+| Comparison | first DS/Grassmann quantities; second total, along, and orthogonal magnitudes |
+| Target | first appearance of a persistent SpaceNet 7 building ID, aggregated to fixed cells |
+| Preserved | within-cell RGB layout and adjacent-month order in each trajectory column |
+| Lost | object identity inside the subspace; detail below cell resolution; information outside RGB |
+| Code | `phase1/data/spacenet7_dataset.py`; `phase1/scripts/evaluate_spacenet7_temporal_subspaces.py` |
+| Verification | loader/rasterization tests, temporal formula tests, development AOIs, and four untouched confirmation AOIs |
+
+`labels_match_pix` uses pixel-coordinate geometries. Rasterizing those labels
+with the image's projected affine transform silently produces incorrect masks;
+the correct operation uses the identity affine transform. A regression test
+guards this dataset-specific fact.
+
+SpaceNet UDM polygons declare CRS84 coordinates and must be reprojected to the
+image CRS before rasterization. Validity is then intersected over the dates
+required by each local first/second comparison; a sequence-wide intersection
+is unnecessarily destructive.
+
+The construction is mathematically executable and formula-tested, but it
+failed as a detector: confirmation AP was `0.1127`, versus `0.1910` for the
+two-radiometric rank fusion. This separates implementation correctness from task
+utility. Do not infer that a correct DS equation automatically defines the
+right satellite sample object or score.
+
+The component behavior is itself informative. First-DS magnitude and first
+Grassmann distance had mean within-AOI Spearman correlation `0.9999`; at the
+tested small rotations they provide almost the same ranking. Second total and
+along had correlation `0.9596`, so total magnitude was largely governed by
+motion along the estimated geodesic. Orthogonal magnitude was distinct from
+raw second difference (`rho=-0.0314`) but nearly random for new-building cells
+(AUROC `0.5055`). Distinctness is not evidence of task relevance.
+
+## 16. Cross-Method Fidelity And Status
+
+The cross-branch evidence review corrected several method-category shortcuts:
+
+| Label | Correct status |
+|---|---|
+| Band-Image DS | Pairwise linear canonical DS on flattened band-image samples; **not GDS**. |
+| Material common-removal experiment | GDS-inspired proxy; not a complete formal multi-subspace GDS evaluation. |
+| RFF nonlinear DS | Explicit-feature kernel proxy; **not paper-faithful KDS/KGDS**. |
+| Autoencoder latent subspaces | Deep-feature proxy; **not Fukui's Signal Latent Subspace**. |
+| Fixed-grid DS pyramid | Spatial-support proxy; **not Green Learning, PixelHop, or wavelets**. |
+| Moving-average/slow features | Temporal smoothing/SFA proxy; **not S3CCA or TRCCA**. |
+
+Method completion as of 2026-06-22:
+
+- **Implemented and real-tested:** canonical first DS, second DS, geodesic
+  along/orthogonal decomposition, RTW, SFA, SSA/signal-subspace DS, MSM,
+  IR-MAD/CCA structure, spatial Band-Image/patch/window DS.
+- **Reference verified only:** Venus KDS/KGDS construction.
+- **Partial/proxy only:** GDS satellite adaptation, SLS, SFS, nonlinear kernel
+  DS, multiscale Green Learning.
+- **Untested faithfully:** satellite KDS/KGDS, standalone KCCA, S3CCA, TRCCA,
+  KMSM, product-Grassmann SLS, true wavelet/PixelHop construction.
+
+The local HSI moment experiment provides a construction example for method
+verification. For a local `w x w` window, each pixel is a `B`-band sample,
+`X_t in R^((w*w) x B)`, and exact dual PCA gives `U_t in R^(B x r)`. Mean,
+covariance scale, normalized eigenspectrum shape, leading-eigenspace
+orientation, canonical DS projection, and projector row-energy attribution
+were separated and tested with five controlled mechanisms. On Hermiston,
+Farmland, and Shenzhen, every frozen geometric hypothesis lost to the strongest
+direct control. The mathematics is usable; the detector hypothesis is rejected
+for this construction.
+
+General rule: a method is not credited by family name. It must preserve the
+exact mathematical object, sample definition, score, and evaluation protocol
+from its source, with project adaptations named separately.
+
+### 16.1 Band-Image Matched Spatial Controls
+
+The Band-Image DS null experiment uses `X_t in R^(N x 13)`, with rows as fixed
+spatial positions and columns as band-image samples. Because
+`fit_pca_basis(X_t)` fits sklearn PCA on `X_t^T`, centering subtracts the mean
+of the 13 band values at each spatial position. Every matched control uses the
+same centering axis.
+
+- **Normalized spatial Gram:** row norm of
+  `A_pre A_pre^T-A_post A_post^T`, where `A=X/||X||_F`. This retains all
+  singular modes and removes total matrix scale.
+- **Projector distance:** row norm of
+  `U_pre U_pre^T-U_post U_post^T`. This isolates rank-matched orientation and
+  does not use the spectral-difference vector.
+- **Cross-reconstruction novelty:** symmetric cross-subspace residual minus
+  each date's self-reconstruction residual. This is zero for equal subspaces
+  even when rank truncation leaves ordinary reconstruction error.
+
+The row formulas are evaluated through `13 x 13` products without forming an
+`N x N` matrix. Explicit small-matrix tests confirm the Gram/projector
+identities and common-permutation equivariance.
+
+Empirical boundary after correcting all controls to use the PCA sample-centering
+axis: Band-Image DS beats Gram, projector, and cross-reconstruction AP, but
+loses to spatially filtered PCA. Therefore spatial orientation alone is not
+the useful statistic. A DS-specific ranking contribution is isolated relative
+to the matched geometric nulls, but not as an improvement over the strongest
+individual spatial-PCA map.
+
+### 16.2 xBD-S12 Transfer And Task Decomposition
+
+The 12-band xBD-S12 adaptation uses `X_t in R^(N_spatial x 12)` and centered
+rank 11. Three targets must remain separate:
+
+1. full-scene damaged-pixel retrieval (`2-4` vs `0-1`);
+2. damage discrimination inside buildings (`2-4` vs `1`);
+3. building localization diagnostic (`1-4` vs `0`).
+
+The frozen external result shows that row-wise projector distance is strongest
+for targets 1 and 3, while raw spectral L2 is strongest for target 2. Thus
+projector distance should be interpreted as spatial candidate/localization
+evidence. It is invariant to basis rotation because it evaluates the row norm
+of `P_pre-P_post`, not individual PCA vector signs.
+
+Canonical DS is weaker than projector distance as a stand-alone xBD-S12 map.
+It beats a centering- and rank-matched cross-reconstruction control on all five
+unseen test events, before and after the boundary stress test, but this
+direction does not repeat consistently across 11 training disasters. Treat it
+as event-dependent DS evidence, not a universal transferable advantage.
+
+The first fixed-combination hypothesis was tested and rejected:
+
+```text
+projector rank map = candidate/localization evidence [supported]
+raw L2 = conditional radiometric evidence [supported]
+mean/product of both maps = improved candidate score [rejected]
+```
+
+High-rank centered PCA and dual uncentered autocorrelation projectors behave
+similarly; ranks 8-11 form a plateau on training events. Keep the two signals
+separate until a mechanism stronger than score averaging is defined. Centered
+PCA and uncentered autocorrelation remain different mathematical objects even
+when their high-rank empirical behavior is similar.
+
+On an identical deterministic 100-patch sample from each of 11 training
+events, centered rank-11 projector distance exceeds IR-MAD full-scene AP by
+`+0.00814` on average, interval `[+0.00470,+0.01171]`, with 10/11 wins. At a
+fixed 5% pixel-review budget it retrieves 38.2% of damaged pixels with 7.64x
+prevalence lift, versus IR-MAD's 30.2% and 6.03x. The unseen-event values are
+24.7%/4.93x versus 17.8%/3.55x. These are candidate-ranking statistics; they
+do not turn projector distance into a damage-severity classifier.
+
+The fixed-budget metric uses the top-scoring fraction of each patch. If a
+score tie crosses the budget, expected positives from the tied group are used
+instead of selecting pixels by flattened index. This matters because
+percentile-rank maps can contain large tied groups.
+
+Object-level evaluation samples original xBD polygons at Sentinel-2 pixel
+centers and intersects each instance with the official downsampled class mask.
+At a 5% scene threshold, projector geometry has the highest damaged-building
+hit recall on both train (`0.452`) and test (`0.358`) events, but also a high
+intact-building hit rate (`0.377` and `0.267`). PCA-diff is better for
+damaged-versus-intact object classification. The projector is therefore a
+high-coverage region proposal signal rather than an object damage score.
+
+Maximum-within-object aggregation is size-sensitive. The projector advantage
+over IR-MAD persists under p90 aggregation and within event-relative object
+size tertiles, including small test objects (`0.1965` versus `0.1346` p90 hit
+recall at 5%), but all object-recall claims must state the size sensitivity.
+
+Controlled registration shifts on training events show a bounded sensitivity.
+At one 4 m Sentinel pixel, projector AP drops by `-0.00233` and p90 object
+recall by `-0.0236`, with both event-bootstrap intervals below zero. At two
+pixels the drops are `-0.00414` and `-0.0358`. Projector remains the strongest
+absolute candidate method through the tested range, but degrades more clearly
+than low-performing PCA/raw controls. Use "registration-sensitive candidate
+geometry," never "registration-invariant geometry."
+
+## 17. Cross-Sensor Band-Image Boundary
+
+The same input convention can produce materially different objects as the
+number of band-image samples changes:
+
+```text
+xBD-S12:   X_t in R^(16384 x 12), centered rank 11
+HSI:       X_t in R^(N x 149..198), fixed transfer rank 11
+SpaceNet7: X_t in R^(tile_pixels x 3), centered rank 2
+```
+
+On HSI, canonical DS can isolate a useful spatial mode on Hermiston but not on
+Benton or Shenzhen. On SpaceNet7, three RGB samples create a severe rank-two
+bottleneck: cross-reconstruction is more useful than DS, while projector
+distance loses to IR-MAD. Therefore "preserves spatial coordinates" is not
+sufficient. The sample count, retained spectral diversity, rank, scene-change
+mechanism, and score semantics determine whether geometry is useful.
+
+The cross-sensor result forbids treating projector distance as a generic
+building-localization method. Its xBD behavior is currently specific to that
+12-band event task. Canonical DS and projector distance also remain distinct:
+DS projects the observed date difference onto principal-vector difference
+directions, while projector distance measures row-wise change of the fitted
+subspace operators without using the observed difference vector.

@@ -11,6 +11,9 @@
 - [7. Literature Leads](#7-literature-leads)
 - [8. Reference Leads](#8-reference-leads)
 - [9. Reset Literature Problem Map](#9-reset-literature-problem-map)
+- [10. Temporal Satellite Subspace Reading Spine](#10-temporal-satellite-subspace-reading-spine)
+- [11. Evidence-Selected Reading Priorities](#11-evidence-selected-reading-priorities)
+- [12. Successive Spatial Subspace Reading Spine](#12-successive-spatial-subspace-reading-spine)
 
 ## 1. Must-Cite Core Sources
 
@@ -24,7 +27,7 @@
 | Close et al. 2021 Sentinel-2 LULUCF change detection | Shows Sentinel-2 change analysis can be affected by rare true change and radiometric/seasonal variability. | Supports the pseudo-change and seasonality-risk discussion. |
 | Metric-CD, WACV 2025 | Modern unsupervised deep metric change detection. | Raises comparison pressure for unsupervised CD claims. |
 | xBD / Gupta et al. 2019 | Building damage dataset. | Future damage extension only. |
-| xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset. | Future extension only. |
+| Dietrich et al., xBD-S12 | Sentinel-1/Sentinel-2 disaster damage dataset with event-disjoint split and xBD labels. | Implemented external unsupervised score-map validation; cite for data, split, normalization, and damage semantics. |
 | ChangeOS | Object-based semantic change/damage framework. | Future damage comparison if xBD work resumes. |
 | Remote-sensing change-detection surveys | Needed to answer Sensei's request to understand the broader method landscape. | Read before novelty claims; use to place DS among classical and deep CD methods. |
 | Fukui et al. second-order DS / time-series DS | Supports multi-date subspace progression/recovery ideas. | Future MultiSenGE/GDS/second-order track, not current OSCD evidence. |
@@ -192,7 +195,7 @@ When Chrome bookmarks are imported later, classify each item as one of:
 - `implementation-reference`: useful for code or math.
 - `baseline`: method to compare against.
 - `background`: useful context, not urgent.
-- `future`: xBD, greenhouses, MultiSenGE, semantic change, or broader application.
+- `future`: supervised xBD severity, greenhouses, MultiSenGE, semantic change, or broader application; xBD-S12 unsupervised external scoring is now active evidence.
 - `discard`: duplicate, weak, unrelated, or no longer useful.
 
 The 2026-06-07 Chrome bookmark export was triaged into `notes/reference_bookmarks.md`. Use that file for Zotero-first reading order and the organized Chrome import file.
@@ -205,7 +208,7 @@ Use this section as the bridge between literature concepts and the organized Chr
 |---|---|---|
 | DS, GDS, KDS, KGDS, CCA/KCCA, and Sensei's subspace-method leads | Defines the mathematical family this project must understand before claiming any subspace contribution. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` |
 | OSCD, FC-Siamese, Metric-CD, Celik PCA-kmeans, IR-MAD, and CVA | Defines the current binary change-detection benchmark and the classical/deep baselines that pressure novelty claims. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines` |
-| OSCD, MultiSenGE, HR/SCD, xBD/xBD-S12, and candidate EO datasets | Clarifies which dataset supports which claim: OSCD for binary change, MultiSenGE/Harmonized Sentinel-2 for temporal ideas, xBD/xBD-S12 for future damage work. | `Research / 01 Read First - Thesis Core / 03 Datasets And Problem Setting` and `Research / 04 Datasets - Current Candidate Future` |
+| OSCD, MultiSenGE, HR/SCD, xBD/xBD-S12, and candidate EO datasets | Clarifies which dataset supports which claim: OSCD for binary change, xBD-S12 for external candidate/damage evidence, and MultiSenGE/Harmonized Sentinel-2 for temporal ideas. | `Research / 01 Read First - Thesis Core / 03 Datasets And Problem Setting` and `Research / 04 Datasets - Current Candidate Future` |
 | Change-detection surveys and reality checks | Prevents method-forcing and helps state what is already known before proposing DS-based priors or spatial subspace variants. | `Research / 01 Read First - Thesis Core / 04 Review Papers And Reality Checks` |
 | Spatial information, semantic change, patch/local DS, and prior-guided CD | Directly answers Sensei's criticism that global pixel subspaces may break spatial information. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
 | Spatial-spectral subspace and tensor/n-mode subspace methods | Important novelty boundary: related methods already exist, but they are not the same as the current Sentinel-2 DS adaptation. | `Research / 02 Methods - Subspace Geometry` and `Research / 03 Methods - Change Detection / 01 Binary And Unsupervised Change Detection` |
@@ -229,7 +232,7 @@ Keep these as literature or implementation leads:
 - MapFormer and other prior-/semantic-guided CD work: evidence that adding priors is not automatically novel.
 - CGNet / Change Guiding Network: named comparison pressure for "change-prior-guided" neural CD because it generates change maps from deep features and uses them as prior information for multi-scale fusion. Use it as related work if this project claims prior-guided fusion, not as evidence that DS priors are useful.
 - AdaSemiCD and mean-teacher semi-supervised CD papers: named comparison pressure for pseudo-label experiments because they explicitly evaluate or filter pseudo-labels for remote-sensing CD. Use them to justify why DS/PCA/IR-MAD pseudo-labels must be quality-checked before training.
-- xBD and xBD-S12: future damage-dataset bridge; do not claim active damage evaluation until implemented.
+- xBD-S12: implemented event-disjoint unsupervised external evaluation; supervised xBD/xBD-S12 severity training remains future work.
 - Transfer learning for emergency building-damage assessment: useful disaster-evaluation realism.
 - ChangeOS: future object-level damage/change comparison, not active implementation.
 - FC-Siam / Siamese FCN: supervised OSCD-style change-detection baseline family; use as comparison pressure for any DS-only or prior-assisted segmentation claim.
@@ -240,7 +243,7 @@ Keep these as literature or implementation leads:
 Second-pass details from `research-notes/refs_links/benchmark_watchlist.md`:
 
 - Metric-CD is useful comparison pressure because it optimizes per image and thresholds its saved map at `0.5`; do not compare its F1/IoU directly to this repo without aligning thresholding, masking, averaging, bands, normalization, and compute.
-- xBD-S12 was logged as a warm extension because it reportedly provides `10,315` aligned Sentinel-1/Sentinel-2 pre/post pairs connected to xBD-style damage labels; capture the official release repo before implementation.
+- xBD-S12 was promoted from a warm extension after verifying and preparing all `10,315` aligned pairs and completing the frozen five-event test.
 - Emergency-context transfer-learning work should be used to discuss disaster generalization and emergency-realistic evaluation, not as evidence that this repo already solves damage mapping.
 - MapFormer and other prior-guided / semantic-guided change-detection papers are important because they weaken any novelty claim based only on "adding prior information."
 - External benchmark tables should start with a protocol-alignment note before score comparison.
@@ -253,7 +256,7 @@ Citation seeds from `research-notes/refs_links/initial_refs.bib` to preserve:
 - Celik 2009 PCA-kmeans.
 - Nielsen MAD / IR-MAD family.
 - U-Net and ResNet only when the corresponding models are discussed.
-- Gupta et al. xBD and Dietrich et al. xBD-S12 only for future damage framing.
+- Gupta et al. xBD for label provenance and Dietrich et al. xBD-S12 for the implemented external damage/candidate-ranking evaluation.
 
 ## 8. Reference Leads
 
@@ -292,7 +295,7 @@ This section connects the refined `Research` bookmark tree and the online reset 
 | Prior-guided and pseudo-label CD | MapFormer, CGNet / Change Guiding Network, AdaSemiCD, and mean-teacher semi-supervised CD papers | Prior information and pseudo-labels are already active ideas in remote-sensing CD, so the project must distinguish DS-style geometric priors from generic prior fusion or teacher-student pseudo-labeling. | Use to frame DS/PCA/IR-MAD maps as interpretable geometric prior candidates; do not claim novelty from "adding a prior map" alone. | `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` and `Research / 03 Methods - Change Detection` |
 | Multi-date DS/GDS/KGDS | Second-order DS, GDS, RTW, SFA/SSA, Harmonized Sentinel-2, MultiSenGE | GDS/KGDS need more than two subspaces; OSCD does not naturally support that beyond pre/post. | Future stronger research path if a multi-date dataset and evaluation proxy are defined. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA` and `Research / 04 Datasets - Current Candidate Future / 01 Sentinel OSCD MultiSenGE And EO Datasets` |
 | Abandoned greenhouse mapping | Global-PCG-10, Sentinel-2 greenhouse index, two-temporal Sentinel-2 greenhouse mapping | Greenhouse mapping is real and Sentinel-2-relevant, but the task may be object mapping/classification rather than generic change detection. | Use as application motivation or future dataset only after labels/evaluation exist. | `Research / 05 Applications - Use Cases And Problem Framing / 01 Greenhouses Agriculture Environmental Monitoring` |
-| xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | Future pivot/warm extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
+| xBD/xBD-S12 damage | xBD and xBD-S12 resources | Damage assessment is a different task with building objects and damage levels. | xBD-S12 now supplies external score-map evidence; supervised damage severity remains future work, and OSCD alone is not damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
 | Object/building-level descriptors | xBD, ChangeOS, object-level CD and greenhouse resources | Object units may preserve spatial/semantic information better than global pixel subspaces. | Candidate pivot if pixel/patch DS is too weak or if an object-labeled dataset is chosen. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` and `Research / 05 Applications` |
 
 ### 9.1 Geometry Versus Neural-Network Framing
@@ -337,8 +340,8 @@ These leads came from the updated Apple/Slack notes and new bookmark source. Tre
 
 Bookmark integration:
 
-- Importable file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-17.html`.
-- Merge summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-17.json`.
+- Importable file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`.
+- Merge summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-20.json`.
 - The new `Research (un-ingested)` source contributed `186` unique URLs; all were preserved in the organized output.
 - Only `14` ambiguous research-like links remain parked because their titles/URLs do not identify the resource safely.
 
@@ -348,8 +351,196 @@ Bookmark integration:
 | Spatial support for subspaces | Jang's channel-wise flattening idea plus spatial-spectral HSI references | Gives a concrete alternative to unordered pixel samples. | Add a flattened-band spatial-subspace pilot after global/patch/window DS comparisons. |
 | Temporal GDS/KGDS | Harmonized Sentinel-2 L2A and multi-date sequence notes | GDS/KGDS require multiple subspaces; OSCD has only two dates. | First produce a sequence feasibility report: frames, dates, bands, cloud/no-data, alignment. |
 | Prior versus pseudo-label | pseudo-label / teacher-student CD papers and prior-guided CD resources | Prevents vague claims that a DS map is automatically a training label. | Evaluate prior-map quality before pseudo-label pretraining. |
-| Classical comparison pressure | Celik, IR-MAD, CVA, PCA-diff, post-classification CD | Spatial DS must be compared against established classical methods, not only against itself. | Keep Celik and IR-MAD as required fair baselines after formula audits. |
+| Classical comparison pressure | Celik, IR-MAD, CVA, PCA-diff, post-classification CD | Spatial DS must be compared against established classical methods, not only against itself. | IR-MAD and Celik checks are implemented and tested; keep them as required pressure baselines, while labeling Celik as a project adaptation and IR-MAD as a compact verified implementation. |
 | Hybrid geometry plus neural methods | Siamese networks, U-Net/DeepLab/PSPNet-style segmentation, foundation models, deep-feature subspaces | A stronger route may use neural models for localization/features and subspaces for interpretation, clustering, or low-label priors. | Do not start large models yet; keep as follow-up if spatial DS maps show useful signal. |
 | Hyperspectral/anomaly/data fusion route | MNF/PCA dimensionality reduction, hyperspectral anomaly detection, IEEE Data Fusion Contest | Richer-band imagery may be a more natural subspace application than Sentinel-2 OSCD. | Treat as pivot/future route; verify datasets and labels before implementation. |
 | Application framing | abandoned greenhouse mapping, urban/infrastructure monitoring, disaster screening | These are possible motivations but not current evidence. | Use only as future application unless data and evaluation are available. |
-| Research trend scans | awesome remote-sensing CD list, recent arXiv resources, SiROC, foundation/open-vocabulary CD leads | Helps prevent missing modern baselines and overclaiming novelty. | Add high-priority papers/repos to bookmark/literature triage, then verify externally before citing. |
+| Research trend scans | awesome remote-sensing CD list, recent arXiv resources, SiROC, foundation/open-vocabulary CD leads | Helps prevent missing modern baselines and overclaiming novelty. | Use curated lists as discovery indices, not ground truth; add high-priority papers/repos to bookmark/literature triage, then verify with original papers/code before citing or implementing. |
+
+## 10. Temporal Satellite Subspace Reading Spine
+
+The active temporal study needs four literature layers. Read them in this order
+instead of collecting unrelated papers.
+
+### 10.1 Core Geometry
+
+| Source | Exact role | Project consequence |
+|---|---|---|
+| Fukui et al. 2024, *Second-order Difference Subspace*, https://arxiv.org/abs/2409.08563 | Defines generalized first DS, magnitude, second DS, subspace projection, and approximate along/orthogonal decomposition. | Primary formula source. It assumes equal `Delta t`; irregular satellite dates need a separately labeled adaptation. |
+| Kanai et al. 2023, *Time-series Anomaly Detection based on Difference Subspace between Signal Subspaces*, https://arxiv.org/abs/2303.17802 | Builds SSA signal subspaces from scalar sliding-window trajectory matrices and compares past/present signal subspaces. | The project block-trajectory matrix is a multivariate satellite adaptation. An unordered annual observation span is not Kanai's order-aware construction. |
+| Fukui and Maki 2015, TPAMI DS/GDS/KDS/KGDS | Defines the broader DS/GDS and kernel family. | Must cite for DS lineage and avoid claiming DS itself is new. |
+| Edelman, Arias, and Smith 1998, https://doi.org/10.1137/S0895479895290954 | Standard Grassmann geodesics and interpolation. | Source for evaluating the endpoint geodesic at the observed acquisition fraction. |
+| Gatto et al. 2019, n-mode GDS, https://arxiv.org/abs/1909.01954 | Preserves tensor modes in generalized DS. | Future alternative if flattening spatial/spectral/time modes proves inadequate. |
+
+### 10.2 Satellite Time-Series Change Baselines
+
+| Source | What it measures | Comparison use |
+|---|---|---|
+| Dagobert et al. 2022, IPOL, https://doi.org/10.5201/ipol.2022.416 | Forward/backward novelty residuals, NFA significance, duration, multiscale patches on registered RGBI sequences. | Closest external sequence-level spatial baseline. Its C code and pseudo-gamma preprocessing were reproduced locally on four sequences; outputs are agreement targets, not labels. |
+| Verbesselt et al. 2009, BFAST, https://doi.org/10.1016/j.rse.2009.08.014 | Breaks in trend and seasonal components. | Required pressure when claiming abrupt temporal change rather than ordinary seasonality. |
+| Jamali et al. 2020, JUST, https://doi.org/10.3390/rs12234001 | Jump, trend, and seasonal analysis for noisy/irregular satellite time series. | Direct irregular-cadence and seasonality comparison pressure. |
+| Zhu/CCDC family and dense time-series evaluations | Continuous change detection and classification. | Broader operational baseline; use when a sufficiently long sequence and event protocol exist. |
+| Dagobert paper MOSUM comparison | Per-pixel moving-sum change-point baseline. | Lightweight first temporal statistical comparator. |
+
+### 10.3 Pseudo-Change And Learned Temporal Representations
+
+| Source | Relevance | Boundary |
+|---|---|---|
+| Du et al. 2019, DSFA, https://doi.org/10.1109/TGRS.2019.2930682 | Learns invariant/slow features so changed pixels differ while unchanged pixels remain stable. | Strong baseline/idea for separating slow background variation from abrupt change; not DS lineage. |
+| Deep learning for satellite image time-series analysis review 2024, https://doi.org/10.1109/MGRS.2024.3393010 | Maps modern SITS representations and tasks. | Prevents comparing only against old classical methods. |
+| ChangeMamba 2024, https://doi.org/10.1109/TGRS.2024.3417253 | Modern spatiotemporal state-space CD. | Performance pressure only; not a method to reimplement before the classical geometric question is answered. |
+| Signal Latent Subspace 2024, https://doi.org/10.1016/j.apacoust.2024.110181 | Builds product-Grassmann subspaces from neural latent features. | Main analogy for a later raw-versus-deep temporal subspace experiment. |
+
+### 10.4 Labeled Multi-Temporal Evaluation Candidate
+
+| Source | What it provides | Feasibility consequence |
+|---|---|---|
+| Toker et al. 2022, *DynamicEarthNet: Daily Multi-Spectral Satellite Dataset for Semantic Change Segmentation*, https://openaccess.thecvf.com/content/CVPR2022/html/Toker_DynamicEarthNet_Daily_Multi-Spectral_Satellite_Dataset_for_Semantic_Change_Segmentation_CVPR_2022_paper.html | Daily Planet multispectral observations for 75 AOIs plus monthly pixel labels for seven land-cover classes; introduces semantic change segmentation evaluation. | Best identified labeled test for temporal characterization/localization, but the official archive is about 524 GB (`labels.zip` about 1.4 GB and imagery split into multi-GB latitude archives). Define one-AOI selective acquisition before downloading. |
+| Official implementation, https://github.com/aysim/dynnet | Temporal baselines, splits, pretrained-model pointers, and official dataset link. | Use to understand data layout and evaluation; do not make it a dependency for the initial classical geometric test. |
+| Van Etten et al. 2021, *The Multi-Temporal Urban Development SpaceNet Dataset*, https://doi.org/10.1109/CVPR46437.2021.00633 | Monthly 4 m RGB mosaics, persistent building IDs, unusable-data masks, and a construction/demolition tracking task. | Enabled a manageable independent-label gate without the full DynamicEarthNet download. It tests RGB building construction, not multispectral Sentinel-2, semantic CD, or the official SCOT metric. |
+| Ketchum et al. 2020, *IrrMapper*, https://doi.org/10.3390/rs12142328 | Annual 30 m irrigation classifications over 11 western US states; the current Earth Engine v1.2 catalog spans 1986 through 2024. | Enables candidate irrigation-regime transitions with strong Sentinel-2 overlap, but transitions are derived weak labels rather than manually annotated event dates. |
+| Earth Engine IrrMapper v1.2 catalog, https://developers.google.com/earth-engine/datasets/catalog/UMT_Climate_IrrMapper_RF_v1_2 | Public binary annual irrigation collection and current temporal extent. | Practical source for candidate patch/year labels; requires an Earth Engine-enabled Cloud project for extraction. |
+| Wenger et al. 2022, *MultiSenGE*, https://isprs-annals.copernicus.org/articles/V-3-2022/635/2022/isprs-annals-V-3-2022-635-2022.pdf | Local multi-date Sentinel-2/Sentinel-1 sequences and static LULC labels. | Useful for controlled temporal geometry and nuisance tests, but static labels do not validate event timing. |
+
+DynamicEarthNet is not Sentinel-2 and therefore tests method generality rather
+than a Sentinel-specific claim. A Harmonized Sentinel-2 event sequence with
+independent annotations remains the preferred sensor-matched alternative if a
+manageable label source is available.
+
+IrrMapper's paper exposes a directly relevant gap: its annual model aggregates
+seasonal reflectance statistics and explicitly does not model capture-level
+spectral dynamics. That motivates testing seasonal trajectory representations.
+It does **not** establish that DS is the solution. Its documented limitations
+include fixed March-November season assumptions, weak response for orchards,
+vineyards, sparse irrigation, and possible class-transition errors.
+
+### 10.5 Hyperspectral And Temporal Leads From 2026-06-20
+
+| Source | What it adds | Decision |
+|---|---|---|
+| Theiler and Perkins, *Proposed Framework for Anomalous Change Detection*, https://web.engr.oregonstate.edu/~wongwe/workshops/icml2006/papers/theiler.pdf | Frames rare local change against pervasive illumination, focus, atmosphere, or seasonal differences. | Strong conceptual pressure for the nuisance-subspace idea; compare against anomalous-change methods rather than only ordinary CVA. |
+| Chakraborty and Ghosh 2021, https://arxiv.org/abs/2109.04990 | Unsupervised hyperspectral CD using multi-level feature-fusion autoencoders. | Modern nonlinear comparison pressure for a hyperspectral pivot. |
+| Gatto et al., n-mode GDS, https://arxiv.org/abs/1909.01954 | Tensor modes are represented and compared without collapsing all structure into one matrix. | Main source for a later spatial-spectral-temporal tensor experiment; not needed for the first seasonal-subspace test. |
+| Russwurm et al. 2020, BreizhCrops, https://doi.org/10.5194/isprs-archives-XLIII-B2-2020-1545-2020 | Official labeled Sentinel-2 field time-series benchmark with geographic partitions and crop classes. | Used for the independent RTW natural-label transfer and invariance test; it evaluates phenology representation, not changed-area segmentation. |
+| CiTIUS hyperspectral CD dataset, https://citius.usc.es/investigacion/datasets/hyperspectral-change-detection-dataset | Registered hyperspectral pairs and change-detection benchmark resources. | First practical dataset lead if the hyperspectral route is activated. |
+| Nielsen, MAD/MAF source page, https://orbit.dtu.dk/en/publications/multivariate-alteration-detection-mad-and-maf-postprocessing-in-m/ | Classical invariant multivariate-change baseline lineage. | Required baseline for multispectral/hyperspectral claims. |
+| Wu, Du, and Zhang 2013 subspace HSI-CD lineage | Confirms subspace-based hyperspectral change detection already exists. | Novelty cannot be "use subspaces on hyperspectral imagery"; novelty must be the exact geometric object, temporal design, or verified capability. |
+
+The latest essential knowledge base also preserves direct DS/GDS, second-order
+DS, time-series DS, S3CCA/TRCCA, signal-latent-subspace, Grassmann tracking,
+SFA, SSC, tensor GDS, and toolbox links. Search-result URLs and ChatGPT links are
+provenance only; original papers and repositories remain the citation sources.
+
+### 10.6 Current Novelty Boundary
+
+The scoped search found extensive satellite time-series change-point,
+seasonality, novelty, classical subspace, hyperspectral subspace, and learned
+spatiotemporal work. It did **not** find a direct publication applying Fukui's
+2024 first/second DS plus geodesic decomposition to registered multispectral
+satellite image sequences. This is evidence of novelty potential, not proof of
+novelty. A formal systematic search and advisor confirmation are still needed.
+
+The defensible novelty is not "subspaces for satellite images." It may be one
+of:
+
+- first validated use of this specific first/second DS geometry on SITS;
+- an irregular-cadence extension with explicit separation from paper theory;
+- a registration-robust/local multiscale construction;
+- or an empirical result explaining what these geometric quantities detect and
+  where they fail relative to NFA/MOSUM/BFAST/JUST and learned methods.
+
+## 11. Evidence-Selected Reading Priorities
+
+The 2026-06-22 cross-branch review changes reading priority from collecting
+more method families to pressure-testing the surviving spatial result.
+
+| Priority | Source/concept | Why read now |
+|---:|---|---|
+| 1 | Fukui and Maki, TPAMI 2015 DS/GDS/KDS/KGDS | Defines the exact pairwise DS object used by Band-Image DS and prevents incorrectly calling it GDS. |
+| 2 | Wu, Du, and Zhang 2013, DOI `10.1109/JSTARS.2013.2241396` | Establishes prior subspace-based HSI change detection; blocks generic novelty claims. |
+| 3 | Nielsen 2007 IR-MAD and paired CCA | Strong correlation/invariance baseline and a model for paper-to-code verification. |
+| 4 | Celik 2009 PCA-k-means and classical CVA/PCA-diff | Defines established unsupervised spatial/radiometric pressure baselines. |
+| 5 | Spatial Gram/correlation, local covariance, SiROC, and patch-tensor CD | Supplies the decisive nulls for whether Band-Image DS geometry adds information beyond full second moments. |
+| 6 | Remote-sensing CD reviews, including DOI `10.3390/rs16132355` and `10.3390/rs14040871` | Positions evaluation protocols, deep/classical baselines, and current open problems. |
+| 7 | Fukui second-order DS and time-series DS | Supports explaining the completed first/second/geodesic experiment; not currently the positive detector route. |
+| 8 | S3CCA/TRCCA | Remaining Sensei/senpai method gap; reproduce the original structured/temporal CCA object before satellite adaptation. |
+
+### 11.1 External Validation Dataset: xBD-S12
+
+Official resources:
+
+- repository and dataset instructions: https://github.com/prs-eth/xbd-s12
+- dataset record: https://zenodo.org/records/18960454
+- paper preprint: https://arxiv.org/abs/2511.05461
+
+Why it was selected for external transfer:
+
+- co-registered pre/post Sentinel-1 and Sentinel-2 imagery linked to xBD
+  disaster labels;
+- Sentinel-2 L2A contains 12 spectral bands (B10 is unavailable) resampled to
+  10 m before 128x128 patching at about 4 m output GSD;
+- event-based train/test split and metadata include disaster type, dates,
+  cloud score, class counts, and no-data counts;
+- the local machine already holds the original xBD archives needed for mask
+  creation.
+
+Constraints:
+
+- the verified Zenodo Sentinel archive is about `8.87 GB`; it is now prepared
+  locally with complete S2-pair and original-label coverage;
+- the target is building localization/damage, not generic OSCD change;
+- Band-Image rank must be adapted from 12 to at most 11;
+- evaluation must follow the official event split and damage/no-data mask
+  semantics rather than reusing OSCD thresholds;
+- results must separate full-scene damaged-pixel retrieval, damage-vs-intact
+  discrimination, and building localization.
+
+Completed evidence:
+
+- canonical DS beats matched cross-reconstruction across all five unseen test
+  events, including the boundary stress test;
+- projector distance leads candidate/building localization but not
+  damage-vs-intact discrimination;
+- raw radiometric difference is stronger inside known building support;
+- use `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md` for
+  exact values and claim limits.
+
+Current novelty boundary:
+
+- spatial support, subspace CD, covariance CD, and score fusion are established
+  topics;
+- the plausible contribution is a precise satellite sample construction plus
+  evidence that its DS score is complementary after matched spatial nulls;
+- generic fusion is not novel by itself, so any fusion claim must identify the
+  distinct information and use a frozen protocol;
+- first/second DS on satellite sequences remains unusual, but current real
+  detection evidence is negative and should be presented as characterization,
+  not performance.
+
+## 12. Successive Spatial Subspace Reading Spine
+
+The 2026-06-23 OSCD result promotes the following sources from optional leads
+to the immediate method/citation spine:
+
+| Source | Exact concept used | Project boundary |
+|---|---|---|
+| Fukui and Maki, TPAMI 2015, [IEEE 7053916](https://ieeexplore.ieee.org/document/7053916) | Canonical principal-vector Difference Subspace and projection onto `D`. | DS is established; novelty can only concern sample construction, adaptation, evidence, or downstream use. |
+| Kuo et al., [PixelHop / SSL](https://arxiv.org/abs/1909.08190) | Successive `3x3` near-to-far expansion, Saab DC/AC subspace approximation, and `2x2` inter-hop pooling. | Current method omits supervised LAG/classifier and must be called PixelHop-inspired successive Saab, not full PixelHop. |
+| Kuo and Madni, [Green Learning](https://doi.org/10.1016/j.jvcir.2022.103685) | Interpretable, feed-forward, low-footprint learning motivation. | Green Learning is an umbrella philosophy, not the exact algorithm implemented here. |
+| Mallat, [multiresolution wavelet representation](https://doi.org/10.1109/34.192463) | Faithful low-pass/detail decomposition and scale/orientation interpretation. | Haar/db2 SWT/DWT were tested as separate controls; the fixed pyramid is not a wavelet transform. |
+| OSCD / Daudt et al. | Official 14-city train and 10-city test protocol used for the frozen internal result. | A second labeled multispectral dataset is still required for generalization. |
+
+Immediate reading priorities:
+
+1. PixelHop Section 2.1–2.2 for the exact successive-unit and Saab
+   construction.
+2. Fukui/Maki Section 3 for canonical DS and the distinction from GDS/KDS.
+3. Remote-sensing unsupervised CD reviews for modern comparison pressure and
+   accepted protocols.
+4. Seasonal/radiometric pseudo-change literature to explain the Norcia and
+   Brasilia failures.
+
+[gap] Find the closest published remote-sensing method combining an
+unsupervised successive Saab/SSL representation with subspace-geometric
+pre/post comparison. A scoped novelty search is still required before claiming
+the combination is new.

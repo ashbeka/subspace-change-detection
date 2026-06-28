@@ -25,7 +25,7 @@ ds:
   rank_r: 6
   variance_threshold: null  # use rank_r unless set
   use_randomized_pca: true
-  subspace_variant: residual  # residual (stacked) or eig (sum-of-projector eigensplit)
+  subspace_variant: canonical  # paper-faithful principal-vector DS; legacy residual-stack is explicit only
   window:
     enabled: true
     size: 64

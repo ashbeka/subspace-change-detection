@@ -10,6 +10,7 @@
 - [5. Phase 1: Generate Prior Maps](#5-phase-1-generate-prior-maps)
 - [5A. Phase 1: Spatial Subspace Audit Workflow](#5a-phase-1-spatial-subspace-audit-workflow)
 - [6. Phase 1: MultiSenGE Optional Exploration](#6-phase-1-multisenge-optional-exploration)
+- [6A. Temporal First/Second DS Study](#6a-temporal-firstsecond-ds-study)
 - [7. Phase 2 Config Matrix](#7-phase-2-config-matrix)
 - [8. Phase 2: Short E0/E1 Smoke Run](#8-phase-2-short-e0e1-smoke-run)
 - [9. Phase 2: Single Full Run](#9-phase-2-single-full-run)
@@ -21,12 +22,23 @@
 - [15. Cleanup and Retention](#15-cleanup-and-retention)
 - [16. Troubleshooting](#16-troubleshooting)
 - [17. Current Evidence Anchors](#17-current-evidence-anchors)
+- [18. SpaceNet 7 Temporal Subspace Gate](#18-spacenet-7-temporal-subspace-gate)
+- [19. Hyperspectral Moment Geometry Gate](#19-hyperspectral-moment-geometry-gate)
+- [20. Band-Image Matched Spatial Controls](#20-band-image-matched-spatial-controls)
+- [21. xBD-S12 External Spatial-Geometry Validation](#21-xbd-s12-external-spatial-geometry-validation)
+- [22. HSI Band-Image Transfer](#22-hsi-band-image-transfer)
+- [23. SpaceNet7 Band-Image Transfer](#23-spacenet7-band-image-transfer)
+- [24. Successive Saab-DS Spatial Experiment](#24-successive-saab-ds-spatial-experiment)
 
 Generated: 2026-05-03
 Workflow updated: 2026-06-06
 Primary environment: Windows PowerShell, repo root `E:\research_projects\subspace-change-detection`
 
-This is the operational cheat sheet for reproducing the current project. It is deliberately practical: commands, expected paths, outputs, and failure checks. The project's truthful current scope is OSCD Sentinel-2 binary change segmentation with optional unsupervised prior channels. It is not yet an end-to-end xBD/xBD-S12 damage segmentation system.
+This is the operational cheat sheet for reproducing the current project. It
+is deliberately practical: commands, expected paths, outputs, and failure
+checks. The project includes OSCD binary change experiments and unsupervised
+xBD-S12 external score-map evaluation. It is not an end-to-end supervised
+xBD/xBD-S12 damage-segmentation system.
 
 ## 0. Golden Rules
 
@@ -163,7 +175,8 @@ data/MultiSenGE/
   s2/
 ```
 
-xBD is currently future work only. The generic adapter expects CSV indexes that are not present:
+The generic supervised xBD adapter remains future work and expects CSV indexes
+that are not present:
 
 ```text
 data/xbd/train.csv
@@ -171,7 +184,8 @@ data/xbd/val.csv
 data/xbd/test.csv
 ```
 
-If those CSVs are absent, do not claim xBD training/evaluation is implemented.
+Their absence does not block the separate xBD-S12 unsupervised external
+evaluator in Section 21. Do not claim supervised xBD training is implemented.
 
 ## 4. One-Command Liveness Check
 
@@ -307,7 +321,7 @@ Phase 2 prior loading expects exactly this structure.
 Current research priority:
 
 ```text
-global pixel DS vs patch-vector DS vs local-window DS
+global pixel DS vs patch-vector DS vs local-window DS vs Band-Image DS
 ```
 
 Source-linked implementation rule:
@@ -339,6 +353,7 @@ What it does not yet prove:
 
 - patch-vector DS;
 - local-window DS as a controlled comparison;
+- Band-Image DS, where each Sentinel-2 band image is one flattened spatial vector;
 - multiscale subspace pyramid;
 - city-level metric maps and visual outputs for the spatial variants.
 
@@ -346,6 +361,12 @@ Spatial comparison command:
 
 ```powershell
 .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 6 --methods global_pixel,window128,patch3,patch5
+```
+
+Spatial comparison with the current Band-Image DS candidate:
+
+```powershell
+$tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-compare --city beirut --rank 8 --methods global_pixel,patch3,patch5,window128s64mean,band_image_ds,band_image_norm --output-dir "phase1/outputs/spatial_ds_beirut_band_image_$tag" --no-save-npy
 ```
 
 Equivalent raw command:
@@ -370,6 +391,8 @@ score_maps/global_pixel.png
 score_maps/window128s64mean.png
 score_maps/patch3.png
 score_maps/patch5.png
+score_maps/band_image_ds.png
+score_maps/band_image_norm.png
 comparison_grid.png
 ```
 
@@ -390,6 +413,50 @@ Tracked report:
 ```text
 docs/experiment_reports/oscd_spatial_subspace_sweep_core5_2026-06-14.md
 ```
+
+Completed all-city Band-Image DS score-ablation sweep:
+
+```powershell
+$tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank8_band_image_scores:8:global_pixel+patch3+patch5+window128s64mean+band_image_ds+band_image_norm+band_image_ratio+band_image_residual" --output-dir "phase1/outputs/spatial_ds_band_image_score_ablation_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Tracked report:
+
+```text
+docs/experiment_reports/oscd_band_image_ds_score_ablation_2026-06-18.md
+```
+
+Corrected all-city classical pressure comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank8_traditional_pressure:8:global_pixel+patch3+patch5+window128s64mean+band_image_norm+celik_pca_kmeans+ir_mad" --output-dir "phase1/outputs/spatial_ds_traditional_pressure_allcities_corrected_$tag" --continue-on-error --no-save-npy
+```
+
+Rank-12 label-free fusion comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_label_free_fusion:12:band_image_norm+ir_mad+rank_fusion_pca_band+rank_fusion_band_irmad+rank_fusion_pca_irmad+rank_fusion_pca_band_irmad" --output-dir "phase1/outputs/spatial_score_rank_fusion_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Tracked interpretation:
+
+```text
+docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md
+```
+
+Generate saved score arrays for split-safe calibration:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; $source="phase1/outputs/spatial_score_calibration_source_allcities_$tag"; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_calibration_source:12:band_image_norm+ir_mad+rank_fusion_pca_band_irmad" --output-dir $source --continue-on-error --save-npy
+```
+
+Fit changed-area fractions on official training cities and evaluate them unchanged on official test cities:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-score-calibration --sweep-root phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915 --config rank12_calibration_source --output-dir "phase1/outputs/oscd_split_safe_calibration_$tag"
+```
+
+The second command writes train calibration curves, held-out test metrics, paired city tests, and TP/FP/FN diagnostic maps. It is supervised by training labels; it is not an unsupervised threshold.
 
 Default sweep design:
 
@@ -423,10 +490,12 @@ Validation meaning:
 - `raw_l2_corr`: redundancy check; if a DS score is almost perfectly correlated with raw spectral L2, it is probably not adding a distinct geometric signal.
 - `raw_l2` and `pca_diff`: baseline pressure so DS is not compared only against itself.
 
-Queued later variant:
+Completed fixed-grid pyramid decision:
 
 ```text
-multiscale_subspace_pyramid
+spatial_pyramid_1_2_4_energy
+spatial_pyramid_1_2_4_norm
+spatial_pyramid_1_2_4_8_norm
 ```
 
 This is the wavelet/JPEG/Green-Learning-inspired idea:
@@ -438,7 +507,7 @@ This is the wavelet/JPEG/Green-Learning-inspired idea:
 8x8 grid       -> 64 subspaces
 ```
 
-Do not call this "Green Learning" in results until the exact Green Learning / PixelHop / wavelet source is matched to the implementation.
+Core-five testing did not improve AP over global pixel DS. Stop this exact construction. Do not call it "Green Learning," PixelHop, or a wavelet implementation: those require a different, source-verified feature hierarchy.
 
 ## 6. Phase 1: MultiSenGE Optional Exploration
 
@@ -461,6 +530,145 @@ Run MultiSenGE visualization:
 ```
 
 MultiSenGE is exploratory. Do not use it as the main supervised segmentation benchmark without new work.
+
+## 6A. Temporal First/Second DS Study
+
+Formula tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest tests.test_temporal_subspace_dynamics tests.test_seasonal_observation_subspaces -v
+```
+
+Build the current five-patch, 23-date MultiSenGE manifest:
+
+```powershell
+.\.venv\Scripts\python.exe -m phase1.scripts.build_multisenge_manifest --multisenge_root data/MultiSenGE --output_path phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --patch_ids "32TLT_3855_0,32TLT_4369_257,32TLT_4883_514,32TLT_5397_1028,32TLT_5654_257" --min_s2_dates 20 --seed 1234
+```
+
+Run full-rank band-image first/second DS on those patches:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-temporal-dynamics --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --rank 10 --preprocessing centered --patch-ids "32TLT_3855_0,32TLT_4369_257,32TLT_4883_514,32TLT_5397_1028,32TLT_5654_257" --output-dir "phase1/outputs/multisenge_temporal_timeaware_core5_$tag"
+```
+
+Run controlled local-change/radiometric/translation injections:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-temporal-injections --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --rank 10 --preprocessing centered --repeats 12 --output-dir "phase1/outputs/multisenge_temporal_injections_$tag"
+```
+
+Run any directory of registered date-prefixed multispectral TIFFs:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-registered-sequence-dynamics --sequence-dir tmp/ipol416_vegas --output-dir "phase1/outputs/registered_temporal_ds_$tag" --rank 0 --preprocessing centered --top-k 20
+```
+
+Compare backward/forward temporal contexts on a registered sequence:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-context-ds --sequence-dir tmp/ipol416_vegas_pseudogamma --context-sizes 3,5 --ranks 1,2 --factorizations per_band,joint --reference-lognfa-dir tmp/ipol416_reference_run_pseudogamma/lognfa_dir --output-dir "phase1/outputs/temporal_context_ds_vegas_$tag" --figure-config 5:2:per_band --figure-count 4
+```
+
+Run controlled persistent/transient/radiometric/translation interventions on
+the current five-patch MultiSenGE manifest:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-context-injections --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --target-date 20200909 --context-size 3 --rank 2 --factorization per_band --repeats 4 --max-patches 5 --output-dir "phase1/outputs/temporal_context_injections_$tag"
+```
+
+Run the subpixel translation and low-frequency robustness curve:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-temporal-registration-curve --manifest phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json --target-date 20200909 --context-size 3 --rank 2 --shifts 0.25,0.5,1,2 --strategies native,gaussian1,gaussian2,pool2,pool4,phase_align --local-strength 0.25 --window-size 32 --repeats 3 --max-patches 5 --output-dir "phase1/outputs/temporal_registration_curve_$tag"
+```
+
+Run the seasonal observation-subspace stress test before acquiring irrigation
+data. This compares abrupt shape change, amplitude-only change, gradual drift,
+phase shift, radiometric nuisance, missing composites, and translation:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-seasonal-regime-study --repeats 80 --ranks 1,2,4,8 --preprocessing uncentered,feature_centered,feature_centered_observation_l2 --bootstrap 200 --output-dir "phase1/outputs/seasonal_regime_subspace_study_$tag"
+```
+
+Compare unordered, first-difference, and block-trajectory subspaces on real
+MultiSenGE backgrounds with controlled event and nuisance transformations:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multisenge-order-aware-interventions --output-dir "phase1/outputs/multisenge_order_aware_interventions_$tag" --crop-size 32 --repeats 8 --max-patches 5 --ranks 1,2 --representations unordered,difference,trajectory2,trajectory3 --preprocessing feature_centered_observation_l2 --bootstrap 300
+```
+
+Run the RTW timing/tempo-invariance gate. The command screens all configurations
+on a fixed development subset, re-estimates six finalists, freezes one, and
+scores two untouched patches against Fourier, harmonic, DTW/TWDTW, M-SSA,
+snapshot-subspace, and scalar controls:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-invariance-gate --output-dir "phase1/outputs/multisenge_rtw_invariance_$tag"
+```
+
+The completed 2026-06-21 gate was negative for incremental RTW value. Do not
+advance to natural irrigation/crop-transition claims unless a new mechanism and
+fresh preregistration justify reopening it.
+
+Run the stronger natural-label RTW transfer study on official BreizhCrops. The
+command performs nested RTW selection on FRH01, freezes the configuration, and
+evaluates FRH04 against global-shift, correlation, PCA reconstruction,
+snapshot/shift-orbit/M-SSA subspaces, DTW/TWDTW, and seasonal controls:
+
+Download and byte-size-verify the four official 2017 L2A partitions:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-breizhcrops-download --regions frh01,frh02,frh03,frh04
+```
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-breizhcrops-transfer --search-rtw --development-region frh01 --holdout-region frh04 --output-dir "phase1/outputs/breizhcrops_rtw_nested_search_frh01_frh04_$tag" --max-fields-per-class 80 --anchors-per-class 40 --rtw-replicates 3 --bootstrap 1000 --seed 2718
+```
+
+Geographic replication:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-rtw-breizhcrops-transfer --search-rtw --development-region frh02 --holdout-region frh03 --output-dir "phase1/outputs/breizhcrops_rtw_nested_search_frh02_frh03_$tag" --max-fields-per-class 80 --anchors-per-class 40 --rtw-replicates 3 --bootstrap 1000 --seed 3141
+```
+
+The official HDF5 files and index/class-mapping CSVs must exist under
+`data/BreizhCrops/2017/L2A/`. The completed study is negative for incremental
+RTW value and should not be retuned on the holdout regions.
+
+Run the strongest current local/off-grid controlled protocol with fair
+multispectral index controls:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-multiscale-order-aware-interventions --output-dir "phase1/outputs/multiscale_order_aware_fair_controls_$tag" --crop-size 32 --grids 8 --representations unordered --rank 1 --preprocessing feature_centered_observation_l2 --spatial-smoothing-sigma 2 --repeats 4 --max-patches 5 --bootstrap 300
+```
+
+Check public IrrMapper coverage and, after configuring an Earth Engine-enabled
+Cloud project, query one candidate AOI without downloading imagery:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-irrigation-data-feasibility --ee-project <GOOGLE_CLOUD_PROJECT_ID> --bbox=-112.60,45.20,-112.40,45.35 --start 2017-01-01 --end 2025-01-01 --output-dir "phase1/outputs/irrigation_regime_data_feasibility_$tag"
+```
+
+Interpretation rules:
+
+- `rank 0` means full band-image span (`r=B`) for the generic runner.
+- The paper's second DS assumes equal time spacing. Use `gap_ratio` and the
+  separately named time-aware geodesic deviation for irregular dates.
+- MultiSenGE's static reference is not temporal ground truth.
+- Contribution maps sum to DS magnitude but are attribution maps, not calibrated
+  change probabilities.
+- Do not claim superiority until external NFA/MOSUM/BFAST/JUST or equivalent
+  baselines and an event-evaluation protocol are present.
+- IPOL log-NFA comparisons are detector agreement, not ground-truth accuracy.
+- `temporal_context_ds` is canonical DS between backward/forward context spans.
+  `linear_projection_novelty` is a separate orthogonal-residual control and is
+  not IPOL's NNLS/NFA algorithm.
+- The seasonal-regime command is synthetic diagnostics, not irrigation
+  accuracy. Real IrrMapper transitions are weak labels and require manual or
+  independent verification.
+- The order-aware and multiscale intervention commands use real backgrounds but
+  injected transformations. They test behavior/localization, not natural event
+  accuracy. Do not report their AP as DynamicEarthNet or IrrMapper performance.
 
 ## 7. Phase 2 Config Matrix
 
@@ -781,7 +989,8 @@ xBD CSVs missing:
 data/xbd/train.csv, val.csv, test.csv absent
 ```
 
-This is expected right now. xBD is future work.
+This is expected for the generic supervised adapter. It is separate from the
+implemented xBD-S12 external evaluator in Section 21.
 
 Long command quoting on Windows:
 
@@ -814,3 +1023,159 @@ Most important next analysis:
 ```text
 Targeted visualization plus true threshold tuning for the completed v5 core sweep. Current per-city/per-seed CSV analysis is done; true threshold tuning still needs probability maps or an inference threshold-sweep.
 ```
+
+## 18. SpaceNet 7 Temporal Subspace Gate
+
+Evaluate one SpaceNet 7 AOI with the frozen rolling trajectory construction:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-temporal-subspaces --aoi-root "data/SpaceNet7_confirmation/L15-1691E-1211N_6764_3347_13" --representations trajectory2 --preprocessing feature_centered --window 6 --rank 2 --grids 8 --output-dir "phase1/outputs/spacenet7_geometry_$tag"
+```
+
+Compute fair standardized radiometric controls without repeating SVD fitting:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-temporal-subspaces --aoi-root "data/SpaceNet7_confirmation/L15-1691E-1211N_6764_3347_13" --window 6 --grids 8 --radiometric-normalization per_date_channel_standardize --controls-only --output-dir "phase1/outputs/spacenet7_controls_$tag"
+```
+
+Analyze already paired confirmation runs with the fixed rank fusion:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-hybrid-analysis --input-root phase1/outputs --geometry-glob "spacenet7_confirmation_validmask_*_geometry_20260621_012400" --controls-glob "spacenet7_confirmation_validmask_*_controls_20260621_012400" --bootstrap 3000 --output-dir "phase1/outputs/spacenet7_confirmation_hybrid_$tag"
+```
+
+These commands reproduce a negative gate, not a promoted baseline. Do not tune
+this construction on the confirmation AOIs. See
+`docs/experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`.
+
+## 19. Hyperspectral Moment Geometry Gate
+
+Reproduce the deterministic four-dataset local HSI factorization experiment:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-hsi-moment-geometry --datasets "benton,hermiston,farmland,shenzhen" --configs "joint_robust_zscore:5:3:3,joint_robust_zscore:9:5:3,joint_robust_zscore:13:7:5,per_date_zscore:9:5:5" --bootstrap 2000 --output-dir phase1/outputs/hsi_moment_geometry_final_stable_20260621_185316
+```
+
+This reproduces a rejected detector hypothesis and a successful
+formula/mechanism verification. See
+`docs/experiment_reports/hsi_local_moment_geometry_2026-06-21.md` before
+interpreting any ratio or attribution output.
+
+## 20. Band-Image Matched Spatial Controls
+
+Run the decisive all-city comparison:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_matched_spatial_nulls:12:band_image_norm+band_image_spatial_gram+band_image_projector_distance+band_image_cross_reconstruction+smoothed_pca_sigma1+multiscale_pca_sigma0_1_2+ir_mad+rank_fusion_pca_band_irmad" --output-dir "phase1/outputs/band_image_matched_nulls_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Run the fixed equal-rank complementarity variants:
+
+```powershell
+$tag=Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities all --configs "rank12_spatial_complementarity:12:band_image_norm+band_image_cross_reconstruction+smoothed_pca_sigma1+ir_mad+rank_fusion_smoothed_pca_band+rank_fusion_smoothed_pca_irmad+rank_fusion_smoothed_pca_band_irmad+rank_fusion_smoothed_pca_cross_irmad" --output-dir "phase1/outputs/spatial_complementarity_fusions_allcities_$tag" --continue-on-error --no-save-npy
+```
+
+Interpretation and exact statistics:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+## 21. xBD-S12 External Spatial-Geometry Validation
+
+Prepare the official archive after downloading it to
+`data/xbd_s12_download/xbd_s12.tar.gz`:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-prepare --skip-label-extraction
+```
+
+The official Zenodo archive omits its documented normalization JSON. Place the
+official Hugging Face `prs-eth/xbd-s12_loc_seed1` model config at
+`data/xbd_s12_download/xbd_s12_loc_seed1_config.json`; preparation extracts
+and validates its embedded `normalization_stats`.
+
+Run the frozen unbuffered test:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 3 --boundary-buffer 0 --output-dir phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613
+```
+
+Run the extreme three-pixel boundary sensitivity without patch-level metrics:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --bootstrap 5000 --maps-per-event 0 --boundary-buffer 3 --event-only --output-dir phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715
+```
+
+Run the identical-sample training comparison against IR-MAD and the secondary
+fixed-budget test analysis. `--metric-workers 4` parallelizes exact PR/ROC
+aggregation in shared memory without multiplying the dataset into processes:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split train --patches-per-event 100 --seed 24680 --event-only --maps-per-event 0 --rank 11 --bootstrap 5000 --metric-workers 4 --output-dir phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-evaluate --split test --seed 1234 --event-only --maps-per-event 0 --rank 11 --bootstrap 5000 --metric-workers 4 --output-dir phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735
+```
+
+Run building-object candidate retrieval. Objects are original xBD polygons
+that remain visible in the official 128×128 categorical mask:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split train --patches-per-event 100 --seed 24680 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_train100_20260622_140604
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-object-retrieval --split test --seed 1234 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_object_test_20260622_140133
+```
+
+Run controlled registration shifts on training events. The post image is
+shifted with bilinear interpolation while invalid entering borders are removed:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 0.25,0.5,1.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-registration-stress --patches-per-event 20 --magnitudes 1.5,2.0 --workers 4 --bootstrap 5000 --output-dir phase1/outputs/xbd_s12_registration_train20_large_20260622_143254
+```
+
+Regenerate the curated figures:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-xbd-s12-summarize --unbuffered phase1/outputs/xbd_s12_frozen_test_unbuffered_complete_20260622_111613 --boundary phase1/outputs/xbd_s12_frozen_test_boundary3_stress_20260622_114715 --train-sweep phase1/outputs/xbd_s12_train_geometry_radiometry_20260622_123321 --train-confirmation phase1/outputs/xbd_s12_train_geometry_confirmation_20260622_124000 --train-classical phase1/outputs/xbd_s12_train_classical_confirmation_20260622_130558 --test-budget phase1/outputs/xbd_s12_frozen_test_budget_metrics_workers4_20260622_133735 --object-train phase1/outputs/xbd_s12_object_train100_20260622_140604 --object-test phase1/outputs/xbd_s12_object_test_20260622_140133 --registration-near phase1/outputs/xbd_s12_registration_train20_blas1_20260622_142433 --registration-large phase1/outputs/xbd_s12_registration_train20_large_20260622_143254 --output-dir docs/experiment_reports/assets/xbd_s12_external_2026-06-22
+```
+
+Interpretation and evidence boundary:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+## 22. HSI Band-Image Transfer
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-hsi-band-image-transfer --datasets "benton,hermiston,farmland,shenzhen" --rank 11 --seed 1234 --bootstrap 500 --output-dir phase1/outputs/hsi_band_image_transfer_frozen_complete_20260622_185629
+```
+
+Report:
+`docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`.
+
+## 23. SpaceNet7 Band-Image Transfer
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spacenet7-band-image-transfer --workers 4 --bootstrap 3000 --output-dir phase1/outputs/spacenet7_band_image_transfer_frozen_20260622_191204
+```
+
+Report:
+`docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`.
+
+## 24. Successive Saab-DS Spatial Experiment
+
+Formula and mechanism tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest tests.test_multiresolution_subspaces tests.test_difference_subspace -v
+```
+
+Reproduce the frozen official OSCD test comparison after development choices
+have already been fixed:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities test --configs "frozen_rank12:12:global_pixel+patch3+window128s64mean+smoothed_pca_sigma1+celik_pca_kmeans+ir_mad+band_image_norm+wavelet_swt_db2_l2_ds_ll+successive_saab_h2_ds_hop1+successive_saab_h2_ds_hop2+successive_saab_h2_ds_fused+successive_saab_h2_l2_fused+successive_saab_h2_pca_fused+successive_saab_h2_cross_fused;senpai_pyramid_rank6:6:smoothed_pca_sigma1+band_image_norm+multiscale_band_image_l2+multiscale_band_image_l4+multiscale_band_image_1_2_4_fixed+multiscale_band_image_1_2_4_shifted+multiscale_band_image_product_1_2_4_shifted+multiscale_band_image_cross_1_2_4_shifted+multiscale_band_image_pca_1_2_4_shifted" --output-dir phase1/outputs/multiresolution_frozen_test10_reproduction --ssl-energy-threshold 0.95 --ssl-max-channels 16 --ssl-max-fit-samples 30000 --feature-device auto --continue-on-error --no-save-npy
+```
+
+Regenerate curated figures from the completed sweeps:
+
+```powershell
+.\.venv\Scripts\python.exe project_cli.py phase1-multiresolution-summarize
+```
+
+Interpretation and exact construction:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.

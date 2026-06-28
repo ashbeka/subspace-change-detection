@@ -92,15 +92,38 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-oscd-priors", "phase1", "Generate OSCD unsupervised prior maps.", ["phase1-oscd-priors", "--config", "canonical"]),
     CommandInfo("phase1-oscd-geodesic", "phase1", "Generate OSCD local geodesic prior maps.", ["phase1-oscd-geodesic"]),
     CommandInfo("phase1-subspace-inspect", "phase1", "Inspect OSCD PCA/DS construction for one city.", ["phase1-subspace-inspect", "--city", "beirut"]),
-    CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
+    CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch/band-image DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
+    CommandInfo("phase1-multiresolution-summarize", "visualization", "Create curated figures from completed multiresolution OSCD sweeps.", ["phase1-multiresolution-summarize"]),
+    CommandInfo("phase1-successive-transfer", "external validation", "Fit one successive Saab hierarchy on training pairs and evaluate frozen OSCD/xBD features.", ["phase1-successive-transfer", "--fit-source", "oscd13", "--target", "oscd"]),
+    CommandInfo("phase1-score-calibration", "phase1", "Fit score-map changed-area fractions on OSCD train cities and evaluate them on test cities.", ["phase1-score-calibration", "--sweep-root", "<saved_npy_sweep>"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
     CommandInfo("phase1-viz-examples", "visualization", "Draw OSCD pre/post/GT/diff/DS example figures.", ["phase1-viz-examples", "--cities", "test"]),
     CommandInfo("phase1-viz-method-grid", "visualization", "Draw saved Phase 1 prior maps side by side.", ["phase1-viz-method-grid", "--prior-root", "full"]),
     CommandInfo("phase1-multisenge-manifest", "multisenge", "Build a small MultiSenGE temporal manifest.", ["phase1-multisenge-manifest"]),
     CommandInfo("phase1-multisenge-viz", "multisenge", "Run exploratory MultiSenGE DS visualization.", ["phase1-multisenge-viz"]),
-    CommandInfo("phase1-multisenge-geodesic", "multisenge", "Run MultiSenGE temporal/geodesic analysis.", ["phase1-multisenge-geodesic"]),
+    CommandInfo("phase1-multisenge-temporal-dynamics", "multisenge", "Measure first/second DS and geodesic components over MultiSenGE dates.", ["phase1-multisenge-temporal-dynamics", "phase1-multisenge-geodesic"]),
+    CommandInfo("phase1-multisenge-temporal-injections", "multisenge", "Compare temporal DS with radiometric/registration nuisance controls.", ["phase1-multisenge-temporal-injections"]),
+    CommandInfo("phase1-multisenge-order-aware-interventions", "multisenge", "Stress-test unordered, difference, and trajectory subspaces on real temporal backgrounds.", ["phase1-multisenge-order-aware-interventions"]),
+    CommandInfo("phase1-multiscale-order-aware-interventions", "multisenge", "Localize controlled temporal events with cell-wise unordered and trajectory subspaces.", ["phase1-multiscale-order-aware-interventions"]),
+    CommandInfo("phase1-registered-sequence-dynamics", "multisenge", "Analyze first/second DS on a dated registered TIFF sequence.", ["phase1-registered-sequence-dynamics"]),
+    CommandInfo("phase1-multiscale-sequence-dynamics", "multisenge", "Analyze local/multiscale temporal DS on a dated registered TIFF sequence.", ["phase1-multiscale-sequence-dynamics"]),
+    CommandInfo("phase1-temporal-context-ds", "multisenge", "Compare backward/forward temporal-context DS on a dated registered TIFF sequence.", ["phase1-temporal-context-ds"]),
+    CommandInfo("phase1-temporal-context-injections", "multisenge", "Stress-test temporal-context DS with controlled change and nuisance injections.", ["phase1-temporal-context-injections"]),
+    CommandInfo("phase1-temporal-registration-curve", "multisenge", "Measure temporal-context sensitivity to subpixel registration error and low-frequency controls.", ["phase1-temporal-registration-curve"]),
+    CommandInfo("phase1-seasonal-regime-study", "multisenge", "Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.", ["phase1-seasonal-regime-study"]),
+    CommandInfo("phase1-rtw-invariance-gate", "multisenge", "Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.", ["phase1-rtw-invariance-gate"]),
+    CommandInfo("phase1-breizhcrops-download", "temporal", "Download and verify official BreizhCrops 2017 L2A geographic partitions.", ["phase1-breizhcrops-download", "--regions", "frh01,frh04"]),
+    CommandInfo("phase1-rtw-breizhcrops-transfer", "temporal", "Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.", ["phase1-rtw-breizhcrops-transfer"]),
+    CommandInfo("phase1-hsi-moment-geometry", "hyperspectral", "Factor local HSI change into mean, scale, eigenspectrum, eigenspace orientation, DS projection, and covariance controls.", ["phase1-hsi-moment-geometry"]),
+    CommandInfo("phase1-hsi-band-image-transfer", "hyperspectral", "Run the frozen rank-11 Band-Image DS/projector transfer pressure test on labeled HSI pairs.", ["phase1-hsi-band-image-transfer"]),
+    CommandInfo("phase1-xbd-s12-prepare", "external validation", "Verify and selectively prepare xBD-S12 Sentinel-2 data and original labels.", ["phase1-xbd-s12-prepare"]),
+    CommandInfo("phase1-xbd-s12-evaluate", "external validation", "Run the frozen event-disjoint xBD-S12 Band-Image DS validation.", ["phase1-xbd-s12-evaluate", "--split", "test"]),
+    CommandInfo("phase1-xbd-s12-object-retrieval", "external validation", "Evaluate damaged-building candidate retrieval and object damage discrimination.", ["phase1-xbd-s12-object-retrieval", "--split", "test"]),
+    CommandInfo("phase1-xbd-s12-registration-stress", "external validation", "Stress-test fixed xBD-S12 maps under controlled post-image shifts.", ["phase1-xbd-s12-registration-stress"]),
+    CommandInfo("phase1-spacenet7-band-image-transfer", "external validation", "Test tiled Band-Image DS/projector maps on monthly RGB building appearances.", ["phase1-spacenet7-band-image-transfer"]),
+    CommandInfo("phase1-irrigation-data-feasibility", "multisenge", "Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.", ["phase1-irrigation-data-feasibility"]),
     CommandInfo("phase2-train", "phase2", "Train one OSCD segmentation config.", ["phase2-train", "--config", "e0-raw"]),
     CommandInfo("phase2-eval", "phase2", "Evaluate one trained checkpoint.", ["phase2-eval", "--config", "e0-raw", "--checkpoint", "<best.ckpt>"]),
     CommandInfo("phase2-sweep", "phase2", "Run a controlled train/eval sweep.", ["phase2-sweep", "--preset", "core", "--progress-bars"]),
@@ -237,10 +260,10 @@ def cmd_doctor(args: argparse.Namespace) -> int:
         check_path("Venus TPAMI data root", "data/venus_tpami2015", kind="dir"),
         check_path("phase1 configs", "phase1/configs", kind="dir"),
         check_path("phase2 configs", "phase2/configs", kind="dir"),
-        check_path("organized Chrome bookmarks", "docs/source_records/chrome_bookmarks_organized_research_2026-06-07.html", kind="file"),
+        check_path("organized Chrome bookmarks", "docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html", kind="file"),
         check_path("retained non-public PDF", "references/reference_papers/MVA_2025_human_motion_analysis.pdf", kind="file"),
     ]
-    for module in ["numpy", "yaml", "torch", "rasterio", "sklearn", "phase1", "phase2"]:
+    for module in ["numpy", "yaml", "torch", "rasterio", "shapely", "sklearn", "h5py", "phase1", "phase2"]:
         checks.append(check_import(module))
 
     try:
@@ -402,9 +425,19 @@ def cmd_phase1_spatial_subspace_compare(args: argparse.Namespace) -> int:
         str(args.max_fit_samples),
         "--score_chunk_size",
         str(args.score_chunk_size),
+        "--ssl_energy_threshold",
+        str(args.ssl_energy_threshold),
+        "--ssl_max_channels",
+        str(args.ssl_max_channels),
+        "--ssl_max_fit_samples",
+        str(args.ssl_max_fit_samples),
+        "--feature_device",
+        str(args.feature_device),
     ]
     if not args.save_npy:
         cmd.append("--no-save-npy")
+    if args.save_band_attribution:
+        cmd.append("--save-band-attribution")
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -431,6 +464,14 @@ def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
         str(args.max_fit_samples),
         "--score_chunk_size",
         str(args.score_chunk_size),
+        "--ssl_energy_threshold",
+        str(args.ssl_energy_threshold),
+        "--ssl_max_channels",
+        str(args.ssl_max_channels),
+        "--ssl_max_fit_samples",
+        str(args.ssl_max_fit_samples),
+        "--feature_device",
+        str(args.feature_device),
     ]
     if args.save_npy:
         cmd.append("--save-npy")
@@ -443,6 +484,90 @@ def cmd_phase1_spatial_subspace_sweep(args: argparse.Namespace) -> int:
     if args.dry_run:
         cmd.append("--dry-run")
     return run_command(cmd, dry_run=False)
+
+
+def cmd_phase1_multiresolution_summarize(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/summarize_multiresolution_subspace_experiment.py",
+        "--rank-sweep",
+        args.rank_sweep,
+        "--feature-root",
+        args.feature_root,
+        "--pyramid-sweep",
+        args.pyramid_sweep,
+        "--wavelet-sweep",
+        args.wavelet_sweep,
+        "--test-sweep",
+        args.test_sweep,
+        "--output-dir",
+        args.output_dir,
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_successive_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or (
+        f"phase1/outputs/successive_transfer_{args.fit_source}_to_{args.target}_{timestamp()}"
+    )
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/evaluate_frozen_successive_transfer.py",
+        "--fit-source",
+        args.fit_source,
+        "--target",
+        args.target,
+        "--input-normalization",
+        args.input_normalization,
+        "--fit-patches-per-event",
+        str(args.fit_patches_per_event),
+        "--energy-threshold",
+        str(args.energy_threshold),
+        "--max-channels",
+        str(args.max_channels),
+        "--max-fit-samples",
+        str(args.max_fit_samples),
+        "--seed",
+        str(args.seed),
+        "--device",
+        args.device,
+        "--bootstrap",
+        str(args.bootstrap),
+        "--maps-per-unit",
+        str(args.maps_per_unit),
+        "--output-dir",
+        out,
+    ]
+    if args.rank is not None:
+        cmd += ["--rank", str(args.rank)]
+    if args.evaluation_patches_per_event is not None:
+        cmd += ["--evaluation-patches-per-event", str(args.evaluation_patches_per_event)]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_score_calibration(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/oscd_split_safe_calibration_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/evaluate_oscd_split_calibration.py",
+        "--sweep-root",
+        args.sweep_root,
+        "--oscd-root",
+        args.oscd_root,
+        "--output-dir",
+        out,
+        "--methods",
+        args.methods,
+        "--grid-size",
+        str(args.grid_size),
+        "--max-fraction",
+        str(args.max_fraction),
+        "--visual-cities",
+        args.visual_cities,
+    ]
+    if args.config:
+        cmd += ["--config", args.config]
+    return run_command(cmd, dry_run=args.dry_run)
 
 
 def cmd_phase1_multisenge_manifest(args: argparse.Namespace) -> int:
@@ -466,6 +591,8 @@ def cmd_phase1_multisenge_manifest(args: argparse.Namespace) -> int:
         cmd.append("--include_s1")
     if args.no_require_ground_reference:
         cmd.append("--no_require_ground_reference")
+    if args.patch_ids:
+        cmd += ["--patch_ids", args.patch_ids]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -488,7 +615,7 @@ def cmd_phase1_multisenge_viz(args: argparse.Namespace) -> int:
 
 def cmd_phase1_multisenge_geodesic(args: argparse.Namespace) -> int:
     config = phase1_config(args.config)
-    out = args.output_dir or f"phase1/outputs/multisenge_temporal_geodesic_{timestamp()}"
+    out = args.output_dir or f"phase1/outputs/multisenge_temporal_dynamics_{timestamp()}"
     cmd = [
         str(venv_python()),
         "-m",
@@ -504,6 +631,783 @@ def cmd_phase1_multisenge_geodesic(args: argparse.Namespace) -> int:
     ]
     if args.max_patches:
         cmd += ["--max_patches", str(args.max_patches)]
+    if args.patch_ids:
+        cmd += ["--patch_ids", args.patch_ids]
+    if args.rank:
+        cmd += ["--rank", str(args.rank)]
+    if args.preprocessing:
+        cmd += ["--preprocessing", args.preprocessing]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multisenge_temporal_injections(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_temporal_injections_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_band_subspace_injections",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--repeats",
+        str(args.repeats),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multisenge_order_aware_interventions(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_order_aware_interventions_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multisenge_order_aware_interventions",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--ranks",
+        args.ranks,
+        "--representations",
+        args.representations,
+        "--preprocessing",
+        args.preprocessing,
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--max_patches",
+        str(args.max_patches),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multiscale_order_aware_interventions(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multiscale_order_aware_interventions_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multiscale_order_aware_interventions",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--grids",
+        args.grids,
+        "--representations",
+        args.representations,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--spatial_smoothing_sigma",
+        str(args.spatial_smoothing_sigma),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--max_patches",
+        str(args.max_patches),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_registered_sequence_dynamics(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/registered_sequence_dynamics_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_registered_multispectral_sequence",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--balanced_gap_ratio",
+        str(args.balanced_gap_ratio),
+        "--top_k",
+        str(args.top_k),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_multiscale_sequence_dynamics(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multiscale_sequence_dynamics_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_multiscale_temporal_subspaces",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--grids",
+        args.grids,
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--min-valid-locations",
+        str(args.min_valid_locations),
+        "--reference-event-frames",
+        args.reference_event_frames,
+        "--evaluation-frame-count",
+        str(args.evaluation_frame_count),
+        "--figure-frame-count",
+        str(args.figure_frame_count),
+    ]
+    if args.reference_map_dir:
+        cmd += ["--reference-map-dir", args.reference_map_dir]
+    if args.reference_crop:
+        cmd += ["--reference-crop", args.reference_crop]
+    if args.reference_lognfa_dir:
+        cmd += [
+            "--reference-lognfa-dir",
+            args.reference_lognfa_dir,
+            "--reference-logepsilon",
+            str(args.reference_logepsilon),
+        ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_context_ds(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_context_ds_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_bidirectional_temporal_context_ds",
+        "--sequence_dir",
+        args.sequence_dir,
+        "--glob",
+        args.glob,
+        "--output_dir",
+        out,
+        "--context_sizes",
+        args.context_sizes,
+        "--ranks",
+        args.ranks,
+        "--factorizations",
+        args.factorizations,
+        "--preprocessing",
+        args.preprocessing,
+        "--nodata",
+        str(args.nodata),
+        "--scale_divisor",
+        str(args.scale_divisor),
+        "--figure_count",
+        str(args.figure_count),
+    ]
+    if args.figure_config:
+        cmd += ["--figure_config", args.figure_config]
+    if args.reference_lognfa_dir:
+        cmd += [
+            "--reference_lognfa_dir",
+            args.reference_lognfa_dir,
+            "--reference_logepsilon",
+            str(args.reference_logepsilon),
+        ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_context_injections(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_context_injections_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_context_injections",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--context_size",
+        str(args.context_size),
+        "--rank",
+        str(args.rank),
+        "--factorization",
+        args.factorization,
+        "--preprocessing",
+        args.preprocessing,
+        "--repeats",
+        str(args.repeats),
+        "--max_patches",
+        str(args.max_patches),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_temporal_registration_curve(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/temporal_registration_curve_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_temporal_context_registration_curve",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--target_date",
+        args.target_date,
+        "--context_size",
+        str(args.context_size),
+        "--rank",
+        str(args.rank),
+        "--preprocessing",
+        args.preprocessing,
+        "--shifts",
+        args.shifts,
+        "--strategies",
+        args.strategies,
+        "--local_strength",
+        str(args.local_strength),
+        "--window_size",
+        str(args.window_size),
+        "--repeats",
+        str(args.repeats),
+        "--max_patches",
+        str(args.max_patches),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_seasonal_regime_study(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/seasonal_regime_subspace_study_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_seasonal_regime_subspaces",
+        "--output_dir",
+        out,
+        "--repeats",
+        str(args.repeats),
+        "--seed",
+        str(args.seed),
+        "--ranks",
+        args.ranks,
+        "--preprocessing",
+        args.preprocessing,
+        "--representations",
+        args.representations,
+        "--height",
+        str(args.height),
+        "--width",
+        str(args.width),
+        "--noise",
+        str(args.noise),
+        "--bootstrap",
+        str(args.bootstrap),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spacenet7_temporal_subspaces(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_temporal_subspaces_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_spacenet7_temporal_subspaces",
+        "--aoi_root",
+        args.aoi_root,
+        "--output_dir",
+        out,
+        "--window",
+        str(args.window),
+        "--rank",
+        str(args.rank),
+        "--grids",
+        args.grids,
+        "--representations",
+        args.representations,
+        "--preprocessing",
+        args.preprocessing,
+        "--radiometric_normalization",
+        args.radiometric_normalization,
+        "--min_valid_pixels",
+        str(args.min_valid_pixels),
+        "--min_new_building_pixels",
+        str(args.min_new_building_pixels),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--all_touched_labels" if args.all_touched_labels else "--no-all_touched_labels",
+    ]
+    if args.controls_only:
+        cmd.append("--controls_only")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_rtw_invariance_gate(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/multisenge_rtw_invariance_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_multisenge_rtw_invariance",
+        "--multisenge_root",
+        args.multisenge_root,
+        "--manifest",
+        args.manifest,
+        "--output_dir",
+        out,
+        "--crop_size",
+        str(args.crop_size),
+        "--repeats",
+        str(args.repeats),
+        "--development_patches",
+        str(args.development_patches),
+        "--max_patches",
+        str(args.max_patches),
+        "--subsequence_lengths",
+        args.subsequence_lengths,
+        "--n_samples",
+        args.n_samples,
+        "--ranks",
+        args.ranks,
+        "--preprocessing",
+        args.preprocessing,
+        "--rtw_replicates",
+        str(args.rtw_replicates),
+        "--screening_repeats",
+        str(args.screening_repeats),
+        "--screening_rtw_replicates",
+        str(args.screening_rtw_replicates),
+        "--finalists",
+        str(args.finalists),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_rtw_breizhcrops_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/breizhcrops_rtw_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_breizhcrops_rtw_transfer",
+        "--data_root",
+        args.data_root,
+        "--output_dir",
+        out,
+        "--development_region",
+        args.development_region,
+        "--holdout_region",
+        args.holdout_region,
+        "--max_fields_per_class",
+        str(args.max_fields_per_class),
+        "--anchors_per_class",
+        str(args.anchors_per_class),
+        "--min_steps",
+        str(args.min_steps),
+        "--quality_threshold",
+        str(args.quality_threshold),
+        "--rtw_replicates",
+        str(args.rtw_replicates),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    if args.search_rtw:
+        cmd.extend([
+            "--search_rtw",
+            "--rtw_search_anchors_per_class",
+            str(args.rtw_search_anchors_per_class),
+            "--rtw_search_subsequence_lengths",
+            args.rtw_search_subsequence_lengths,
+            "--rtw_search_n_samples",
+            args.rtw_search_n_samples,
+            "--rtw_search_ranks",
+            args.rtw_search_ranks,
+            "--rtw_search_preprocessing",
+            args.rtw_search_preprocessing,
+            "--rtw_finalists",
+            str(args.rtw_finalists),
+        ])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_breizhcrops_download(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.download_breizhcrops_l2a",
+        "--data_root",
+        args.data_root,
+        "--regions",
+        args.regions,
+    ]
+    if args.keep_archives:
+        cmd.append("--keep_archives")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_hsi_moment_geometry(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/hsi_moment_geometry_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_hsi_moment_geometry",
+        "--data_root",
+        args.data_root,
+        "--output_dir",
+        out,
+        "--datasets",
+        args.datasets,
+        "--configs",
+        args.configs,
+        "--rff_features",
+        str(args.rff_features),
+        "--band_policy",
+        args.band_policy,
+        "--global_pca_rank",
+        str(args.global_pca_rank),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    if args.stability_seeds:
+        cmd.extend(["--stability_seeds", args.stability_seeds])
+    if args.smoke:
+        cmd.append("--smoke")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_hsi_band_image_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/hsi_band_image_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_hsi_band_image_transfer",
+        "--data-root",
+        args.data_root,
+        "--datasets",
+        args.datasets,
+        "--preprocessing",
+        args.preprocessing,
+        "--band-policy",
+        args.band_policy,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--bootstrap-block",
+        str(args.bootstrap_block),
+        "--output-dir",
+        out,
+    ]
+    if args.smoke:
+        cmd.append("--smoke")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_prepare(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.prepare_xbd_s12_external",
+        "--archive",
+        args.archive,
+        "--output-root",
+        args.output_root,
+        "--original-xbd-root",
+        args.original_xbd_root,
+        "--labels-output",
+        args.labels_output,
+    ]
+    if args.skip_checksum:
+        cmd.append("--skip-checksum")
+    if args.skip_release_extraction:
+        cmd.append("--skip-release-extraction")
+    if args.skip_label_extraction:
+        cmd.append("--skip-label-extraction")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_evaluate(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_frozen_{args.split}_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_xbd_s12_external",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--split",
+        args.split,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--maps-per-event",
+        str(args.maps_per_event),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--metric-workers",
+        str(args.metric_workers),
+        "--boundary-buffer",
+        str(args.boundary_buffer),
+        "--output-dir",
+        out,
+    ]
+    if args.maximum_patches is not None:
+        cmd.extend(["--maximum-patches", str(args.maximum_patches)])
+    if args.patches_per_event is not None:
+        cmd.extend(["--patches-per-event", str(args.patches_per_event)])
+    if args.include_metadata_nodata:
+        cmd.append("--include-metadata-nodata")
+    if args.event_only:
+        cmd.append("--event-only")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_summarize(args: argparse.Namespace) -> int:
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.summarize_xbd_s12_external",
+        "--unbuffered",
+        args.unbuffered,
+        "--boundary",
+        args.boundary,
+        "--output-dir",
+        args.output_dir,
+    ]
+    if args.train_sweep:
+        cmd.extend(["--train-sweep", args.train_sweep])
+    if args.train_confirmation:
+        cmd.extend(["--train-confirmation", args.train_confirmation])
+    if args.train_classical:
+        cmd.extend(["--train-classical", args.train_classical])
+    if args.test_budget:
+        cmd.extend(["--test-budget", args.test_budget])
+    if args.object_train:
+        cmd.extend(["--object-train", args.object_train])
+    if args.object_test:
+        cmd.extend(["--object-test", args.object_test])
+    if args.registration_near:
+        cmd.extend(["--registration-near", args.registration_near])
+    if args.registration_large:
+        cmd.extend(["--registration-large", args.registration_large])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_object_retrieval(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_object_{args.split}_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_xbd_s12_object_retrieval",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--split",
+        args.split,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--workers",
+        str(args.workers),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
+    ]
+    if args.patches_per_event is not None:
+        cmd.extend(["--patches-per-event", str(args.patches_per_event)])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_registration_stress(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_registration_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.stress_xbd_s12_registration",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--patches-per-event",
+        str(args.patches_per_event),
+        "--magnitudes",
+        args.magnitudes,
+        "--rank",
+        str(args.rank),
+        "--seed",
+        str(args.seed),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--workers",
+        str(args.workers),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
+    ]
+    if args.summarize_existing:
+        cmd.append("--summarize-existing")
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_xbd_s12_develop_geometry(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/xbd_s12_train_geometry_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.develop_xbd_s12_geometry_radiometry",
+        "--root",
+        args.root,
+        "--labels-root",
+        args.labels_root,
+        "--ranks",
+        args.ranks,
+        "--basis-modes",
+        args.basis_modes,
+        "--patches-per-event",
+        str(args.patches_per_event),
+        "--seed",
+        str(args.seed),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--output-dir",
+        out,
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spacenet7_hybrid_analysis(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_hybrid_analysis_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.analyze_spacenet7_hybrid_validation",
+        "--input_root",
+        args.input_root,
+        "--geometry_glob",
+        args.geometry_glob,
+        "--controls_glob",
+        args.controls_glob,
+        "--output_dir",
+        out,
+        "--min_new_building_pixels",
+        str(args.min_new_building_pixels),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+    ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_spacenet7_band_image_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/spacenet7_band_image_transfer_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.evaluate_spacenet7_band_image_transfer",
+        "--data-roots",
+        args.data_roots,
+        "--tile-size",
+        str(args.tile_size),
+        "--rank",
+        str(args.rank),
+        "--ir-mad-iters",
+        str(args.ir_mad_iters),
+        "--minimum-valid-pixels",
+        str(args.minimum_valid_pixels),
+        "--minimum-positive-pixels",
+        str(args.minimum_positive_pixels),
+        "--workers",
+        str(args.workers),
+        "--bootstrap",
+        str(args.bootstrap),
+        "--seed",
+        str(args.seed),
+        "--output-dir",
+        out,
+    ]
+    if args.maximum_aois is not None:
+        cmd.extend(["--maximum-aois", str(args.maximum_aois)])
+    if args.maximum_transitions is not None:
+        cmd.extend(["--maximum-transitions", str(args.maximum_transitions)])
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_irrigation_data_feasibility(args: argparse.Namespace) -> int:
+    out = args.output_dir or f"phase1/outputs/irrigation_regime_data_feasibility_{timestamp()}"
+    cmd = [
+        str(venv_python()),
+        "-m",
+        "phase1.scripts.check_irrigation_regime_data",
+        "--output_dir",
+        out,
+        f"--bbox={args.bbox}",
+        "--start",
+        args.start,
+        "--end",
+        args.end,
+        "--max_cloud",
+        str(args.max_cloud),
+    ]
+    if args.ee_project:
+        cmd += ["--ee_project", args.ee_project]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1064,17 +1968,30 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_subspace_inspect)
 
-    p = sub.add_parser("phase1-spatial-subspace-compare", help="Compare global/window/patch DS score maps on one OSCD city.")
+    p = sub.add_parser("phase1-spatial-subspace-compare", help="Compare global/window/patch/band-image DS score maps on one OSCD city.")
     p.add_argument("--oscd-root", default="data/OSCD")
     p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
     p.add_argument("--city", default="beirut")
     p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     p.add_argument("--rank", type=int, default=6)
-    p.add_argument("--methods", default="global_pixel,window128,patch3,patch5")
+    p.add_argument(
+        "--methods",
+        default="global_pixel,window128,patch3,patch5",
+        help=(
+            "Comma list, e.g. global_pixel,patch3,patch5,window128s64mean,"
+            "band_image_ds,band_image_norm,band_image_ratio,band_image_residual. "
+            "Legacy alias flatbands is still accepted."
+        ),
+    )
     p.add_argument("--output-dir", default="")
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--max-fit-samples", type=int, default=20000)
     p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--ssl-energy-threshold", type=float, default=0.95)
+    p.add_argument("--ssl-max-channels", type=int, default=16)
+    p.add_argument("--ssl-max-fit-samples", type=int, default=30000)
+    p.add_argument("--feature-device", choices=["auto", "cpu", "cuda"], default="auto")
+    p.add_argument("--save-band-attribution", action="store_true", help="For band-image DS methods, save per-band projected-energy attribution PNG/CSV.")
     p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=True)
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spatial_subspace_compare)
@@ -1082,22 +1999,72 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("phase1-spatial-subspace-sweep", help="Run spatial DS comparison across multiple OSCD cities/configs.")
     p.add_argument("--oscd-root", default="data/OSCD")
     p.add_argument("--stats-path", default="phase1/data/oscd_band_stats.json")
-    p.add_argument("--cities", default="core5", help="Comma list, or 'core5' for beirut,dubai,lasvegas,milano,norcia.")
+    p.add_argument("--cities", default="core5", help="Comma list, 'core5', official 'train', official 'test', or 'all'.")
     p.add_argument(
         "--configs",
         default="rank4_core:4:global_pixel+patch3+patch5;rank6_spatial:6:global_pixel+window128+patch3+patch5;rank8_core:8:global_pixel+patch3+patch5",
-        help="Semicolon-separated configs as name:rank:method+method.",
+        help="Semicolon-separated configs as name:rank:method+method. Method names can include band_image_ds variants; legacy flatbands is accepted.",
     )
     p.add_argument("--split", default="auto", choices=["auto", "train", "val", "test"])
     p.add_argument("--output-dir", default="")
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--max-fit-samples", type=int, default=20000)
     p.add_argument("--score-chunk-size", type=int, default=25000)
+    p.add_argument("--ssl-energy-threshold", type=float, default=0.95)
+    p.add_argument("--ssl-max-channels", type=int, default=16)
+    p.add_argument("--ssl-max-fit-samples", type=int, default=30000)
+    p.add_argument("--feature-device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--save-npy", action=argparse.BooleanOptionalAction, default=False)
     p.add_argument("--resume", action="store_true")
     p.add_argument("--continue-on-error", action="store_true")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_spatial_subspace_sweep)
+
+    p = sub.add_parser(
+        "phase1-multiresolution-summarize",
+        help="Create curated figures from completed multiresolution OSCD sweeps.",
+    )
+    p.add_argument("--rank-sweep", default="phase1/outputs/successive_saab_rank_sensitivity_train14_20260623")
+    p.add_argument("--feature-root", default="phase1/outputs/successive_saab_feature_sensitivity_train14_20260623")
+    p.add_argument("--pyramid-sweep", default="phase1/outputs/multiscale_band_image_rank_sensitivity_train14_20260623")
+    p.add_argument("--wavelet-sweep", default="phase1/outputs/wavelet_band_image_sensitivity_train14_20260623")
+    p.add_argument("--test-sweep", default="phase1/outputs/multiresolution_frozen_test10_20260623")
+    p.add_argument("--output-dir", default="docs/experiment_reports/assets/multiresolution_subspace_2026-06-23")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiresolution_summarize)
+
+    p = sub.add_parser(
+        "phase1-successive-transfer",
+        help="Fit successive Saab on training pairs and evaluate unchanged filters on OSCD or xBD-S12.",
+    )
+    p.add_argument("--fit-source", choices=["oscd13", "oscd12", "xbd12"], required=True)
+    p.add_argument("--target", choices=["oscd", "xbd"], required=True)
+    p.add_argument("--input-normalization", choices=["dataset", "pair_band_zscore"], default="dataset")
+    p.add_argument("--fit-patches-per-event", type=int, default=20)
+    p.add_argument("--evaluation-patches-per-event", type=int, default=None)
+    p.add_argument("--rank", type=int, default=None)
+    p.add_argument("--energy-threshold", type=float, default=0.95)
+    p.add_argument("--max-channels", type=int, default=16)
+    p.add_argument("--max-fit-samples", type=int, default=30000)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--maps-per-unit", type=int, default=1)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_successive_transfer)
+
+    p = sub.add_parser("phase1-score-calibration", help="Fit changed-area fractions on OSCD train cities and evaluate them unchanged on test cities.")
+    p.add_argument("--sweep-root", required=True, help="Spatial sweep root generated with --save-npy.")
+    p.add_argument("--oscd-root", default="data/OSCD")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--methods", default="raw_l2,pca_diff,band_image_norm,ir_mad,rank_fusion_pca_band_irmad")
+    p.add_argument("--config", default="")
+    p.add_argument("--grid-size", type=int, default=300)
+    p.add_argument("--max-fraction", type=float, default=0.5)
+    p.add_argument("--visual-cities", default="brasilia,dubai,norcia")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_score_calibration)
 
     p = sub.add_parser("phase1-subspace-audit", help="Compatibility alias for phase1-subspace-inspect.")
     p.add_argument("--oscd-root", default="data/OSCD")
@@ -1117,6 +2084,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--seed", type=int, default=1234)
     p.add_argument("--include-s1", action="store_true")
     p.add_argument("--no-require-ground-reference", action="store_true")
+    p.add_argument("--patch-ids", default="", help="Optional comma-separated patch IDs to select explicitly.")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_manifest)
 
@@ -1127,14 +2095,499 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_viz)
 
-    p = sub.add_parser("phase1-multisenge-geodesic", help="Run MultiSenGE temporal/geodesic analysis.")
+    p = sub.add_parser(
+        "phase1-multisenge-temporal-dynamics",
+        aliases=["phase1-multisenge-geodesic"],
+        help="Measure first/second DS and geodesic components over MultiSenGE dates.",
+    )
     p.add_argument("--config", default="multisenge-geodesic", help="Phase 1 config alias or path.")
     p.add_argument("--multisenge-root", default="data/MultiSenGE")
     p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_50p_5dates.json")
     p.add_argument("--output-dir", default="")
     p.add_argument("--max-patches", type=int, default=0)
+    p.add_argument("--patch-ids", default="", help="Optional comma-separated patch IDs from the manifest.")
+    p.add_argument("--rank", type=int, default=0, help="Override the configured subspace rank.")
+    p.add_argument("--preprocessing", default="", choices=["", "uncentered", "centered", "band_l2", "centered_band_l2"])
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multisenge_geodesic)
+
+    p = sub.add_parser(
+        "phase1-multisenge-temporal-injections",
+        help="Compare temporal DS response to local synthetic change and nuisance controls.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--rank", type=int, default=6)
+    p.add_argument("--preprocessing", default="centered_band_l2", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--repeats", type=int, default=12)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multisenge_temporal_injections)
+
+    p = sub.add_parser(
+        "phase1-multisenge-order-aware-interventions",
+        help="Stress-test unordered, difference, and trajectory subspaces on real MultiSenGE backgrounds.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=8)
+    p.add_argument("--ranks", default="1,2")
+    p.add_argument("--representations", default="unordered,difference,trajectory2,trajectory3")
+    p.add_argument("--preprocessing", default="feature_centered_observation_l2")
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multisenge_order_aware_interventions)
+
+    p = sub.add_parser(
+        "phase1-multiscale-order-aware-interventions",
+        help="Localize controlled temporal events with cell-wise unordered and trajectory subspaces.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=4)
+    p.add_argument("--grids", default="2,4")
+    p.add_argument("--representations", default="unordered,trajectory2")
+    p.add_argument("--rank", type=int, default=1)
+    p.add_argument("--preprocessing", default="feature_centered_observation_l2")
+    p.add_argument("--spatial-smoothing-sigma", type=float, default=0.0)
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiscale_order_aware_interventions)
+
+    p = sub.add_parser(
+        "phase1-registered-sequence-dynamics",
+        help="Analyze first/second DS and spatial contributions on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--rank", type=int, default=0, help="0 keeps the full band-image span.")
+    p.add_argument("--preprocessing", default="centered", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--balanced-gap-ratio", type=float, default=1.5)
+    p.add_argument("--top-k", type=int, default=5)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_registered_sequence_dynamics)
+
+    p = sub.add_parser(
+        "phase1-multiscale-sequence-dynamics",
+        help="Analyze local/multiscale temporal DS on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--grids", default="1,2,4,8")
+    p.add_argument("--rank", type=int, default=0, help="0 keeps the full band-image span.")
+    p.add_argument("--preprocessing", default="centered", choices=["uncentered", "centered", "band_l2", "centered_band_l2"])
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--min-valid-locations", type=int, default=64)
+    p.add_argument("--reference-event-frames", default="")
+    p.add_argument("--evaluation-frame-count", type=int, default=0)
+    p.add_argument("--figure-frame-count", type=int, default=5)
+    p.add_argument("--reference-map-dir", default="")
+    p.add_argument("--reference-crop", default="")
+    p.add_argument("--reference-lognfa-dir", default="")
+    p.add_argument("--reference-logepsilon", type=float, default=1.0)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_multiscale_sequence_dynamics)
+
+    p = sub.add_parser(
+        "phase1-temporal-context-ds",
+        help="Compare backward/forward temporal-context DS on registered dated TIFFs.",
+    )
+    p.add_argument("--sequence-dir", required=True)
+    p.add_argument("--glob", default="*.tif")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--context-sizes", default="3,5,7")
+    p.add_argument("--ranks", default="1,2,3")
+    p.add_argument("--factorizations", default="per_band,joint")
+    p.add_argument(
+        "--preprocessing",
+        default="centered_column_l2",
+        choices=["uncentered", "centered", "column_l2", "centered_column_l2"],
+    )
+    p.add_argument("--nodata", type=float, default=0.0)
+    p.add_argument("--scale-divisor", type=float, default=1.0)
+    p.add_argument("--reference-lognfa-dir", default="")
+    p.add_argument("--reference-logepsilon", type=float, default=1.0)
+    p.add_argument("--figure-config", default="")
+    p.add_argument("--figure-count", type=int, default=4)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_context_ds)
+
+    p = sub.add_parser(
+        "phase1-temporal-context-injections",
+        help="Stress-test temporal-context DS with controlled MultiSenGE interventions.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--context-size", type=int, default=3)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--factorization", default="per_band", choices=["per_band", "joint"])
+    p.add_argument("--preprocessing", default="centered_column_l2")
+    p.add_argument("--repeats", type=int, default=4)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_context_injections)
+
+    p = sub.add_parser(
+        "phase1-temporal-registration-curve",
+        help="Measure temporal-context sensitivity to subpixel translation and scale-space controls.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--target-date", default="20200909")
+    p.add_argument("--context-size", type=int, default=3)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--preprocessing", default="centered_column_l2")
+    p.add_argument("--shifts", default="0.25,0.5,1,2")
+    p.add_argument("--strategies", default="native,gaussian1,gaussian2,pool2,pool4,phase_align")
+    p.add_argument("--local-strength", type=float, default=0.25)
+    p.add_argument("--window-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=3)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_temporal_registration_curve)
+
+    p = sub.add_parser(
+        "phase1-seasonal-regime-study",
+        help="Stress-test seasonal observation DS on abrupt, gradual, and nuisance trajectories.",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--repeats", type=int, default=80)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ranks", default="1,2,4,8")
+    p.add_argument(
+        "--preprocessing",
+        default="uncentered,feature_centered,feature_centered_observation_l2",
+    )
+    p.add_argument(
+        "--representations",
+        default="unordered",
+        help="Comma-separated unordered,difference,trajectory2,trajectory3,...",
+    )
+    p.add_argument("--height", type=int, default=16)
+    p.add_argument("--width", type=int, default=16)
+    p.add_argument("--noise", type=float, default=0.008)
+    p.add_argument("--bootstrap", type=int, default=200)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_seasonal_regime_study)
+
+    p = sub.add_parser(
+        "phase1-rtw-invariance-gate",
+        help="Test RTW timing/tempo invariance against marginal-matched seasonal-shape changes.",
+    )
+    p.add_argument("--multisenge-root", default="data/MultiSenGE")
+    p.add_argument("--manifest", default="phase1/outputs/multisenge_manifest_32TLT_5patches_23dates.json")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--crop-size", type=int, default=32)
+    p.add_argument("--repeats", type=int, default=6)
+    p.add_argument("--development-patches", type=int, default=3)
+    p.add_argument("--max-patches", type=int, default=5)
+    p.add_argument("--subsequence-lengths", default="4,8,12")
+    p.add_argument("--n-samples", default="64,256")
+    p.add_argument("--ranks", default="2,5")
+    p.add_argument(
+        "--preprocessing",
+        default="raw,reference_zscore,per_sequence_zscore",
+    )
+    p.add_argument("--rtw-replicates", type=int, default=3)
+    p.add_argument("--screening-repeats", type=int, default=2)
+    p.add_argument("--screening-rtw-replicates", type=int, default=1)
+    p.add_argument("--finalists", type=int, default=6)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_rtw_invariance_gate)
+
+    p = sub.add_parser(
+        "phase1-breizhcrops-download",
+        help="Download and verify official BreizhCrops 2017 L2A partitions.",
+    )
+    p.add_argument("--data-root", default="data/BreizhCrops")
+    p.add_argument("--regions", default="frh01,frh02,frh03,frh04")
+    p.add_argument("--keep-archives", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_breizhcrops_download)
+
+    p = sub.add_parser(
+        "phase1-rtw-breizhcrops-transfer",
+        help="Test frozen RTW on geographically held-out natural crop-phenology labels and killer controls.",
+    )
+    p.add_argument("--data-root", default="data/BreizhCrops")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--development-region", default="frh01")
+    p.add_argument("--holdout-region", default="frh04")
+    p.add_argument("--max-fields-per-class", type=int, default=80)
+    p.add_argument("--anchors-per-class", type=int, default=40)
+    p.add_argument("--min-steps", type=int, default=12)
+    p.add_argument("--quality-threshold", type=float, default=0.5)
+    p.add_argument("--rtw-replicates", type=int, default=3)
+    p.add_argument("--search-rtw", action="store_true")
+    p.add_argument("--rtw-search-anchors-per-class", type=int, default=8)
+    p.add_argument("--rtw-search-subsequence-lengths", default="2,4,8,12")
+    p.add_argument("--rtw-search-n-samples", default="32,64,128")
+    p.add_argument("--rtw-search-ranks", default="2,5")
+    p.add_argument(
+        "--rtw-search-preprocessing", default="raw,per_sequence_zscore"
+    )
+    p.add_argument("--rtw-finalists", type=int, default=4)
+    p.add_argument("--bootstrap", type=int, default=1000)
+    p.add_argument("--seed", type=int, default=2718)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_rtw_breizhcrops_transfer)
+
+    p = sub.add_parser(
+        "phase1-hsi-moment-geometry",
+        help="Evaluate local HSI moment factors, DS projection, attribution, and falsifying controls.",
+    )
+    p.add_argument("--data-root", default="data/HSI_change")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--datasets", default="benton,hermiston,farmland,shenzhen")
+    p.add_argument(
+        "--configs",
+        default="joint_robust_zscore:5:3:3,joint_robust_zscore:5:3:5,"
+        "joint_robust_zscore:9:5:3,joint_robust_zscore:9:5:5,"
+        "joint_robust_zscore:9:5:8,joint_robust_zscore:13:7:5,"
+        "joint_robust_zscore:13:7:8,per_date_zscore:9:5:5",
+    )
+    p.add_argument("--rff-features", type=int, default=32)
+    p.add_argument(
+        "--band-policy",
+        default="nonconstant",
+        choices=("nonconstant", "common_hyperion_159"),
+    )
+    p.add_argument("--global-pca-rank", type=int, default=12)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--seed", type=int, default=314159)
+    p.add_argument(
+        "--stability-seeds",
+        default="",
+        help="Comma-separated alternate seeds for selected-map reproducibility checks.",
+    )
+    p.add_argument("--smoke", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_hsi_moment_geometry)
+
+    p = sub.add_parser(
+        "phase1-hsi-band-image-transfer",
+        help="Run the frozen Band-Image DS/projector transfer pressure test on labeled HSI pairs.",
+    )
+    p.add_argument("--data-root", default="data/HSI_change")
+    p.add_argument("--datasets", default="benton,hermiston,farmland,shenzhen")
+    p.add_argument("--preprocessing", default="joint_robust_zscore")
+    p.add_argument(
+        "--band-policy",
+        default="nonconstant",
+        choices=("nonconstant", "common_hyperion_159"),
+    )
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--bootstrap", type=int, default=500)
+    p.add_argument("--bootstrap-block", type=int, default=16)
+    p.add_argument("--smoke", action="store_true")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_hsi_band_image_transfer)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-prepare",
+        help="Verify and selectively prepare xBD-S12 plus original xBD labels.",
+    )
+    p.add_argument("--archive", default="data/xbd_s12_download/xbd_s12.tar.gz")
+    p.add_argument("--output-root", default="data/xbd_s12")
+    p.add_argument("--original-xbd-root", default="data/xbd")
+    p.add_argument("--labels-output", default="data/xbd_s12_original_labels")
+    p.add_argument("--skip-checksum", action="store_true")
+    p.add_argument("--skip-release-extraction", action="store_true")
+    p.add_argument("--skip-label-extraction", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_prepare)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-evaluate",
+        help="Run the frozen event-disjoint xBD-S12 external validation.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--split", choices=("train", "test", "all"), default="test")
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--maximum-patches", type=int, default=None)
+    p.add_argument("--patches-per-event", type=int, default=None)
+    p.add_argument("--include-metadata-nodata", action="store_true")
+    p.add_argument("--boundary-buffer", type=int, default=0)
+    p.add_argument("--event-only", action="store_true")
+    p.add_argument("--maps-per-event", type=int, default=1)
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--metric-workers", type=int, default=4)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_evaluate)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-object-retrieval",
+        help="Evaluate fixed xBD-S12 score maps at building-object level.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--split", choices=("train", "test"), required=True)
+    p.add_argument("--patches-per-event", type=int, default=None)
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=24680)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--workers", type=int, default=4)
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_object_retrieval)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-registration-stress",
+        help="Stress-test fixed xBD-S12 score maps under controlled shifts.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--patches-per-event", type=int, default=20)
+    p.add_argument("--magnitudes", default="0.25,0.5,1.0")
+    p.add_argument("--rank", type=int, default=11)
+    p.add_argument("--seed", type=int, default=24680)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--workers", type=int, default=4)
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--summarize-existing", action="store_true")
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_registration_stress)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-summarize",
+        help="Summarize frozen xBD-S12 primary and boundary-stress outputs.",
+    )
+    p.add_argument("--unbuffered", required=True)
+    p.add_argument("--boundary", required=True)
+    p.add_argument("--train-sweep", default="")
+    p.add_argument("--train-confirmation", default="")
+    p.add_argument("--train-classical", default="")
+    p.add_argument("--test-budget", default="")
+    p.add_argument("--object-train", default="")
+    p.add_argument("--object-test", default="")
+    p.add_argument("--registration-near", default="")
+    p.add_argument("--registration-large", default="")
+    p.add_argument("--output-dir", required=True)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_summarize)
+
+    p = sub.add_parser(
+        "phase1-xbd-s12-develop-geometry",
+        help="Develop rank, centering, and geometry+radiometry hypotheses on train events.",
+    )
+    p.add_argument("--root", default="data/xbd_s12")
+    p.add_argument("--labels-root", default="data/xbd_s12_original_labels")
+    p.add_argument("--ranks", default="2,4,6,8,10,11")
+    p.add_argument(
+        "--basis-modes", default="centered_pca,uncentered_autocorrelation"
+    )
+    p.add_argument("--patches-per-event", type=int, default=20)
+    p.add_argument("--seed", type=int, default=24680)
+    p.add_argument("--bootstrap", type=int, default=3000)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_xbd_s12_develop_geometry)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-temporal-subspaces",
+        help="Evaluate rolling first/second DS maps on labeled monthly SpaceNet 7 construction.",
+    )
+    p.add_argument(
+        "--aoi-root",
+        default="data/SpaceNet7_sample/L15-1203E-1203N_4815_3378_13",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--window", type=int, default=4)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--grids", default="8,16")
+    p.add_argument("--representations", default="unordered,difference,trajectory2")
+    p.add_argument("--preprocessing", default="feature_centered")
+    p.add_argument(
+        "--radiometric-normalization",
+        default="none",
+        choices=["none", "per_date_channel_standardize", "per_date_channel_quantile"],
+    )
+    p.add_argument("--min-valid-pixels", type=int, default=16)
+    p.add_argument("--min-new-building-pixels", type=int, default=2)
+    p.add_argument("--bootstrap", type=int, default=300)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--all-touched-labels", action=argparse.BooleanOptionalAction, default=True)
+    p.add_argument("--controls-only", action="store_true")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_temporal_subspaces)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-hybrid-analysis",
+        help="Evaluate the frozen geometry+radiometry rank fusion across SpaceNet 7 AOIs.",
+    )
+    p.add_argument("--input-root", default="phase1/outputs")
+    p.add_argument("--geometry-glob", required=True)
+    p.add_argument("--controls-glob", required=True)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--min-new-building-pixels", type=int, default=2)
+    p.add_argument("--bootstrap", type=int, default=2000)
+    p.add_argument("--seed", type=int, default=90210)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_hybrid_analysis)
+
+    p = sub.add_parser(
+        "phase1-spacenet7-band-image-transfer",
+        help="Test tiled Band-Image DS/projector maps on monthly RGB building appearances.",
+    )
+    p.add_argument(
+        "--data-roots",
+        default="data/SpaceNet7_sample,data/SpaceNet7_validation,data/SpaceNet7_confirmation",
+    )
+    p.add_argument("--tile-size", type=int, default=128)
+    p.add_argument("--rank", type=int, default=2)
+    p.add_argument("--ir-mad-iters", type=int, default=10)
+    p.add_argument("--minimum-valid-pixels", type=int, default=256)
+    p.add_argument("--minimum-positive-pixels", type=int, default=2)
+    p.add_argument("--workers", type=int, default=3)
+    p.add_argument("--bootstrap", type=int, default=3000)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--maximum-aois", type=int, default=None)
+    p.add_argument("--maximum-transitions", type=int, default=None)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_spacenet7_band_image_transfer)
+
+    p = sub.add_parser(
+        "phase1-irrigation-data-feasibility",
+        help="Check IrrMapper and Sentinel-2 temporal coverage before data acquisition.",
+    )
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--ee-project", default="")
+    p.add_argument("--bbox", default="-112.60,45.20,-112.40,45.35")
+    p.add_argument("--start", default="2017-01-01")
+    p.add_argument("--end", default="2025-01-01")
+    p.add_argument("--max-cloud", type=float, default=60.0)
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_irrigation_data_feasibility)
 
     p = sub.add_parser("phase1-viz-examples", help="Visualize OSCD examples with raw diffs and DS maps.")
     p.add_argument("--config", default="canonical", help="Phase 1 config alias or path.")

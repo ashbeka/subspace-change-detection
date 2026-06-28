@@ -11,6 +11,14 @@
 - [7. Paused Work](#7-paused-work)
 - [8. Evidence Rules](#8-evidence-rules)
 - [9. Source Ingestion Summary](#9-source-ingestion-summary)
+- [10. Active Temporal Difference-Subspace Study](#10-active-temporal-difference-subspace-study)
+- [11. Cross-Branch Evidence Decision](#11-cross-branch-evidence-decision)
+- [12. Cross-Sensor Band-Image Transfer Gates](#12-cross-sensor-band-image-transfer-gates)
+- [13. Post-Seminar Validation Gate](#13-post-seminar-validation-gate)
+- [14. Pre-Seminar Multiscale Band-Image Pyramid](#14-pre-seminar-multiscale-band-image-pyramid)
+  - [14.1 Completed Result And Decision](#141-completed-result-and-decision)
+  - [14.2 Train-Fitted And External Transfer Gate](#142-train-fitted-and-external-transfer-gate)
+- [15. Current Next-Task Agenda](#15-current-next-task-agenda)
 
 ## 1. Current Research Question
 
@@ -135,6 +143,74 @@ Interpretation:
 - The result supports "spatial sample construction changes DS behavior," not "DS beats classical baselines."
 - Do not spend time on long Phase 2 raw+spatial-prior training until the score definition and failure modes are better understood.
 
+Band-Image DS all-city sweep, 2026-06-18:
+
+```powershell
+$cities = 'abudhabi,aguasclaras,beihai,beirut,bercy,bordeaux,brasilia,chongqing,cupertino,dubai,hongkong,lasvegas,milano,montpellier,mumbai,nantes,norcia,paris,pisa,rennes,rio,saclay_e,saclay_w,valencia'; $tag = Get-Date -Format 'yyyyMMdd_HHmmss'; .\.venv\Scripts\python.exe project_cli.py phase1-spatial-subspace-sweep --cities $cities --configs "rank6_flatbands:6:global_pixel+patch3+patch5+window128s64mean+flatbands;rank8_flatbands:8:global_pixel+patch3+patch5+window128s64mean+flatbands" --output-dir "phase1/outputs/spatial_ds_allcities_flatbands_$tag" --continue-on-error
+```
+
+Tracked report:
+
+```text
+docs/experiment_reports/oscd_spatial_flatbands_allcities_2026-06-18.md
+```
+
+Ignored output:
+
+```text
+phase1/outputs/spatial_ds_allcities_flatbands_20260618_001408/
+```
+
+Historical design:
+
+```text
+cities: all 24 local OSCD cities
+rank6_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
+rank8_flatbands: global_pixel,patch3,patch5,window128s64mean,flatbands
+baselines included in each run: raw_l2,pca_diff
+```
+
+Naming update 2026-06-18:
+
+- `flatbands` is now a legacy alias only.
+- Active method name: `band_image_ds`.
+- Reason: the method treats each Sentinel-2 band image as one flattened spatial vector; `band_image_ds` is clearer and seminar-safe.
+
+Mean results across 24 cities:
+
+| config | method | mean AUROC | mean AP | mean Otsu F1 | mean best F1 | mean raw-L2 corr |
+|---|---|---:|---:|---:|---:|---:|
+| rank8_flatbands | pca_diff | 0.8392 | 0.2541 | 0.2160 | 0.3076 | 0.8588 |
+| rank6_flatbands | pca_diff | 0.8370 | 0.2535 | 0.2140 | 0.3068 | 0.8564 |
+| rank8_flatbands | flatbands | 0.8412 | 0.2340 | 0.1129 | 0.2928 | 0.6596 |
+| rank6_flatbands | flatbands | 0.8313 | 0.2317 | 0.1093 | 0.2913 | 0.6634 |
+| all configs | raw_l2 | 0.7717 | 0.2261 | 0.1802 | 0.2873 | 1.0000 |
+| rank8_flatbands | patch5 | 0.7119 | 0.1331 | 0.0663 | 0.1952 | 0.4614 |
+| rank6_flatbands | patch5 | 0.7002 | 0.1293 | 0.0811 | 0.1884 | 0.4686 |
+| rank8_flatbands | patch3 | 0.7021 | 0.1185 | 0.0465 | 0.1797 | 0.4682 |
+| rank6_flatbands | patch3 | 0.6896 | 0.1184 | 0.0602 | 0.1818 | 0.4639 |
+| rank6_flatbands | global_pixel | 0.6310 | 0.0725 | 0.0272 | 0.1251 | 0.3717 |
+| rank6_flatbands | window128s64mean | 0.6300 | 0.0658 | 0.0345 | 0.1184 | 0.3600 |
+
+Winner counts:
+
+```text
+all methods by AP across 48 city/rank runs:
+  pca_diff 30, flatbands 11, raw_l2 3, patch5 2, patch3 1, window128s64mean 1
+
+DS-family only by AP across 48 city/rank runs:
+  flatbands 44, patch5 2, patch3 1, window128s64mean 1
+```
+
+Interpretation:
+
+- Band-Image DS is now the strongest DS-family candidate by a large margin.
+- It is much better than global pixel DS, patch DS, and local-window DS on mean AP.
+- It does **not** beat PCA-diff on mean AP, so the thesis cannot claim this construction is a better detector overall.
+- It slightly beats PCA-diff on mean AUROC (`0.8412` vs `0.8392`), which suggests useful ranking signal, but Otsu F1 is weak (`0.1129`) and score calibration/pseudo-change remain problems.
+- Its raw-L2 correlation is lower than PCA-diff's (`0.6596` vs `0.8588`), so it is not just a raw-L2 duplicate.
+- This is the first strong evidence that Senpai's band-image sample definition is worth studying further.
+
 ## 3. Main Completed Sweep
 
 Run:
@@ -186,30 +262,156 @@ Interpretation:
 
 ## 5. Immediate Next Experiment
 
-The next experiment is not another blind sweep. The core5 sweep already showed that patch-vector DS is the only DS-family candidate worth studying immediately, but it is still weaker than PCA-diff/raw L2 overall.
-
-There are now two parallel tracks:
+Current decision, 2026-06-22:
 
 ```text
-Sensei-first track:
-  generate time-sequential satellite subspaces -> first/second DS magnitude -> geodesic decomposition/projection
+Next gate:
+  Band-Image DS versus matched spatial nulls on the frozen OSCD split
 
-OSCD verification track:
-  explain whether spatially aware DS fixes the spatial-information weakness on a labeled benchmark
+Conditional follow-up:
+  Band-Image/PCA/IR-MAD candidate-ranking fusion or prior-channel test only if
+  the spatial DS component survives the nulls
+
+Completed evidence:
+  RTW and moment-factorized HSI gates are negative detector results
 ```
 
-The Sensei-first track has priority for advisor alignment. The OSCD track remains important because it provides labels and lets the project verify whether the subspace maps correspond to changed areas.
+The decisive controls are smoothed/multiscale PCA-diff, spatial
+Gram/correlation distance, matched cross-projection, PCA-diff, and repaired
+IR-MAD. Primary evidence is official test-city AP with configuration fixed on
+training cities. Section 11 gives the full decision gate. Sections 5.1-5.3 are
+retained as completed/historical experiment designs, not the current next task.
 
-Immediate next task:
+### 5.1 RTW Phase/Tempo-Invariance Gate
+
+Research question:
 
 ```text
-Inspect why patch DS helps in some cities and fails in others, then test whether the score definition is the bottleneck.
+Can an RTW hypo-subspace suppress changes in seasonal timing/tempo while
+remaining sensitive to changes in the shape of a multispectral seasonal cycle,
+beyond phase-aware harmonic, Fourier, DTW/TWDTW, and non-warped subspace controls?
 ```
 
-Immediate experiment track to keep in order:
+Satellite construction:
+
+- one sample object is a pixel, field, or fixed patch with a regularized
+  multiband sequence `Z=[z_1,...,z_N]`, `z_t in R^d`;
+- sample `R` temporally ordered observations repeatedly and concatenate them
+  into `L` time-elastic vectors `f_l in R^(dR)`;
+- fit a rank-`m` PCA hypo-subspace to `F=[f_1,...,f_L]`;
+- compare reference and target hypo-subspaces through the canonical-correlation
+  spectrum of `X^T Y`, using `1-mean(kappa_i^2)` as the primary dissimilarity;
+- do not call the construction warp-invariant until the nuisance tests show it.
+
+Controlled regimes over real-background seasonal curves:
+
+| Regime | Meaning | Expected RTW behavior |
+|---|---|---|
+| null resampling/noise | unchanged | low score |
+| circular phase shift | timing nuisance | low score |
+| monotone nonlinear time warp | tempo nuisance | low score |
+| missing/irregular composites | acquisition nuisance | uncertainty or low score, not false change |
+| amplitude/mean shift | easy change control | may respond; not the claimed novelty |
+| same-phase cycle-shape deformation | target change | high score |
+| crop/irrigation regime transition | real target after controlled gate | high score on held-out sites/years |
+
+Required baselines:
+
+- Euclidean/CVA and SAM on aligned seasonal vectors;
+- harmonic regression with explicit phase terms;
+- Fourier-magnitude descriptors as a strong phase-invariant null;
+- DTW, time-weighted DTW, and soft-DTW where feasible;
+- non-warped PCA/MSM and M-SSA/Hankel-subspace comparison;
+- simple NDVI/mean/amplitude change features.
+
+Primary metrics:
+
+- AP and AUROC for target-change versus timing/tempo nuisance;
+- false-positive rate on phase/tempo nuisances at a validation-fixed threshold;
+- target-to-nuisance score ratio and its bootstrap interval;
+- response curves versus phase shift, warp severity, missing observations, and
+  noise;
+- held-out geography/year AP and event timing error for the real gate.
+
+Go/no-go rule:
+
+- **Go:** RTW exceeds phase-aware harmonic, Fourier magnitude, and TWDTW beyond
+  bootstrap uncertainty on at least two real-background families, then repeats
+  on independently labeled or manually verified transitions.
+- **No-go:** a simpler invariant baseline matches RTW, success exists only on
+  synthetic curves, or nuisance rejection destroys sensitivity to cycle-shape
+  change. In that case, retain RTW as a negative row in the diagnostic study.
+
+### 5.2 Conditional Shallow-Learning Test
+
+Only after a geometric block passes its mechanism gate, compare nested models
+under geography/year holdout and label budgets of `10%, 25%, 50%, 100%`:
 
 ```text
-global pixel DS -> patch-vector DS -> local-window DS -> flattened-band spatial subspace -> multiscale subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
+scalar/harmonic features only
+geometry features only
+scalar/harmonic + geometry
+scalar/harmonic + shuffled-geometry negative control
+```
+
+Use regularized logistic regression first. Geometry features may include the
+canonical-correlation spectrum, RTW dissimilarity, attention/contribution
+concentration, rank/energy, and uncertainty. The claim requires a positive
+held-out `Delta AP` or equal performance at a lower label budget; classifier
+accuracy alone does not prove a geometric contribution.
+
+### 5.3 Parallel Hyperspectral Attribution Gate
+
+The strongest Codex-mining alternative remains local, moment-factorized HSI
+change characterization: separate mean, total scale, normalized eigenspectrum,
+and eigenspace orientation, then attribute orientation discrepancy to contiguous
+wavelength intervals. Run its algebra and moment-matched tests in parallel only
+if a real bitemporal HSI benchmark can be obtained. Full covariance/SPD,
+MMD/energy, fused per-band effects, and unmixing are mandatory falsifiers.
+
+### 5.4 Closed Or Deprioritized Routes
+
+- RTW phase/tempo-invariance gate completed 2026-06-21:
+  - selected on three development patches: `R=4`, `L=64`, rank `5`, raw;
+  - held-out structural AP `0.8078`, versus snapshot-subspace AP `0.8156`;
+  - paired AP delta `-0.0078`, 95% interval `[-0.0807,+0.0435]`;
+  - marginal-matched-shape AP only `0.4533`; relative-band-phase AP `0.9511`
+    was matched by snapshot PCA (`0.9550`) and DTW (`0.9459`);
+  - median RTW sampling-std/score ratio `0.3012`;
+  - decision: no-go for a natural-transition RTW study; retain the result in
+    the diagnostic line;
+  - report: `docs/experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`.
+- RTW natural-label transfer follow-up completed 2026-06-21:
+  - official BreizhCrops 2017 L2A data; seven adequately represented crop
+    classes, 560 sequences per region, and 2,720 pairs per run;
+  - two geographic rotations: FRH01->FRH04 and FRH02->FRH03;
+  - 22 controls include aligned Euclidean/RMS, global temporal shift,
+    correlation, DTW/TWDTW/soft-DTW, PCA cross-reconstruction, centered and
+    uncentered snapshot subspaces, deterministic shift-orbit and M-SSA
+    subspaces, bandwise differences, and seasonal summaries;
+  - nested RTW selection on development geography improved AP to `0.7052` and
+    `0.6596`, but development-selected global-shift RMS reached `0.7789` and
+    `0.7759`; paired RTW deltas were `-0.0737` and `-0.1163`, with wholly
+    negative 95% intervals;
+  - PCA cross-reconstruction was strongest on both holdouts (`0.8128`,
+    `0.8264` AP); selected RTW had higher timing-nuisance false positives;
+  - RTW also lost on natural-only, within-phenology-group hard pairs, and
+    timing-invariance tasks. Close RTW as the current positive satellite route;
+    do not generalize this negative result beyond the tested construction;
+  - report: `docs/experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`.
+- The requested first/second DS magnitude and geodesic decomposition were
+  implemented and independently tested; the rolling RGB SpaceNet 7 detector
+  lost to radiometric controls and did not improve their fusion.
+- Direct global/patch/Band-Image DS on OSCD is retained as diagnostic evidence,
+  not the immediate optimization target.
+- Generic geometry-plus-shallow-learning is deferred until geometry earns a
+  distinct feature signal.
+
+Historical OSCD experiment track:
+
+```text
+global pixel DS [done] -> patch/local DS [done] -> Band-Image DS [done] ->
+fixed-grid pyramid [stopped] -> corrected Celik/IR-MAD [done]
 ```
 
 Minimum fair comparisons:
@@ -221,8 +423,23 @@ Minimum fair comparisons:
 - global canonical DS;
 - patch3 and patch5 DS;
 - local-window DS;
-- flattened-band spatial-subspace candidate;
+- Band-Image DS spatial-subspace candidate;
 - multiscale subspace pyramid.
+
+Band-Image DS spatial-subspace pilot:
+
+- Motivation: Senpai suggested testing the opposite sample definition from current global pixel DS.
+- Current global pixel DS uses `X in R^(13 x N_pixels)`, where one sample is one pixel's 13-band value vector.
+- Band-Image candidate uses `X in R^(N_pixels x 13)`, where one sample is one full band image flattened into a spatial vector.
+- First implementation should be one-city only and should answer shape, rank, score-map definition, runtime, and correlation with raw L2/PCA-diff.
+- Required caution: with Sentinel-2 there are only 13 band samples, so rank is limited; do not call this better or more faithful until it produces interpretable maps and metrics.
+- Hyperspectral extension: the idea may be more natural for hyperspectral images with hundreds of bands, where the number of band-image samples is much larger.
+
+Status 2026-06-18:
+
+- Implemented and swept on all 24 local OSCD cities at ranks 6 and 8.
+- Strongest DS-family method in 44/48 city/rank runs.
+- Still below PCA-diff on mean AP, so the next task is diagnostic score/threshold/failure-mode work, not Phase 2 training.
 
 Minimum reporting:
 
@@ -234,6 +451,69 @@ Minimum reporting:
 - runtime;
 - qualitative pre/post/GT/score maps;
 - city-wise failure table.
+
+Band-Image DS score-ablation result, 2026-06-18:
+
+- Tracked report: `docs/experiment_reports/oscd_band_image_ds_score_ablation_2026-06-18.md`.
+- Core5 output: `phase1/outputs/spatial_ds_band_image_score_ablation_core5_20260618_021813/`.
+- All-city output: `phase1/outputs/spatial_ds_band_image_score_ablation_allcities_20260618_022314/`.
+- Attribution outputs: `phase1/outputs/spatial_ds_band_image_attribution_{city}_20260618_022904/` for `chongqing`, `nantes`, `bordeaux`, and `norcia`.
+
+All-city mean result:
+
+| method | mean AUROC | mean AP | mean Otsu F1 | mean best F1 | mean raw-L2 corr |
+|---|---:|---:|---:|---:|---:|
+| `pca_diff` | 0.8392 | 0.2541 | 0.2160 | 0.3076 | 0.8588 |
+| `band_image_ds` | 0.8412 | 0.2340 | 0.1129 | 0.2928 | 0.6596 |
+| `band_image_norm` | 0.8412 | 0.2340 | 0.2007 | 0.2928 | 0.7775 |
+| `raw_l2` | 0.7717 | 0.2261 | 0.1802 | 0.2873 | 1.0000 |
+| `band_image_ratio` | 0.7037 | 0.0586 | 0.0773 | 0.1170 | -0.0510 |
+| `band_image_residual` | 0.5766 | 0.0712 | 0.0555 | 0.1203 | 0.5147 |
+
+Interpretation:
+
+- `band_image_norm` is the better active Band-Image DS thresholding score because it keeps the same AUROC/AP as `band_image_ds` but raises all-city Otsu F1 from `0.1129` to `0.2007`.
+- The score reduction was part of the thresholding problem, but PCA-diff still wins mean AP and still has slightly better Otsu F1.
+- `band_image_ratio` and `band_image_residual` should be treated as diagnostics, not primary scores.
+
+Pressure-baseline result, 2026-06-18:
+
+1. Repaired IR-MAD now uses paired CCA transforms and unchanged-pixel chi-square survival weighting.
+2. Corrected Celik defaults to scalar CVA/L2 difference-image patches with seeded, chunked PCA/k-means fitting.
+3. Rank-8 mean AP: PCA-diff `0.2541`, Band-Image DS `0.2340`, raw L2 `0.2261`, IR-MAD `0.2138`, Celik `0.1621`.
+4. Band-Image DS is significantly worse than PCA-diff and significantly better than this Celik adaptation; it is not reliably different from raw L2 or IR-MAD.
+5. Rank-12 Band-Image DS improves to AP `0.2410`, but still does not beat PCA-diff.
+6. Three-way equal-weight rank fusion reaches AUROC `0.8708` versus PCA-diff `0.8406`, winning 21/24 cities (`p=0.00024`). Its AP gain is not significant and Otsu F1 drops to `0.1084`.
+7. Fixed-grid spectral pyramid AP (`0.0762`-`0.0765`) did not improve global pixel DS (`0.0791`); stop this exact branch.
+8. Inspect qualitative failure modes for:
+   - Band-Image DS wins: Bordeaux, Chongqing, Milano, Paris, selected Saclay cases;
+   - PCA-diff wins: Beirut, Dubai, Las Vegas, Montpellier, Mumbai, Nantes, Rio;
+   - patch/local-window wins: Norcia and Saclay-e style cases.
+
+Tracked report and outputs:
+
+- `docs/experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
+- `phase1/outputs/spatial_ds_traditional_pressure_allcities_corrected_20260618_174228/`
+- `phase1/outputs/band_image_ds_rank10_12_allcities_20260618_175418/`
+- `phase1/outputs/spatial_score_rank_fusion_allcities_20260618_175956/`
+- `phase1/outputs/spatial_pyramid_core5_decision_20260618_180652/`
+
+Next decision gate:
+
+1. Split-safe changed-area calibration: **completed 2026-06-18**.
+   - Fitted one top-ranked changed-area fraction per method on 14 official training cities and froze it for 10 official test cities.
+   - Three-way fusion test F1 `0.2670` versus PCA-diff `0.2452`; delta `+0.0218`, 7/10 wins, `p=0.1602`, bootstrap CI crosses zero.
+   - Band-Image DS test F1 `0.2507`; its `+0.0055` delta over PCA-diff is not reliable.
+   - Conclusion: rank fusion remains promising complementarity, not a proven improvement. Threshold scale alone does not solve the problem.
+2. Define a pseudo-change taxonomy using representative city maps: vegetation/seasonality, water, cloud/haze, illumination, registration, and target structural change.
+3. Test robust or nuisance-aware feature normalization only when it has a source and a held-out-city protocol.
+4. Continue to neural/prior experiments only if the continuous geometric maps add held-out evidence beyond raw bands/PCA-diff or provide a clear diagnostic contribution.
+
+Calibration implementation and outputs:
+
+- `phase1/scripts/evaluate_oscd_split_calibration.py`
+- `phase1/outputs/spatial_score_calibration_source_allcities_20260618_182915/`
+- `phase1/outputs/oscd_split_safe_calibration_20260618_183238/`
 
 Immediate Sensei-first task:
 
@@ -312,10 +592,10 @@ Concrete near-term checklist:
    - This is the closest classical spatial-patch pressure baseline, not just another optional method.
    - Outcome: if Celik beats patch DS clearly, the thesis cannot claim patch DS is a strong spatial classical detector without a narrower interpretability argument.
 
-4. IR-MAD fair-comparison audit:
-   - Treat IR-MAD as a required classical multivariate baseline because it is established in remote-sensing change detection and is CCA-related.
-   - Do not trust the current lightweight implementation until it is checked against Nielsen/MAD/iMAD references.
-   - Outcome: either a paper-faithful IR-MAD score map in the same Phase 1 comparison table, or a clearly documented reason it is not yet fair to compare.
+4. IR-MAD fair-comparison verification: **completed 2026-06-18**.
+   - The corrected implementation uses paired transforms, unchanged-pixel reweighting, and synthetic formula guards.
+   - It was included in the same 24-city table as PCA-diff, raw L2, Celik, and DS variants.
+   - Outcome: mean AUROC `0.8471`, AP `0.2138`, and Otsu F1 `0.0547`; retain it as a ranking baseline and calibration/failure-mode pressure test.
 
 ## 6. Other Important Experiments To Queue
 
@@ -454,7 +734,7 @@ Concrete near-term checklist:
    - If using multiple dates, test whether first-order DS, second-order DS, GDS, or KGDS gives a more interpretable progression signal.
    - Report whether visual changes are likely semantic land-cover change or seasonal/radiometric change.
 
-18. IR-MAD fair-comparison audit:
+18. IR-MAD fair-comparison verification: **completed 2026-06-18**.
    - Sources:
      - Nielsen 2007 regularized IR-MAD paper;
      - Nielsen/Conradsen MAD/CCA formulation;
@@ -463,19 +743,18 @@ Concrete near-term checklist:
      - IR-MAD is a mature multivariate remote-sensing change detector.
      - It is based on CCA/MAD variates and is therefore close enough to DS to be a serious comparison pressure baseline.
      - Sensei and seminar feedback already pushed toward CCA, so ignoring IR-MAD would weaken the thesis.
-   - Audit before claims:
-     - Check whether `phase1/baselines/ir_mad.py` solves the correct CCA/generalized eigenproblem.
-     - Verify whether iterative reweighting emphasizes likely unchanged observations correctly.
-     - Recheck band selection, normalization, covariance regularization, subsampling seed, convergence behavior, chi-square weighting, and threshold calibration.
-     - Test equal-image/no-change toy behavior and a simple synthetic changed-pixel case.
-   - Fair comparison:
-     - Compare against raw L2/CVA, PCA-diff, Celik PCA-kmeans, global canonical DS, patch3 DS, and patch5 DS.
-     - Use the same OSCD cities, valid masks, score normalization policy, AUROC, PR-AUC/AP, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, and visual grids.
-     - Inspect whether IR-MAD reduces pseudo-change from radiometric/background effects better than DS or PCA-diff.
+   - Verification performed:
+     - corrected paired CCA/generalized eigenproblems and iterative unchanged-pixel weighting;
+     - checked regularization, seed, convergence, chi-square statistic, equal-image behavior, and a synthetic changed block;
+     - compared on all 24 cities with raw L2/CVA, PCA-diff, Celik, global DS, patch3, patch5, Band-Image DS, and local-window DS.
+   - Result:
+     - IR-MAD has the strongest single-method mean AUROC (`0.8471`) but lower AP (`0.2138`) than PCA-diff and Band-Image DS;
+     - per-image Otsu calibration is poor (`0.0547` mean F1);
+     - qualitative maps show useful ranking alongside broad seasonal/agricultural responses.
    - Decision:
-     - If IR-MAD beats DS, use that as honest evidence that DS needs a spatial, nonlinear, temporal, or interpretability-specific justification.
-     - If patch DS complements IR-MAD on specific false-positive/false-negative modes, that may support an interpretable hybrid-prior framing.
-     - Do not claim IR-MAD is weak from old runs unless this audit supports it.
+     - keep repaired IR-MAD in every serious classical comparison;
+     - do not claim it suppresses pseudo-change until the next nuisance/failure-mode study tests that directly;
+     - use the three-way rank-fusion result only as evidence of complementary rankings.
 
 19. Multi-date / period-subspace DS feasibility audit:
    - Check datasets with enough aligned dates per location.
@@ -620,3 +899,932 @@ Active rule:
 - Use this file for current experiment evidence, queued audits, and decision gates.
 - Use `docs/source_records/final_organization_2026-06-12/prior_ingestion_ledgers.md` only when checking historical provenance.
 - Old archive/research-notes/phase-doc claims are historical unless they are repeated above as current evidence or current tasks.
+
+## 10. Active Temporal Difference-Subspace Study
+
+Active question as of 2026-06-19:
+
+```text
+Can paper-faithful first/second Difference Subspaces and geodesic decomposition
+provide distinct, spatially attributable evidence of change in registered
+multispectral satellite time series, after accounting for irregular cadence,
+radiometric variation, and misregistration?
+```
+
+This supersedes the instruction near the end of Section 6 that temporal pilots
+must wait for the spatial OSCD audit. That audit has now been run and found that
+simple spatial PCA/smoothing explains much of the apparent gain.
+
+### 10.1 Completed Implementation Checks
+
+- One date cube is represented by `X_t in R^(N_common_pixels x B_bands)`.
+- Each column is one complete aligned band image flattened over the same common
+  spatial mask.
+- The leading left singular vectors form `S_t in Gr(r, N_common_pixels)`.
+- Full-rank MultiSenGE uses `r=10`; full-rank IPOL RGBI uses `r=4`.
+- Paper-faithful first magnitude is `2 sum_i(1-cos(theta_i))`.
+- Paper-faithful second DS is `D(S_t, M(S_{t-1},S_{t+1}))`.
+- Geodesic decomposition reports along and orthogonal components.
+- The second-order paper assumes equal intervals. The project therefore also
+  reports a separate time-aware deviation from the endpoint Grassmann geodesic
+  at the observed acquisition fraction. It is not mislabeled as paper DS.
+- Canonical spatial contributions sum to the corresponding DS magnitude.
+- Eighteen focused unit tests cover equal-speed, along-geodesic, off-geodesic,
+  unequal-gap, interpolation, mean-subspace, common-mask, shape, and attribution
+  behavior.
+
+### 10.2 Controlled Findings
+
+Full-rank centered band-image subspaces on real MultiSenGE triples with injected
+changes:
+
+- local change versus global per-band gain/offset:
+  - paper second/orthogonal AUROC `1.0`, AP `1.0` in the rank-10 pilot;
+  - the full band-image span is invariant to the tested invertible per-band
+    scaling, while centering removes constant offset.
+- local change versus one-pixel translation:
+  - orthogonal AUROC `0.0`; every tested translation produced a larger response
+    than the local synthetic change.
+- local change versus all tested negatives:
+  - AUROC `0.875`, AP `0.540`.
+
+Interpretation: the construction has a real radiometric invariance but is not
+registration robust. This is a method boundary worth studying, not evidence of
+general change-detection superiority.
+
+Output:
+
+`phase1/outputs/multisenge_temporal_injections_full_channel_20260619_193250/`
+
+### 10.3 Real-Sequence Findings
+
+MultiSenGE, five patches x 23 dates:
+
+- only `15/105` triples have left/right gap ratio <= `1.5`;
+- paper second and orthogonal magnitudes correlate at `0.973`;
+- paper second correlates with raw second reflectance RMSE at `0.709`, NDVI
+  curvature at `0.818`, and NBR curvature at `0.752`;
+- the time-aware deviation correlates with paper second at `0.941` and raw
+  curvature at `0.675`;
+- on the 15 balanced triples, time-aware deviation and paper second correlate
+  at `0.988`.
+
+These curves currently track spectral/index curvature strongly. MultiSenGE has
+static land-cover labels, so this is descriptive evidence, not supervised event
+detection accuracy.
+
+Output:
+
+`phase1/outputs/multisenge_temporal_timeaware_core5_20260619_194845/`
+
+IPOL Las Vegas, 20 registered RGBI dates:
+
+- the published NFA method identifies important changes at frames 2 and 4;
+- first DS ranks frame 2 highly but frame 4 only tenth among 19 pairs;
+- paper second/time-aware maps at both frames respond broadly to roofs, roads,
+  and scene texture rather than isolating only the published changed objects;
+- the strongest paper second/time-aware response occurs at 2018-02-15, not one
+  of the first-five published demonstration events.
+
+This is important negative pressure: whole-scene temporal DS is not yet a
+competitive local detector.
+
+Output:
+
+`phase1/outputs/ipol_vegas_temporal_timeaware_20260619_194845/`
+
+### 10.4 Four-Sequence External Pressure Test
+
+The exact IPOL C implementation was compiled locally and run on pseudo-gamma
+versions of Las Vegas, Al Wakrah, Piraeus, and Beijing Airport. Its log-NFA
+maps are external detector outputs, not ground truth.
+
+One-date rank-2 band-image DS did not generalize. Its adjacent/along score was
+near raw difference on Vegas but worse on Al Wakrah, Piraeus, and Beijing.
+Multiscale tiling did not rescue that result.
+
+For second-order rank-2 whole-scene maps, macro results over the four sequences
+were:
+
+| Method | Macro pixel AP | Macro pixel AUROC | Macro temporal Spearman with IPOL changed fraction |
+|---|---:|---:|---:|
+| raw time-interpolation residual | 0.1206 | 0.8282 | 0.5485 |
+| paper second DS | 0.0895 | 0.8518 | 0.5934 |
+| orthogonal component | 0.0951 | 0.8409 | 0.5826 |
+| along component | 0.0512 | 0.7774 | 0.3065 |
+| irregular-time geodesic deviation | 0.0994 | 0.8404 | 0.5898 |
+
+Interpretation: second/time-aware geometry is slightly better aligned with
+sequence-level event intensity in aggregate, but worse at pixel localization.
+This motivates a descriptor/interpretation hypothesis, not a detector win.
+
+Bidirectional temporal-context sweep (`V={3,5}`, rank `{1,2}`, per-band and
+joint) produced:
+
+- raw adjacent RMS macro AP `0.38`, AUROC `0.97`;
+- best linear projection novelty (`V=3`, rank 2, per-band) macro AP `0.37`,
+  AUROC `0.98`;
+- best temporal-context DS macro AP about `0.10`.
+
+The DS localization hypothesis is rejected under this construction. Projection
+novelty remains a candidate because it improves AUROC in all four sequences,
+but it beats raw AP only on Piraeus and still needs labeled evaluation.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_ds_macro_4seq_20260620/`
+- `phase1/outputs/temporal_context_ds_*_matrix_20260620/`
+
+### 10.5 Persistent-Change And Nuisance Diagnostic
+
+Five real MultiSenGE backgrounds were used with known injected masks. Four
+predefined configurations varied context `V={3,5}` and rank `{1,2}`.
+
+Rank-2, `V=3`, per-band results:
+
+| Method | Persistent localization AP | Persistent/transient response | Gain/offset response | Translation response |
+|---|---:|---:|---:|---:|
+| temporal-context DS | 0.733 | 0.97x by raw sums; positive paired normalized contrast | near zero | 16.6x persistent response |
+| linear projection novelty | 0.909 | 1.51x | near zero | 11.8x persistent response |
+| raw adjacent RMS | 0.936 | exactly 1.00x | very large | 7.1x persistent response |
+
+Clustered bootstrap over five patch backgrounds gives projection novelty a
+persistent-vs-transient normalized contrast of `0.190` with 95% interval
+`[0.170, 0.212]`. Its persistent localization AP difference from raw is
+`-0.024`, interval `[-0.068, 0.018]`. The DS contrast grows at lower rank/longer
+context, but localization degrades sharply. Five clusters are too few for a
+publication-level uncertainty claim; this is a stable diagnostic lead.
+
+Decision:
+
+- retain persistence discrimination and radiometric invariance as hypotheses;
+- reject current DS as the main localization score;
+- treat translation robustness and labeled multi-temporal evaluation as hard
+  gates before method claims.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_injections_multisenge_*_20260620/`
+- `phase1/outputs/temporal_context_injections_macro_20260620/`
+
+### 10.6 Registration And Scale-Space Curve
+
+Controlled horizontal shifts `{0.25,0.5,1,2}` pixels were compared with a
+persistent local injection on five MultiSenGE backgrounds.
+
+For a `32x32`, strength-0.25 event using projection novelty:
+
+| Representation | Translation/local ratio at 1 px | Local AP |
+|---|---:|---:|
+| native | 26.67 | 0.982 |
+| Gaussian `sigma=1` | 8.19 | 0.993 |
+| Gaussian `sigma=2` | 3.17 | 0.993 |
+| Gaussian `sigma=3` | 1.72 | 0.988 |
+| Gaussian `sigma=4` | 1.14 | 0.984 |
+| phase alignment | 0.006 | 0.877 |
+
+The apparent robustness does not generalize to a weak `16x16` event: at one
+pixel and `sigma=4`, translation/local ratio remains `32.8` and local AP falls
+to `0.764`. Phase alignment corrects integer shifts well but loses event AP and
+is imperfect at `0.25-0.5` pixels.
+
+Cross-scale retention (`score_sigma / score_native`) perfectly separates the
+tested global translations from persistent local injections for DS, projection
+novelty, and raw difference. Projection has the largest mean log-retention
+margin at `sigma=4`, but AUROC/AP are `1.0` for all three methods. Therefore
+scale-space decay is a useful generic artifact diagnostic, not DS-specific
+novelty.
+
+Next robustness test must include local warps/parallax and natural labeled
+events. Do not claim Gaussian smoothing or phase alignment solves registration.
+
+Outputs:
+
+- `phase1/outputs/temporal_context_registration_curve_*_20260620/`
+- `phase1/outputs/temporal_context_scale_decay_20260620/`
+
+### 10.7 Immediate Experiment Order
+
+1. Test seasonal observation subspaces on a labeled regime-change protocol:
+   - one aligned patch/field and one year supply a set of cloud-filtered date
+     composites; each full spatial-spectral date cube is one column of `X_y`;
+   - build one PCA subspace per year, then calculate first DS, second DS,
+     along/orthogonal decomposition, and time-aware geodesic deviation;
+   - first controlled task: irrigation start/stop, because adding/removing
+     irrigation changes seasonal dynamics rather than only one acquisition;
+   - use IrrMapper transitions only as weak candidate labels, manually verify a
+     selected subset, and require an independently labeled repeat before a
+     performance claim;
+   - if Earth Engine access remains blocked, run the complete synthetic regime
+     validation and preserve real-data evaluation as blocked rather than
+     fabricating results.
+2. Obtain an independently labeled multi-temporal evaluation slice:
+   - preferred: a selectively acquired DynamicEarthNet AOI with monthly semantic labels;
+   - dataset size is approximately 524-564 GB in full, so define a selective
+     acquisition protocol rather than downloading blindly;
+   - fallback: an independently annotated Harmonized Sentinel-2 event sequence.
+3. Build a registration robustness curve:
+   - translations from subpixel/interpolated shifts through at least two pixels;
+   - compare pre-registration, local pooling, low-frequency/wavelet features,
+     and displacement-minimized scores;
+   - keep gain/offset and local persistent/transient interventions.
+4. Preserve the task split in evaluation:
+   - event timing/characterization: first, second, orthogonal, along, and
+     time-aware geodesic descriptors;
+   - changed-area localization: projection novelty, IPOL NFA, raw/index, and
+     classical/deep segmentation controls.
+5. Extend multiscale local temporal band-image subspaces only with a matched
+   non-DS control:
+   - scales: whole scene, `2x2`, `4x4`, and overlapping local tiles;
+   - compute first, second, orthogonal, along, and time-aware quantities per
+     tile;
+   - compare spatial fusion with matched local PCA/chronochrome controls.
+6. Add temporal baselines beyond the reproduced IPOL NFA:
+   - MOSUM and one trend/seasonal method such as BFAST/JUST;
+   - never call another detector output ground truth.
+7. Acquire one Sensei-requested Harmonized Sentinel-2 sequence:
+   - report region, dates, frame count, actual gaps, clouds/no-data, bands,
+     spatial alignment, and event/evaluation source;
+   - do not run a large sequence before this feasibility card exists.
+8. Decide after the above whether the paper is:
+   - a new time-aware/local temporal DS method;
+   - a nuisance-robust DS method;
+   - or a diagnostic benchmark explaining when temporal DS helps/fails.
+
+### 10.8 Evidence Gates
+
+Continue toward a method claim only if:
+
+- known/published events are localized better than whole-scene DS;
+- improvement is not reproduced by smoothing/tiling a non-DS baseline;
+- registration robustness improves without destroying local-change response;
+- at least one independent sequence repeats the finding;
+- the result survives rank, scale, preprocessing, and cadence ablations.
+
+Otherwise publish or present the negative result honestly: full-channel temporal
+DS is radiometrically invariant but registration sensitive, and whole-scene
+geometric contributions are too diffuse for changed-area localization.
+
+Seasonal-regime study design:
+
+| Component | Required test |
+|---|---|
+| Positive event | irrigation off-to-on and on-to-off transitions |
+| Negative event | stable irrigated and stable non-irrigated years |
+| Confounders | phenological phase shift, gradual trend, gain/offset, missing composites, clouds/noise, spatial translation/local warp |
+| Geometric scores | adjacent first magnitude/geodesic, second total, along, orthogonal, time-aware deviation |
+| Controls | NDVI amplitude/mean break, raw mean-spectrum L2, minimum principal angle, null/no-event score, then MOSUM/BFAST/JUST |
+| Event metric | boundary AUROC/AP, event-year rank, timing error, false alarms per stable sequence |
+| Characterization metric | abrupt-versus-gradual classification and effect-size separation |
+| Calibration | train-free threshold analysis plus held-out-site calibration if a threshold is reported |
+| Generalization | hold out geography and year; repeat on an independent label source |
+
+Stop the irrigation route if DS scores do not exceed simple NDVI/raw/min-angle
+controls on event timing, if success depends on one geography/rank, or if manual
+inspection shows that IrrMapper transition noise explains the apparent result.
+
+### 10.9 Seasonal Observation Stress-Test Result
+
+Completed 2026-06-20:
+
+- `800` synthetic five-year sequences (`80` per scenario), `3200` candidate
+  boundaries per rank/preprocessing configuration, `200` sequence-level
+  bootstrap resamples, plus noise `0.02` and `0.04` pressure runs.
+- Best first DS: uncentered rank 1, AUROC `0.950`, AP `0.403`
+  (`0.356-0.469`), versus raw monthly RMS AP `0.459` and NDVI-curve AP `1.000`.
+- Rank-1 DS ranked the true abrupt boundary first within every event sequence,
+  but did not calibrate well across sequences.
+- Feature-centered rank-1 DS rejected tested gain/offset and phase nuisances,
+  but false-alarm rates were `0.997` for missing composites, `0.559` for
+  one-pixel translation, and `0.528` for gradual drift under a stable-cycle
+  95th-percentile threshold.
+- At noise `0.04`, rank-2 second-along AP was `0.698` (`0.649-0.778`) versus
+  NDVI second-difference AP `0.674` (`0.622-0.730`); intervals overlap.
+- Conclusion: continue only as a real-data test of relative event timing,
+  geometric trajectory characterization, and orientation-plus-energy
+  decomposition. Do not claim a synthetic DS performance win.
+
+Report:
+`docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
+
+### 10.8 Independently Labeled SpaceNet 7 Gate - Completed 2026-06-21
+
+The independent-label gate was executed on SpaceNet 7 monthly RGB imagery.
+One AOI was used for discovery, three for development, and four additional
+AOIs were selected by growth quantile before confirmation scoring.
+
+Frozen candidate:
+
+```text
+fixed 8x8 cells
+-> six-month rolling windows
+-> lag-two RGB trajectory matrix
+-> rank-two subspace
+-> second-DS orthogonal magnitude
+```
+
+Confirmation macro AP across four AOIs:
+
+| Method | Mean AP |
+|---|---:|
+| Second-DS orthogonal magnitude | 0.1127 |
+| Standardized raw pair RMS | 0.1615 |
+| Standardized raw second RMS | 0.1502 |
+| Two-radiometric rank fusion | 0.1910 |
+| Geometry plus radiometric rank fusion | 0.1747 |
+
+The three-score fusion was below the two-radiometric fusion by `-0.0163` macro
+AP, with hierarchical 95% interval `[-0.0531, +0.0140]`. Geometry alone lost
+substantially, and adding it did not improve the fair two-control fusion.
+
+Component analysis: first DS was the strongest geometric quantity at AP
+`0.1313`; second total/along were `0.1229/0.1226`; second orthogonal was
+`0.1127`. First magnitude and Grassmann distance were effectively redundant
+(`rho=0.9999`), while second total was dominated by along ordering
+(`rho=0.9596`).
+
+Data-integrity correction: SpaceNet UDM polygons are CRS84 and must be
+reprojected to the image CRS. Valid support is intersected per transition over
+only the rolling windows being compared, not over the entire sequence. One
+preselected AOI had no valid six-month support and was replaced before scoring
+using a mask-only deterministic rule.
+
+Decision:
+
+- close this exact rolling RGB trajectory-DS detector;
+- do not tune its grid, window, rank, or fusion on the seven non-discovery
+  AOIs;
+- retain the result as evidence that verified first/second DS quantities need
+  not be useful local change detectors;
+- require a new mechanism and fresh held-out data for the next route.
+
+[gap] Can subspaces isolate useful multispectral/hyperspectral characteristics
+or explain nuisance/change factors even when RGB trajectory DS fails as a
+detector?
+[why it matters] This is a materially different role for geometry and is not
+answered by the SpaceNet 7 experiment.
+[next check] Design a source-grounded feature-isolation or nuisance-subspace
+experiment with a matched non-subspace control and untouched evaluation data.
+
+Report:
+`docs/experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`.
+
+Data gate:
+
+- Public IrrMapper v1.2 coverage and 1986-2024 temporal extent are verified.
+- AOI/frame querying is blocked until an Earth Engine-enabled Google Cloud
+  project is configured.
+- IrrMapper transitions remain weak labels; manual/independent verification is
+  required before performance testing.
+
+### 10.10 Real-Background Order And Localization Result
+
+Completed 2026-06-20:
+
+1. Corrected the temporal construction distinction:
+   - unordered annual PCA is invariant to date permutation;
+   - first differences and block trajectory matrices are order-aware;
+   - eight formula/invariance tests pass.
+2. Ran global/crop controlled interventions on five MultiSenGE patches:
+   - `8` repeats, `23` dates, ranks `1,2`, four representations, four
+     preprocessing modes;
+   - best DS-family AP `0.448`; normalized trajectory DS AP `0.365`;
+   - simple amplitude/spectrum controls were stronger.
+3. Ran cell-wise localization with exact injected masks:
+   - randomized off-grid supports;
+   - grids `2,4,8`;
+   - stable, gain/offset, phase, missing-composite, translation, global-
+     amplitude, and localized-mode scenarios;
+   - patch-level bootstrap, not pixel-independent bootstrap.
+4. Ran a smoothing robustness curve and fair multispectral controls:
+   - local eigenspectrum AP increased `0.516 -> 0.650 -> 0.688` for Gaussian
+     sigma `0,1,2`;
+   - translation false alarms decreased `0.847 -> 0.607 -> 0.292`;
+   - missing-composite false alarms decreased `0.843 -> 0.563 -> 0.358`;
+   - sigma-2 AP: eigenspectrum `0.688`, NDMI `0.680`, NBR `0.637`, NDVI
+     `0.486`, first DS `0.456`;
+   - paired eigenspectrum-minus-NDMI delta AP `+0.008`, 95% CI
+     `-0.249` to `+0.244`; there is no superiority claim;
+   - paired eigenspectrum-minus-first-DS delta AP `+0.233`, 95% CI
+     `+0.084` to `+0.354` in this controlled task.
+
+Decision:
+
+- retain first/second DS as interpretable trajectory descriptors;
+- do not treat pure DS as the winning detector;
+- promote local temporal eigenspectrum as a candidate companion descriptor;
+- keep order-aware trajectory matrices for event timing/order questions, not
+  because they won the current localization intervention;
+- stop synthetic/controlled refinement until a real-label slice is prepared.
+
+Immediate next experiment: independently labeled temporal gate
+
+```text
+one labeled AOI/transition source
+-> fixed spatial supports and temporal windows
+-> local eigenspectrum + first/second DS + geodesic quantities
+-> NDVI/NDMI/NBR + raw multispectral controls
+-> MOSUM or BFAST/JUST pressure baseline
+-> held-out region/time evaluation
+```
+
+Preferred route: selectively acquire one DynamicEarthNet AOI and its monthly
+labels. Do not download the full ~524 GB archive. Alternative: configure an
+Earth Engine project, extract a small IrrMapper/Sentinel-2 slice, and manually
+verify transition fields before scoring.
+
+Required decision gates:
+
+- Event labels must be independent of the tested Sentinel-2/Planet features.
+- Acquisition dates and masks must be explicit.
+- Thresholds or calibration must be fit outside the held-out AOI/year.
+- Eigenspectrum must beat or complement the best index/break baseline on at
+  least one repeatable event class, or the contribution becomes a negative
+  diagnostic.
+- Missing observations and residual registration must remain explicit
+  nuisance strata.
+
+Report:
+`docs/experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`.
+
+## 11. Cross-Branch Evidence Decision
+
+Completed 2026-06-22 after independently checking the Codex, Claude,
+Antigravity, research-mining, and legacy branches. The full method-by-method
+matrix is in
+`docs/experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`.
+
+Stable conclusions:
+
+1. Band-Image DS is the strongest tested DS construction on OSCD, but it is
+   pairwise DS, not GDS. At rank 12 it reaches AUROC `0.8477`, AP `0.2410`,
+   versus PCA-diff AP `0.2541`.
+2. Equal-weight PCA-diff + Band-Image DS + IR-MAD rank fusion has a significant
+   AUROC gain (`0.8708` vs `0.8406`), but its AP and held-out F1 gains are not
+   significant. Retain it as analyst-ranking evidence, not segmentation proof.
+3. Spatially smoothed/multiscale PCA-diff is the strongest observed positive
+   map result: AP `0.267404/0.267447` vs PCA-diff `0.254095`; smoothed delta
+   `+0.013310`, interval `[+0.004860,+0.022220]`, 19/24 wins. This comes from
+   `spatial_acd_multiscale_allcities_20260619_012510`, not the numerically
+   similar three-way fusion run. Because it was identified post-hoc, it needs
+   a frozen rerun.
+4. First/second DS and geodesic decomposition are formula-verified and tested
+   on sequential data. They did not beat radiometric controls on SpaceNet 7.
+5. RTW, SSA, SFA, local HSI orientation/DS, material MSM, Grassmann
+   orientation, kernel proxies, and deep-feature proxies do not currently
+   support positive detector claims.
+
+Matched-null experiment completed 2026-06-22:
+
+```text
+official OSCD split
+-> freeze preprocessing, rank, and fusion on training cities
+-> PCA-diff and smoothed/multiscale PCA-diff
+-> Band-Image DS rank 12
+-> matched spatial Gram/correlation distance
+-> matched full-rank reconstruction/cross-projection control
+-> repaired IR-MAD
+-> frozen equal-weight or train-only fusion
+-> test-city AP first; AUROC, fixed-threshold F1/IoU, runtime, and maps second [done]
+```
+
+Result:
+
+- Band-Image DS AP `0.2410` beats PCA-matched normalized Gram `0.1417`,
+  projector-row `0.1024`, and cross-reconstruction `0.2153`, but not PCA-diff `0.2541` or
+  smoothed/multiscale PCA `0.2679/0.2680`.
+- Smoothed PCA + Band-Image + IR-MAD reaches all-city AP `0.2780`. Its
+  official-test gain beyond smoothed PCA is uncertain, but it beats the
+  centering-matched cross-reconstruction fusion on all cities and test cities.
+- A distinct DS ranking contribution is supported internally against the
+  matched geometric controls. External transfer and improvement beyond the
+  strongest spatial-PCA map are not established.
+
+[gap] The OSCD findings are retrospective and lack external multispectral
+confirmation.
+[why it matters] OSCD has influenced rank and method selection; another OSCD
+split cannot provide a clean publication claim.
+[next check] Select one compatible labeled multispectral benchmark, freeze all
+methods before scoring, and test Band-Image DS against spatial PCA,
+cross-reconstruction, IR-MAD, and equal-rank fusion.
+
+Preferred candidate: xBD-S12. Freeze rank at the 12-band centered maximum of
+11, use its event-based split, treat no-data/unclassified pixels explicitly,
+and compare building-damage localization rather than silently calling its
+labels ordinary binary change. The Sentinel archive is `8.87 GB`; download and
+extraction require explicit approval. Original xBD archives are already under
+`data/xbd/`.
+
+External gate completed 2026-06-22:
+
+- Official xBD-S12 archive checksum verified; `10,315` S2 pairs prepared and
+  all records matched to original xBD post-event polygon labels.
+- Frozen test: `1,577/1,577` patches, five unseen disaster events, zero method
+  failures, rank 11, official percentile normalization.
+- Full-scene damaged-pixel retrieval: projector distance leads global AP
+  (`0.03675`) and mean event AP (`0.03015`), ahead of IR-MAD (`0.03194` global,
+  `0.02649` event mean) and PCA-diff (`0.02123`, `0.01840`).
+- Canonical DS beats matched cross-reconstruction in all five events:
+  event-mean AP delta `+0.00448`, bootstrap interval
+  `[+0.00074,+0.01099]`. The corresponding DS fusion also wins 5/5.
+- Task diagnosis: projector distance leads building localization, while raw L2
+  leads damage-vs-intact discrimination. Interpret projector geometry as a
+  candidate-localization prior, not a damage-severity score.
+- Three-pixel boundary stress removes almost all small-building pixels but DS
+  still beats cross-reconstruction 5/5. Projector AUROC remains high while its
+  AP lead disappears, confirming strong boundary/localization sensitivity.
+
+Report:
+`docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md`.
+
+[gap] The test events were inspected while forming the new two-stage
+geometry-plus-radiometry hypothesis.
+[why it matters] The same five events cannot honestly select and confirm a new
+fusion.
+[next check] Develop fixed projector-plus-raw-radiometry combinations by
+event-group cross-validation on xBD-S12 training disasters. First pressure-test
+centered rank `{2,4,6,8,10,11}` and uncentered autocorrelation construction on
+training events. Seek another independent event set before a confirmatory
+publication claim.
+
+Training-event pressure test completed 2026-06-22:
+
+- Rank sweep: 20 deterministic patches from each of 11 training events;
+  confirmation: 100/event, `1,100/1,100`, zero failures.
+- Projector AP rises through rank 8 and then plateaus. Centered and uncentered
+  high-rank constructions are practically similar.
+- Uncentered rank-11 projector beats raw L2 for full-scene retrieval in 11/11
+  events: delta `+0.01804`, interval `[+0.01017,+0.02651]`.
+- Mean/product projector + raw-L2 fusions are rejected: mean fusion loses to
+  projector in 0/11 events, delta `-0.01339`, interval
+  `[-0.02079,-0.00662]`.
+- DS-minus-cross is not stable on training events (uncentered rank 11:
+  `+0.00089`, interval `[-0.00036,+0.00239]`, 5/11 wins). Restrict the 5/5
+  test-event DS finding to those events.
+
+Classical and operational gate completed 2026-06-22:
+
+- On the identical 100/event training sample, centered rank-11 projector beats
+  IR-MAD full-scene AP by `+0.00814`, interval `[+0.00470,+0.01171]`, with
+  10/11 wins (`p=0.00293`). It beats IR-MAD building-localization AP by
+  `+0.03077` with 11/11 wins.
+- At a 5% review budget, projector recall/lift is `0.382/7.64x` on training
+  events and `0.247/4.93x` on unseen test events. IR-MAD reaches
+  `0.302/6.03x` and `0.178/3.55x` respectively.
+- The test budget metrics are post-hoc secondary analysis because they were
+  added after primary test AP was inspected.
+- Event-relative cloud-score strata show only weak correlations and all
+  five-event high-minus-low intervals cross zero. Date gaps have insufficient
+  within-event levels for a paired tertile conclusion.
+
+Object-level gate completed 2026-06-22:
+
+- 75,802 visible objects on the 1,100-patch train sample and 103,653 on the
+  complete test split; zero patch failures.
+- At a 5% scene threshold, projector damaged-building recall is `0.452` train
+  and `0.358` test, versus IR-MAD `0.307/0.209`, PCA-diff `0.170/0.181`, and
+  raw L2 `0.109/0.100`.
+- Projector-minus-IR-MAD recall delta is `+0.1456`, interval
+  `[+0.1077,+0.1885]`, 11/11 training-event wins; test delta is `+0.1487`,
+  interval `[+0.0876,+0.2250]`, 5/5 wins.
+- Projector also hits more intact buildings. PCA-diff gives the best test
+  damaged-vs-intact object AP (`0.3616` mean score versus projector `0.3166`).
+- Size-stratified and p90 checks retain the projector recall advantage, but
+  larger buildings are easier for every maximum/p90 hit metric.
+
+Registration gate completed 2026-06-22 on 20 patches from each of 11 training
+events and four directions per magnitude:
+
+- projector AP: `0.03612` at zero shift, `0.03379` at 1 pixel, `0.03198` at
+  2 pixels;
+- projector p90 damaged-building recall: `0.4755`, `0.4519`, `0.4396`;
+- 1-pixel AP delta `-0.00233`, interval `[-0.00496,-0.00055]`; 2-pixel delta
+  `-0.00414`, interval `[-0.00891,-0.00096]`;
+- the projector retains the absolute lead but is not registration invariant.
+
+[gap] Only five unseen event clusters are available, and synthetic shifts do
+not model every natural co-registration error.
+[why it matters] The current evidence can support a candidate-ranking study,
+but not a general new detector claim without another independent event set.
+[next check] Add one independent event gate. Only after that, test a fixed
+projector channel as a neural prior. Do not invent another score fusion unless
+a mechanism and independent validation gate are specified.
+
+Report:
+`docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`.
+
+## 12. Cross-Sensor Band-Image Transfer Gates
+
+Two frozen pressure tests were completed on 2026-06-22 after the xBD-S12
+candidate-localization result.
+
+### 12.1 Hyperspectral Transfer
+
+The exact spatial-axis sample definition was transferred at fixed rank 11 to
+Benton, Hermiston, Farmland, and Shenzhen HSI pairs.
+
+- Hermiston is the only defensible positive DS scene: AP `0.3707` versus
+  smoothed PCA `0.2194` and IR-MAD `0.2298`; the spatial block-bootstrap
+  DS-minus-smoothed-PCA interval is `[+0.0970,+0.2008]`.
+- Benton and Shenzhen reject the DS hypothesis against direct controls.
+- Farmland is polarity-confounded: geometry AP remains below its `0.687`
+  changed-pixel prevalence and cannot support a positive claim.
+- Seeds `7/1234/2026` give geometry-map correlations above `0.9983`.
+- A post-hoc rank curve shows scene-specific optima, not a universal rank.
+
+Decision: broad HSI transfer is rejected. Hermiston supports a future
+conditional-regime hypothesis only after additional untouched scenes and a
+predeclared unlabeled regime predictor.
+
+### 12.2 SpaceNet7 RGB Building-Appearance Transfer
+
+The xBD tile scale was transferred directly to nine SpaceNet7 AOIs and 197
+monthly building-appearance transitions. Each `128 x 128` tile supplies three
+RGB band-image samples and a centered rank-two subspace.
+
+- raw L2 mean transition AP `0.05599`;
+- cross-reconstruction `0.03545`;
+- IR-MAD `0.01841`;
+- canonical DS `0.01575`;
+- projector distance `0.00891`.
+
+Projector-minus-IR-MAD AP is `-0.00950`, hierarchical interval
+`[-0.01991,-0.00162]`. DS-minus-cross-reconstruction is `-0.01970`, interval
+`[-0.03811,-0.00668]`.
+
+Decision: the xBD projector effect does not transfer to RGB construction
+localization, and canonical DS loses to its matched reconstruction control.
+The neural projector-prior gate is **not met**.
+
+[gap] The strongest positive result remains xBD-S12-specific candidate
+localization, while HSI transfer is conditional and RGB transfer is negative.
+[why it matters] A neural prior trained now would promote a representation
+that failed the predeclared transfer criterion.
+[next check] Obtain a genuinely comparable labeled multispectral event dataset
+or define a materially new mechanism. Do not retune rank, tile size, or fusion
+on the completed HSI/SpaceNet labels.
+
+Reports:
+
+- `docs/experiment_reports/hsi_band_image_transfer_2026-06-22.md`
+- `docs/experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
+
+## 13. Post-Seminar Validation Gate
+
+Do not run this before the seminar. The selected research program is a
+spatial-axis DS prior with first/second temporal geometry as its multi-date
+extension.
+
+After the seminar, choose one of two falsifiable gates with Sensei:
+
+1. **Hybrid-prior confirmation:** freeze the OSCD U-Net architecture and prior
+   definitions; reproduce the preliminary three-seed result from the currently
+   untracked experiment code; add city-level uncertainty; then test the same
+   fixed prior on a genuinely compatible multispectral event benchmark. Stop
+   if DS does not beat both the no-DS fusion and matched cross-reconstruction.
+2. **Temporal event confirmation:** acquire Harmonized Sentinel-2 sequences
+   with documented event dates and stable control regions; freeze the per-date
+   spatial-axis construction; compare first/second/geodesic curves with raw
+   spectral change, indices, SSA minimum angle, MOSUM/BFAST/CCDC or DRMAT-style
+   controls; report event-time localization and nuisance false alarms. Stop if
+   geometry does not add timing or characterization beyond those controls.
+
+Sensei should choose which gate is the immediate thesis priority. Do not start
+another unconstrained method search before this decision.
+
+## 14. Pre-Seminar Multiscale Band-Image Pyramid
+
+Senpai's whole-image -> `2x2` -> `4x4` -> `8x8` proposal receives one
+source-linked, falsifiable test before the seminar. This is not a rerun of the
+failed fixed-grid pixel-spectrum pyramid.
+
+Research question:
+
+```text
+Does a hierarchy of global-to-local spatial band-image subspaces provide
+complementary changed-area evidence beyond global Band-Image DS and matched
+multiscale PCA controls?
+```
+
+Construction:
+
+1. At level `g`, partition each aligned date image into `g x g` corresponding
+   cells, initially `g in {1,2,4}`.
+2. In one cell with `N_c` valid pixels, flatten each of the `13` band images
+   and form `X_(t,g,c) in R^(N_c x 13)`.
+3. Fit a centered rank-`r` spatial basis `U_(t,g,c) in R^(N_c x r)` for each
+   date; compare corresponding pre/post bases with canonical DS.
+4. Project the paired band differences to obtain a pixel-resolved cell map.
+5. Lift cell maps to the full image, robustly normalize each scale using only
+   unlabeled scores, and fuse score maps. Do not add basis matrices from
+   different cells or scales as ordinary Euclidean vectors.
+
+Predeclared ablations:
+
+- ranks `3, 6, 9, 12` on development cities; freeze one rank for test cities;
+- single levels `1`, `2`, `4`, followed by equal-weight `1+2+4` fusion;
+- half-cell shifted grids to measure boundary/alignment sensitivity;
+- optional `8x8` only if `4x4` improves evidence without severe seams;
+- a separate Haar-wavelet experiment using `LL`, `LH`, `HL`, and `HH`
+  coefficient maps; do not describe fixed tiling as a wavelet transform;
+- a PixelHop/Green Learning implementation only after matching the successive
+  neighborhood-expansion and unsupervised subspace-transform equations in the
+  source papers.
+
+Required pressure controls use the same preprocessing and spatial support:
+
+- raw L2/CVA, PCA-diff, smoothed/multiscale PCA-diff, and IR-MAD;
+- global Band-Image DS;
+- the failed pixel-spectrum pyramid as a historical control;
+- local Band-Image projector distance and cross-reconstruction to test whether
+  any gain is DS-specific rather than merely caused by tiling.
+
+Evaluation:
+
+- OSCD official development/test split; labels may select rank/weights only on
+  development cities;
+- city-wise AP, AUROC, frozen-threshold F1/IoU, Otsu F1/IoU, runtime, and
+  qualitative maps;
+- paired city bootstrap/permutation intervals for AP differences;
+- seam score, shifted-grid map correlation, scale-map correlation, and
+  pseudo-change failure inspection;
+- per-level maps and a winning-scale/contribution visualization.
+
+Positive gate: the frozen pyramid must improve test AP over global Band-Image
+DS and either improve the best matched multiscale PCA control or add a stable
+gain when fused with it. A metric gain caused only by threshold tuning or one
+city is insufficient. If it fails, retain the result as evidence that local
+support alone does not rescue DS and stop the branch.
+
+### 14.1 Completed Result And Decision
+
+Completed 2026-06-23 on the official OSCD 14-city training and 10-city test
+split. Full report:
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.
+
+Decision by hypothesis:
+
+- **Literal Band-Image pyramid:** rejected as the primary detector. Best
+  training AP `0.2070`, below smoothed PCA `0.2340`. Shifted grids help only
+  slightly, and product-Grassmann weighting does not improve equal fusion.
+- **Wavelet Band-Image DS:** rejected as the primary detector. Best training
+  variant is rank-12 db2 SWT level-2 LL at AP `0.2067`; detail and equal
+  LL/detail fusion are much worse.
+- **Successive local subspace representation:** passes the internal gate.
+  Shared two-hop Saab features followed by canonical DS reach frozen test AP
+  `0.3420`, versus smoothed PCA `0.3141`, PCA-diff `0.3067`, matched feature
+  L2 `0.3067`, matched feature PCA `0.3051`, and matched cross-reconstruction
+  `0.3279`.
+- **Mechanism:** on held-out cities, DS beats matched L2 in 9/10 cities and
+  matched PCA in 10/10. The paired AP bootstrap interval against matched
+  cross-reconstruction is also positive, but Wilcoxon `p=0.084` with only ten
+  cities; claim complementary DS evidence, not definitive universal
+  superiority.
+- **Stability:** seeds 7/1234/2026 give test AP
+  `0.3438/0.3420/0.3405`.
+
+Frozen construction:
+
+```text
+two shared pre/post 3x3 Saab hops
+2x2 max pooling between hops
+95% AC energy, maximum 16 channels per hop
+rank-12 canonical DS on spatial response-map subspaces
+unlabeled 99.5%-quantile scaling and equal hop fusion
+```
+
+[status] The pair-adaptive and OSCD-only gaps were tested in Section 14.2.
+
+### 14.2 Train-Fitted And External Transfer Gate
+
+Completed 2026-06-23. Full report:
+`docs/experiment_reports/successive_saab_trainfit_external_gate_2026-06-23.md`.
+
+Design:
+
+- fit one successive Saab hierarchy from OSCD training cities, then apply the
+  same filters to the official OSCD test cities;
+- fit one hierarchy from xBD-S12 training events, then apply it to all official
+  held-out xBD-S12 test patches;
+- also test OSCD common-12-band filters transferred to xBD-S12, native versus
+  pairwise band z-score normalization;
+- compare DS with matched frozen-feature L2, PCA-diff, and cross-reconstruction.
+
+Result:
+
+- **OSCD train-fitted gate passes.** Frozen train-city filters reach AP
+  `0.3381`, versus pair-adaptive AP `0.3420`, smoothed PCA `0.3141`, PCA-diff
+  `0.3067`, frozen-feature L2 `0.3061`, and frozen-feature PCA `0.3051`.
+- **OSCD mechanism is stable.** Seeds 7/1234/2026 give AP
+  `0.3375/0.3381/0.3389`; DS beats frozen-feature L2/PCA with positive
+  bootstrap intervals and 9/10 city wins.
+- **xBD-S12 transfer does not pass as a successive-feature detector.** Best
+  successive xBD variant is xBD train100 + pair-band z-score at AP `0.0190`,
+  below Band-Image projector `0.0302`, IR-MAD `0.0265`, and Band-Image DS
+  `0.0212` for full-scene damaged-pixel retrieval.
+- **External interpretation changes.** Successive Saab-DS is currently an OSCD
+  internal spatial-support result. The xBD external positive remains the
+  simpler spatial Band-Image/projector candidate-localization geometry.
+
+[gap] The positive mechanism is dataset/task dependent.
+
+[why it matters] A thesis or paper should not claim one universal subspace
+detector. The stronger story is a decision boundary: successive local features
+help OSCD-style changed-area maps, while xBD disaster candidate localization
+prefers Band-Image projector geometry.
+
+[next check] For seminar, present both gates clearly. For further research,
+test whether a learned selector or dataset/task descriptor can choose between
+successive local DS and Band-Image/projector geometry without labels.
+
+## 15. Current Next-Task Agenda
+
+Updated 2026-06-28 after cross-worktree status management and review of the
+latest experiment reports.
+
+The project should not continue by adding more unrelated subspace variants.
+The completed evidence now says:
+
+- global pixel DS, patch DS, local-window DS, fixed-grid pyramid DS, wavelet
+  DS, RTW, broad HSI transfer, SpaceNet7 RGB transfer, and several temporal
+  detector variants are not current positive detector routes;
+- Successive Saab-DS is the strongest internal OSCD changed-area result;
+- xBD-S12 supports Band-Image/projector geometry as candidate-localization
+  evidence, not direct damage classification;
+- first/second DS and geodesic decomposition are implemented and useful for
+  characterization, but not yet a stronger real changed-area detector;
+- Claude's latest learned-rung result claims a DS-specific multi-prior U-Net
+  fusion gain, but it must be independently reproduced before it becomes a
+  thesis claim;
+- antigravity's component-wise DS/NDVI diagnostic is useful failure analysis,
+  but its current filtering logic uses labels and should not be presented as a
+  deployable unsupervised method.
+
+Ordered tasks:
+
+1. **Consolidate current evidence into one branch/report before new claims.**
+   - Pull the latest Claude and antigravity results into the main evidence
+     ledger or a new synthesis report.
+   - Mark branch-local results as `reported`, `verified`, or `needs rerun`.
+   - Do not mix them into the thesis story until code path, data split, seed
+     count, and baselines are checked.
+
+2. **Independently reproduce the learned-rung DS-specific fusion result.**
+   - Inspect Claude's `phase1/experiments/unet_ds_prior.py` and exact configs.
+   - Re-run or reproduce the 3-seed OSCD comparison:
+     `bands`, `bands+DS`, `bands+sPCA+IR-MAD`, `bands+DS+sPCA+IR-MAD`, and
+     `bands+cross+sPCA+IR-MAD`.
+   - Primary check: does DS improve multi-prior U-Net AP beyond the no-DS and
+     matched-cross controls?
+   - Go: consistent city/seed gain with no leakage and clear runtime/logs.
+   - No-go: no-DS or matched-cross catches up; then keep neural fusion as
+     exploratory only.
+
+3. **Use the seminar story as a scoped evidence story, not a final thesis
+   claim.**
+   - Lead with: spatial sample construction matters; Successive Saab-DS fixes
+     OSCD's local-feature weakness better than raw global pixel DS.
+   - Show xBD as the boundary: disaster candidate localization favors projector
+     geometry and IR-MAD/Band-Image controls, not universal Successive DS.
+   - Show first/second/geodesic DS as Sensei-aligned characterization objects.
+   - Avoid claiming SOTA, damage segmentation, semantic change, or universal
+     transfer.
+
+4. **Choose the next external confirmation dataset before more tuning.**
+   - Need a labeled multispectral change dataset compatible with frozen
+     Successive Saab-DS or Band-Image/projector geometry.
+   - Freeze the OSCD-fitted method before scoring the new labels.
+   - If no compatible dataset is feasible quickly, state that the current
+     contribution is an OSCD construction study plus xBD candidate-localization
+     boundary, not a publication-ready universal detector.
+
+5. **If continuing the xBD route, frame it as analyst-triage/candidate
+   localization.**
+   - Next evidence should be another independent event set or a stronger
+     object-level candidate-retrieval protocol.
+   - Required comparisons: IR-MAD, raw L2, PCA-diff, Band-Image DS,
+     projector distance, and fixed review-budget recall/lift.
+   - Do not optimize on the five already inspected xBD-S12 test events.
+
+6. **Convert component-wise DS into diagnostics, not a method claim.**
+   - Use the antigravity script to explain why global DS mixes target change
+     and vegetation/pseudo-change.
+   - If promoted beyond diagnosis, derive component-selection rules on training
+     cities only and test them frozen on held-out cities.
+   - Keep NDVI/label-correlation filtering out of unsupervised method claims.
+
+7. **Keep the temporal DS line as characterization unless a labeled sequence
+   arrives.**
+   - Present first-DS magnitude, second-DS magnitude, and geodesic
+     along/orthogonal decomposition visually.
+   - For a future detector claim, acquire a manageable labeled multi-date
+     sequence and compare against MOSUM/BFAST/CCDC/SSA, raw residuals, and
+     index curvature.
+
+8. **Explicitly close or pause weak routes.**
+   - Closed/deprioritized for now: RTW as implemented, fixed-grid pyramid,
+     wavelet DS, generic HSI transfer, SpaceNet7 RGB transfer, global pixel DS
+     as a detector, and satellite KDS/KGDS without a specific nonlinear
+     question.
+   - Reopen only if a materially new mechanism, dataset, or advisor request
+     changes the problem.

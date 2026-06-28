@@ -13,11 +13,19 @@ normalization:
   eps: 1.0e-6
 
 subspace:
-  rank_r: 6
+  # Primary temporal construction: X_t is (common spatial locations x bands),
+  # and the leading left singular vectors define one date subspace in pixel space.
+  construction: band_image
+  preprocessing: centered
+  # MultiSenGE contains 10 Sentinel-2 bands. Retaining rank 10 implements the
+  # full band-image span; lower ranks remain explicit ablations.
+  rank_r: 10
+  min_common_pixels: 1024
   variance_threshold: null
   use_randomized_pca: true
   pixel_sample: 0
 
-geodesic:
-  decompose: true
-
+temporal:
+  # The second-order paper assumes equal time intervals. A triple is treated as
+  # approximately balanced only when max(left_gap,right_gap)/min(...) <= 1.5.
+  balanced_gap_ratio: 1.5

@@ -10,6 +10,7 @@
 - [6. First Seminar Student Feedback](#6-first-seminar-student-feedback)
 - [7. First Seminar QA Report Follow-Up](#7-first-seminar-qa-report-follow-up)
 - [8. Paused Or Unsafe Claims](#8-paused-or-unsafe-claims)
+- [9. Sensei Task Completion Status](#9-sensei-task-completion-status)
 
 ## 1. Current Sensei Feedback
 
@@ -59,10 +60,25 @@ Sensei-priority task order as of 2026-06-14:
 3. Generate a set of time-sequential satellite subspaces from Harmonized Sentinel-2 or another valid multi-date dataset.
    - Reason: Sensei repeatedly asked whether a time-sequential satellite dataset had been obtained, and asked for the Google dataset frame count and time step.
    - Minimum facts to report: area, dates, number of valid frames, nominal revisit interval, cloud/no-data filtering, bands used, and whether the images are spatially aligned.
+   - Status 2026-06-19: completed first trials on five 23-date MultiSenGE
+     patches and the published 20-frame registered IPOL Las Vegas RGBI
+     sequence. Harmonized Sentinel-2 remains the requested independent dataset.
+   - Status 2026-06-20: expanded external pressure to four IPOL sequences and
+     tested backward/forward date-window subspaces. A labeled or independently
+     annotated sequence is still missing; IPOL detector maps are not truth.
 
 4. Calculate first DS magnitude, second DS magnitude, and geodesic-decomposition/projection quantities on the time-sequential subspaces.
    - Reason: Sensei specifically asked whether the changes in magnitudes of the first and second DSs can be calculated soon.
    - Treat this as a lab-aligned exploratory result even if it does not beat modern change-detection baselines.
+   - Status 2026-06-19: implemented and formula-tested. First, second, along,
+     orthogonal, spatial-contribution, and irregular-cadence diagnostics now
+     run through the project CLI. The current whole-scene maps are diffuse and
+     registration-sensitive, so local/multiscale and baseline tests are next.
+   - Status 2026-06-20: the exact IPOL detector was reproduced on four
+     sequences. Second/time-aware quantities show a small sequence-level
+     agreement lead over raw interpolation residual, but lower pixel AP.
+     Temporal-context DS localization failed; projection novelty and
+     registration robustness are the remaining hypotheses.
 
 5. Keep the OSCD spatial-information experiment as the verification track.
    - Reason: Sensei warned that the current global pixel subspace can break spatial information.
@@ -74,7 +90,8 @@ Sensei-priority task order as of 2026-06-14:
 
 Actions:
 
-- Add a Harmonized Sentinel-2 sequence feasibility audit before any serious GDS/KGDS claim.
+- Add a Harmonized Sentinel-2 or selectively acquired labeled DynamicEarthNet
+  feasibility audit before any serious GDS/KGDS or temporal performance claim.
 - Prepare concrete questions for Jang/Suto/Pedro/Santos about sample definition, spatial preservation, rank choice, and reference-code behavior.
 
 2026-06-17 source-batch update:
@@ -83,11 +100,23 @@ Actions:
 - Treat Jang's channel-wise flattening suggestion as a concrete experiment candidate:
   - current OSCD DS: one pixel is one 13-D spectral vector;
   - Jang-style candidate: one band/channel image is flattened into a spatial vector, then subspaces compare spatial band patterns.
+  - Interpret this as advice to test, not ground truth. The key matrix flip is `13 x N_pixels` versus `N_pixels x 13`.
+  - The advantage is spatial layout preservation inside each band vector; the risk is that Sentinel-2 supplies only 13 band-image samples.
 - Treat Aono/geodesic/first-second DS work as the Sensei-aligned temporal track:
   - first build a real multi-date Harmonized Sentinel-2 sequence;
   - then define one subspace per date;
   - then calculate first DS, second DS, and geodesic projection/decomposition quantities.
 - Do not let semantic change, greenhouse mapping, hyperspectral anomaly detection, or foundation-model ideas replace the Sensei-first tasks until their datasets and evaluation protocols are real.
+- The latest note batch strengthens the Sensei-first temporal interpretation:
+  the temporal axis can supply the real set of related observations that the
+  original image-set methods require. Build a subspace from multiple dates of
+  the same aligned region/season, rather than assuming that unordered pixels
+  from one date are equivalent to multiple views of one object.
+- For any event study, report whether first/second magnitudes change at the
+  documented event and remain stable during no-event periods. Separate abrupt
+  disturbance, gradual drift, recovery, seasonality, and acquisition artifacts.
+- IrrMapper transitions are weak labels derived from annual random-forest maps.
+  Do not describe them to Sensei as independently annotated switch dates.
 
 ## 2. Subspace Construction Feedback
 
@@ -323,3 +352,23 @@ Do not currently claim:
 - OSCD binary change proves disaster damage performance.
 - Old residual-stack priors prove paper-faithful DS works.
 - Current global pixel DS preserves spatial structure during fitting.
+
+## 9. Sensei Task Completion Status
+
+Status after the 2026-06-22 cross-branch review:
+
+| Sensei request | Status | Evidence / remaining gap |
+|---|---|---|
+| Explain how a multi-channel image becomes a subspace | Completed for pixel, patch, local-window, band-image, and temporal variants | Construction cards are in `notes/methods.md`; Band-Image DS is the best current satellite construction. |
+| Address loss of spatial information | Experimentally addressed, not solved | OSCD global/patch/window/band-image/pyramid and matched Gram/projector/cross-reconstruction comparisons completed; external confirmation remains. |
+| Run nonlinear DS on the Venus data | Completed as reference verification | KDS/KGDS equations and dimensions reproduced; no satellite KDS claim. |
+| Generate sequential subspaces | Completed on MultiSenGE, SpaceNet 7, and BreizhCrops-derived temporal tasks | Specific Harmonized Sentinel-2 evaluation remains optional. |
+| Calculate first DS, second DS, and geodesic components | Completed and formula-tested | Controlled behavior is interpretable; SpaceNet 7 detection result is negative. |
+| Conduct various tests on first/second DS magnitudes | Completed across controlled nuisances and real temporal data | Report both successful mechanisms and failure under translation/radiometric controls. |
+| Investigate SSA/SFA/RTW | Completed for project adaptations | RTW and natural-transfer tests are negative; SFA/SSA synthetic behavior does not establish novelty. |
+| Investigate CCA | Partly completed through repaired IR-MAD | Standalone CCA explanation exists; S3CCA/TRCCA and KCCA remain untested faithfully. |
+| Investigate KPCA/KDS | Venus construction completed; satellite method incomplete | RFF proxy is not KDS; a nonlinear satellite question must be defined before implementation. |
+
+The next Sensei-facing result should show the subspace constructions, the
+first/second/geodesic objects, and the OSCD comparison without claiming that all
+requested methods improve detection.

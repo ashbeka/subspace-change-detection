@@ -1,0 +1,274 @@
+{
+  "unbuffered": "phase1\\outputs\\xbd_s12_frozen_test_unbuffered_complete_20260622_111613",
+  "boundary_stress": "phase1\\outputs\\xbd_s12_frozen_test_boundary3_stress_20260622_114715",
+  "global": {
+    "unbuffered": {
+      "full_scene_damage": {
+        "band_image_projector_distance": {
+          "average_precision": 0.036749831482404655,
+          "auroc": 0.6936271483585372,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.0877076146901833
+        },
+        "ir_mad": {
+          "average_precision": 0.03193846178824596,
+          "auroc": 0.7111921075995612,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.07245258018101107
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.029851035100036435,
+          "auroc": 0.6778858298895327,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.07125813258064008
+        },
+        "band_image_ds": {
+          "average_precision": 0.023774933798551966,
+          "auroc": 0.6172573962642265,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.059982298332245575
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.0195530870512597,
+          "auroc": 0.6050937271066423,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.04527180330914061
+        },
+        "pca_diff": {
+          "average_precision": 0.021233286630832206,
+          "auroc": 0.611340338247559,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.05150562868651992
+        },
+        "raw_l2": {
+          "average_precision": 0.009372231605195005,
+          "auroc": 0.39400737292089233,
+          "positive_rate": 0.011905839592113348,
+          "best_f1": 0.023531516720789836
+        }
+      },
+      "building_conditional_damage": {
+        "band_image_projector_distance": {
+          "average_precision": 0.33169240639558845,
+          "auroc": 0.49995944736255843,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "ir_mad": {
+          "average_precision": 0.32716998114169693,
+          "auroc": 0.4912121787809665,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.3424410463042726,
+          "auroc": 0.5068269874092722,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "band_image_ds": {
+          "average_precision": 0.35319012399479965,
+          "auroc": 0.5233825143604067,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.34882939169859906,
+          "auroc": 0.5172147106227698,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "pca_diff": {
+          "average_precision": 0.3367373456834528,
+          "auroc": 0.4901307043602107,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49704381336346815
+        },
+        "raw_l2": {
+          "average_precision": 0.39875611692786683,
+          "auroc": 0.5776333618496712,
+          "positive_rate": 0.33071078038262935,
+          "best_f1": 0.49715434593976854
+        }
+      },
+      "building_localization_diagnostic": {
+        "band_image_projector_distance": {
+          "average_precision": 0.08038813875355663,
+          "auroc": 0.6544014452761915,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.1381950140253236
+        },
+        "ir_mad": {
+          "average_precision": 0.07306928996388326,
+          "auroc": 0.6510098918135528,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.13307026120762827
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.056493804200634344,
+          "auroc": 0.6004213840571074,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.1026618443846754
+        },
+        "band_image_ds": {
+          "average_precision": 0.046159510261274836,
+          "auroc": 0.5453320181160148,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.07931852439904463
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.04256671762870192,
+          "auroc": 0.5391722170099374,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.07477147908539074
+        },
+        "pca_diff": {
+          "average_precision": 0.04284895829972297,
+          "auroc": 0.5384312056084514,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.07704427105833069
+        },
+        "raw_l2": {
+          "average_precision": 0.026552267821113962,
+          "auroc": 0.3688375567714429,
+          "positive_rate": 0.036000760478199105,
+          "best_f1": 0.06949948658644191
+        }
+      }
+    },
+    "boundary3": {
+      "full_scene_damage": {
+        "band_image_projector_distance": {
+          "average_precision": 0.0010008657190702485,
+          "auroc": 0.7453748271340692,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.009770266701874834
+        },
+        "ir_mad": {
+          "average_precision": 0.0017999515948537979,
+          "auroc": 0.7596035510326178,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.01580819391384534
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.002180897193947591,
+          "auroc": 0.7531902151367758,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.01550998948475289
+        },
+        "band_image_ds": {
+          "average_precision": 0.0013573494465608604,
+          "auroc": 0.7336943691288301,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.01028481012658228
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.0006662165699095015,
+          "auroc": 0.7201639327579132,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.00456989247311828
+        },
+        "pca_diff": {
+          "average_precision": 0.001061047785799259,
+          "auroc": 0.6993620262010117,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.011578947368421052
+        },
+        "raw_l2": {
+          "average_precision": 0.00048723478141985885,
+          "auroc": 0.5324171948286729,
+          "positive_rate": 0.00013860653812239736,
+          "best_f1": 0.005228910062746921
+        }
+      },
+      "building_conditional_damage": {
+        "band_image_projector_distance": {
+          "average_precision": 0.18850807481088944,
+          "auroc": 0.48752078487387823,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.3073663463907367
+        },
+        "ir_mad": {
+          "average_precision": 0.19874484502809597,
+          "auroc": 0.5191014539051066,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.3073663463907367
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.2445853414544068,
+          "auroc": 0.5905181243142272,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.3270676691729323
+        },
+        "band_image_ds": {
+          "average_precision": 0.24144873402758202,
+          "auroc": 0.5865243767856437,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.32576709796672826
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.22069730560137205,
+          "auroc": 0.5541214018872413,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.309145264302215
+        },
+        "pca_diff": {
+          "average_precision": 0.245594419541842,
+          "auroc": 0.5866497993569578,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.3245576906797596
+        },
+        "raw_l2": {
+          "average_precision": 0.2583471574320142,
+          "auroc": 0.6063835435915738,
+          "positive_rate": 0.18159059152305543,
+          "best_f1": 0.33232529628116053
+        }
+      },
+      "building_localization_diagnostic": {
+        "band_image_projector_distance": {
+          "average_precision": 0.005441053309820547,
+          "auroc": 0.7232222158547436,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.028412424657290682
+        },
+        "ir_mad": {
+          "average_precision": 0.006442068695405727,
+          "auroc": 0.7085186360371946,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.03409668177107675
+        },
+        "fusion_smoothed_pca_band_irmad": {
+          "average_precision": 0.002092823511745263,
+          "auroc": 0.6633793275027319,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.011333484951861119
+        },
+        "band_image_ds": {
+          "average_precision": 0.0016094592701427221,
+          "auroc": 0.5926416109884598,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.010639303953092491
+        },
+        "band_image_cross_reconstruction": {
+          "average_precision": 0.0015537408236647714,
+          "auroc": 0.5963587509513779,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.0078473798893748
+        },
+        "pca_diff": {
+          "average_precision": 0.0011700019174261968,
+          "auroc": 0.5678924635448811,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.00787524366471735
+        },
+        "raw_l2": {
+          "average_precision": 0.0007263689239093488,
+          "auroc": 0.412321079041475,
+          "positive_rate": 0.000763291407114555,
+          "best_f1": 0.004471147128685203
+        }
+      }
+    }
+  }
+}

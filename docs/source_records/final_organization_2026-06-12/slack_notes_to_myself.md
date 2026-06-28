@@ -412,3 +412,48 @@ this is highly relevant https://github.com/wenhwu/awesome-remote-sensing-change-
 [5:09 PM]we could target noise "Noise-Resistant" (edited) 
 [5:11 PM]"Experimental results on LEVIR-CD, SYSU-CD and WHU-CD datasets demonstrate superior performance, with [METHOD] outperforming state-of-the-art methods both visually and quantitatively."
 [5:13 PM]for example: "Unsupervised change detection (UCD) from heterogeneous bitemporal optical–SAR imagery is challenging due to modality discrepancy, speckle/illumination variations, and the absence of change annotations."
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence
+Abood/アブド  [8:28 PM]
+NOT YET INGESTED: "Traditional unsupervised CD often struggles with pseudo-changes (like illumination or seasonal shifts). [METHOD] tackles this by leveraging spatial context:" (edited) 
+Abood/アブド  [8:09 PM]
+claude said: "A DS needs a real set of related observations. The one place a real set exists in satellite data is the temporal axis: a window of dates is a set (this is Singular Spectrum Analysis)."
+why don't we try to make the set of related observations as the 200+ bands of a hyper-spectral imageAbood/アブド  [8:17 PM]
+"a noise-robust, interpretable temporal-subspace detector for phenological-regime change"
+Abood/アブド  [11:32 PM]
+The strengthened Option A — justified by your own notes + the literature:
+
+Phenomenon (your note, apple_notes.md:48):rice-field / crop seasonal cycles — and the cleanestlabeled changeversion:irrigation start/stop. Turning irrigation onaddsa vigorous growing-season cycle; turning it offremovesit — a genuine multi-mode dynamics change (DS's verified niche), not a sharp shift.
+Dataset: IrrMapper(GEE-native, validated annual irrigation labels, western US, clear skies) — pullsalongsideS2 in my existing pipeline, near-zero download, and gives areal labeled switch yearas ground truth. (PASTIS crop-phenology is the heavier companion benchmark for later.)
+Method strengthening:use thealready-implemented second-order DS + geodesic + d_pre(the verified niche, advisor's flagship paper) withper-band attribution as a first-class output— both top picks, code already MagTool-verified.
+Framing hook + baseline:position DS as asubspace generalization of harmonic-cycle break detection(BFAST/CCDC use harmonic models; DS aggregates all canonical angles over the multi-harmonic subspace). BFAST + min-angle + NDVI-amplitude + trivial null are the baselines.
+Abood/アブド  [1:10 AM]
+"OSCD’s target changes are sparse deviations from a pervasive cross-date relationship. The current DS constructions model each date independently, while anomalous-change methods model the relationship itself. A defensible DS extension is therefore to estimate likely unchanged pixels, build a nuisance Difference Subspace from them, and score change energy that lies outside that nuisance geometry."
+H-B = change-trajectory characterization using the second-order Difference Subspace.
+Abood/アブド  [1:05 AM]
+
+Hyperspectral unmixing seems like an appropriate task for GDS/Geodesic
+Do we hunt Spatial context?
+Ideas:
+multitemporal change detection;
+change-point or anomaly detection;
+temporal dynamics analysis;
+detecting abrupt changes in an otherwise gradual process.
+time-series decomposition;
+denoising;
+trend and periodicity extraction;
+forecasting;
+anomaly or change-point detection.
+
+“Subspace method for 3D/PointCloud reconstruction of multiple satellite imagery (angels) from different resources for a single patch (DGM)
+“Does the scene's subspace trajectory respond, at the right time, to a physically documented event — and stay quiet when nothing happens — and can we tell an abrupt disturbance from gradual drift/recovery?”
+Kanai 2023: clean-prefix + threshold-free AUC vs SSA-min-angle baselines + Grassmann-MDS separability; Fukui 2024: internal self-consistency + qualitative event alignment
+If: “The "set of samples" is fake. DS, MSM, CMSM, KMSM, KGDS — the entire CVLab family, and every piece of reference code on your disk (Venus sculptures, hand-pose, motion3D, faces) — are image-set methods. A subspace is meaningful when you have a set of related observations: 300 views of a sculpture, many frames of a face, a motion sequence. Bi-temporal change detection gives you one image per date. To manufacture a subspace, the project treats the ~1.26M pixels of a single image as the "set." That subspace describes the global spectral distribution of the whole scene — it has no notion of where anything is. This is the category error, and it is the literal content of Sensei's warning: "your algorithm can make a subspace, but it can break the spatial information.”” Then how about using hyper-spectral satellite images that have hundreds of bands and treating those bands as the “300 faces of Venus”?
+“A hyperspectral spectrum is a rich, near-continuous signal of 200–300+ bands, yet classical change detectors crush it to a single scalar — the spectral angle (its direction) or the change-vector magnitude (its amplitude). Both discard the spectrum's higher-order geometric structure. We ask: does that discarded structure carry change information, and can a Difference-Subspace representation — which encodes the full, illumination-invariant geometry of the spectral signal — detect and characterize change more faithfully than these scalar measures? And how does that advantage depend on spectral dimensionality?”
+How It's Used (pixel spectrum)
+
+Earth Observation: Satellites and drones use this technology to map forest health, detect crop diseases, or identify water pollution.
+Mineralogy & Geology: Used to pinpoint the exact chemical composition of rock formations or discover trace minerals.
+Medical Imaging: Helps distinguish between healthy and diseased tissues (like cancerous cells) based on their distinct spectral signatures
+
+
+"Lack of Temporal Subspace Methods for Multi-Date Satellite Image Analysis in Rapid Disaster Assessment... track damage progression... predict recovery trajectories.

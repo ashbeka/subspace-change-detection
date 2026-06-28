@@ -258,7 +258,7 @@ Before more long Phase 2 U-Net sweeps, the key methodological task is a spatial 
 Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
 ```
 
-The immediate experiment track is:
+The original immediate experiment track was:
 
 ```text
 global pixel DS -> patch-vector DS -> local-window DS -> multiscale spatial subspace pyramid -> fair classical baselines -> optional neural/prior follow-up
@@ -267,3 +267,27 @@ global pixel DS -> patch-vector DS -> local-window DS -> multiscale spatial subs
 This directly answers Sensei's concern that the current global pixel-based subspace may break spatial information.
 
 The comparison should report metrics and maps against OSCD labels and simple baselines such as raw spectral L2 and PCA-diff.
+
+As of 2026-06-22, the OSCD matched-control study and frozen xBD-S12 external
+transfer are complete. Spatial band-image projector distance behaves mainly as
+candidate/building-localization evidence. Canonical DS beats matched
+cross-reconstruction on five unseen test events but not consistently on 11
+training events, so the DS-specific effect is event-dependent. Raw L2 is
+stronger for damage-vs-intact discrimination.
+
+The HSI and SpaceNet7 transfer gates are complete. HSI behavior is
+scene-dependent, while tiled RGB building-appearance transfer is negative.
+The current experiment track is now:
+
+```text
+compatible multispectral event confirmation OR materially new mechanism
+-> fresh held-out gate
+-> neural-prior test only after a positive gate
+```
+
+Rank/centering, naive geometry/radiometry fusion, IR-MAD pressure, fixed review
+budgets, object retrieval, registration shifts, HSI transfer, RGB SpaceNet7
+transfer, and available cloud/date checks are complete. Do not tune new
+combinations on the five already inspected xBD-S12 test events. Develop any
+new mechanism on training disasters and seek another independent gate before
+making a confirmatory detector claim.
