@@ -1,0 +1,42 @@
+{
+  "a_hat_ndvi": {
+    "peak": 83,
+    "localized": false,
+    "margin": 0.26627536300256316
+  },
+  "meanang_ndvi": {
+    "peak": 82,
+    "localized": false,
+    "margin": 0.5364299445848377
+  },
+  "a_hat_mssa": {
+    "peak": 82,
+    "localized": false,
+    "margin": 0.42183177159280755
+  },
+  "meanang_mssa": {
+    "peak": 55,
+    "localized": false,
+    "margin": 0.8581503054446861
+  },
+  "raw_TDS(failed)": {
+    "peak": 35,
+    "localized": true,
+    "margin": 4.204698467061729
+  },
+  "CVA_allband": {
+    "peak": 55,
+    "localized": false,
+    "margin": 1.0104392176344852
+  },
+  "NDVI_absdiff": {
+    "peak": 6,
+    "localized": false,
+    "margin": 1.8153628702325877
+  },
+  "NBR_absdiff": {
+    "peak": 4,
+    "localized": false,
+    "margin": 2.7056615962443917
+  }
+}

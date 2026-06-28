@@ -1,0 +1,26 @@
+{
+  "burn": {
+    "n_dates": 251,
+    "dpre_sustained_days_main": 0,
+    "dpre_postfire_median_main": 6.015443520358895,
+    "dpre_prefire_median_main": 5.9634228406204635,
+    "minangle_postfire_median_main": 0.05965318116387658,
+    "minangle_prefire_median_main": 0.03488257487914348,
+    "dpre_recovery_slope_main": -0.0014164534582024268,
+    "dpre_recovery_slope_strict": -0.0020610883341274553,
+    "nbr_recovery_slope": 0.0006223232331438238,
+    "rawmean_recovery_slope": 0.0005347979828139046
+  },
+  "control": {
+    "n_dates": 227,
+    "dpre_sustained_days_main": 303,
+    "dpre_postfire_median_main": 6.926601821570824,
+    "dpre_prefire_median_main": 5.361926538918482,
+    "minangle_postfire_median_main": 0.07410912088811705,
+    "minangle_prefire_median_main": 0.03636570935864036,
+    "dpre_recovery_slope_main": -0.004150295894224042,
+    "dpre_recovery_slope_strict": -0.004273472072291267,
+    "nbr_recovery_slope": -0.00033299880140800017,
+    "rawmean_recovery_slope": 0.0007053170896265601
+  }
+}

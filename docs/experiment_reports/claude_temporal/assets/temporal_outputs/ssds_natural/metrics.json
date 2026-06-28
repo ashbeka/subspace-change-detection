@@ -1,0 +1,46 @@
+{
+  "gerd_reservoir": {
+    "a_hat(D_N)": {
+      "localized": false,
+      "margin": 1.2315085659362541,
+      "days_off": 760
+    },
+    "harmonic_cp": {
+      "localized": false,
+      "margin": 0.9678834630980878,
+      "days_off": 1450
+    },
+    "crude_TDS": {
+      "localized": false,
+      "margin": 2.9184636987343935,
+      "days_off": 260
+    },
+    "NDVI_meanshift": {
+      "localized": false,
+      "margin": 2.562026424655163,
+      "days_off": 1440
+    }
+  },
+  "creek_fire_ca": {
+    "a_hat(D_N)": {
+      "localized": false,
+      "margin": 0.49592744161424324,
+      "days_off": 210
+    },
+    "harmonic_cp": {
+      "localized": false,
+      "margin": 1.40705754412018,
+      "days_off": 140
+    },
+    "crude_TDS": {
+      "localized": true,
+      "margin": 9.960471638278968,
+      "days_off": 20
+    },
+    "NDVI_meanshift": {
+      "localized": true,
+      "margin": 2.5652759250768935,
+      "days_off": 20
+    }
+  }
+}

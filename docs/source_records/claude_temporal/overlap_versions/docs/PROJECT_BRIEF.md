@@ -1,0 +1,154 @@
+# Project Brief
+
+## Table Of Contents
+
+- [1. Current Scope](#1-current-scope)
+- [2. Problem Statement](#2-problem-statement)
+- [3. Implemented Pipeline](#3-implemented-pipeline)
+- [4. Current Evidence](#4-current-evidence)
+- [5. Immediate Next Decision](#5-immediate-next-decision)
+- [6. Forbidden Overclaims](#6-forbidden-overclaims)
+- [7. Active Reading Map](#7-active-reading-map)
+- [8. Historical Archive](#8-historical-archive)
+
+## 1. Current Scope
+
+The broader research direction is **interpretable subspace-based change detection for multispectral satellite imagery**.
+
+The implemented project is **Sentinel-2 OSCD binary change detection with unsupervised prior maps**.
+
+The active pipeline is:
+
+```text
+pre/post Sentinel-2 images -> Phase 1 prior maps -> Phase 2 supervised segmentation
+```
+
+`Phase 1` and `Phase 2` are current workflow labels and folder names. They should be read as "geometric/classical prior generation" and "neural segmentation/downstream learning," not as a fixed research structure.
+
+OSCD is the current concrete benchmark and evidence source, not a permanent boundary on the thesis. xBD, xBD-S12, MultiSenGE semantic change, Harmonized Sentinel-2 L2A, and abandoned-greenhouse mapping are future or candidate directions unless their own data pipeline, labels, and evaluation are implemented.
+
+## 2. Problem Statement
+
+Current research question:
+
+```text
+Can DS-based representations help detect changed areas in pre/post multispectral satellite images, and what subspace construction preserves the spatial information needed for that task?
+```
+
+Working problem statement as of 2026-06-17:
+
+```text
+Can spatially aware Difference Subspace construction preserve the spatial structure of multispectral Sentinel-2 images well enough to produce interpretable changed-area evidence, and where does it help or fail compared with raw spectral difference, PCA-diff, Celik/IR-MAD, and neural change-detection baselines?
+```
+
+The key methodological risk is spatial information. The current global pixel DS can build a subspace, but it fits PCA from unordered 13-band pixel vectors. Pixel position is only restored after scoring.
+
+Current research posture:
+
+```text
+geometric/subspace change evidence first -> supervised/deep-learning integration second
+```
+
+The project is not trying to prove that DS beats deep learning outright. It is testing whether spatially aware subspace geometry can produce interpretable change priors that are useful by themselves and possibly useful as inputs, diagnostics, or label-efficient aids for neural change-detection models.
+
+## 3. Implemented Pipeline
+
+Phase 1:
+
+- loads OSCD Sentinel-2 pre/post image pairs;
+- reads the actual 13-band rectified `.tif` files, not RGB previews;
+- computes prior maps such as DS, DS cross-residual, pixel/CVA difference, PCA-diff, Celik PCA-kmeans, IR-MAD, and geodesic variants;
+- saves maps under ignored `phase1/outputs/`.
+
+Phase 2:
+
+- loads raw pre/post Sentinel-2 stacks as 26 channels;
+- optionally appends Phase 1 prior maps as extra channels;
+- trains binary segmentation models such as U-Net and Siamese U-Net;
+- evaluates stitched city-level OSCD masks under ignored `phase2/outputs/`.
+
+## 4. Current Evidence
+
+Trusted local evidence:
+
+- OSCD data loads locally.
+- Raw Phase 2 input gives 26 channels.
+- Raw+DS gives 27 channels.
+- Raw+DS+PCA gives 28 channels.
+- U-Net forward pass works.
+- CUDA is available in the local `.venv`.
+- The Venus KDS/KGDS demo loads Sensei's dataset from `data/venus_tpami2015/`.
+
+Important result:
+
+- The 2026-05-03 controlled 3-seed sweep did **not** reproduce the old raw+DS-over-raw claim.
+- `E1_raw_ds` underperformed `E0_raw_unet`.
+- `E3_raw_ds_pca` slightly improved IoU/F1 but not AUROC/PR-AUC.
+- Siamese raw-only remains an important baseline.
+
+Subspace correction:
+
+- The old residual-stack DS behaved almost like raw spectral L2 on Beirut.
+- It is now treated as legacy.
+- Canonical/eig DS are the cleaner linear DS paths.
+
+Spatial-subspace core5 result, 2026-06-14:
+
+- Patch-vector DS outperformed current global pixel DS on mean AP.
+- `window128s64mean` was weak as configured.
+- PCA-diff and raw L2 still outperformed the DS-family maps overall.
+- Best DS-family mean AP was `0.1966` (`rank8_core / patch5`).
+- Best PCA-diff mean AP was `0.3953`.
+- This supports the claim that spatial sample construction changes DS behavior, not the claim that DS improves OSCD change detection.
+
+Band-Image DS all-city result, 2026-06-18:
+
+- Tested all 24 local OSCD cities with ranks 6 and 8.
+- `band_image_ds` treats each Sentinel-2 band image as one flattened spatial vector: `X_pre_flat, X_post_flat in R^(N_valid_pixels x 13)`.
+- `flatbands` is retained only as a legacy alias.
+- It was the best DS-family method in 44/48 city/rank runs.
+- Mean rank-8 `band_image_ds`: AUROC `0.8412`, AP `0.2340`, best F1 `0.2928`, Otsu F1 `0.1129`.
+- Mean rank-8 `band_image_norm`: AUROC `0.8412`, AP `0.2340`, best F1 `0.2928`, Otsu F1 `0.2007`.
+- Mean rank-8 `pca_diff`: AUROC `0.8392`, AP `0.2541`, best F1 `0.3076`, Otsu F1 `0.2160`.
+- This supports the claim that Band-Image DS is worth studying and that score scaling affects thresholdability; it does **not** support the claim that it beats PCA-diff overall.
+
+## 5. Immediate Next Decision
+
+Before more long U-Net sweeps, inspect why Band-Image DS ranks changed pixels reasonably but still loses to PCA-diff on AP and slightly loses on Otsu F1:
+
+```text
+failure-mode maps -> score/threshold ablations -> Celik and IR-MAD pressure baselines
+```
+
+This directly answers Sensei's concern about breaking spatial information.
+
+Treat this as a hypothesis test, not a proven claim. Spatial-spectral subspace ideas already exist in remote sensing, so the possible thesis contribution is a careful DS/GDS-style spatial-support adaptation and evaluation for Sentinel-2 change maps, not a blanket claim that spatial satellite subspaces are new.
+
+The next ablation should report AUROC, PR-AUC, best F1/IoU, Otsu F1/IoU, raw-L2 correlation, valid-mask exclusion rate, runtime, and visual maps.
+
+## 6. Forbidden Overclaims
+
+Do not currently claim:
+
+- completed disaster damage segmentation;
+- building damage-level prediction;
+- xBD/xBD-S12 end-to-end training or evaluation;
+- DS was invented in this project;
+- DS priors reliably improve OSCD segmentation;
+- OSCD binary change results prove disaster damage performance;
+- current global pixel DS preserves spatial structure during fitting.
+
+## 7. Active Reading Map
+
+- `notes/feedback.md`: advisor/senpai feedback and what it implies.
+- `notes/methods.md`: DS, GDS, KDS, KGDS, OSCD, and Phase 2 method understanding.
+- `notes/literature.md`: papers, datasets, and code references.
+- `notes/experiments.md`: experiment evidence and next tests.
+- `notes/research_paper_plan.md`: full paper-facing argument and thesis skeleton.
+- `docs/RESEARCH_RESET_AUDIT.md`: critical reset audit and ranked problem/framing plan.
+- `docs/RUNBOOK.md`: exact commands.
+- `docs/experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`: accepted sweep result report.
+
+## 8. Historical Archive
+
+The useful knowledge from the old `docs/archive/` folder has been consolidated into the active `notes/` files and project docs. The archive folder was removed after final review; tracked historical files remain available through Git/GitHub history.

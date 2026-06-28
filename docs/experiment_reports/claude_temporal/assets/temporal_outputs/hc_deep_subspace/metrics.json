@@ -1,0 +1,15 @@
+{
+  "per_pixel": {
+    "raw_CVA": 0.9802043333333333,
+    "raw_SAM": 0.8444996666666666,
+    "latent_CVA": 0.9799044444444445,
+    "latent_SAM": 0.573272
+  },
+  "patch": {
+    "raw_patchmean_SAM": 0.8145853333333333,
+    "latent_patchmean_SAM": 0.5830302222222223,
+    "latent_corr": 0.8907413333333333,
+    "latent_SUBSPACE": 0.6723648888888889,
+    "raw_SUBSPACE": 0.5036262222222222
+  }
+}

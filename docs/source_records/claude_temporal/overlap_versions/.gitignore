@@ -1,0 +1,76 @@
+########################
+# Python / env artifacts
+########################
+
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtualenvs (single root venv; keep others out just in case)
+.venv/
+env/
+venv/
+
+# Bytecode caches
+__pycache__/
+**/__pycache__/
+
+##################
+# IDE / notebooks
+##################
+
+.idea/
+.vscode/
+.ipynb_checkpoints/
+
+########################
+# Data + heavy artifacts
+########################
+
+# Root data
+data/
+
+# Phase‑1 raw data and outputs
+phase1/outputs/
+phase1/*.tif
+phase1/*.tiff
+phase1/**/*.tif
+phase1/**/*.tiff
+
+# Phase‑2 raw data (future) and outputs
+phase2/outputs/
+
+# research notes
+research-notes/
+
+# Reference code and external papers/presentations
+references/reference_code/
+references/reference_papers/*.pdf
+!references/reference_papers/MVA_2025_human_motion_analysis.pdf
+
+# Model checkpoints
+*.ckpt
+*.pt
+*.pth
+
+########
+# Logs
+########
+
+*.log
+
+# temporal experiment outputs (generated)
+temporal/outputs/
+
+# temporal-DS: cached GEE fetches + secrets (never commit)
+temporal/data/
+temporal/.secrets/
+temporal/outputs/
+
+# scratch PDFs
+*.tmp_*.pdf
+.tmp_*.pdf
+
+# hyperspectral benchmark data (large, local)
+data_hsi/

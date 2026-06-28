@@ -1,0 +1,36 @@
+{
+  "detect": {
+    "mean_shift": {
+      "mean": 1.0,
+      "scale": 0.8125,
+      "orient": 0.5493750000000001
+    },
+    "dispersion": {
+      "mean": 0.583125,
+      "scale": 1.0,
+      "orient": 0.629375
+    },
+    "ORIENTATION": {
+      "mean": 0.5337500000000001,
+      "scale": 0.515,
+      "orient": 0.9400000000000001
+    },
+    "SPD": {
+      "mean": 0.5375000000000001,
+      "scale": 1.0,
+      "orient": 1.0
+    },
+    "Frobenius": {
+      "mean": 0.524375,
+      "scale": 1.0,
+      "orient": 1.0
+    }
+  },
+  "disentangle": {
+    "mean_shift": 0.806875,
+    "dispersion": 1.0,
+    "ORIENTATION": 0.9668749999999999,
+    "SPD": 0.6056250000000001,
+    "Frobenius": 1.0
+  }
+}

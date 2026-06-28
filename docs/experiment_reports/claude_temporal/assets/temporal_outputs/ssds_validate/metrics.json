@@ -1,0 +1,31 @@
+{
+  "a_hat": {
+    "seas_corr": 0.05483579659928999,
+    "splice_loc": true,
+    "splice_margin": 3.0964566076327764,
+    "null_loc": false,
+    "null_margin": 1.9592548966529344
+  },
+  "harmonic": {
+    "seas_corr": 0.14935176916257964
+  },
+  "sfa_win": {
+    "seas_corr": 0.011823120480280653,
+    "splice_loc": false,
+    "splice_margin": 0.992967667783443,
+    "null_loc": false,
+    "null_margin": 1.0010496008111573
+  },
+  "harmonic_resid": {
+    "splice_loc": false,
+    "splice_margin": 1.3387588125110605,
+    "null_loc": false,
+    "null_margin": 1.4214868357923587
+  },
+  "harmonic_cp": {
+    "splice_loc": false,
+    "splice_margin": 1.1932592247267528,
+    "null_loc": false,
+    "null_margin": 1.152721968019943
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "auc": {
+    "sfa_d1_max": 0.4375,
+    "mssa_d1_max": 0.41666666666666663,
+    "sfa_slowness_change": 0.5763888888888888,
+    "sfa_prepost_ds": 0.5625
+  },
+  "n": 24,
+  "n_switched": 12
+}

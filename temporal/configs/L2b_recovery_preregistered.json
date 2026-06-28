@@ -1,0 +1,27 @@
+{
+  "_purpose": "FROZEN before looking at outcomes. A NEW pre-registered test (not the onset Gate-0): does temporal DS characterize post-fire RECOVERY / seasonal-dynamics disruption in a way that (a) is sustained (unlike a single NBR step), (b) beats the conventional min-angle, and (c) is NOT just re-deriving NBR (circularity guard)?",
+  "frozen_2026_06_18": true,
+  "event": {"name": "tenerife_2023", "date": "2023-08-15"},
+  "fetch_range": ["2021-01-01", "2025-06-30"],
+  "construction": "mssa",
+  "window_W_dates": 24,
+  "embedding_L": 12,
+  "rank_dim": 8,
+  "energy": 0.99,
+  "center": false,
+  "pre_event_ref_window": "last 24 valid dates ending >30d before event",
+  "circularity_guard": {
+    "nbr_bands": ["B8", "B12"],
+    "ds_bands_main": ["B2", "B3", "B4", "B5", "B8A", "B11"],
+    "ds_bands_strict": ["B2", "B3", "B4", "B5"],
+    "rule": "DS uses bands EXCLUDING NBR's B8/B12 (main) and also a strict visible-only variant. A non-circular positive requires DS-recovery to track NBR-recovery while built from different bands, AND to beat a raw-mean-reflectance baseline."
+  },
+  "preregistered_claims": {
+    "C1_sustained": "post-fire d_pre(t) stays elevated for >= 90 days (a sustained dynamics disruption), vs control AOI which does not.",
+    "C2_noncircular_value": "d_pre (B8/B12-excluded) correlates with the NBR recovery trend AND does so better than a raw-mean-reflectance baseline (else DS adds nothing).",
+    "C3_beats_minangle": "full DS d_pre separates burn-vs-control more than the single min-angle does (the verified-regime claim, on real data).",
+    "C4_control_quiet": "unburned control AOI shows no sustained d_pre elevation around the event."
+  },
+  "falsifier": "If d_pre on burn is not sustained-elevated vs control, OR DS adds nothing over raw reflectance for recovery tracking, OR full DS does not beat min-angle -> NEGATIVE; commit to the diagnostic paper.",
+  "no_tuning_rule": "These choices are frozen. Any exploration happens only on the control / a held-out AOI, never tuned to make the burn result look better."
+}

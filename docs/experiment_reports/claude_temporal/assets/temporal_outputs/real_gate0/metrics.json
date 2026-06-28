@@ -1,0 +1,34 @@
+{
+  "burn_tenerife_arafo": {
+    "n_dates": 84,
+    "n_boundaries": 37,
+    "peak": {
+      "peak_date": "2023-10-17",
+      "localization_days": 63
+    },
+    "attribution": {
+      "top_band": "B11",
+      "energy_by_band": {
+        "B2": 1.315349761983597,
+        "B3": 0.882286805891676,
+        "B4": 0.8073099069345038,
+        "B5": 0.7271209851247417,
+        "B8": 0.7534684673195843,
+        "B8A": 0.8893036523854267,
+        "B11": 1.4423317059125473,
+        "B12": 1.1828287144479264
+      }
+    },
+    "d1_peak_over_median": 1.2305396086268132
+  },
+  "control_vilaflor": {
+    "n_dates": 72,
+    "n_boundaries": 25,
+    "peak": {
+      "peak_date": "2023-09-07",
+      "localization_days": 23
+    },
+    "attribution": null,
+    "d1_peak_over_median": 1.1021753139374604
+  }
+}

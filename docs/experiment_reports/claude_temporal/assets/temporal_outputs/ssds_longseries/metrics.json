@@ -1,0 +1,42 @@
+{
+  "a_hat_ndvi": {
+    "corr": 0.015737321130925287,
+    "cv": 1.6928133451394467
+  },
+  "a_hat_mssa": {
+    "corr": 0.05483579659928999,
+    "cv": 1.434504211987562
+  },
+  "meanang_ndvi": {
+    "corr": 0.14067767246530613,
+    "cv": 0.5119499846426897
+  },
+  "meanang_mssa": {
+    "corr": 0.04147210457716733,
+    "cv": 0.10676739246358008
+  },
+  "raw_TDS(failed)": {
+    "corr": 0.03908926666910189,
+    "cv": 2.2504816236556793
+  },
+  "NDVI_absdiff": {
+    "corr": 0.5829883980476666,
+    "cv": 1.12719837293324
+  },
+  "splice_a_hat_mssa": {
+    "localized": true,
+    "margin": 3.0964566076327764
+  },
+  "splice_meanang_mssa": {
+    "localized": false,
+    "margin": 1.042721163193496
+  },
+  "splice_raw_TDS": {
+    "localized": false,
+    "margin": 2.054658960181342
+  },
+  "nullsplice_a_hat_mssa": {
+    "localized": false,
+    "margin": 1.9592548966529344
+  }
+}

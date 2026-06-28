@@ -1,0 +1,30 @@
+{
+  "sh0_a0.0": {
+    "per_pixel_CVA": 0.9910250000000002,
+    "patch_mean_CVA": 0.99379375,
+    "patch_mean_SAM": 0.9973125,
+    "SET_SUBSPACE": 0.6729437500000001,
+    "corr_Frob": 0.880025
+  },
+  "sh0_a0.1": {
+    "per_pixel_CVA": 0.99228125,
+    "patch_mean_CVA": 0.99371875,
+    "patch_mean_SAM": 0.9973125,
+    "SET_SUBSPACE": 0.6729437500000001,
+    "corr_Frob": 0.87498125
+  },
+  "sh1_a0.0": {
+    "per_pixel_CVA": 0.98558125,
+    "patch_mean_CVA": 0.9918562499999999,
+    "patch_mean_SAM": 0.9937999999999999,
+    "SET_SUBSPACE": 0.652425,
+    "corr_Frob": 0.8613875000000001
+  },
+  "sh1_a0.1": {
+    "per_pixel_CVA": 0.9817812499999999,
+    "patch_mean_CVA": 0.9893624999999999,
+    "patch_mean_SAM": 0.9937999999999999,
+    "SET_SUBSPACE": 0.652425,
+    "corr_Frob": 0.8576874999999999
+  }
+}

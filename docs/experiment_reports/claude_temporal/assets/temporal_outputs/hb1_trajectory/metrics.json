@@ -1,0 +1,106 @@
+{
+  "L0_clean_synth": {
+    "config": {
+      "endmembers": "synth",
+      "B": 30,
+      "T": 9,
+      "T0": 4,
+      "N": 60,
+      "K": 2,
+      "STEP": 0.5,
+      "SPREAD": 0.15,
+      "SIGMA": 0.01,
+      "M": 40,
+      "seed": 0
+    },
+    "turn_vs_straight": {
+      "vel": 0.619375,
+      "d2": 0.53375,
+      "along": 0.5925,
+      "orth": 0.534375,
+      "kappa": 0.9600000000000001,
+      "numd2_vel": 0.6056250000000001,
+      "sc_acc": 0.61625,
+      "sc_d2": 1.0,
+      "total_change": 1.0
+    },
+    "turn_vs_accel": {
+      "vel": 0.91125,
+      "d2": 0.504375,
+      "along": 0.94375,
+      "orth": 0.57875,
+      "kappa": 0.963125,
+      "numd2_vel": 0.953125,
+      "sc_acc": 1.0,
+      "sc_d2": 0.9925,
+      "total_change": 1.0
+    },
+    "accel_vs_straight": {
+      "vel": 0.8443749999999999,
+      "d2": 0.53375,
+      "along": 0.87375,
+      "orth": 0.59625,
+      "kappa": 0.56,
+      "numd2_vel": 0.8625,
+      "sc_acc": 1.0,
+      "sc_d2": 1.0,
+      "total_change": 0.513125
+    },
+    "verdict": {
+      "H1_turn_vs_straight": false,
+      "H2_turn_vs_accel": true
+    }
+  },
+  "L1_realistic_salinas": {
+    "config": {
+      "endmembers": "salinas",
+      "B": 204,
+      "T": 9,
+      "T0": 4,
+      "N": 50,
+      "K": 2,
+      "STEP": 0.25,
+      "SPREAD": 0.25,
+      "SIGMA": 0.02,
+      "M": 40,
+      "seed": 0
+    },
+    "turn_vs_straight": {
+      "vel": 0.5081249999999999,
+      "d2": 0.525,
+      "along": 0.5175000000000001,
+      "orth": 0.5206250000000001,
+      "kappa": 0.5687500000000001,
+      "numd2_vel": 0.504375,
+      "sc_acc": 0.546875,
+      "sc_d2": 1.0,
+      "total_change": 1.0
+    },
+    "turn_vs_accel": {
+      "vel": 0.524375,
+      "d2": 0.5175000000000001,
+      "along": 0.5025000000000001,
+      "orth": 0.51375,
+      "kappa": 0.503125,
+      "numd2_vel": 0.5,
+      "sc_acc": 1.0,
+      "sc_d2": 0.84625,
+      "total_change": 1.0
+    },
+    "accel_vs_straight": {
+      "vel": 0.51,
+      "d2": 0.53625,
+      "along": 0.524375,
+      "orth": 0.53,
+      "kappa": 0.570625,
+      "numd2_vel": 0.506875,
+      "sc_acc": 1.0,
+      "sc_d2": 1.0,
+      "total_change": 0.51625
+    },
+    "verdict": {
+      "H1_turn_vs_straight": false,
+      "H2_turn_vs_accel": false
+    }
+  }
+}

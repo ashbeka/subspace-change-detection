@@ -1,0 +1,23 @@
+{
+  "clean": {
+    "perband_meandiff": 1.0,
+    "perband_stddiff": 1.0,
+    "perband_standardized": 1.0,
+    "DS_basis": 0.2416062432429838,
+    "DS_smooth": 0.25715077718929086
+  },
+  "noise": {
+    "perband_meandiff": 0.7566605840154425,
+    "perband_stddiff": 0.47095554878260576,
+    "perband_standardized": 1.0,
+    "DS_basis": 0.2262597717203721,
+    "DS_smooth": 0.2504100352435213
+  },
+  "noise+distractor": {
+    "perband_meandiff": 0.5999881997572634,
+    "perband_stddiff": 0.32386630000861355,
+    "perband_standardized": 0.21400643620221635,
+    "DS_basis": 0.17691110455197107,
+    "DS_smooth": 0.18621880421238327
+  }
+}
