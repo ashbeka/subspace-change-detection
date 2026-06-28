@@ -88,6 +88,21 @@ Interpretation:
 - Local-window DS with `128x128` windows does not help in this run.
 - This justifies multi-city spatial DS comparison; it is not yet a thesis-level claim.
 
+Component-Wise DS Pseudo-Change Diagnosis, 2026-06-18:
+
+```powershell
+.\.venv\Scripts\python.exe phase1/scripts/diagnose_oscd_pseudo_change.py --city <city> --oscd_root <path> --stats_path <path> --output_dir <path>
+```
+
+Testing the hypothesis that Global DS aggregates semantic change and vegetation pseudo-change (evaluated by AP on Beirut, Dubai, Milano):
+- **Dubai (Arid):** Filtered DS (filtering out low-change components) improved AP from 0.3922 to 0.4344 (beating PCA-diff).
+- **Beirut (Vegetated):** Filtered DS worsened AP (0.3597 -> 0.3375) because valid urban change components were also highly correlated with NDVI change (vegetation clearing during construction).
+- **Milano (Sparse Changes):** Filtered DS completely collapsed (0.1452 -> 0.0925) because the global Pearson correlation over the whole image was ~0 for all components due to the small size of the changes.
+
+Interpretation:
+- Global Pixel DS mixes up signals globally. Filtering components globally using simple semantics fails for cities with sparse changes or entangled vegetation changes.
+- This provides concrete diagnostic evidence supporting Sensei's concern about global pixel-based subspace breaking spatial information. It justifies the shift to Local/Patch-based DS to isolate local anomalies.
+
 Spatial subspace core5 sweep, 2026-06-14:
 
 ```powershell

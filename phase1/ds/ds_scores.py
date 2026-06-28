@@ -63,6 +63,7 @@ def _compute_ds_matrix_scores(
     x1_mat: Array,
     x2_mat: Array,
     cfg: DSConfig,
+    return_components: bool = False,
 ) -> Dict[str, Array]:
     """Core DS computations on (C, N) matrices."""
     phi = pca_utils.fit_pca_basis(
@@ -84,18 +85,22 @@ def _compute_ds_matrix_scores(
     d_basis = pca_utils.build_difference_subspace(phi, psi, variant=resolved_variant)
     diff = x2_mat - x1_mat
     proj_coeff = d_basis.T @ diff
-    projection_energy = np.sum(proj_coeff * proj_coeff, axis=0)
+    component_energy = proj_coeff * proj_coeff
+    projection_energy = np.sum(component_energy, axis=0)
 
     r_phi = pca_utils.residual_projector(phi)
     r_psi = pca_utils.residual_projector(psi)
     cross_residual = pca_utils.cross_residual_energy(r_psi, x2_mat) + pca_utils.cross_residual_energy(r_phi, x1_mat)
-    return {
+    res = {
         "projection": projection_energy,
         "cross_residual": cross_residual,
         "subspace_variant": resolved_variant,
         "subspace_dim": int(d_basis.shape[1]),
         "ambient_dim": int(d_basis.shape[0]),
     }
+    if return_components:
+        res["components"] = component_energy
+    return res
 
 
 def compute_ds_scores(
@@ -104,6 +109,7 @@ def compute_ds_scores(
     valid_mask: Optional[Array] = None,
     cfg: Optional[DSConfig] = None,
     normalize: bool = True,
+    return_components: bool = False,
 ) -> Dict[str, Array]:
     """
     Compute DS projection and cross-residual maps for a single tile.
@@ -123,7 +129,7 @@ def compute_ds_scores(
     if mat1.size == 0:
         raise RuntimeError("No valid pixels available for DS computation.")
 
-    scores = _compute_ds_matrix_scores(mat1, mat2, cfg)
+    scores = _compute_ds_matrix_scores(mat1, mat2, cfg, return_components=return_components)
     h, w = x1.shape[1:]
     proj_full = devectorize_cube(scores["projection"][None, :], idx, (h, w), fill_value=0.0)[0]
     cross_full = devectorize_cube(scores["cross_residual"][None, :], idx, (h, w), fill_value=0.0)[0]
@@ -132,11 +138,22 @@ def compute_ds_scores(
         proj_full = _normalize_score(proj_full, cfg.score_normalization, percentile=cfg.percentile)
         cross_full = _normalize_score(cross_full, cfg.score_normalization, percentile=cfg.percentile)
 
-    return {
+    res = {
         "projection": proj_full,
         "cross_residual": cross_full,
         "valid_mask": valid_mask,
     }
+
+    if return_components:
+        r = scores["components"].shape[0]
+        comp_full = np.zeros((r, h, w), dtype=np.float32)
+        for i in range(r):
+            comp_full[i] = devectorize_cube(scores["components"][i:i+1, :], idx, (h, w), fill_value=0.0)[0]
+            if normalize:
+                comp_full[i] = _normalize_score(comp_full[i], cfg.score_normalization, percentile=cfg.percentile)
+        res["components"] = comp_full
+
+    return res
 
 
 def _window_positions(length: int, window: int, stride: int):
