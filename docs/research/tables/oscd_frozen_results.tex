@@ -1,0 +1,41 @@
+% Frozen held-out OSCD results — Successive Saab-DS.
+% Compile standalone (pdflatex), or paste the table* / tabular block into your deck/Overleaf.
+% Needs: booktabs, colortbl, xcolor.
+\documentclass[border=8pt]{standalone}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{amsmath}
+\definecolor{win}{HTML}{D3ECE2}     % teal-ish highlight for our method
+\definecolor{best}{HTML}{1D8F6E}    % best-number text
+\newcommand{\B}[1]{\textbf{\textcolor{best}{#1}}}
+\begin{document}
+\begin{tabular}{l c c c c}
+\toprule
+\textbf{Method} & \textbf{AP} $\uparrow$ & \textbf{AUROC} $\uparrow$ & \textbf{Otsu F1} & \textbf{best F1} \\
+\midrule
+\rowcolor{win} Successive Saab-DS (pair-adaptive)      & \B{0.342} & 0.886 & \B{0.331} & \B{0.371} \\
+\rowcolor{win} Successive Saab-DS (train-fitted, frozen) & 0.338 & \B{0.891} & 0.331 & 0.364 \\
+Successive Saab + cross-reconstruction (control)        & 0.328 & 0.880 & 0.315 & 0.359 \\
+Smoothed PCA-diff                                       & 0.314 & 0.830 & 0.286 & 0.343 \\
+Successive Saab + L2 (control)                          & 0.306 & 0.782 & 0.283 & 0.341 \\
+PCA-diff                                                & 0.307 & 0.834 & 0.288 & 0.338 \\
+Global Band-Image DS                                   & 0.295 & 0.849 & 0.271 & 0.337 \\
+Wavelet LL + DS                                         & 0.288 & 0.839 & 0.278 & 0.335 \\
+Raw L2 / CVA                                            & 0.279 & 0.757 & 0.260 & 0.316 \\
+IR-MAD                                                 & 0.265 & 0.848 & 0.065 & 0.330 \\
+Celik PCA-$k$-means                                    & 0.215 & 0.692 & 0.260 & 0.290 \\
+Global pixel DS (naive)                                & 0.063 & --    & --    & --    \\
+\bottomrule
+\end{tabular}
+\end{document}
+
+% ---------------------------------------------------------------------------
+% Paired-city evidence for Successive Saab-DS (10 official test cities):
+%   vs matched L2:    +0.0353 AP, 95% CI [+0.0133,+0.0653], 9/10 wins,  Wilcoxon p=0.0039
+%   vs matched PCA:   +0.0370 AP, 95% CI [+0.0157,+0.0667], 10/10 wins, Wilcoxon p=0.0020
+%   vs PCA-diff:      +0.0353 AP, 95% CI [+0.0058,+0.0656], 9/10 wins,  Wilcoxon p=0.0273
+%   vs smoothed PCA:  +0.0279 AP, 95% CI [+0.0011,+0.0556], 8/10 wins,  Wilcoxon p=0.0840
+%   vs cross-recon:   +0.0141 AP, 95% CI [+0.0012,+0.0290], 8/10 wins,  Wilcoxon p=0.0840
+% Train-fitted (frozen, fit on 14 train cities only) reaches AP 0.338 on the 10 test
+% cities -> the representation generalizes; it is NOT a per-pair transductive trick.
+% Seed-stable (3 neighborhood-sampling seeds: AP 0.341 / 0.342 / 0.341).

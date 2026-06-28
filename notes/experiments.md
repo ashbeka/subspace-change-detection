@@ -17,6 +17,7 @@
 - [13. Post-Seminar Validation Gate](#13-post-seminar-validation-gate)
 - [14. Pre-Seminar Multiscale Band-Image Pyramid](#14-pre-seminar-multiscale-band-image-pyramid)
   - [14.1 Completed Result And Decision](#141-completed-result-and-decision)
+  - [14.2 Train-Fitted And External Transfer Gate](#142-train-fitted-and-external-transfer-gate)
 
 ## 1. Current Research Question
 
@@ -1691,12 +1692,46 @@ rank-12 canonical DS on spatial response-map subspaces
 unlabeled 99.5%-quantile scaling and equal hop fusion
 ```
 
-[gap] The transform is pair-adaptive/transductive and the evidence is still
-OSCD-only.
+[status] The pair-adaptive and OSCD-only gaps were tested in Section 14.2.
 
-[why it matters] A paper claim needs to separate the value of local successive
-features, DS geometry, and pair adaptation, then show transfer beyond OSCD.
+### 14.2 Train-Fitted And External Transfer Gate
 
-[next check] Fit one shared transform using training cities only; evaluate the
-frozen transform on a second labeled multispectral dataset; design any
-hop-reliability gate on training data and validate it externally.
+Completed 2026-06-23. Full report:
+`docs/experiment_reports/successive_saab_trainfit_external_gate_2026-06-23.md`.
+
+Design:
+
+- fit one successive Saab hierarchy from OSCD training cities, then apply the
+  same filters to the official OSCD test cities;
+- fit one hierarchy from xBD-S12 training events, then apply it to all official
+  held-out xBD-S12 test patches;
+- also test OSCD common-12-band filters transferred to xBD-S12, native versus
+  pairwise band z-score normalization;
+- compare DS with matched frozen-feature L2, PCA-diff, and cross-reconstruction.
+
+Result:
+
+- **OSCD train-fitted gate passes.** Frozen train-city filters reach AP
+  `0.3381`, versus pair-adaptive AP `0.3420`, smoothed PCA `0.3141`, PCA-diff
+  `0.3067`, frozen-feature L2 `0.3061`, and frozen-feature PCA `0.3051`.
+- **OSCD mechanism is stable.** Seeds 7/1234/2026 give AP
+  `0.3375/0.3381/0.3389`; DS beats frozen-feature L2/PCA with positive
+  bootstrap intervals and 9/10 city wins.
+- **xBD-S12 transfer does not pass as a successive-feature detector.** Best
+  successive xBD variant is xBD train100 + pair-band z-score at AP `0.0190`,
+  below Band-Image projector `0.0302`, IR-MAD `0.0265`, and Band-Image DS
+  `0.0212` for full-scene damaged-pixel retrieval.
+- **External interpretation changes.** Successive Saab-DS is currently an OSCD
+  internal spatial-support result. The xBD external positive remains the
+  simpler spatial Band-Image/projector candidate-localization geometry.
+
+[gap] The positive mechanism is dataset/task dependent.
+
+[why it matters] A thesis or paper should not claim one universal subspace
+detector. The stronger story is a decision boundary: successive local features
+help OSCD-style changed-area maps, while xBD disaster candidate localization
+prefers Band-Image projector geometry.
+
+[next check] For seminar, present both gates clearly. For further research,
+test whether a learned selector or dataset/task descriptor can choose between
+successive local DS and Band-Image/projector geometry without labels.

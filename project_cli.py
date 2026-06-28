@@ -95,6 +95,7 @@ COMMANDS: list[CommandInfo] = [
     CommandInfo("phase1-spatial-subspace-compare", "phase1", "Compare global/window/patch/band-image DS score maps on one OSCD city.", ["phase1-spatial-subspace-compare", "--city", "beirut"]),
     CommandInfo("phase1-spatial-subspace-sweep", "phase1", "Run spatial DS comparison across multiple cities/configs and aggregate results.", ["phase1-spatial-subspace-sweep", "--cities", "core5"]),
     CommandInfo("phase1-multiresolution-summarize", "visualization", "Create curated figures from completed multiresolution OSCD sweeps.", ["phase1-multiresolution-summarize"]),
+    CommandInfo("phase1-successive-transfer", "external validation", "Fit one successive Saab hierarchy on training pairs and evaluate frozen OSCD/xBD features.", ["phase1-successive-transfer", "--fit-source", "oscd13", "--target", "oscd"]),
     CommandInfo("phase1-score-calibration", "phase1", "Fit score-map changed-area fractions on OSCD train cities and evaluate them on test cities.", ["phase1-score-calibration", "--sweep-root", "<saved_npy_sweep>"]),
     CommandInfo("phase1-subspace-audit", "phase1", "Compatibility alias for phase1-subspace-inspect.", ["phase1-subspace-audit", "--city", "beirut"]),
     CommandInfo("phase1-venus", "phase1", "Run the Venus DS/KDS/KGDS diagnostic demo.", ["phase1-venus"]),
@@ -502,6 +503,45 @@ def cmd_phase1_multiresolution_summarize(args: argparse.Namespace) -> int:
         "--output-dir",
         args.output_dir,
     ]
+    return run_command(cmd, dry_run=args.dry_run)
+
+
+def cmd_phase1_successive_transfer(args: argparse.Namespace) -> int:
+    out = args.output_dir or (
+        f"phase1/outputs/successive_transfer_{args.fit_source}_to_{args.target}_{timestamp()}"
+    )
+    cmd = [
+        str(venv_python()),
+        "phase1/scripts/evaluate_frozen_successive_transfer.py",
+        "--fit-source",
+        args.fit_source,
+        "--target",
+        args.target,
+        "--input-normalization",
+        args.input_normalization,
+        "--fit-patches-per-event",
+        str(args.fit_patches_per_event),
+        "--energy-threshold",
+        str(args.energy_threshold),
+        "--max-channels",
+        str(args.max_channels),
+        "--max-fit-samples",
+        str(args.max_fit_samples),
+        "--seed",
+        str(args.seed),
+        "--device",
+        args.device,
+        "--bootstrap",
+        str(args.bootstrap),
+        "--maps-per-unit",
+        str(args.maps_per_unit),
+        "--output-dir",
+        out,
+    ]
+    if args.rank is not None:
+        cmd += ["--rank", str(args.rank)]
+    if args.evaluation_patches_per_event is not None:
+        cmd += ["--evaluation-patches-per-event", str(args.evaluation_patches_per_event)]
     return run_command(cmd, dry_run=args.dry_run)
 
 
@@ -1992,6 +2032,27 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--output-dir", default="docs/experiment_reports/assets/multiresolution_subspace_2026-06-23")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_phase1_multiresolution_summarize)
+
+    p = sub.add_parser(
+        "phase1-successive-transfer",
+        help="Fit successive Saab on training pairs and evaluate unchanged filters on OSCD or xBD-S12.",
+    )
+    p.add_argument("--fit-source", choices=["oscd13", "oscd12", "xbd12"], required=True)
+    p.add_argument("--target", choices=["oscd", "xbd"], required=True)
+    p.add_argument("--input-normalization", choices=["dataset", "pair_band_zscore"], default="dataset")
+    p.add_argument("--fit-patches-per-event", type=int, default=20)
+    p.add_argument("--evaluation-patches-per-event", type=int, default=None)
+    p.add_argument("--rank", type=int, default=None)
+    p.add_argument("--energy-threshold", type=float, default=0.95)
+    p.add_argument("--max-channels", type=int, default=16)
+    p.add_argument("--max-fit-samples", type=int, default=30000)
+    p.add_argument("--seed", type=int, default=1234)
+    p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
+    p.add_argument("--bootstrap", type=int, default=5000)
+    p.add_argument("--maps-per-unit", type=int, default=1)
+    p.add_argument("--output-dir", default="")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_phase1_successive_transfer)
 
     p = sub.add_parser("phase1-score-calibration", help="Fit changed-area fractions on OSCD train cities and evaluate them unchanged on test cities.")
     p.add_argument("--sweep-root", required=True, help="Spatial sweep root generated with --save-npy.")

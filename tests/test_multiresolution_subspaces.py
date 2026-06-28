@@ -1,4 +1,6 @@
 import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import numpy as np
 
@@ -8,7 +10,11 @@ from phase1.subspace.multiscale_band_image import (
     principal_angle_distances,
 )
 from phase1.subspace.successive_subspace_features import (
+    apply_successive_saab_model,
     fit_saab_stage,
+    fit_successive_saab_model,
+    load_successive_saab_model,
+    save_successive_saab_model,
     successive_saab_band_image_geometry,
 )
 from phase1.subspace.wavelet_band_image import (
@@ -151,6 +157,74 @@ class SuccessiveSaabTests(unittest.TestCase):
         self.assertTrue(np.allclose(result.fused_map, 0.0, atol=2e-5))
         self.assertEqual(result.fused_map.shape, valid.shape)
         self.assertEqual(len(result.stages), 2)
+
+    def test_frozen_model_round_trip_and_equal_pair(self) -> None:
+        rng = np.random.default_rng(33)
+        pairs = []
+        for _ in range(3):
+            first = rng.normal(scale=0.3, size=(4, 20, 24)).astype(np.float32)
+            second = first + rng.normal(scale=0.05, size=first.shape).astype(np.float32)
+            pairs.append((first, second, np.ones((20, 24), dtype=bool)))
+
+        def factory():
+            yield from pairs
+
+        model = fit_successive_saab_model(
+            factory,
+            pair_count=len(pairs),
+            input_channels=4,
+            hops=2,
+            max_output_channels=(8, 8),
+            max_fit_samples=600,
+            seed=17,
+            source_description="unit-test pairs",
+        )
+        with TemporaryDirectory() as directory:
+            path = Path(directory) / "model.npz"
+            save_successive_saab_model(path, model)
+            restored = load_successive_saab_model(path)
+        self.assertEqual(restored.fit_pair_count, 3)
+        self.assertEqual(restored.source_description, "unit-test pairs")
+        for expected, actual in zip(model.stages, restored.stages):
+            self.assertTrue(np.array_equal(expected.kernels, actual.kernels))
+            self.assertTrue(np.array_equal(expected.intercept, actual.intercept))
+
+        frozen = apply_successive_saab_model(
+            pairs[0][0],
+            pairs[0][0].copy(),
+            pairs[0][2],
+            restored,
+            rank=3,
+        )
+        self.assertTrue(np.allclose(frozen.fused_map, 0.0, atol=2e-5))
+
+    def test_frozen_model_rejects_channel_mismatch(self) -> None:
+        rng = np.random.default_rng(34)
+        pair = (
+            rng.normal(size=(3, 16, 16)).astype(np.float32),
+            rng.normal(size=(3, 16, 16)).astype(np.float32),
+            np.ones((16, 16), dtype=bool),
+        )
+
+        def factory():
+            yield pair
+
+        model = fit_successive_saab_model(
+            factory,
+            pair_count=1,
+            input_channels=3,
+            hops=1,
+            max_output_channels=(6,),
+            max_fit_samples=200,
+        )
+        with self.assertRaisesRegex(ValueError, "model expects 3"):
+            apply_successive_saab_model(
+                np.zeros((4, 16, 16), dtype=np.float32),
+                np.zeros((4, 16, 16), dtype=np.float32),
+                pair[2],
+                model,
+                rank=2,
+            )
 
 
 if __name__ == "__main__":

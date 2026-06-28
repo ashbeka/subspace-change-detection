@@ -722,8 +722,18 @@ adaptation of PixelHop/Successive Subspace Learning:
 This is **successive Saab-DS**, not full PixelHop. It omits supervised LAG,
 classification, and the original task-specific aggregation. The adjusted Saab
 bias is omitted because one shared additive response bias cancels in paired
-differences. The current transform is pair-adaptive and must be described as
-transductive unsupervised feature fitting.
+differences.
+
+There are now two verified fitting modes:
+
+- **pair-adaptive:** fit the Saab filters from the same unlabeled pre/post pair
+  being evaluated; this is transductive and should not be the strongest claim;
+- **train-fitted:** fit one Saab hierarchy from training cities/events and apply
+  those filters unchanged to held-out pairs; this is the safer OSCD result.
+
+The DS basis is still pair-specific in both modes because DS compares that
+held-out pair's pre/post spatial feature subspaces. What is frozen is the local
+feature extractor, not the difference subspace itself.
 
 Matched controls use the same hop features with row-wise L2, PCA-diff, or
 cross-reconstruction. Their lower held-out AP is the current evidence that DS
@@ -731,7 +741,16 @@ adds something beyond local representation alone.
 
 Code: `phase1/subspace/successive_subspace_features.py`.
 Verification: `tests/test_multiresolution_subspaces.py` and
-`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`.
+`docs/experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`,
+then the train-fitted/external gate in
+`docs/experiment_reports/successive_saab_trainfit_external_gate_2026-06-23.md`.
+
+Current evidence boundary:
+
+- OSCD train-fitted filters preserve the positive result: AP `0.3381`, close to
+  pair-adaptive AP `0.3420` and above matched frozen L2/PCA.
+- xBD-S12 transfer does not support successive Saab-DS as the best external
+  disaster detector; Band-Image projector geometry remains stronger there.
 
 Open implementation questions:
 
