@@ -1,5 +1,20 @@
 # Current Research Direction
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Current Umbrella](#current-umbrella)
+- [3. Current Working Direction](#current-working-direction)
+- [4. Current Best Result](#current-best-result)
+- [5. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
+- [6. Safe Claims](#safe-claims)
+- [7. Forbidden Claims](#forbidden-claims)
+- [8. Active Reading Path](#active-reading-path)
+- [9. Stage 1 Distillation Policy](#stage-1-distillation-policy)
+- [10. Transition Map](#transition-map)
+- [11. Deletion Review Queue](#deletion-review-queue)
+- [12. First File-Fate Checklist](#first-file-fate-checklist)
+
 ## Purpose
 
 This is the fastest answer to: **what is this project doing now?**
@@ -128,7 +143,8 @@ Read only these first:
 5. `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`
 6. `docs/LITERATURE_DATASETS_AND_BASELINES.md`
 7. `docs/REPRODUCIBLE_COMMANDS.md`
-8. `docs/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
+8. `docs/KNOWLEDGE_DISTILLATION_REVIEW.md` for deletion/coverage review
+9. `docs/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
 
 ## Stage 1 Distillation Policy
 
@@ -143,6 +159,20 @@ Priority for preservation:
 AI-generated files should be read, compressed, and then marked as
 delete-candidates when their useful content is absorbed. Human/source records
 should be preserved until explicitly approved for deletion.
+
+Labels used in the distillation review:
+
+| Label | Meaning |
+|---|---|
+| `[human-source]` | user, Sensei, senpai, seminar, submitted, or raw source material |
+| `[curated-evidence]` | experiment report with metrics, figures, commands, or reproducible output |
+| `[ai-synthesis]` | Codex/Claude/other generated interpretation or narrative |
+| `[method-reference]` | formulas, method construction, or source-to-code detail |
+| `[literature-resource]` | papers, datasets, benchmarks, links, or reference code |
+| `[active-control]` | one of the new files that remains in the main reading path |
+| `[delete-candidate]` | likely removable after review because content is absorbed |
+| `[preserve]` | do not delete without explicit user approval |
+| `[needs-review]` | possible unique content remains |
 
 ## Transition Map
 
@@ -224,4 +254,3 @@ records are preserved unless explicitly reviewed.
 | `docs/experiment_reports/*.md` | keep curated for now | exact metrics and provenance; later compress/delete selectively |
 | `docs/source_records/**` | preserve | original records/provenance, not active truth |
 | `research-notes/` | audit/delete-candidate | nested old notes repo; delete only after final uniqueness check |
-

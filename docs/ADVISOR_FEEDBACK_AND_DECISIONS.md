@@ -1,5 +1,15 @@
 # Advisor Feedback And Decisions
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Sensei Feedback: Core Questions](#sensei-feedback-core-questions)
+- [3. Sensei-Requested Temporal Direction](#sensei-requested-temporal-direction)
+- [4. Senpai Feedback: Spatial And Green Learning](#senpai-feedback-spatial-and-green-learning)
+- [5. Seminar Feedback](#seminar-feedback)
+- [6. Sensei/Seminar Coverage Table](#senseiseminar-coverage-table)
+- [7. Current Decisions](#current-decisions)
+
 ## Purpose
 
 This file answers: **what did Sensei/senpai/seminar feedback require, and what
@@ -96,6 +106,21 @@ Decision:
 
 - every lane must define its win axis and baseline pressure before new runs.
 
+## Sensei/Seminar Coverage Table
+
+| Ask / concern | Current answer | Status |
+|---|---|---|
+| What is the subspace? | now documented by construction cards; global pixel, Band-Image, Saab-DS, and temporal date subspaces are different objects | covered, keep explaining |
+| Does the current method break spatial information? | yes for global pixel DS; spatial/sample-construction experiments were run | covered |
+| Try Venus/nonlinear DS/KDS/KGDS | Venus understanding exists; satellite KDS/KGDS still lacks specific nonlinear hypothesis | partially covered |
+| Try first/second DS and geodesic decomposition | implemented on sequences; characterization works, detector evidence weak | covered as characterization |
+| Clarify purpose/problem | current purpose is spatially faithful/interpretable multispectral change evidence, not generic damage segmentation | covered, still evolving |
+| Compare against simple methods | raw L2, PCA-diff, Celik, IR-MAD, matched controls, and U-Net pressure are tracked | covered |
+| Explain Otsu/thresholding/normalization | belongs in method/experiment reports; no method claim should depend on one threshold | covered enough for now |
+| Band selection / combinations | preserved as future attribution/HSI lane, not current core | paused |
+| CCA/S3CCA/TRCCA | preserved as structured temporal/view-matching lane | future |
+| Pseudo-change vs real change | central failure-analysis concern; seasonal/radiometric failures must be reported | active boundary |
+
 ## Current Decisions
 
 | Decision | Reason |
@@ -106,4 +131,3 @@ Decision:
 | keep temporal DS/geodesic as Sensei-aligned characterization | implemented but detector evidence weak |
 | pause broad method search | too many weak routes already tested |
 | collapse AI-generated docs after absorption | reduce noise and improve reading path |
-

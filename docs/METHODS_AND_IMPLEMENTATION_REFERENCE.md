@@ -1,5 +1,16 @@
 # Methods And Implementation Reference
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Method Status Labels](#method-status-labels)
+- [3. Subspace / Geometry Cards](#subspace--geometry-cards)
+- [4. Classical Baseline Cards](#classical-baseline-cards)
+- [5. Neural / Foundation Cards](#neural--foundation-cards)
+- [6. Temporal / Structured Method Cards](#temporal--structured-method-cards)
+- [7. Dataset Cards](#dataset-cards)
+- [8. Source-To-Code Rule](#source-to-code-rule)
+
 ## Purpose
 
 This file explains methods only enough to implement, verify, and defend them.
@@ -237,6 +248,101 @@ Minimum controls:
 - PCA or cosine distance;
 - linear classifier or shallow probe if labels exist.
 
+## Temporal / Structured Method Cards
+
+### SFA / Slow Feature Subspace
+
+Status: reference-only / candidate.
+
+Purpose:
+
+- model slowly varying background or seasonal components;
+- detect change as residual outside a learned invariant/slow subspace.
+
+Current boundary:
+
+- useful conceptual pressure for temporal satellite sequences;
+- not yet an active positive detector in this repo.
+
+Minimum controls:
+
+- raw residuals;
+- seasonal summaries;
+- PCA reconstruction;
+- SSA;
+- documented event labels or independent weak labels.
+
+### SSA / Trajectory Subspace
+
+Status: reference-only / candidate.
+
+Purpose:
+
+- represent time-series windows as trajectory matrices/subspaces.
+
+Project use:
+
+- possible alternative to unordered date PCA for MultiSenGE/Harmonized
+  Sentinel-2 sequences.
+
+Minimum controls:
+
+- snapshot PCA;
+- global temporal shift;
+- dynamic time warping;
+- harmonic/Fourier summaries.
+
+### RTW
+
+Status: paused.
+
+Purpose:
+
+- generate time-warped samples so sequences with different speeds can form
+  comparable subspaces.
+
+Evidence:
+
+- current satellite/crop tests did not beat simpler controls.
+
+Reopen only if:
+
+- a new timing-invariance task is defined and simple shift/RMS/PCA controls are
+  beaten.
+
+### CCA / KCCA / S3CCA / Temporally Regularized CCA
+
+Status: reference-only / candidate.
+
+Purpose:
+
+- compare related views while preserving correlation or smooth structure.
+
+Possible project roles:
+
+- pre/post view matching;
+- band-group attribution;
+- temporal sequence alignment;
+- structured partial-pattern matching.
+
+Gate:
+
+- define which two views are being correlated;
+- compare against IR-MAD, PCA, and raw correlation controls.
+
+### Tensor / n-Mode GDS / Product Grassmann
+
+Status: future lane.
+
+Purpose:
+
+- preserve multi-mode structure such as bands, space, time, object regions, or
+  deep-feature factors.
+
+Gate:
+
+- show that mode-preserving geometry adds information beyond flattening.
+
 ## Dataset Cards
 
 ### OSCD
@@ -282,4 +388,3 @@ source material -> math object -> satellite adaptation -> code path -> test -> r
 ```
 
 If any link is missing, the method is experimental only.
-

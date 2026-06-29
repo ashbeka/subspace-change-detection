@@ -4,6 +4,21 @@ Instructions for Codex and future coding/research agents working in this reposit
 
 This project is a research codebase, not a finished product. Treat every document, result, code path, and previous AI-generated claim as a draft hypothesis until verified by code, experiments, advisor feedback, or external literature.
 
+## Quick Links
+
+- [1. Role](#role)
+- [2. Current Research Identity](#current-research-identity)
+- [3. Working Style](#working-style)
+- [4. Knowledge Preservation And Consolidation](#knowledge-preservation-and-consolidation)
+- [5. Research Gap Tracking](#research-gap-tracking)
+- [6. Suggestion Persistence](#suggestion-persistence)
+- [7. Reference Code Discovery](#reference-code-discovery)
+- [8. Notes And Docs Structure](#notes-and-docs-structure)
+- [9. Git Rules](#git-rules)
+- [10. Research Hygiene](#research-hygiene)
+- [11. Paper-To-Code Verification](#paper-to-code-verification)
+- [12. Current Priority](#current-priority)
+
 ## Role
 
 Act as a skeptical but constructive co-researcher, co-project manager, and co-developer.
@@ -184,6 +199,7 @@ Active control docs:
 - `docs/LITERATURE_DATASETS_AND_BASELINES.md`: papers, datasets, baselines, bookmarks, and reference-code context.
 - `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`: Sensei/senpai/seminar feedback and resulting decisions.
 - `docs/REPRODUCIBLE_COMMANDS.md`: exact commands.
+- `docs/KNOWLEDGE_DISTILLATION_REVIEW.md`: coverage/deletion dashboard for old notes, research docs, KB files, and AI-generated synthesis.
 - `docs/PERSONAL_RESEARCH_NOTES.md`: rough personal note intake before ideas are translated into control docs.
 - `docs/experiment_reports/`: curated detailed reports, not the first reading path.
 - `docs/source_records/`: original human-facing records received/submitted during the project, raw imports, and importable organized source records. Preserve these, but do not treat them as current truth without checking active control docs.

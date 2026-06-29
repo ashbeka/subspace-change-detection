@@ -1,5 +1,16 @@
 # Literature, Datasets, And Baselines
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Reading Priorities](#reading-priorities)
+- [3. Must-Cite Boundaries](#must-cite-boundaries)
+- [4. Dataset Map](#dataset-map)
+- [5. Baseline Pressure](#baseline-pressure)
+- [6. Reference Code](#reference-code)
+- [7. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
+- [8. Bookmark Policy](#bookmark-policy)
+
 ## Purpose
 
 This file answers: **what should I read, cite, compare against, or reuse?**
@@ -93,6 +104,22 @@ Do not copy reference code into active methods without:
 paper equation -> sample definition -> shape test -> toy check -> one-dataset output
 ```
 
+## Knowledge-Base Concepts Absorbed
+
+From `docs/kb/` and `docs/research/*novelty*`, preserve these literature
+boundaries:
+
+| Concept cluster | What it teaches | Project implication |
+|---|---|---|
+| DS/GDS/KDS/KGDS/MSM/KMSM | lab lineage and canonical angle/subspace geometry | cite Fukui/Maki; do not claim DS invention |
+| second-order DS/geodesic | subspace trajectory velocity/acceleration/along-orthogonal decomposition | supports temporal characterization lane |
+| n-mode GDS/product Grassmann | mode-preserving geometry for tensor data | future satellite cube lane, not current proof |
+| SFA/SFS/SSA/RTW | sequence invariance, slow features, trajectory subspaces, timing variation | compare before temporal novelty claims |
+| S3CCA/TRCCA/KCCA | structured correlation matching | future view/sequence matching lane |
+| HSI subspace CD/SMSL/covariance/unmixing | subspace HSI change is established | novelty must be exact object/evidence, not generic HSI subspace CD |
+| SiROC/spatial context CD | spatial context is established in optical CD | spatial DS must beat matched spatial nulls |
+| Signal Latent Subspace | deep latent features as subspaces/product Grassmann | bridge to foundation/deep-feature lane |
+
 ## Bookmark Policy
 
 Chrome bookmarks are a reading queue, not active project truth. Important
@@ -103,4 +130,3 @@ resources should be promoted here only when they affect one of:
 - a dataset;
 - a method implementation;
 - a citation boundary.
-

@@ -20,6 +20,17 @@ The current research question is:
 Can DS-based representations help detect changed areas in pre/post multispectral satellite images, and what subspace construction preserves the spatial information needed for that task?
 ```
 
+## Quick Links
+
+- [1. If You Feel Lost, Start Here](#1-if-you-feel-lost-start-here)
+- [2. Current Truthful Scope](#2-current-truthful-scope)
+- [3. Current Most Important Result](#3-current-most-important-result)
+- [4. What To Do Next](#4-what-to-do-next)
+- [5. Central CLI](#5-central-cli)
+- [6. Repository Map](#6-repository-map)
+- [7. Code Provenance Rule](#7-code-provenance-rule)
+- [8. Forbidden Overclaims](#8-forbidden-overclaims)
+
 ## 1. If You Feel Lost, Start Here
 
 Read in this order:

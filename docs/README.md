@@ -33,7 +33,10 @@ Read these first:
 7. `REPRODUCIBLE_COMMANDS.md`
    - Exact commands only.
 
-8. `PERSONAL_RESEARCH_NOTES.md`
+8. `KNOWLEDGE_DISTILLATION_REVIEW.md`
+   - Coverage dashboard for old notes/research/kb files and deletion candidates.
+
+9. `PERSONAL_RESEARCH_NOTES.md`
    - Rough human note intake. Preserve intent; translate stable implications into active control docs.
 
 Detailed reports remain under `experiment_reports/`, but they are no longer the

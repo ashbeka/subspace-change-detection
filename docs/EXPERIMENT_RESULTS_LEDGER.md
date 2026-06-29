@@ -1,5 +1,14 @@
 # Experiment Results Ledger
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Evidence Status](#evidence-status)
+- [3. Main Ledger](#main-ledger)
+- [4. Current Evidence Interpretation](#current-evidence-interpretation)
+- [5. Unverified / AI-Reported Claims](#unverified--ai-reported-claims)
+- [6. Delete-Candidate Report Groups After Absorption](#delete-candidate-report-groups-after-absorption)
+
 ## Purpose
 
 This is the compact evidence table. Old reports can be read only when detail is
@@ -45,6 +54,19 @@ project memory.
 4. The learned-prior result may become important, but it is not trusted until
    reproduced in the active main code path.
 
+## Unverified / AI-Reported Claims
+
+These items were generated during Claude/Codex exploration and are useful, but
+not thesis claims until reproduced or audited.
+
+| Claim | Source group | Current label | Required action |
+|---|---|---|---|
+| DS-specific multi-prior U-Net improves over no-DS and matched-cross controls | `docs/research/*DSprior*`, Claude temporal synthesis | `needs rerun` | reproduce exact split/config/seeds in main |
+| teacher-student / pseudo-label distillation could produce label-scarce payoff | `MASTER_NARRATIVE_2026-06-22.md` | `hypothesis` | design controlled low-label experiment |
+| MultiSenGE pretraining then OSCD fine-tuning may improve label scarcity | `MASTER_NARRATIVE_2026-06-22.md` | `hypothesis` | require multi-seed and leakage-safe protocol |
+| temporal DS can become an ACCV-style paper route | `DESIGN_TEMPORAL_DS_ACCV2026.md` | `candidate` | needs labeled sequence and baseline ladder |
+| HSI N<<B distributional change is a possible niche | `bet1_design.md`, `challenges_ranked.md` | `candidate/paused` | needs real labeled bitemporal HSI benchmark |
+
 ## Delete-Candidate Report Groups After Absorption
 
 Do not delete yet. These are likely candidates after this ledger is checked:
@@ -56,4 +78,3 @@ Do not delete yet. These are likely candidates after this ledger is checked:
 | overlapping old `notes/*.md` | being replaced by active docs |
 | duplicated report narratives | summarized here; keep only reports with unique figures/details |
 | `research-notes/` nested repo | old note structure already distilled repeatedly |
-

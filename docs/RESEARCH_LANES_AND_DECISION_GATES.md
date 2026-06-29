@@ -1,5 +1,14 @@
 # Research Lanes And Decision Gates
 
+## Quick Links
+
+- [1. Purpose](#purpose)
+- [2. Lane Status Labels](#lane-status-labels)
+- [3. Ranked Lane Table](#ranked-lane-table)
+- [4. Lane Cards](#lane-cards)
+- [5. Closed Or Paused Routes](#closed-or-paused-routes)
+- [6. Cross-Lane Rules](#cross-lane-rules)
+
 ## Purpose
 
 This file turns indecision into a controlled queue. A research lane is one
@@ -32,9 +41,11 @@ Only one lane should be active for implementation at a time.
 | 5 | Deep subspace / geometry analysis | analyze deep/foundation features geometrically | candidate | choose encoder, define feature object, compare to raw feature baselines |
 | 6 | Foundation-model + subspace geometry | interpret/compress/cluster strong foundation features | candidate | define task: post-hoc explanation, prior generation, or low-label adaptation |
 | 7 | HSI spectral geometry and wavelength attribution | spectral interpretability and material-change analysis | paused | get real labeled bitemporal HSI benchmark and pressure against HSI baselines |
-| 8 | KDS/KGDS nonlinear satellite change | nonlinear geometry | paused | define specific nonlinear failure of DS/PCA first |
-| 9 | Greenhouse/urban infrastructure application | applied object/state monitoring | paused | secure labels and define task: mapping, classification, or change |
-| 10 | Diagnostic benchmark paper | honest boundary of subspace methods | fallback | consolidate positives/negatives into one evidence matrix |
+| 8 | Structured temporal/CCA/SFA lane | invariant/background modeling and attributable temporal change | candidate | define one sequence task and compare SFA/CCA/SSA/DS controls |
+| 9 | Tensor/Product-Grassmann satellite cubes | preserve spectral-spatial-temporal modes | future | choose tensor object and prove it beats flattening/control geometry |
+| 10 | KDS/KGDS nonlinear satellite change | nonlinear geometry | paused | define specific nonlinear failure of DS/PCA first |
+| 11 | Greenhouse/urban infrastructure application | applied object/state monitoring | paused | secure labels and define task: mapping, classification, or change |
+| 12 | Diagnostic benchmark paper | honest boundary of subspace methods | fallback | consolidate positives/negatives into one evidence matrix |
 
 ## Lane Cards
 
@@ -181,7 +192,50 @@ Gate:
 
 - define failure case where linear scores fail and kernel scores should help.
 
-### 8. Application Lane
+### 8. Structured Temporal / CCA / SFA Lane
+
+Problem:
+
+```text
+Can slow/invariant/background subspaces separate real structural change from
+seasonal, phase, or radiometric nuisance?
+```
+
+Candidate tools:
+
+- SFA / Slow Feature Subspace;
+- Singular Spectrum Analysis;
+- temporally regularized CCA / S3CCA / KCCA;
+- RTW only if a new mechanism beats simple shift/RMS/PCA controls.
+
+Gate:
+
+- define one labeled or weakly labeled sequence task;
+- compare against raw residual, global shift, PCA reconstruction, SSA, and
+  simple seasonal summaries before claiming novelty.
+
+### 9. Tensor / Product-Grassmann Lane
+
+Problem:
+
+```text
+Satellite data are naturally multi-mode: bands, height, width, time, object.
+Can tensor/product-Grassmann geometry preserve structure that vector flattening
+destroys?
+```
+
+Candidate tools:
+
+- n-mode GDS;
+- product Grassmann manifold;
+- signal latent subspace style deep-feature factors.
+
+Gate:
+
+- define the tensor modes and nulls;
+- show a benefit over simpler per-mode PCA/DS or flattened controls.
+
+### 10. Application Lane
 
 Potential applications:
 
@@ -205,3 +259,13 @@ Gate:
 | SpaceNet7 RGB transfer | raw L2/cross controls stronger |
 | satellite KDS/KGDS | no specific nonlinear question yet |
 
+## Cross-Lane Rules
+
+- A lane must define its win axis before experiments: accuracy,
+  interpretability, label efficiency, candidate triage, temporal
+  characterization, robustness, or computation.
+- A lane must name its strongest unfair-looking baseline before it is trusted.
+- AI-generated positive claims are `needs rerun` until reproduced in the active
+  code path.
+- Sensei-requested temporal/geodesic work remains important even when it is not
+  the current best detector.
