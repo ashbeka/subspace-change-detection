@@ -24,26 +24,34 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 
 Read in this order:
 
-1. [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md)  
-   Short current truth-status: what is implemented, what is not implemented, what not to overclaim.
+1. [docs/CURRENT_RESEARCH_DIRECTION.md](docs/CURRENT_RESEARCH_DIRECTION.md)
+   The current control panel: what we are doing, strongest evidence, safe claims, and the next gate.
 
-2. [docs/RESEARCH_RESET_AUDIT.md](docs/RESEARCH_RESET_AUDIT.md)  
-   The research reset: why the problem must be grounded, what directions are defensible, and what the minimum viable thesis path is.
+2. [docs/RESEARCH_LANES_AND_DECISION_GATES.md](docs/RESEARCH_LANES_AND_DECISION_GATES.md)
+   Candidate research directions ranked as lanes with win axes and continue/pause/close decisions.
 
-3. [notes/methods.md](notes/methods.md)  
-   Method understanding: how OSCD images become matrices, how DS is constructed, and why spatial information is the central concern.
+3. [docs/EXPERIMENT_RESULTS_LEDGER.md](docs/EXPERIMENT_RESULTS_LEDGER.md)
+   Compact table of what we tried, what happened, and which results matter.
 
-4. [notes/experiments.md](notes/experiments.md)  
-   Current experiment backlog, completed results, decision gates, and exact next evidence needed.
+4. [docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md](docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md)
+   Method cards, formulas, sample definitions, source-to-code trails, and implementation boundaries.
 
-5. [notes/literature.md](notes/literature.md)  
-   Papers, datasets, reference code, and what each source is useful for.
+5. [docs/ADVISOR_FEEDBACK_AND_DECISIONS.md](docs/ADVISOR_FEEDBACK_AND_DECISIONS.md)
+   Sensei/senpai/seminar feedback and the decisions/actions taken from it.
 
-6. [docs/RUNBOOK.md](docs/RUNBOOK.md)  
-   Exact setup, check, training, evaluation, and cleanup commands.
+6. [docs/LITERATURE_DATASETS_AND_BASELINES.md](docs/LITERATURE_DATASETS_AND_BASELINES.md)
+   What to read, cite, compare against, and reuse.
 
-7. [docs/research_learning_map.html](docs/research_learning_map.html)  
-   Interactive local research map. Public mobile version after the GitHub repo rename: [GitHub Pages research map](https://ashbeka.github.io/subspace-change-detection/).
+7. [docs/REPRODUCIBLE_COMMANDS.md](docs/REPRODUCIBLE_COMMANDS.md)
+   Exact commands only.
+
+8. [docs/PERSONAL_RESEARCH_NOTES.md](docs/PERSONAL_RESEARCH_NOTES.md)
+   Rough human notes. Use this as intake, not polished truth.
+
+The older `notes/` files, `docs/RESEARCH_RESET_AUDIT.md`, seminar drafts, and
+many AI-generated synthesis documents are being absorbed into the active docs
+above. They remain available during review, but they are no longer the first
+reading path.
 
 ## 2. Current Truthful Scope
 
@@ -197,20 +205,15 @@ phase2/
   viz/            prediction and prior visualization scripts
   outputs/        ignored checkpoints/evals/figures
 
-notes/
-  my_notes.md              rough personal note intake
-  feedback.md              Sensei/senpai/seminar feedback
-  methods.md               method and pipeline understanding
-  literature.md            papers, datasets, code references
-  experiments.md           experiment evidence and backlog
-  reference_bookmarks.md   organized bookmark/Zotero triage
-  research_paper_plan.md   thesis/paper framing
-
 docs/
-  README.md                documentation index
-  PROJECT_BRIEF.md         short current truth-status
-  RESEARCH_RESET_AUDIT.md  research reset and thesis path
-  RUNBOOK.md               exact commands
+  CURRENT_RESEARCH_DIRECTION.md
+  RESEARCH_LANES_AND_DECISION_GATES.md
+  METHODS_AND_IMPLEMENTATION_REFERENCE.md
+  EXPERIMENT_RESULTS_LEDGER.md
+  LITERATURE_DATASETS_AND_BASELINES.md
+  ADVISOR_FEEDBACK_AND_DECISIONS.md
+  REPRODUCIBLE_COMMANDS.md
+  PERSONAL_RESEARCH_NOTES.md
   research_learning_map.html
   experiment_reports/
   source_records/

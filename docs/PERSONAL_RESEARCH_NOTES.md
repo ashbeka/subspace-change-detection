@@ -39,20 +39,22 @@ Add new thoughts here first when they are still raw:
 - paper, code, or bookmark leads;
 - experiment ideas that are not yet specified.
 
-After new notes are added here, Codex should translate them into the functional notes:
+After new notes are added here, Codex should translate them into the active
+control docs:
 
-- `feedback.md` for advisor/senpai questions and critique;
-- `methods.md` for method understanding and implementation implications;
-- `literature.md` for papers, datasets, code references, and citations;
-- `experiments.md` for concrete tests, audits, and decision gates;
-- `research_paper_plan.md` for paper-facing framing and contribution logic.
+- `ADVISOR_FEEDBACK_AND_DECISIONS.md` for advisor/senpai questions and critique;
+- `METHODS_AND_IMPLEMENTATION_REFERENCE.md` for method understanding and implementation implications;
+- `LITERATURE_DATASETS_AND_BASELINES.md` for papers, datasets, code references, and citations;
+- `EXPERIMENT_RESULTS_LEDGER.md` for concrete tests, audits, results, and decision gates;
+- `RESEARCH_LANES_AND_DECISION_GATES.md` for candidate routes and win axes;
+- `CURRENT_RESEARCH_DIRECTION.md` for current framing and paper-facing direction.
 
 Do not treat this file as polished truth. Treat it as the human thinking layer.
 
 Future workflow note:
 
 - If these rough notes later live in Notion or another notes app through MCP, that external note source becomes the intake layer.
-- The rule stays the same: keep the raw human note, then translate only stable implications into `feedback.md`, `methods.md`, `literature.md`, `experiments.md`, or `research_paper_plan.md`.
+- The rule stays the same: keep the raw human note, then translate only stable implications into the active control docs.
 - Do not let Notion plus repo notes become two competing truth sources; the repo notes remain the structured research/action layer unless we explicitly redesign the system.
 
 ## 3. Current Rough Notes

@@ -12,58 +12,35 @@
 
 Read these first:
 
-1. `PROJECT_BRIEF.md`
-   - Short project truth: scope, pipeline, evidence, next decision, and forbidden overclaims.
+1. `CURRENT_RESEARCH_DIRECTION.md`
+   - Current control panel: active direction, strongest evidence, safe claims, forbidden claims, and next gate.
 
-2. `RESEARCH_RESET_AUDIT.md`
-   - Critical reset document: current code truth, literature-grounded problem map, ranked thesis framings, minimum viable thesis path, and 7-day action plan.
+2. `RESEARCH_LANES_AND_DECISION_GATES.md`
+   - Candidate research lanes ranked by feasibility, win axis, evidence, and continue/pause/close gates.
 
-3. `RUNBOOK.md`
-   - Exact commands for setup, liveness checks, prior generation, training, evaluation, sweeps, visualization, and troubleshooting.
+3. `EXPERIMENT_RESULTS_LEDGER.md`
+   - Compact evidence table: what was tried, what happened, and what decision each result supports.
 
-4. `SECOND_OPINION_RESEARCH_CONTEXT.md`
-   - Neutral context package for Claude/Gemini/another reviewer. Use it when asking an external model or person to challenge the project direction.
+4. `METHODS_AND_IMPLEMENTATION_REFERENCE.md`
+   - Method cards, formulas, sample definitions, source-to-code trails, and implementation boundaries.
 
-5. `experiment_reports/oscd_successive_subspace_learning_ds_2026-06-23.md`
-   - Current strongest internal OSCD result: exact successive Saab-DS construction, matched-feature controls, frozen test metrics, seed stability, pyramid/wavelet negative gates, and failure cases.
+5. `ADVISOR_FEEDBACK_AND_DECISIONS.md`
+   - Sensei/senpai/seminar feedback and what decisions/actions came from it.
 
-6. `experiment_reports/oscd_spatial_ds_baseline_pressure_2026-06-18.md`
-   - Current spatial-DS decision report: corrected Celik/IR-MAD pressure baselines, Band-Image rank sensitivity, label-free fusion, fixed-grid pyramid stop decision, and next evidence gate.
+6. `LITERATURE_DATASETS_AND_BASELINES.md`
+   - Papers, datasets, baselines, bookmarks, reference code, and comparison pressure.
 
-7. `experiment_reports/seasonal_observation_subspace_stress_test_2026-06-20.md`
-   - Synthetic and real-background controlled tests of unordered, trajectory, first/second DS, local eigenspectrum, nuisance robustness, and the independent-label evidence gate.
+7. `REPRODUCIBLE_COMMANDS.md`
+   - Exact commands only.
 
-8. `experiment_reports/oscd_core_sweep_3seed_150epoch_2026-05-03.md`
-   - Curated report for the historical OSCD 3-seed neural sweep.
+8. `PERSONAL_RESEARCH_NOTES.md`
+   - Rough human note intake. Preserve intent; translate stable implications into active control docs.
 
-9. `experiment_reports/spacenet7_temporal_subspace_validation_2026-06-21.md`
-   - Independent-label SpaceNet 7 gate for rolling first/second trajectory DS; records the negative result against standardized radiometric controls.
+Detailed reports remain under `experiment_reports/`, but they are no longer the
+first reading path. Use `EXPERIMENT_RESULTS_LEDGER.md` first, then open a
+report only when you need exact implementation details, figures, or metrics.
 
-10. `experiment_reports/multisenge_rtw_invariance_gate_2026-06-21.md`
-   - Controlled MultiSenGE test of Randomized Time Warping against snapshot-subspace, Fourier/harmonic, DTW/TWDTW, M-SSA, and radiometric controls; records the no-go decision for a natural-transition RTW study.
-
-11. `experiment_reports/breizhcrops_rtw_natural_label_transfer_2026-06-21.md`
-   - Natural-label and timing-invariance transfer study on all four official BreizhCrops regions with nested RTW selection and 22 killer controls.
-
-12. `experiment_reports/hsi_local_moment_geometry_2026-06-21.md`
-   - Four-dataset held-out test of local hyperspectral mean/scale/eigenspectrum/orientation factorization, DS projection, and basis-invariant band attribution.
-
-13. `experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md`
-   - Consolidated Codex/Claude/Antigravity method-results matrix, Sensei-task status, ranked research problems, safe claims, and seminar recommendation.
-
-14. `experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md`
-   - Decisive matched-null experiment for Band-Image DS versus spatial Gram, projector, cross-reconstruction, spatial PCA, IR-MAD, and label-free fusions.
-
-15. `experiment_reports/xbd_s12_external_validation_2026-06-22.md`
-   - Frozen event-disjoint xBD-S12 transfer, damage/localization task decomposition, matched-control statistics, and boundary stress test.
-
-16. `experiment_reports/hsi_band_image_transfer_2026-06-22.md`
-   - Fixed rank-11 transfer to four labeled HSI pairs, including the positive Hermiston regime and failed broad transfer.
-
-17. `experiment_reports/spacenet7_band_image_transfer_2026-06-22.md`
-   - Nine-AOI, 197-transition RGB building-appearance gate that rejects generic projector/DS transfer.
-
-18. `research_learning_map.html`
+9. `research_learning_map.html`
    - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records
@@ -85,28 +62,27 @@ Read these first:
 - `final_organization_2026-06-12/`
   - Raw source batch for the final notes/bookmark organization pass, including Apple Notes, Slack exports, Word notes, Fukui subspace PDF, image attachments, Chrome export, Safari links, moved historical ingestion ledgers, the organized Chrome import file, and the final coverage audit.
 
-These files are preserved as provenance. They are not the active project truth. Useful knowledge from them should be reflected in `../notes/` or the active docs.
+These files are preserved as provenance. They are not the active project truth.
+Useful knowledge from them should be reflected in the active control docs above.
 
 ## 3. Active Notes
 
-The active thinking files are:
+The old `../notes/` folder is being absorbed during Active Knowledge
+Distillation. Do not add new active project knowledge there unless the migration
+is explicitly paused.
 
-- `../notes/feedback.md`
-- `../notes/my_notes.md`
-- `../notes/methods.md`
-- `../notes/literature.md`
-- `../notes/experiments.md`
-- `../notes/reference_bookmarks.md`
-- `../notes/research_paper_plan.md`
+The rough personal note intake has moved to:
+
+- `PERSONAL_RESEARCH_NOTES.md`
 
 ## 4. Historical Archive
 
-`docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into the active `../notes/` files and project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
+`docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
 
-The old `phase1/docs/` and `phase2/docs/` folders were also removed after consolidation. Their useful commands, method details, historical result caveats, and experiment plans now live in `../notes/methods.md`, `../notes/experiments.md`, and `RUNBOOK.md`. Their generated figures were not kept as active docs; regenerate or recover from Git history only if a specific figure is needed.
+The old `phase1/docs/` and `phase2/docs/` folders were also removed after consolidation. Their useful commands, method details, historical result caveats, and experiment plans are being absorbed into the active control docs. Their generated figures were not kept as active docs; regenerate or recover from Git history only if a specific figure is needed.
 
 ## 5. Research Notes Rule
 
-`../notes/` is the current active notes location.
+The active knowledge location is now this `docs/` control-doc set.
 
-`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into `../notes/` or the active docs above. Its current useful content was ingested into active notes on 2026-06-07; delete the folder only after the user confirms the ingestion is sufficient.
+`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into the active docs above. Its current useful content was ingested previously; delete the folder only after the user confirms the new active docs cover it sufficiently.

@@ -75,12 +75,12 @@ This question is also draft. If a better research gap is found, update the frami
 
 The user has strong research-note FOMO: do not casually discard ideas, advisor feedback, old decisions, failed experiments, or possible future research directions. At the same time, do not preserve them by creating many scattered files.
 
-`notes/my_notes.md` is the user's rough personal note intake. When the user has a raw thought, unclear idea, half-formed research doubt, or copied personal note, it should go there first. Codex should then translate the useful content into the functional notes without pretending the rough note is already verified truth.
+`docs/PERSONAL_RESEARCH_NOTES.md` is the user's rough personal note intake. When the user has a raw thought, unclear idea, half-formed research doubt, or copied personal note, it should go there first. Codex should then translate the useful content into the active control docs without pretending the rough note is already verified truth.
 
-When processing `notes/my_notes.md`:
+When processing `docs/PERSONAL_RESEARCH_NOTES.md`:
 
 - preserve the user's intent and wording style enough that the note remains recognizable;
-- extract actionable implications into `feedback.md`, `methods.md`, `literature.md`, `experiments.md`, or `research_paper_plan.md`;
+- extract actionable implications into `ADVISOR_FEEDBACK_AND_DECISIONS.md`, `METHODS_AND_IMPLEMENTATION_REFERENCE.md`, `LITERATURE_DATASETS_AND_BASELINES.md`, `EXPERIMENT_RESULTS_LEDGER.md`, `RESEARCH_LANES_AND_DECISION_GATES.md`, or `CURRENT_RESEARCH_DIRECTION.md`;
 - avoid inventing a neat narrative that the user did not actually decide;
 - do not erase rough notes merely because they have been translated unless the user explicitly asks for cleanup.
 
@@ -110,11 +110,11 @@ Gap checking is a core project habit, not just a cleanup step. The purpose is to
 
 Track gaps without letting notes explode. Prefer short, local gap entries inside the existing functional note where the gap belongs:
 
-- `notes/methods.md`: mathematical, algorithmic, and implementation gaps.
-- `notes/experiments.md`: missing evidence, ablations, metrics, and reproducibility gaps.
-- `notes/literature.md`: novelty, citation, baseline, and related-work gaps.
-- `notes/feedback.md`: advisor/senpai questions that are not fully answered.
-- `notes/research_paper_plan.md`: gaps that affect the paper argument, contribution, or thesis framing.
+- `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md`: mathematical, algorithmic, and implementation gaps.
+- `docs/EXPERIMENT_RESULTS_LEDGER.md`: missing evidence, ablations, metrics, and reproducibility gaps.
+- `docs/LITERATURE_DATASETS_AND_BASELINES.md`: novelty, citation, baseline, and related-work gaps.
+- `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`: advisor/senpai questions that are not fully answered.
+- `docs/CURRENT_RESEARCH_DIRECTION.md` or `docs/RESEARCH_LANES_AND_DECISION_GATES.md`: gaps that affect the paper argument, contribution, lane ranking, or thesis framing.
 
 Use lightweight labels instead of large templates:
 
@@ -137,13 +137,13 @@ Chat is not durable enough for research planning. If Codex recommends something 
 
 Default locations:
 
-- `notes/experiments.md`: experiment/audit/backlog tasks, metrics, commands, decision gates, and "do not run X until Y" constraints.
-- `notes/methods.md`: method relationships, formulas, implementation caveats, source-to-code interpretation, and subspace construction details.
-- `notes/literature.md`: papers, baselines, datasets, reference code, citations, and novelty/comparison pressure.
-- `notes/feedback.md`: advisor/senpai/seminar questions and unanswered concerns.
-- `notes/research_paper_plan.md`: thesis framing, safe claims, forbidden claims, and argument structure.
-- `docs/RUNBOOK.md`: commands the user is expected to rerun.
-- `docs/PROJECT_BRIEF.md`: only major status changes that affect the current project truth.
+- `docs/EXPERIMENT_RESULTS_LEDGER.md`: experiment/audit/backlog tasks, metrics, commands, decision gates, and "do not run X until Y" constraints.
+- `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md`: method relationships, formulas, implementation caveats, source-to-code interpretation, and subspace construction details.
+- `docs/LITERATURE_DATASETS_AND_BASELINES.md`: papers, baselines, datasets, reference code, citations, and novelty/comparison pressure.
+- `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`: advisor/senpai/seminar questions and unanswered concerns.
+- `docs/CURRENT_RESEARCH_DIRECTION.md`: thesis framing, safe claims, forbidden claims, and current argument structure.
+- `docs/RESEARCH_LANES_AND_DECISION_GATES.md`: candidate research routes, ranking, win axes, and continue/pause/close decisions.
+- `docs/REPRODUCIBLE_COMMANDS.md`: commands the user is expected to rerun.
 
 When reviewing recent chat for missed tasks, convert only actionable items into notes. Avoid copying conversational wording or creating new files. If the task already exists, strengthen the existing entry instead of duplicating it.
 
@@ -158,10 +158,10 @@ When new reference code appears:
 - Identify what concepts it implements, such as PCA, KPCA, DS, GDS, KDS, KGDS, CCA/KCCA, S3CCA/TRCCA, MSM/KMSM, RTW, SFA, Grassmann geometry, attribution, or metric/decomposition utilities.
 - Map each useful concept to a possible project role: paper-to-code verification, baseline implementation, future experiment, advisor explanation, visualization, or thesis related work.
 - Record where the useful knowledge belongs in the active structure:
-  - `notes/methods.md` for algorithm details and adaptation ideas;
-  - `notes/experiments.md` for candidate experiments and evidence gates;
-  - `notes/literature.md` for paper/code provenance and citation context;
-  - `notes/research_paper_plan.md` only if it affects the paper-facing research path.
+  - `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md` for algorithm details and adaptation ideas;
+  - `docs/EXPERIMENT_RESULTS_LEDGER.md` for candidate experiments and evidence gates;
+  - `docs/LITERATURE_DATASETS_AND_BASELINES.md` for paper/code provenance and citation context;
+  - `docs/CURRENT_RESEARCH_DIRECTION.md` or `docs/RESEARCH_LANES_AND_DECISION_GATES.md` only if it affects the paper-facing research path.
 - Do not assume reference code is ground truth. Compare it with papers, toy tests, dimensions, and active code behavior.
 - Do not delete or archive reference code just because it is unused by runtime. First explain what it can teach us, what is irrelevant, what is duplicated, and what would be required to adapt it.
 
@@ -169,34 +169,30 @@ The goal is project self-scanning: when files or folders are added, Codex should
 
 ## Notes And Docs Structure
 
-Use this split:
+Use this active structure:
 
 ```text
-notes/ = active research thinking
-docs/  = project-facing documentation
+docs/ = active research control docs, source records, curated reports, commands
 ```
 
-Active notes:
+Active control docs:
 
-- `notes/feedback.md`: Sensei, senpai, seminar, and self-critique feedback translated into tasks.
-- `notes/my_notes.md`: personal rough-note intake before ideas are translated into functional notes.
-- `notes/methods.md`: method and pipeline understanding.
-- `notes/literature.md`: papers, datasets, code references, and why they matter.
-- `notes/experiments.md`: experiment evidence, open tests, decision gates, and next actions.
-- `notes/reference_bookmarks.md`: bookmark triage, Zotero-first queue, and organized Chrome import pointer.
-- `notes/research_paper_plan.md`: paper/thesis-facing argument, contribution framing, and section skeleton.
+- `docs/CURRENT_RESEARCH_DIRECTION.md`: current project truth, strongest evidence, safe claims, and next action.
+- `docs/RESEARCH_LANES_AND_DECISION_GATES.md`: candidate research lanes, win axes, ranking, and continue/pause/close gates.
+- `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md`: methods, formulas, construction cards, source-to-code trails, and implementation caveats.
+- `docs/EXPERIMENT_RESULTS_LEDGER.md`: compact evidence table for completed and pending experiments.
+- `docs/LITERATURE_DATASETS_AND_BASELINES.md`: papers, datasets, baselines, bookmarks, and reference-code context.
+- `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`: Sensei/senpai/seminar feedback and resulting decisions.
+- `docs/REPRODUCIBLE_COMMANDS.md`: exact commands.
+- `docs/PERSONAL_RESEARCH_NOTES.md`: rough personal note intake before ideas are translated into control docs.
+- `docs/experiment_reports/`: curated detailed reports, not the first reading path.
+- `docs/source_records/`: original human-facing records received/submitted during the project, raw imports, and importable organized source records. Preserve these, but do not treat them as current truth without checking active control docs.
 
-Active docs:
-
-- `docs/README.md`: docs index and reading map.
-- `docs/PROJECT_BRIEF.md`: short current truth-status.
-- `docs/RUNBOOK.md`: exact reproducibility and experiment commands.
-- `docs/experiment_reports/`: curated human-readable experiment reports, not raw generated outputs.
-- `docs/source_records/`: original human-facing records received/submitted during the project, raw imports, and importable organized source records. Preserve these, but do not treat them as current truth without checking active notes.
+The old `notes/` files are being absorbed into the active docs during the Active Knowledge Distillation stage. Do not add new active knowledge to `notes/` unless the user explicitly pauses the migration.
 
 The old `docs/archive/` folder was deleted after its useful knowledge was consolidated into active notes/docs. If historical wording is needed, use Git/GitHub history rather than recreating an archive folder by default.
 
-When ingesting old notes, Apple Notes exports, Chrome bookmarks, archive files, or `research-notes/`, compress useful information into the existing `notes/` files whenever possible. Do not make a new note file by default.
+When ingesting old notes, Apple Notes exports, Chrome bookmarks, archive files, or `research-notes/`, compress useful information into the active `docs/` control files whenever possible. Do not make a new note file by default.
 
 ## Git Rules
 
@@ -248,7 +244,7 @@ Before coding a paper-derived or reference-code-derived method, identify the pap
 
 When reporting an implemented experiment to the user, explain what source material guided it, what was adapted for Sentinel-2 or another dataset, and what remains an implementation choice rather than paper theory.
 
-For subspace experiments, always explain subspace construction first. Use the construction-card fields from `notes/methods.md`: variant name, source/reference, sample unit, input matrix/tensor, subspace count, basis shape, fitting method, comparison/score, spatial information preserved/lost, code path, and verification. This is seminar-critical; do not assume "we build a subspace" is enough explanation.
+For subspace experiments, always explain subspace construction first. Use the construction-card fields from `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md`: variant name, source/reference, sample unit, input matrix/tensor, subspace count, basis shape, fitting method, comparison/score, spatial information preserved/lost, code path, and verification. This is seminar-critical; do not assume "we build a subspace" is enough explanation.
 
 ## Current Priority
 
