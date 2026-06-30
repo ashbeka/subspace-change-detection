@@ -1,100 +1,97 @@
-# Docs Index
+# Docs Start Here
 
-## Table Of Contents
+## Quick Links
 
-- [1. Active Docs](#1-active-docs)
-- [2. Source Records](#2-source-records)
-- [3. Pending Deletion Review](#3-pending-deletion-review)
-- [4. Historical Archive](#4-historical-archive)
-- [5. Research Notes Rule](#5-research-notes-rule)
+- [1. First Reading Path](#1-first-reading-path)
+- [2. What Each Active Doc Owns](#2-what-each-active-doc-owns)
+- [3. Supporting Material](#3-supporting-material)
+- [4. Distillation Rule](#4-distillation-rule)
+- [5. Deletion Review Rule](#5-deletion-review-rule)
 
-## 1. Active Docs
+## 1. First Reading Path
 
-Read these first:
+Read these files first, in this order:
 
-1. `active/CURRENT_RESEARCH_DIRECTION.md`
-   - Current control panel: active direction, strongest evidence, safe claims, forbidden claims, and next gate.
+1. `CURRENT_RESEARCH_DIRECTION.md`
+   - Current truth, strongest evidence, safe claims, forbidden claims, and immediate next gate.
 
-2. `active/RESEARCH_LANES_AND_DECISION_GATES.md`
-   - Candidate research lanes ranked by feasibility, win axis, evidence, and continue/pause/close gates.
+2. `RESEARCH_ROUTES.md`
+   - All research routes, including current, candidate, weak, parked, and rejected routes.
 
-3. `active/EXPERIMENT_RESULTS_LEDGER.md`
-   - Compact evidence table: what was tried, what happened, and what decision each result supports.
+3. `EXPERIMENTS_RESULTS.md`
+   - Compact ledger of completed experiments, pending experiments, negative results, commands, and decision gates.
 
-4. `active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
-   - Method cards, formulas, sample definitions, source-to-code trails, and implementation boundaries.
+4. `METHODS_REFERENCE.md`
+   - Subspace construction, formulas, source-to-code trails, method cards, and implementation caveats.
 
-5. `active/ADVISOR_FEEDBACK_AND_DECISIONS.md`
-   - Sensei/senpai/seminar feedback and what decisions/actions came from it.
+5. `LITERATURE_BASELINES_DATASETS.md`
+   - Papers, datasets, baselines, bookmark-derived resources, and reference-code context.
 
-6. `active/LITERATURE_DATASETS_AND_BASELINES.md`
-   - Papers, datasets, baselines, bookmarks, reference code, and comparison pressure.
+6. `HUMAN_NOTES_AND_FEEDBACK.md`
+   - Sensei/senpai/seminar feedback plus distilled human-facing decisions.
 
-7. `active/REPRODUCIBLE_COMMANDS.md`
-   - Exact commands only.
+7. `PERSONAL_RESEARCH_NOTES.md`
+   - Rough user note intake. Preserve intent here, then translate stable implications into the other active docs.
 
-8. `active/KNOWLEDGE_DISTILLATION_REVIEW.md`
-   - Coverage dashboard for old notes, research docs, KB files, and deletion candidates.
+8. `COMMANDS.md`
+   - Exact reproducible commands.
 
-9. `active/PERSONAL_RESEARCH_NOTES.md`
-   - Rough human note intake. Preserve intent; translate stable implications into active control docs.
+9. `DISTILLATION_REVIEW.md`
+   - Coverage dashboard showing what old files were reviewed, what was absorbed, and what remains for deletion review.
 
-Detailed reports remain under `experiment_reports/`, but they are no longer the
-first reading path. Use `EXPERIMENT_RESULTS_LEDGER.md` first, then open a
-report only when you need exact implementation details, figures, or metrics.
+## 2. What Each Active Doc Owns
 
-## 2. Source Records
+The active docs are the only normal reading path. They should contain no unnecessary provenance chatter and no repeated copies of the same idea.
 
-`source_records/` preserves original human-facing project records:
+| Active doc | Responsibility |
+|---|---|
+| `CURRENT_RESEARCH_DIRECTION.md` | current project framing, safest claims, strongest evidence, current next action |
+| `RESEARCH_ROUTES.md` | evolving research problem routes and decision gates |
+| `METHODS_REFERENCE.md` | formulas, dimensions, construction cards, implementation references |
+| `EXPERIMENTS_RESULTS.md` | results, metrics, commands, pending tests, go/no-go outcomes |
+| `LITERATURE_BASELINES_DATASETS.md` | papers, datasets, baselines, bookmarks, reference code |
+| `HUMAN_NOTES_AND_FEEDBACK.md` | advisor/senpai/seminar feedback and human priorities |
+| `PERSONAL_RESEARCH_NOTES.md` | rough personal notes before distillation |
+| `COMMANDS.md` | command-only runbook |
+| `DISTILLATION_REVIEW.md` | coverage and deletion-readiness dashboard |
 
-- `student_feedback_channel4_2025-11-20.xlsx`
-  - Student feedback received after the first seminar.
-- `qa_report_response_2025-11-20.pdf`
-  - Submitted QA response report after the first seminar.
-- `legacy_cs_seminar_report_ds_damage_segmentation_2025.tex`
-  - Earlier generated/submitted CS seminar report source.
-- `chrome_bookmarks_raw_2026-06-07.html`
-  - Raw Chrome bookmark export preserved before organization.
-- `chrome_bookmarks_organized_research_2026-06-07.html`
-  - Importable organized Chrome bookmark file preserving every URL once.
-- `presentations/legacy_2025_oscd_ds_seminar/`
-  - Historical seminar slide PNGs and talk notes. These are provenance, not current evidence; some result claims were superseded by later controlled sweeps.
-- `final_organization_2026-06-12/`
-  - Raw source batch for the final notes/bookmark organization pass, including Apple Notes, Slack exports, Word notes, Fukui subspace PDF, image attachments, Chrome export, Safari links, moved historical ingestion ledgers, the organized Chrome import file, and the final coverage audit.
+## 3. Supporting Material
 
-These files are preserved as provenance. They are not the active project truth.
-Useful knowledge from them should be reflected in the active control docs above.
+Supporting material is preserved, but it is not the first reading path.
 
-## 3. Pending Deletion Review
+| Folder | Purpose |
+|---|---|
+| `source_records/` | raw provenance: Apple Notes, Slack exports, reports, submitted files, bookmark exports, absorbed Claude overlap copies |
+| `experiment_reports/` | detailed reports, figures, metrics, and assets for specific experiments |
+| `pending_deletion_review/` | old notes, old AI drafts, old project docs, old research material, and old learning-map files waiting for review |
+| `figures/` | reusable figures and generated visual aids |
 
-`pending_deletion_review/` contains files preserved for review before possible
-deletion. These files are no longer active truth.
+## 4. Distillation Rule
 
-Current groups:
+Every non-active file should be read and routed by usefulness:
 
-- `pending_deletion_review/old_notes/`
-  - Former `notes/` files.
-- `pending_deletion_review/old_knowledge_base/`
-  - Former `docs/kb/` synthesis files.
-- `pending_deletion_review/old_research_material/`
-  - Former `docs/research/` seminar, Claude, and mining files.
-- `pending_deletion_review/old_project_docs/`
-  - Former top-level long docs such as `RUNBOOK.md`, `PROJECT_BRIEF.md`,
-    `RESEARCH_RESET_AUDIT.md`, and `CD_TAXONOMY.md`.
-- `pending_deletion_review/old_learning_map/`
-  - The previous local research learning map HTML/CSS/JS.
+```text
+human feedback -> HUMAN_NOTES_AND_FEEDBACK.md
+research problem or possible contribution -> RESEARCH_ROUTES.md
+method/formula/pipeline/sample definition -> METHODS_REFERENCE.md
+experiment/result/command/metric/decision gate -> EXPERIMENTS_RESULTS.md or COMMANDS.md
+paper/dataset/baseline/reference code -> LITERATURE_BASELINES_DATASETS.md
+current thesis claim/risk -> CURRENT_RESEARCH_DIRECTION.md
+rough personal wording -> PERSONAL_RESEARCH_NOTES.md
+coverage/fate -> DISTILLATION_REVIEW.md
+```
 
-Do not add new active project knowledge there unless the migration is
-explicitly paused. New stable knowledge belongs in `active/`.
+If an important idea does not fit those destinations, the routing system should evolve. Do not discard useful information just because it was not anticipated.
 
-## 4. Historical Archive
+## 5. Deletion Review Rule
 
-`docs/archive/` was removed after a final ingestion audit. Its useful knowledge was consolidated into project docs. The deleted tracked files remain recoverable from Git/GitHub history, but they are no longer part of the active reading path.
+No source record or old file should be deleted merely because it is old, AI-generated, repetitive, or messy.
 
-The old `phase1/docs/` and `phase2/docs/` folders were also removed after consolidation. Their useful commands, method details, historical result caveats, and experiment plans are being absorbed into the active control docs. Their generated figures were not kept as active docs; regenerate or recover from Git history only if a specific figure is needed.
+Deletion becomes reasonable only when:
 
-## 5. Research Notes Rule
+1. the file is listed in `DISTILLATION_REVIEW.md`;
+2. any unique knowledge has been distilled into the active docs;
+3. duplicate content has no unique nuance left;
+4. the user approves deletion.
 
-The active knowledge location is now `docs/active/`.
-
-`research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into the active docs above. Its current useful content was ingested previously; delete the folder only after the user confirms the new active docs cover it sufficiently.
+Exact experiment reports and source records may remain preserved even after their conclusions are distilled, because they carry provenance, figures, commands, and auditability.

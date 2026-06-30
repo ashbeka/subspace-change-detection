@@ -136,15 +136,15 @@ Do not claim:
 
 Read only these first:
 
-1. `docs/active/CURRENT_RESEARCH_DIRECTION.md`
-2. `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md`
-3. `docs/active/EXPERIMENT_RESULTS_LEDGER.md`
-4. `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
-5. `docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md`
-6. `docs/active/LITERATURE_DATASETS_AND_BASELINES.md`
-7. `docs/active/REPRODUCIBLE_COMMANDS.md`
-8. `docs/active/KNOWLEDGE_DISTILLATION_REVIEW.md` for deletion/coverage review
-9. `docs/active/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
+1. `docs/CURRENT_RESEARCH_DIRECTION.md`
+2. `docs/RESEARCH_ROUTES.md`
+3. `docs/EXPERIMENTS_RESULTS.md`
+4. `docs/METHODS_REFERENCE.md`
+5. `docs/HUMAN_NOTES_AND_FEEDBACK.md`
+6. `docs/LITERATURE_BASELINES_DATASETS.md`
+7. `docs/COMMANDS.md`
+8. `docs/DISTILLATION_REVIEW.md` for deletion/coverage review
+9. `docs/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
 
 ## Stage 1 Distillation Policy
 
@@ -160,33 +160,35 @@ AI-generated files should be read, compressed, and then marked as
 delete-candidates when their useful content is absorbed. Human/source records
 should be preserved until explicitly approved for deletion.
 
-Labels used in the distillation review:
+File fate language should stay simple:
 
-| Label | Meaning |
+| Fate | Meaning |
 |---|---|
-| `[human-source]` | user, Sensei, senpai, seminar, submitted, or raw source material |
-| `[curated-evidence]` | experiment report with metrics, figures, commands, or reproducible output |
-| `[ai-synthesis]` | Codex/Claude/other generated interpretation or narrative |
-| `[method-reference]` | formulas, method construction, or source-to-code detail |
-| `[literature-resource]` | papers, datasets, benchmarks, links, or reference code |
-| `[active-control]` | one of the new files that remains in the main reading path |
-| `[delete-candidate]` | likely removable after review because content is absorbed |
-| `[preserve]` | do not delete without explicit user approval |
-| `[needs-review]` | possible unique content remains |
+| keep active | first reading path |
+| preserve | raw/source evidence; do not delete without approval |
+| keep curated | detailed experiment evidence still useful |
+| absorb then review | useful content should live in active docs before deletion |
+| unclear | spot-check before any decision |
+
+The file-by-file proof surface is:
+
+```text
+docs/source_records/distillation_file_ledger_2026-07-01.csv
+```
 
 ## Transition Map
 
 | Old source | New active destination | Later status |
 |---|---|---|
-| `docs/pending_deletion_review/old_notes/research_paper_plan.md` | this file + `RESEARCH_LANES_AND_DECISION_GATES.md` | absorb/delete-candidate |
-| `docs/pending_deletion_review/old_notes/experiments.md` | `EXPERIMENT_RESULTS_LEDGER.md` | absorbed/delete-candidate after user review |
-| `docs/pending_deletion_review/old_notes/methods.md` | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` | absorbed/delete-candidate after user review |
-| `docs/pending_deletion_review/old_notes/literature.md`, `docs/pending_deletion_review/old_notes/reference_bookmarks.md` | `LITERATURE_DATASETS_AND_BASELINES.md` | absorbed/delete-candidate after user review |
-| `docs/pending_deletion_review/old_notes/feedback.md` | `ADVISOR_FEEDBACK_AND_DECISIONS.md` | absorbed/delete-candidate after user review |
-| former `notes/my_notes.md` | `docs/active/PERSONAL_RESEARCH_NOTES.md` | moved into active rough-note intake |
+| `docs/pending_deletion_review/old_notes/research_paper_plan.md` | this file + `RESEARCH_ROUTES.md` | absorb/delete-candidate |
+| `docs/pending_deletion_review/old_notes/experiments.md` | `EXPERIMENTS_RESULTS.md` | absorbed/delete-candidate after user review |
+| `docs/pending_deletion_review/old_notes/methods.md` | `METHODS_REFERENCE.md` | absorbed/delete-candidate after user review |
+| `docs/pending_deletion_review/old_notes/literature.md`, `docs/pending_deletion_review/old_notes/reference_bookmarks.md` | `LITERATURE_BASELINES_DATASETS.md` | absorbed/delete-candidate after user review |
+| `docs/pending_deletion_review/old_notes/feedback.md` | `HUMAN_NOTES_AND_FEEDBACK.md` | absorbed/delete-candidate after user review |
+| former `notes/my_notes.md` | `docs/PERSONAL_RESEARCH_NOTES.md` | moved into active rough-note intake |
 | `docs/pending_deletion_review/old_research_material/*seminar*` | this file if current; otherwise source/delete-candidate | mostly delete-candidate |
 | `docs/pending_deletion_review/old_research_material/claude_temporal/*` | lane/method/experiment ledgers | AI synthesis delete-candidate |
-| `docs/experiment_reports/*.md` | `EXPERIMENT_RESULTS_LEDGER.md` rows | keep curated until review |
+| `docs/experiment_reports/*.md` | `EXPERIMENTS_RESULTS.md` rows | keep curated until review |
 | `docs/pending_deletion_review/old_knowledge_base/*.md` | methods/literature references | absorb/delete-candidate |
 | `research-notes/` | active docs if not already absorbed | delete-candidate after audit |
 
@@ -199,7 +201,7 @@ Highest-priority delete candidates:
 
 | Candidate | Why likely removable | Condition before deletion |
 |---|---|---|
-| `docs/pending_deletion_review/old_research_material/claude_temporal/*.md` | AI-generated synthesis now represented in lanes/methods/ledger | confirm no unique result missing from `EXPERIMENT_RESULTS_LEDGER.md` |
+| `docs/pending_deletion_review/old_research_material/claude_temporal/*.md` | AI-generated synthesis now represented in lanes/methods/ledger | confirm no unique result missing from `EXPERIMENTS_RESULTS.md` |
 | old seminar drafts in `docs/pending_deletion_review/old_research_material/` | superseded by active direction docs and final seminar material | keep only final slides/scripts if still needed |
 | `docs/pending_deletion_review/old_notes/*.md` | active knowledge moved to docs control set | user review before deletion |
 | `research-notes/` nested repo | old distilled notes repo, repeatedly ingested | final audit that no human note is unique there |
@@ -211,7 +213,7 @@ Not delete without explicit approval:
 | Source | Reason |
 |---|---|
 | `docs/source_records/final_organization_2026-06-12/` | raw Apple/Slack/bookmark/source batch |
-| `docs/active/PERSONAL_RESEARCH_NOTES.md` | user rough-note intake |
+| `docs/PERSONAL_RESEARCH_NOTES.md` | user rough-note intake |
 | curated experiment reports with unique figures or exact metrics | evidence provenance |
 | code and datasets | require separate code/data cleanup stages |
 
@@ -223,14 +225,14 @@ records are preserved unless explicitly reviewed.
 
 | Path/group | Fate | Reason |
 |---|---|---|
-| `docs/active/CURRENT_RESEARCH_DIRECTION.md` | keep active | current control panel |
-| `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md` | keep active | research lane queue |
-| `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md` | keep active | method/source-to-code reference |
-| `docs/active/EXPERIMENT_RESULTS_LEDGER.md` | keep active | compact result memory |
-| `docs/active/LITERATURE_DATASETS_AND_BASELINES.md` | keep active | reading/citation/baseline map |
-| `docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md` | keep active | Sensei/senpai decision trail |
-| `docs/active/REPRODUCIBLE_COMMANDS.md` | keep active | commands only |
-| `docs/active/PERSONAL_RESEARCH_NOTES.md` | keep active | rough human note intake |
+| `docs/CURRENT_RESEARCH_DIRECTION.md` | keep active | current control panel |
+| `docs/RESEARCH_ROUTES.md` | keep active | research lane queue |
+| `docs/METHODS_REFERENCE.md` | keep active | method/source-to-code reference |
+| `docs/EXPERIMENTS_RESULTS.md` | keep active | compact result memory |
+| `docs/LITERATURE_BASELINES_DATASETS.md` | keep active | reading/citation/baseline map |
+| `docs/HUMAN_NOTES_AND_FEEDBACK.md` | keep active | Sensei/senpai decision trail |
+| `docs/COMMANDS.md` | keep active | commands only |
+| `docs/PERSONAL_RESEARCH_NOTES.md` | keep active | rough human note intake |
 | `docs/pending_deletion_review/old_notes/feedback.md` | absorb/delete-candidate | distilled into advisor/decision doc |
 | `docs/pending_deletion_review/old_notes/methods.md` | absorb/delete-candidate | distilled into methods reference |
 | `docs/pending_deletion_review/old_notes/experiments.md` | absorb/delete-candidate | distilled into experiment ledger |

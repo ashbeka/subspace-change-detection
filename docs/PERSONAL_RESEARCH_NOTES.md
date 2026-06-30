@@ -42,11 +42,11 @@ Add new thoughts here first when they are still raw:
 After new notes are added here, Codex should translate them into the active
 control docs:
 
-- `ADVISOR_FEEDBACK_AND_DECISIONS.md` for advisor/senpai questions and critique;
-- `METHODS_AND_IMPLEMENTATION_REFERENCE.md` for method understanding and implementation implications;
-- `LITERATURE_DATASETS_AND_BASELINES.md` for papers, datasets, code references, and citations;
-- `EXPERIMENT_RESULTS_LEDGER.md` for concrete tests, audits, results, and decision gates;
-- `RESEARCH_LANES_AND_DECISION_GATES.md` for candidate routes and win axes;
+- `HUMAN_NOTES_AND_FEEDBACK.md` for advisor/senpai questions and critique;
+- `METHODS_REFERENCE.md` for method understanding and implementation implications;
+- `LITERATURE_BASELINES_DATASETS.md` for papers, datasets, code references, and citations;
+- `EXPERIMENTS_RESULTS.md` for concrete tests, audits, results, and decision gates;
+- `RESEARCH_ROUTES.md` for candidate routes and win axes;
 - `CURRENT_RESEARCH_DIRECTION.md` for current framing and paper-facing direction.
 
 Do not treat this file as polished truth. Treat it as the human thinking layer.

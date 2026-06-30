@@ -1,17 +1,17 @@
-# Advisor Feedback And Decisions
+# Human Notes And Feedback
 
 ## Quick Links
 
-- [1. Purpose](#purpose)
-- [2. Sensei Feedback: Core Questions](#sensei-feedback-core-questions)
-- [3. Sensei-Requested Temporal Direction](#sensei-requested-temporal-direction)
-- [4. Senpai Feedback: Spatial And Green Learning](#senpai-feedback-spatial-and-green-learning)
-- [5. Seminar Feedback](#seminar-feedback)
-- [6. Sensei/Seminar Coverage Table](#senseiseminar-coverage-table)
-- [7. Detailed Human Feedback Preserved From Old Notes](#detailed-human-feedback-preserved-from-old-notes)
-- [8. Current Decisions](#current-decisions)
+- [1. Purpose](#1-purpose)
+- [2. Sensei Feedback: Core Questions](#2-sensei-feedback-core-questions)
+- [3. Sensei-Requested Temporal Direction](#3-sensei-requested-temporal-direction)
+- [4. Senpai Feedback: Spatial And Green Learning](#4-senpai-feedback-spatial-and-green-learning)
+- [5. Seminar Feedback](#5-seminar-feedback)
+- [6. Sensei/Seminar Coverage Table](#6-senseiseminar-coverage-table)
+- [7. Detailed Human Feedback Preserved From Old Notes](#7-detailed-human-feedback-preserved-from-old-notes)
+- [8. Current Decisions](#8-current-decisions)
 
-## Purpose
+## 1. Purpose
 
 This file answers: **what did Sensei/senpai/seminar feedback require, and what
 did we do about it?**
@@ -19,7 +19,7 @@ did we do about it?**
 Advisor and human-written notes have higher preservation priority than
 AI-generated synthesis.
 
-## Sensei Feedback: Core Questions
+## 2. Sensei Feedback: Core Questions
 
 Sensei's most important question:
 
@@ -40,7 +40,19 @@ Decision:
 - spatially faithful constructions must be tested;
 - OSCD is a benchmark, not the whole thesis.
 
-## Sensei-Requested Temporal Direction
+Other durable Sensei guidance from Slack:
+
+| Guidance | Project consequence |
+|---|---|
+| Read change-detection survey papers to understand the field and math. | Do not justify the thesis only from lab methods; literature gaps must shape the problem. |
+| The field is a red ocean; learn deeper math and develop an original technique or algorithm. | The work needs a clear mathematical/original point, not just an application wrapper. |
+| Use subspace representation as an initial tool, but do not stick with it if other approaches are more functional. | DS is a starting point and source of originality, not a doctrine. |
+| Increase the number of bands if possible; RGB-only xBD is not ideal for subspace methods. | Multispectral/hyperspectral routes matter because DS has little room in 3-channel data. |
+| Conduct simple database evaluation to understand characteristics and verify DS validity. | Before complex models, run fair dataset diagnostics and simple baselines. |
+| DS is naive/straightforward but a good starting point for future deep research. | Keep negative DS results honestly; they can guide deeper geometry or hybrid routes. |
+| Title and presentation should emphasize the essential item, not many loosely connected ideas. | Every seminar/paper framing needs one main contribution and one win axis. |
+
+## 3. Sensei-Requested Temporal Direction
 
 Sensei asked about:
 
@@ -66,7 +78,7 @@ Decision:
 - temporal DS is a real Sensei-aligned lane;
 - present as characterization unless stronger labels/evidence arrive.
 
-## Senpai Feedback: Spatial And Green Learning
+## 4. Senpai Feedback: Spatial And Green Learning
 
 Key ideas:
 
@@ -89,7 +101,7 @@ Decision:
 - the successful part is not literal wavelet/pyramid decomposition;
 - the successful part is local label-free successive features before DS.
 
-## Seminar Feedback
+## 5. Seminar Feedback
 
 Recurring issue:
 
@@ -107,7 +119,7 @@ Decision:
 
 - every lane must define its win axis and baseline pressure before new runs.
 
-## Sensei/Seminar Coverage Table
+## 6. Sensei/Seminar Coverage Table
 
 | Ask / concern | Current answer | Status |
 |---|---|---|
@@ -121,8 +133,18 @@ Decision:
 | Band selection / combinations | preserved as future attribution/HSI lane, not current core | paused |
 | CCA/S3CCA/TRCCA | preserved as structured temporal/view-matching lane | future |
 | Pseudo-change vs real change | central failure-analysis concern; seasonal/radiometric failures must be reported | active boundary |
+| VLM explanations as subspaces | future route: embed explanations for image sets, then analyze first/second/geodesic variation | future |
+| More bands than RGB | preserved as multispectral/HSI motivation and dataset-selection rule | active boundary |
+| Read survey papers | literature map and baseline pressure now required before claims | active rule |
+| What happens after the heatmap? | senpai repeatedly asked what the output is used for: reconstruction, resource allocation, evacuation, damage level, or planning | active decision question |
+| Damage assessment vs land-use confusion | combining land-use and damage assessment was criticized as vague unless the method explains the bridge | active scope warning |
+| UAV / edge processing angle | personal notes and senpai comments suggested drone imagery and resource-constrained processing as a possible win axis | candidate application |
+| Temporal recovery value | first/second DS may be more meaningful for damage/recovery trajectories than one binary changed-area map | candidate route |
+| Gaza / reconstruction motivation | personal motivation is reconstruction support, but the thesis still needs a precise task, dataset, and metric | motivation boundary |
+| LLM/VLM idea | notes mention LLM/VLM support, but the role must be explicit: explanation, semantic retrieval, or decision support | future-only unless evaluated |
+| Alternative prior usage | feedback asked about loss weighting, curriculum, gating, and attention instead of naive concatenation | preserve as neural-prior variants after standalone prior evidence |
 
-## Detailed Human Feedback Preserved From Old Notes
+## 7. Detailed Human Feedback Preserved From Old Notes
 
 This section keeps the durable human feedback once, so old feedback files do
 not need to remain active.
@@ -146,6 +168,8 @@ not need to remain active.
 | Metrics confusion | explain AUROC, AP/PR-AUC, F1/IoU, Otsu threshold separately |
 | Related work vs proposed method boundary | separate DS/PixelHop/source methods from project adaptation |
 | Alternative prior integration | test prior channels only after standalone prior evidence is clear |
+| Construction-change alternative | if disaster labels are scarce, consider whether construction before/after data answers the same technical question; do not assume disaster is required unless the research claim needs disaster semantics |
+| Sentinel-2 for disaster damage | explain why multispectral bands add value over RGB when discussing damage assessment |
 
 ### Submitted QA Report Takeaways
 
@@ -156,6 +180,7 @@ not need to remain active.
 | MultiSenGE earliest/latest | can be dominated by seasonality; use with temporal protocol, not as direct OSCD replacement |
 | snow/seasonality | robustness/failure-analysis cases, not trivial noise to hide |
 | IR-MAD weakness | cannot be claimed unless the implementation and tuning are fair |
+| DS/PCA-diff label mismatch | treat them as spectral-change priors/explanatory overlays; OSCD masks are semantic labels and do not mark every radiometric change |
 
 ### Expanded Sensei Ask Coverage
 
@@ -170,7 +195,7 @@ not need to remain active.
 | CCA/S3CCA/TRCCA | preserved for structured temporal/view attribution, not yet detector |
 | Google Harmonized Sentinel-2 / time-sequential data | future temporal data source if temporal lane resumes |
 
-## Current Decisions
+## 8. Current Decisions
 
 | Decision | Reason |
 |---|---|

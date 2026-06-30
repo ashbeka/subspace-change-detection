@@ -1,4 +1,4 @@
-# Methods And Implementation Reference
+# Methods Reference
 
 ## Quick Links
 
@@ -345,6 +345,8 @@ Purpose:
 
 - model slowly varying background or seasonal components;
 - detect change as residual outside a learned invariant/slow subspace.
+- preserve temporal order information that ordinary PCA frame-subspaces can
+  discard.
 
 Core object:
 
@@ -357,11 +359,25 @@ Variants to know:
 
 - USFA, SSFA, and ISFA-style remote-sensing variants;
 - transformed residual scoring rather than raw post/pre subtraction.
+- Slow Feature Subspace (SFS): compute several slowest SFA weight vectors,
+  build a low-dimensional subspace from those vectors, then compare SFS objects
+  with canonical angles/MSM-style methods.
+
+SFS transfer idea:
+
+```text
+satellite sequence -> frame/date descriptors X_t
+SFA -> slowest weight vectors W
+SFS basis = PCA(W) without treating frames as unordered samples
+compare regions/events by canonical angles or DS over SFS objects
+```
 
 Current boundary:
 
 - useful conceptual pressure for temporal satellite sequences;
 - not yet an active positive detector in this repo.
+- the source paper is action-recognition, not remote sensing; adaptation must
+  beat simple temporal summaries, PCA trajectory subspaces, and raw residuals.
 
 Minimum controls:
 
@@ -390,6 +406,31 @@ Minimum controls:
 - global temporal shift;
 - dynamic time warping;
 - harmonic/Fourier summaries.
+
+### Temporal Pairing And Seasonality Protocol
+
+Status: required caution for sequence experiments.
+
+Purpose:
+
+- avoid treating arbitrary earliest/latest images as clean change evidence;
+- separate true event or land-cover change from seasonal snow, vegetation,
+  soil moisture, cloud, haze, or illumination effects.
+
+Rules:
+
+```text
+do not trust earliest/latest pairing without reporting the date gap
+prefer within-season pre/post windows when possible
+mask obvious clouds/snow before DS/PCA/IR-MAD if claiming damage relevance
+compare temporal DS against simple seasonal and raw residual controls
+```
+
+Project implication:
+
+- MultiSenGE earliest/latest visualizations are exploratory;
+- a detector claim needs controlled date selection or labels/proxies that
+  distinguish pseudo-change from the target change.
 
 ### RTW
 
@@ -473,6 +514,331 @@ Purpose:
 Gate:
 
 - show that mode-preserving geometry adds information beyond flattening.
+
+### PCA Reconstruction / Subspace Residual Baseline
+
+Status: baseline / diagnostic.
+
+Purpose:
+
+- test whether a post image, patch, object descriptor, or deep feature fits a
+  learned "normal" or pre-event subspace;
+- provide a simple anomaly/change baseline before DS claims.
+
+Construction:
+
+```text
+fit PCA basis U on normal/pre-event features
+project x: z = U^T (x - mu)
+reconstruct x_hat = mu + U z
+score = ||x - x_hat||^2
+```
+
+Possible sample units:
+
+- pixel spectra;
+- patch descriptors;
+- building-level descriptors;
+- U-Net/foundation-model encoder features.
+
+Boundary:
+
+- this is a baseline and explanation tool, not DS novelty.
+
+### Sparse Subspace Clustering For Change Types
+
+Status: candidate / baseline pressure.
+
+Purpose:
+
+- test whether changed regions form a union of simpler low-dimensional change
+  patterns;
+- provide a stronger unsupervised baseline than one global DS score;
+- optionally generate pseudo-labels or auxiliary channels for a supervised
+  model.
+
+Construction:
+
+```text
+sample = pixel, patch, object, or temporal trajectory descriptor
+X = [x_1, ..., x_N]
+solve sparse self-expression: X approx X C, diag(C)=0
+cluster the affinity |C| + |C|^T
+interpret clusters as change types or trajectory groups
+```
+
+Possible project uses:
+
+- cluster changed patches into no-change, mild spectral shift, severe surface
+  change, vegetation-to-urban, urban-to-rubble, or recovery states;
+- feed cluster ids or subspace coordinates into U-Net as extra channels;
+- compare DS against a principled union-of-subspaces baseline.
+
+Minimum controls:
+
+- k-means on the same descriptors;
+- spectral clustering without sparse self-expression;
+- U-Net/no-cluster baseline if used as pseudo-labels;
+- human/semantic inspection of cluster meaning.
+
+Boundary:
+
+- SSC is not automatically the proposed novelty. It is useful only if the
+  clusters are interpretable, externally validated, or improve a downstream
+  task without circular labels.
+
+### Diffusion / Pseudotime Progression Features
+
+Status: future route.
+
+Purpose:
+
+- represent disaster damage or recovery as a continuous progression rather
+  than only discrete classes;
+- borrow the "order samples along a trajectory" idea from diffusion-map
+  pseudotime analysis.
+
+Construction:
+
+```text
+tile/object descriptors -> k-NN graph
+graph diffusion map -> low-dimensional manifold coordinates
+pseudotime/order -> intact -> damaged -> recovering progression hypothesis
+marker features -> bands/textures/subspace coordinates associated with stages
+```
+
+Possible project use:
+
+- stage buildings or regions by recovery trajectory;
+- add a progression score as a U-Net channel or object-level feature;
+- discover marker bands/textures that explain a damage/recovery stage.
+
+Minimum controls:
+
+- simple severity score;
+- PCA/UMAP/t-SNE visualization only as diagnostic;
+- clustering with discrete labels;
+- human or dataset labels that can validate stage ordering.
+
+Boundary:
+
+- pseudotime is an analogy, not evidence by itself. It needs an interpretable
+  endpoint and validation that the ordering corresponds to real damage or
+  recovery.
+
+### Neural Prior Integration Variants
+
+Status: candidate after standalone prior evidence.
+
+Purpose:
+
+- preserve feedback asking whether DS/PCA/IR-MAD priors can be used more
+  carefully than plain channel concatenation.
+- test whether geometry helps under few labels before claiming it helps fully
+  supervised deep networks.
+
+Possible variants:
+
+```text
+prior as extra input channel
+prior as attention/gating map
+prior as loss weighting map
+prior used only in early curriculum epochs
+prior as pseudo-label or teacher signal
+```
+
+Minimum controls:
+
+- raw U-Net/Siamese model;
+- same architecture with no-DS prior such as PCA/IR-MAD/L2;
+- matched cross-reconstruction control;
+- multiple seeds and fixed train/test split.
+
+Boundary:
+
+- do not claim DS helps neural segmentation until it beats both no-prior and
+  non-DS-prior controls.
+
+### MCDA / Disaster-Resilience Decision Layer
+
+Status: application-level future route.
+
+Purpose:
+
+- turn change maps into planning evidence for reconstruction, evacuation,
+  hospitals, roads, schools, or critical infrastructure;
+- answer the repeated senpai question: "what do we do with the heatmap?"
+- preserve DMaaS, IoT, edge device, and operational-dashboard ideas without
+  letting them define the current thesis.
+
+Construction:
+
+```text
+damage/change evidence + land-use + roads + terrain + population/context
+-> weighted criteria or learned decision score
+-> priority map / candidate infrastructure or evacuation support map
+```
+
+Possible inputs:
+
+- DS/Saab/IR-MAD/PCA change scores;
+- land-use/land-cover maps;
+- building or road masks;
+- DEM/slope/aspect/topography;
+- IoT or UAV observations if a real deployment scenario exists;
+- disaster-response constraints.
+
+Boundary:
+
+- this is not the current core method. It becomes viable only after a concrete
+  decision task and validation criterion are defined.
+
+### Band-Combination / Spectral Attribution Search
+
+Status: candidate diagnostic.
+
+Purpose:
+
+- identify which Sentinel-2 band groups or indices carry useful change
+  evidence;
+- avoid treating all 13 bands as equally useful by default.
+
+Possible groups:
+
+- RGB;
+- RGB + NIR;
+- red-edge;
+- NIR/SWIR moisture and burn-sensitive groups;
+- vegetation/building/water indices.
+
+Gate:
+
+- run on held-out cities/events;
+- report both performance and band-meaning;
+- avoid exhaustive overfit unless nested validation is used.
+
+### Sparse Modeling / Dictionary / Feature Selection
+
+Status: future baseline or feature-engineering route.
+
+Purpose:
+
+- preserve the personal-note ideas around LASSO, sparse modeling, dictionary
+  learning, and automatic feature selection;
+- test whether a small interpretable feature subset explains change better than
+  dense all-band/all-feature scores.
+
+Possible uses:
+
+```text
+candidate descriptors -> LASSO / sparse logistic model -> selected bands/features
+patch/object features -> dictionary atoms -> reconstruction or cluster score
+DS/Saab/PCA scores -> sparse fusion model -> interpretable lightweight prior
+```
+
+Minimum controls:
+
+- ordinary linear/logistic regression;
+- random forest or shallow MLP if labels exist;
+- PCA or band-group attribution without sparsity.
+
+Boundary:
+
+- sparse selection is useful only if it improves interpretability, label
+  efficiency, or deployment cost. It is not automatically a subspace novelty.
+
+### Object / Building-Level Descriptors
+
+Status: application candidate.
+
+Purpose:
+
+- move from pixel-level maps to object-level change/damage reasoning.
+
+Construction:
+
+```text
+one building/greenhouse/object -> one descriptor vector
+descriptor = geometry + spectral stats + texture + context + temporal differences
+```
+
+Possible features:
+
+- area, perimeter, compactness, elongation, orientation;
+- mean/median/std per band or index inside the object mask;
+- texture such as GLCM, edge density, local variance;
+- neighborhood context such as road/water/building density;
+- pre/post differences or concatenated pre/post descriptors.
+
+Use:
+
+- damage classification;
+- greenhouse abandonment/state monitoring;
+- object retrieval for human review;
+- clustering of recovery/change trajectories.
+
+Gate:
+
+- requires object masks, polygons, or reliable object proposals;
+- compare against ordinary object descriptors and classical classifiers before
+  claiming subspace value.
+
+### Post-Classification / Semantic Change
+
+Status: candidate route, not current OSCD core.
+
+Purpose:
+
+- answer "what changed into what?" instead of only "changed or unchanged."
+
+Construction:
+
+```text
+pre image -> class/object map
+post image -> class/object map
+change = from-class -> to-class or object-state transition
+```
+
+Possible bridge to this project:
+
+- use SAM/CLIP/GeoAI/foundation models to propose objects or semantics;
+- use DS/GDS/KDS/SSC to explain or cluster changed objects/regions;
+- use subspace constraints as a light interpretable head, not as the whole
+  semantic model.
+
+Gate:
+
+- needs semantic labels, object proposals, or credible pseudo-labels;
+- compare against standard semantic/open-vocabulary change baselines.
+
+### VLM Explanation Subspaces
+
+Status: future-only.
+
+Purpose:
+
+- preserve Sensei's idea that textual explanations for image sets may be
+  represented as subspaces, then analyzed by first/second DS and geodesic
+  variation.
+
+Candidate construction:
+
+```text
+satellite image set -> VLM captions/explanations -> text embeddings
+embedding set per date/region -> subspace
+first/second DS/geodesic -> explanation trajectory or semantic drift
+```
+
+Gate:
+
+- define the VLM, prompt, embedding model, stability checks, and evaluation;
+- compare against direct text-embedding distance and raw visual-feature
+  distance.
+
+Boundary:
+
+- this is not current computer-vision evidence; it is a future
+  foundation/semantic route.
 
 ## HSI / Spectral Distribution Cards
 

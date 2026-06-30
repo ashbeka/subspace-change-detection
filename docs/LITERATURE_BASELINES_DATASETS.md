@@ -4,14 +4,15 @@
 
 - [1. Purpose](#purpose)
 - [2. Reading Priorities](#reading-priorities)
-- [3. Must-Cite Boundaries](#must-cite-boundaries)
-- [4. Dataset Map](#dataset-map)
-- [5. Baseline Pressure](#baseline-pressure)
-- [6. Reference Code](#reference-code)
-- [7. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
-- [8. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
-- [9. Bookmark Policy](#bookmark-policy)
-- [10. Exact Resource State](#exact-resource-state)
+- [3. Concept-To-Reading Map](#concept-to-reading-map)
+- [4. Must-Cite Boundaries](#must-cite-boundaries)
+- [5. Dataset Map](#dataset-map)
+- [6. Baseline Pressure](#baseline-pressure)
+- [7. Reference Code](#reference-code)
+- [8. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
+- [9. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
+- [10. Bookmark Policy](#bookmark-policy)
+- [11. Exact Resource State](#exact-resource-state)
 
 ## Purpose
 
@@ -34,6 +35,41 @@ inventories, and dataset reminders as the active reading map.
 | 8 | xBD-S12 | external Sentinel-2 disaster validation context |
 | 9 | second-order/time-series DS papers | Sensei-aligned temporal subspace dynamics |
 | 10 | foundation-model CD papers | future deep-feature geometry lane |
+
+## Concept-To-Reading Map
+
+Use this table when choosing what to read or cite for a route.
+
+| Concept / route | Read first | Why it matters |
+|---|---|---|
+| DS/GDS/KDS/KGDS foundation | Fukui and Maki TPAMI 2015, IEEE `7053916` | defines the lab method; prevents false novelty claims |
+| Second-order DS/geodesic | Fukui 2024 second-order DS, `https://www.arxiv.org/pdf/2409.08563` | Sensei-requested temporal/geodesic route |
+| SSA + DS for time-series anomaly | `https://arxiv.org/abs/2303.17802` | shows DS on signal subspaces and useful references despite reported mistakes |
+| Green Learning / PixelHop / Saab | Green Learning JVCIR 2022; PixelHop arXiv `1909.08190`; Saab/feedforward CNN papers | source for label-free local features before DS |
+| IR-MAD / CCA baseline | Nielsen 2007 IR-MAD, `https://doi.org/10.1109/TIP.2006.888195` | strong classical multivariate baseline; close to correlation-space change |
+| S3CCA / structured matching | `https://staff.aist.go.jp/takumi.kobayashi/publication/2014/ICPR2014.pdf` | Sensei/senpai route for smooth sparse partial matching |
+| Temporally regularized CCA | IEEE `7477238` and related Fukui/Kobayashi work | sequence/view matching route |
+| SFA / slow feature subspace | AIST BMVC 2017 SFA paper; Slow Feature Subspace paper | invariant/background route and nuisance control |
+| Signal Latent Subspace | ScienceDirect `S0003682X24003323` | analogy for building subspaces from learned latent features |
+| Spatial context CD | SiROC/spatial-context unsupervised CD resources | closest pressure for spatially aware unsupervised CD |
+| HSI subspace CD | Wu/Du/Zhang 2013 HSI subspace CD and HSI-CD surveys | novelty boundary: subspace HSI CD already exists |
+| Anomalous change detection | Chronochrome, covariance equalization, whitened TLSQ/ACD family | controls for nuisance-invariant residual claims |
+| Open-vocabulary / foundation CD | open-vocabulary, open vocabulary, semantic, and foundation-model CD papers from bookmarks | future route for object-specific or text-conditioned change |
+| Semantic/object-level change | SCD surveys, SAM/CLIP/GeoAI object proposals, ChangeStar-style resources | route for "what changed into what?" beyond OSCD binary masks |
+| Greenhouse monitoring | Global greenhouse maps, plastic greenhouse index, abandoned greenhouse project links | applied route only if labels/evaluation become available |
+| Building-level descriptors | xBD/xBD-S12, object-detection/segmentation and damage-assessment references | object-level damage/candidate triage route |
+| Sparse Subspace Clustering | Elhamifar and Vidal TPAMI 2013, IEEE `6482137` | union-of-subspaces baseline and possible change-type clustering route |
+| Sentinel-2 dynamic time warping | Belgiu and Csillik 2018, `https://www.sciencedirect.com/science/article/pii/S0034425717304686` | phenology/seasonality timing control for temporal routes |
+| UAV-assisted disaster management | Erdelj and Natalizio 2016, IEEE `7440563` | supports the edge/UAV deployment route and compute-resource motivation |
+| Diffusion-pseudotime analogy | RamDA-seq / diffusion-map pseudotime source note, `https://www.nature.com/articles/s41467-018-02866-0` | inspiration for ordering regions from intact to damaged to recovering; not remote-sensing evidence by itself |
+| Disaster-resilience planning / MCDA | disaster resilience frameworks, urban planning, HAI urban-change policy brief, MCDA/MCDM GIS papers | application layer for "what do we do with the heatmap?" |
+| Multi-sensor disaster analysis | SAR/InSAR, LiDAR/DEM/topography, UAV imagery, Sentinel-2 bands | future route for clouds, terrain, structural shape, and resource-allocation use cases |
+| Sparse modeling / feature selection | LASSO, sparse dictionary learning, band-selection papers | possible interpretable fusion or band-selection baseline |
+| TorchGeo / geospatial ML tooling | TorchGeo docs/examples | useful engineering library for dataset loading, pretrained models, and geospatial ML baselines |
+| Data Fusion Contest / multimodal benchmarks | IEEE GRSS Data Fusion Contest resources | future benchmark/resource pool; do not let it derail the current gate |
+| xView2 / xBD / EuroSAT | xBD/xView2 damage, EuroSAT land-use, OSCD binary CD | historical dataset candidates and baseline context |
+| MGRS / Sentinel-2 tiles | Sentinel-2 tile metadata and MGRS mapping references | needed when matching xBD-style locations back to Sentinel-2/HLS tiles |
+| Snow/cloud masking | NDSI, Sentinel-2 cloud masks, QA bands | required if claiming seasonality or snow robustness |
 
 ## Must-Cite Boundaries
 
@@ -59,6 +95,9 @@ sample construction + satellite adaptation + controlled evidence boundary
 | xBD-S12 | external disaster pressure | xBD-derived building damage labels | candidate localization | not generic OSCD-style change |
 | MultiSenGE | multi-date exploration | weak/unclear | temporal DS/RTW exploration | no clean target labels |
 | Harmonized Sentinel-2 L2A | Sensei-requested sequence source | depends on chosen event | future temporal DS/GDS | needs audit |
+| xView2 | disaster damage / building assessment family | building/damage labels | future context only | RGB-centric and not current active pipeline |
+| EuroSAT | land-use classification | land-use class labels | historical candidate | not change detection by itself |
+| Data Fusion Contest resources | multimodal remote-sensing benchmarks | varies by year | future resource pool | route must be selected before use |
 | IPOL/SITS sequences | registered time-series tests | detector maps/events | temporal DS characterization | detector maps not ground truth |
 | HSI datasets | spectral geometry pressure | scene-dependent labels | HSI transfer probes | not current positive route |
 | SpaceNet7 | RGB building appearance | building/temporal labels | transfer stress test | raw L2 stronger |
@@ -87,6 +126,20 @@ Every deep/foundation-feature lane should compare against:
 - cosine or Euclidean feature distance;
 - PCA/cross-reconstruction controls;
 - shallow classifier or linear probe where labels exist.
+
+Every SSC or change-type clustering claim should compare against:
+
+- k-means on the same descriptors;
+- spectral clustering without sparse self-expression;
+- direct raw/PCA/DS scores without clustering;
+- semantic or human inspection that clusters correspond to meaningful change
+  types rather than arbitrary score bins.
+
+Every UAV/edge or lightweight-compute claim should compare against:
+
+- runtime and memory on a fixed device or simulated budget;
+- a compact CNN/U-Net or classical baseline with the same input;
+- accuracy/latency/energy tradeoff, not only F1 or IoU.
 
 ## Reference Code
 
@@ -183,11 +236,13 @@ resources should be promoted here only when they affect one of:
 
 ## Exact Resource State
 
-Latest bookmark/resource state preserved from old notes:
+Latest bookmark/resource state preserved from old notes. The actual organized
+HTML import files are not present in the current working tree; recover them
+from Git history or regenerate from a fresh Chrome export if needed.
 
 | Item | State |
 |---|---|
-| latest cleaned import target | `docs/source_records/bookmarks/chrome_bookmarks_research_labeled_cleaned_2026-06-25.html` |
+| latest cleaned import target | historical only; not currently in tree |
 | total bookmark entries | `1869` |
 | research entries | `740` |
 | exact duplicate URLs | `0` |

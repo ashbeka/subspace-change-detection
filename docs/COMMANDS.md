@@ -276,5 +276,5 @@ Get-ChildItem -Directory | ForEach-Object { $s=(Get-ChildItem $_.FullName -Recur
 Markdown path sanity for active docs:
 
 ```powershell
-rg -n "pending_deletion_review|old_notes|old_project_docs|source_records|experiment_reports" docs/active -g "*.md"
+rg -n "pending_deletion_review|old_notes|old_project_docs|source_records|experiment_reports" docs -g "*.md"
 ```
