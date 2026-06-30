@@ -136,15 +136,15 @@ Do not claim:
 
 Read only these first:
 
-1. `docs/CURRENT_RESEARCH_DIRECTION.md`
-2. `docs/RESEARCH_LANES_AND_DECISION_GATES.md`
-3. `docs/EXPERIMENT_RESULTS_LEDGER.md`
-4. `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
-5. `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md`
-6. `docs/LITERATURE_DATASETS_AND_BASELINES.md`
-7. `docs/REPRODUCIBLE_COMMANDS.md`
-8. `docs/KNOWLEDGE_DISTILLATION_REVIEW.md` for deletion/coverage review
-9. `docs/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
+1. `docs/active/CURRENT_RESEARCH_DIRECTION.md`
+2. `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md`
+3. `docs/active/EXPERIMENT_RESULTS_LEDGER.md`
+4. `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
+5. `docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md`
+6. `docs/active/LITERATURE_DATASETS_AND_BASELINES.md`
+7. `docs/active/REPRODUCIBLE_COMMANDS.md`
+8. `docs/active/KNOWLEDGE_DISTILLATION_REVIEW.md` for deletion/coverage review
+9. `docs/active/PERSONAL_RESEARCH_NOTES.md` only for rough human notes
 
 ## Stage 1 Distillation Policy
 
@@ -178,16 +178,16 @@ Labels used in the distillation review:
 
 | Old source | New active destination | Later status |
 |---|---|---|
-| `notes/research_paper_plan.md` | this file + `RESEARCH_LANES_AND_DECISION_GATES.md` | absorb/delete-candidate |
-| `notes/experiments.md` | `EXPERIMENT_RESULTS_LEDGER.md` | absorb/delete-candidate after coverage |
-| `notes/methods.md` | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` | absorb/delete-candidate after coverage |
-| `notes/literature.md`, `notes/reference_bookmarks.md` | `LITERATURE_DATASETS_AND_BASELINES.md` | absorb/delete-candidate after coverage |
-| `notes/feedback.md` | `ADVISOR_FEEDBACK_AND_DECISIONS.md` | absorb/delete-candidate after coverage |
-| `notes/my_notes.md` | `docs/PERSONAL_RESEARCH_NOTES.md` | moved |
-| `docs/research/*seminar*` | this file if current; otherwise source/delete-candidate | mostly delete-candidate |
-| `docs/research/claude_temporal/*` | lane/method/experiment ledgers | AI synthesis delete-candidate |
+| `docs/pending_deletion_review/old_notes/research_paper_plan.md` | this file + `RESEARCH_LANES_AND_DECISION_GATES.md` | absorb/delete-candidate |
+| `docs/pending_deletion_review/old_notes/experiments.md` | `EXPERIMENT_RESULTS_LEDGER.md` | absorb/delete-candidate after coverage |
+| `docs/pending_deletion_review/old_notes/methods.md` | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` | absorb/delete-candidate after coverage |
+| `docs/pending_deletion_review/old_notes/literature.md`, `docs/pending_deletion_review/old_notes/reference_bookmarks.md` | `LITERATURE_DATASETS_AND_BASELINES.md` | absorb/delete-candidate after coverage |
+| `docs/pending_deletion_review/old_notes/feedback.md` | `ADVISOR_FEEDBACK_AND_DECISIONS.md` | absorb/delete-candidate after coverage |
+| former `notes/my_notes.md` | `docs/active/PERSONAL_RESEARCH_NOTES.md` | moved into active rough-note intake |
+| `docs/pending_deletion_review/old_research_material/*seminar*` | this file if current; otherwise source/delete-candidate | mostly delete-candidate |
+| `docs/pending_deletion_review/old_research_material/claude_temporal/*` | lane/method/experiment ledgers | AI synthesis delete-candidate |
 | `docs/experiment_reports/*.md` | `EXPERIMENT_RESULTS_LEDGER.md` rows | keep curated until review |
-| `docs/kb/*.md` | methods/literature references | absorb/delete-candidate |
+| `docs/pending_deletion_review/old_knowledge_base/*.md` | methods/literature references | absorb/delete-candidate |
 | `research-notes/` | active docs if not already absorbed | delete-candidate after audit |
 
 ## Deletion Review Queue
@@ -199,11 +199,11 @@ Highest-priority delete candidates:
 
 | Candidate | Why likely removable | Condition before deletion |
 |---|---|---|
-| `docs/research/claude_temporal/*.md` | AI-generated synthesis now represented in lanes/methods/ledger | confirm no unique result missing from `EXPERIMENT_RESULTS_LEDGER.md` |
-| old seminar drafts in `docs/research/` | superseded by active direction docs and final seminar material | keep only final slides/scripts if still needed |
-| `notes/*.md` except `README.md` | active knowledge moved to docs control set | compare each file against active docs |
+| `docs/pending_deletion_review/old_research_material/claude_temporal/*.md` | AI-generated synthesis now represented in lanes/methods/ledger | confirm no unique result missing from `EXPERIMENT_RESULTS_LEDGER.md` |
+| old seminar drafts in `docs/pending_deletion_review/old_research_material/` | superseded by active direction docs and final seminar material | keep only final slides/scripts if still needed |
+| `docs/pending_deletion_review/old_notes/*.md` except `README.md` | active knowledge moved to docs control set | compare each file against active docs |
 | `research-notes/` nested repo | old distilled notes repo, repeatedly ingested | final audit that no human note is unique there |
-| `docs/kb/*.md` | AI/agent knowledge base material now summarized in method/literature docs | confirm formulas and source trails are preserved |
+| `docs/pending_deletion_review/old_knowledge_base/*.md` | AI/agent knowledge base material now summarized in method/literature docs | confirm formulas and source trails are preserved |
 | duplicate source-record overlap versions | preserved only for Claude absorption safety | verify Git history and active docs cover useful differences |
 
 Not delete without explicit approval:
@@ -211,7 +211,7 @@ Not delete without explicit approval:
 | Source | Reason |
 |---|---|
 | `docs/source_records/final_organization_2026-06-12/` | raw Apple/Slack/bookmark/source batch |
-| `docs/PERSONAL_RESEARCH_NOTES.md` | user rough-note intake |
+| `docs/active/PERSONAL_RESEARCH_NOTES.md` | user rough-note intake |
 | curated experiment reports with unique figures or exact metrics | evidence provenance |
 | code and datasets | require separate code/data cleanup stages |
 
@@ -223,34 +223,34 @@ records are preserved unless explicitly reviewed.
 
 | Path/group | Fate | Reason |
 |---|---|---|
-| `docs/CURRENT_RESEARCH_DIRECTION.md` | keep active | current control panel |
-| `docs/RESEARCH_LANES_AND_DECISION_GATES.md` | keep active | research lane queue |
-| `docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md` | keep active | method/source-to-code reference |
-| `docs/EXPERIMENT_RESULTS_LEDGER.md` | keep active | compact result memory |
-| `docs/LITERATURE_DATASETS_AND_BASELINES.md` | keep active | reading/citation/baseline map |
-| `docs/ADVISOR_FEEDBACK_AND_DECISIONS.md` | keep active | Sensei/senpai decision trail |
-| `docs/REPRODUCIBLE_COMMANDS.md` | keep active | commands only |
-| `docs/PERSONAL_RESEARCH_NOTES.md` | keep active | rough human note intake |
-| `notes/feedback.md` | absorb/delete-candidate | distilled into advisor/decision doc |
-| `notes/methods.md` | absorb/delete-candidate | distilled into methods reference |
-| `notes/experiments.md` | absorb/delete-candidate | distilled into experiment ledger |
-| `notes/literature.md` | absorb/delete-candidate | distilled into literature/baselines doc |
-| `notes/reference_bookmarks.md` | absorb/delete-candidate | distilled into literature/baselines doc |
-| `notes/research_paper_plan.md` | absorb/delete-candidate | distilled into current direction and lanes |
-| `docs/PROJECT_BRIEF.md` | absorb/delete-candidate | replaced by current direction if no unique status remains |
-| `docs/RESEARCH_RESET_AUDIT.md` | absorb/delete-candidate | important AI reset, but its stable conclusions are now control-doc material |
-| `docs/SECOND_OPINION_RESEARCH_CONTEXT.md` | keep for now | useful external-review package |
-| `docs/RUNBOOK.md` | absorb/delete-candidate | should shrink into reproducible commands after command coverage check |
-| `docs/CD_TAXONOMY.md` | absorb/delete-candidate | taxonomy belongs in lanes/literature if still useful |
-| `docs/kb/*.md` | absorb/delete-candidate | AI knowledge base; keep only source-to-code/method facts |
-| `docs/research/BOARD_CHEATSHEET.md` | keep/review | useful seminar quick reference, but not active project control |
-| `docs/research/CONCEPTS_EXPLAINED.md` | absorb/delete-candidate | explanations belong in methods reference or learning map |
-| `docs/research/MASTER_NARRATIVE_2026-06-22.md` | absorb/delete-candidate | superseded narrative |
-| `docs/research/SEMINAR*.md`, `seminar_*.md` | keep/review final only | retain only material needed for future presentations |
-| `docs/research/challenges_ranked.md` | absorb/delete-candidate | stable points now in lanes/literature |
-| `docs/research/closest_methods_novelty.md` | absorb/delete-candidate | stable novelty boundaries now in literature/lanes |
-| `docs/research/synthesis_specific_tasks.md` | absorb/delete-candidate | tasks now belong in lanes/ledger |
-| `docs/research/claude_temporal/*.md` | absorb/delete-candidate | AI synthesis; preserve unique methods/results only |
+| `docs/active/CURRENT_RESEARCH_DIRECTION.md` | keep active | current control panel |
+| `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md` | keep active | research lane queue |
+| `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md` | keep active | method/source-to-code reference |
+| `docs/active/EXPERIMENT_RESULTS_LEDGER.md` | keep active | compact result memory |
+| `docs/active/LITERATURE_DATASETS_AND_BASELINES.md` | keep active | reading/citation/baseline map |
+| `docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md` | keep active | Sensei/senpai decision trail |
+| `docs/active/REPRODUCIBLE_COMMANDS.md` | keep active | commands only |
+| `docs/active/PERSONAL_RESEARCH_NOTES.md` | keep active | rough human note intake |
+| `docs/pending_deletion_review/old_notes/feedback.md` | absorb/delete-candidate | distilled into advisor/decision doc |
+| `docs/pending_deletion_review/old_notes/methods.md` | absorb/delete-candidate | distilled into methods reference |
+| `docs/pending_deletion_review/old_notes/experiments.md` | absorb/delete-candidate | distilled into experiment ledger |
+| `docs/pending_deletion_review/old_notes/literature.md` | absorb/delete-candidate | distilled into literature/baselines doc |
+| `docs/pending_deletion_review/old_notes/reference_bookmarks.md` | absorb/delete-candidate | distilled into literature/baselines doc |
+| `docs/pending_deletion_review/old_notes/research_paper_plan.md` | absorb/delete-candidate | distilled into current direction and lanes |
+| `docs/pending_deletion_review/old_project_docs/PROJECT_BRIEF.md` | absorb/delete-candidate | replaced by current direction if no unique status remains |
+| `docs/pending_deletion_review/old_project_docs/RESEARCH_RESET_AUDIT.md` | absorb/delete-candidate | important AI reset, but its stable conclusions are now control-doc material |
+| `docs/pending_deletion_review/old_project_docs/SECOND_OPINION_RESEARCH_CONTEXT.md` | keep for now | useful external-review package |
+| `docs/pending_deletion_review/old_project_docs/RUNBOOK.md` | absorb/delete-candidate | should shrink into reproducible commands after command coverage check |
+| `docs/pending_deletion_review/old_project_docs/CD_TAXONOMY.md` | absorb/delete-candidate | taxonomy belongs in lanes/literature if still useful |
+| `docs/pending_deletion_review/old_knowledge_base/*.md` | absorb/delete-candidate | AI knowledge base; keep only source-to-code/method facts |
+| `docs/pending_deletion_review/old_research_material/BOARD_CHEATSHEET.md` | keep/review | useful seminar quick reference, but not active project control |
+| `docs/pending_deletion_review/old_research_material/CONCEPTS_EXPLAINED.md` | absorb/delete-candidate | explanations belong in methods reference or learning map |
+| `docs/pending_deletion_review/old_research_material/MASTER_NARRATIVE_2026-06-22.md` | absorb/delete-candidate | superseded narrative |
+| `docs/pending_deletion_review/old_research_material/SEMINAR*.md`, `seminar_*.md` | keep/review final only | retain only material needed for future presentations |
+| `docs/pending_deletion_review/old_research_material/challenges_ranked.md` | absorb/delete-candidate | stable points now in lanes/literature |
+| `docs/pending_deletion_review/old_research_material/closest_methods_novelty.md` | absorb/delete-candidate | stable novelty boundaries now in literature/lanes |
+| `docs/pending_deletion_review/old_research_material/synthesis_specific_tasks.md` | absorb/delete-candidate | tasks now belong in lanes/ledger |
+| `docs/pending_deletion_review/old_research_material/claude_temporal/*.md` | absorb/delete-candidate | AI synthesis; preserve unique methods/results only |
 | `docs/experiment_reports/*.md` | keep curated for now | exact metrics and provenance; later compress/delete selectively |
 | `docs/source_records/**` | preserve | original records/provenance, not active truth |
 | `research-notes/` | audit/delete-candidate | nested old notes repo; delete only after final uniqueness check |

@@ -35,31 +35,31 @@ Can DS-based representations help detect changed areas in pre/post multispectral
 
 Read in this order:
 
-1. [docs/CURRENT_RESEARCH_DIRECTION.md](docs/CURRENT_RESEARCH_DIRECTION.md)
+1. [docs/active/CURRENT_RESEARCH_DIRECTION.md](docs/active/CURRENT_RESEARCH_DIRECTION.md)
    The current control panel: what we are doing, strongest evidence, safe claims, and the next gate.
 
-2. [docs/RESEARCH_LANES_AND_DECISION_GATES.md](docs/RESEARCH_LANES_AND_DECISION_GATES.md)
+2. [docs/active/RESEARCH_LANES_AND_DECISION_GATES.md](docs/active/RESEARCH_LANES_AND_DECISION_GATES.md)
    Candidate research directions ranked as lanes with win axes and continue/pause/close decisions.
 
-3. [docs/EXPERIMENT_RESULTS_LEDGER.md](docs/EXPERIMENT_RESULTS_LEDGER.md)
+3. [docs/active/EXPERIMENT_RESULTS_LEDGER.md](docs/active/EXPERIMENT_RESULTS_LEDGER.md)
    Compact table of what we tried, what happened, and which results matter.
 
-4. [docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md](docs/METHODS_AND_IMPLEMENTATION_REFERENCE.md)
+4. [docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md](docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md)
    Method cards, formulas, sample definitions, source-to-code trails, and implementation boundaries.
 
-5. [docs/ADVISOR_FEEDBACK_AND_DECISIONS.md](docs/ADVISOR_FEEDBACK_AND_DECISIONS.md)
+5. [docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md](docs/active/ADVISOR_FEEDBACK_AND_DECISIONS.md)
    Sensei/senpai/seminar feedback and the decisions/actions taken from it.
 
-6. [docs/LITERATURE_DATASETS_AND_BASELINES.md](docs/LITERATURE_DATASETS_AND_BASELINES.md)
+6. [docs/active/LITERATURE_DATASETS_AND_BASELINES.md](docs/active/LITERATURE_DATASETS_AND_BASELINES.md)
    What to read, cite, compare against, and reuse.
 
-7. [docs/REPRODUCIBLE_COMMANDS.md](docs/REPRODUCIBLE_COMMANDS.md)
+7. [docs/active/REPRODUCIBLE_COMMANDS.md](docs/active/REPRODUCIBLE_COMMANDS.md)
    Exact commands only.
 
-8. [docs/PERSONAL_RESEARCH_NOTES.md](docs/PERSONAL_RESEARCH_NOTES.md)
+8. [docs/active/PERSONAL_RESEARCH_NOTES.md](docs/active/PERSONAL_RESEARCH_NOTES.md)
    Rough human notes. Use this as intake, not polished truth.
 
-The older `notes/` files, `docs/RESEARCH_RESET_AUDIT.md`, seminar drafts, and
+The older `docs/pending_deletion_review/old_notes/` files, `docs/pending_deletion_review/old_project_docs/RESEARCH_RESET_AUDIT.md`, seminar drafts, and
 many AI-generated synthesis documents are being absorbed into the active docs
 above. They remain available during review, but they are no longer the first
 reading path.
@@ -154,7 +154,7 @@ cities, then reproduce the frozen method on a second labeled multispectral
 change dataset.
 
 Reproduce the current frozen OSCD comparison with the command in
-`docs/RUNBOOK.md`, Section 24.
+`docs/pending_deletion_review/old_project_docs/RUNBOOK.md`, Section 24.
 
 The earlier xBD-S12 result can be reproduced with:
 
@@ -217,17 +217,25 @@ phase2/
   outputs/        ignored checkpoints/evals/figures
 
 docs/
-  CURRENT_RESEARCH_DIRECTION.md
-  RESEARCH_LANES_AND_DECISION_GATES.md
-  METHODS_AND_IMPLEMENTATION_REFERENCE.md
-  EXPERIMENT_RESULTS_LEDGER.md
-  LITERATURE_DATASETS_AND_BASELINES.md
-  ADVISOR_FEEDBACK_AND_DECISIONS.md
-  REPRODUCIBLE_COMMANDS.md
-  PERSONAL_RESEARCH_NOTES.md
-  research_learning_map.html
-  experiment_reports/
-  source_records/
+  README.md
+  active/                         current control docs and reading path
+    CURRENT_RESEARCH_DIRECTION.md
+    RESEARCH_LANES_AND_DECISION_GATES.md
+    METHODS_AND_IMPLEMENTATION_REFERENCE.md
+    EXPERIMENT_RESULTS_LEDGER.md
+    LITERATURE_DATASETS_AND_BASELINES.md
+    ADVISOR_FEEDBACK_AND_DECISIONS.md
+    REPRODUCIBLE_COMMANDS.md
+    PERSONAL_RESEARCH_NOTES.md
+    KNOWLEDGE_DISTILLATION_REVIEW.md
+  experiment_reports/             curated result reports and figures
+  source_records/                  raw preserved imports and provenance
+  pending_deletion_review/         old material preserved for review, not active truth
+    old_notes/
+    old_knowledge_base/
+    old_research_material/
+    old_project_docs/
+    old_learning_map/
 
 project_cli.py             central command wrapper
 AGENTS.md                  instructions for future Codex sessions

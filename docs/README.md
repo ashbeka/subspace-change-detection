@@ -4,7 +4,7 @@
 
 - [1. Active Docs](#1-active-docs)
 - [2. Source Records](#2-source-records)
-- [3. Active Notes](#3-active-notes)
+- [3. Pending Deletion Review](#3-pending-deletion-review)
 - [4. Historical Archive](#4-historical-archive)
 - [5. Research Notes Rule](#5-research-notes-rule)
 
@@ -12,39 +12,36 @@
 
 Read these first:
 
-1. `CURRENT_RESEARCH_DIRECTION.md`
+1. `active/CURRENT_RESEARCH_DIRECTION.md`
    - Current control panel: active direction, strongest evidence, safe claims, forbidden claims, and next gate.
 
-2. `RESEARCH_LANES_AND_DECISION_GATES.md`
+2. `active/RESEARCH_LANES_AND_DECISION_GATES.md`
    - Candidate research lanes ranked by feasibility, win axis, evidence, and continue/pause/close gates.
 
-3. `EXPERIMENT_RESULTS_LEDGER.md`
+3. `active/EXPERIMENT_RESULTS_LEDGER.md`
    - Compact evidence table: what was tried, what happened, and what decision each result supports.
 
-4. `METHODS_AND_IMPLEMENTATION_REFERENCE.md`
+4. `active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
    - Method cards, formulas, sample definitions, source-to-code trails, and implementation boundaries.
 
-5. `ADVISOR_FEEDBACK_AND_DECISIONS.md`
+5. `active/ADVISOR_FEEDBACK_AND_DECISIONS.md`
    - Sensei/senpai/seminar feedback and what decisions/actions came from it.
 
-6. `LITERATURE_DATASETS_AND_BASELINES.md`
+6. `active/LITERATURE_DATASETS_AND_BASELINES.md`
    - Papers, datasets, baselines, bookmarks, reference code, and comparison pressure.
 
-7. `REPRODUCIBLE_COMMANDS.md`
+7. `active/REPRODUCIBLE_COMMANDS.md`
    - Exact commands only.
 
-8. `KNOWLEDGE_DISTILLATION_REVIEW.md`
-   - Coverage dashboard for old notes/research/kb files and deletion candidates.
+8. `active/KNOWLEDGE_DISTILLATION_REVIEW.md`
+   - Coverage dashboard for old notes, research docs, KB files, and deletion candidates.
 
-9. `PERSONAL_RESEARCH_NOTES.md`
+9. `active/PERSONAL_RESEARCH_NOTES.md`
    - Rough human note intake. Preserve intent; translate stable implications into active control docs.
 
 Detailed reports remain under `experiment_reports/`, but they are no longer the
 first reading path. Use `EXPERIMENT_RESULTS_LEDGER.md` first, then open a
 report only when you need exact implementation details, figures, or metrics.
-
-9. `research_learning_map.html`
-   - Local interactive concept/experiment map. Use it to see what to read and which code path supports each current or future experiment.
 
 ## 2. Source Records
 
@@ -68,15 +65,27 @@ report only when you need exact implementation details, figures, or metrics.
 These files are preserved as provenance. They are not the active project truth.
 Useful knowledge from them should be reflected in the active control docs above.
 
-## 3. Active Notes
+## 3. Pending Deletion Review
 
-The old `../notes/` folder is being absorbed during Active Knowledge
-Distillation. Do not add new active project knowledge there unless the migration
-is explicitly paused.
+`pending_deletion_review/` contains files preserved for review before possible
+deletion. These files are no longer active truth.
 
-The rough personal note intake has moved to:
+Current groups:
 
-- `PERSONAL_RESEARCH_NOTES.md`
+- `pending_deletion_review/old_notes/`
+  - Former `notes/` files.
+- `pending_deletion_review/old_knowledge_base/`
+  - Former `docs/kb/` synthesis files.
+- `pending_deletion_review/old_research_material/`
+  - Former `docs/research/` seminar, Claude, and mining files.
+- `pending_deletion_review/old_project_docs/`
+  - Former top-level long docs such as `RUNBOOK.md`, `PROJECT_BRIEF.md`,
+    `RESEARCH_RESET_AUDIT.md`, and `CD_TAXONOMY.md`.
+- `pending_deletion_review/old_learning_map/`
+  - The previous local research learning map HTML/CSS/JS.
+
+Do not add new active project knowledge there unless the migration is
+explicitly paused. New stable knowledge belongs in `active/`.
 
 ## 4. Historical Archive
 
@@ -86,6 +95,6 @@ The old `phase1/docs/` and `phase2/docs/` folders were also removed after consol
 
 ## 5. Research Notes Rule
 
-The active knowledge location is now this `docs/` control-doc set.
+The active knowledge location is now `docs/active/`.
 
 `research-notes/` is a nested external notes repo/archive. It is useful background, but it should not be treated as the current project source of truth. Important current material should be extracted into the active docs above. Its current useful content was ingested previously; delete the folder only after the user confirms the new active docs cover it sufficiently.

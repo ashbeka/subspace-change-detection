@@ -31,8 +31,8 @@ The organized bookmark export is the main active resource map:
 
 - Importable organized Chrome file: `docs/source_records/final_organization_2026-06-12/chrome_bookmarks_organized_all_2026-06-20.html`
 - Bookmark QA summary: `docs/source_records/final_organization_2026-06-12/bookmark_organization_summary_2026-06-20.json`
-- Active bookmark notes: `notes/reference_bookmarks.md`
-- Concept-to-reading table: `notes/literature.md`
+- Active bookmark/resource map: `docs/active/LITERATURE_DATASETS_AND_BASELINES.md`
+- Current method/source-to-code map: `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`
 
 The 2026-06-20 merge added `37` new URLs to the prior `1742` entries. The final
 organized output preserves `1779` bookmark entries. All `58` URLs in the
@@ -42,16 +42,16 @@ essential knowledge-base source are represented in the final import file.
 
 | Concept | Use in the project | Resource location |
 |---|---|---|
-| Paper-faithful DS/GDS/KDS/KGDS | Formula source for subspace comparisons, nonlinear KDS/KGDS, and future multi-date work. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA`; `notes/literature.md`; `references/REFERENCE_CODE_INVENTORY.md` |
-| Spatially aware DS | Immediate experiment route: global pixel DS versus patch-vector DS versus local-window DS versus multiscale pyramid. | `notes/experiments.md`; `notes/methods.md`; spatial CD bookmarks under `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
-| Classical baselines | Required fair comparisons before any DS contribution claim. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines`; `phase1/baselines/`; `notes/literature.md` |
-| IR-MAD / CCA / KCCA | Strong classical multivariate baseline and possible bridge to subspace/CCA family. | Subspace toolbox code, CCA bookmarks, `notes/methods.md`, `notes/experiments.md` |
-| KPCA/KDS | Nonlinear variant requested by Sensei; not current OSCD default. | Fukui/Maki TPAMI resources, Venus demos, SubspaceMethodsToolBox, `notes/methods.md` |
-| Green Learning / wavelet / multiscale pyramid | Possible spatial-preservation extension inspired by Senpai notes. | `notes/experiments.md` multiscale subspace pyramid, Green Learning bookmarks |
+| Paper-faithful DS/GDS/KDS/KGDS | Formula source for subspace comparisons, nonlinear KDS/KGDS, and future multi-date work. | `Research / 01 Read First - Thesis Core / 01 Subspace DS KDS GDS And CCA`; `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`; `docs/active/LITERATURE_DATASETS_AND_BASELINES.md`; `references/REFERENCE_CODE_INVENTORY.md` |
+| Spatially aware DS | Immediate experiment route: global pixel DS versus patch-vector DS versus local-window DS versus multiscale pyramid. | `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md`; `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`; spatial CD bookmarks under `Research / 01 Read First - Thesis Core / 05 Spatial And Semantic Change Questions` |
+| Classical baselines | Required fair comparisons before any DS contribution claim. | `Research / 01 Read First - Thesis Core / 02 OSCD And Classical Change Detection Baselines`; `phase1/baselines/`; `docs/active/LITERATURE_DATASETS_AND_BASELINES.md` |
+| IR-MAD / CCA / KCCA | Strong classical multivariate baseline and possible bridge to subspace/CCA family. | Subspace toolbox code, CCA bookmarks, `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`, `docs/active/LITERATURE_DATASETS_AND_BASELINES.md` |
+| KPCA/KDS | Nonlinear variant requested by Sensei; not current OSCD default. | Fukui/Maki TPAMI resources, Venus demos, SubspaceMethodsToolBox, `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md` |
+| Green Learning / wavelet / multiscale pyramid | Possible spatial-preservation extension inspired by Senpai notes. | `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md`; Green Learning bookmarks |
 | Semantic/open-vocabulary CD | Pivot/comparison pressure if binary OSCD is too narrow. | `Research / 03 Methods - Change Detection / 02 Semantic And Damage Change Detection` |
 | Greenhouse mapping | Possible application route; not current evidence. | `Research / 05 Applications - Use Cases And Problem Framing / 01 Greenhouses Agriculture Environmental Monitoring` |
 | xBD/xBD-S12 damage | Future extension only; do not use OSCD evidence as damage proof. | `Research / 04 Datasets - Current Candidate Future / 03 Disaster Damage And Semantic Datasets` |
-| Seasonal irrigation-regime change | Candidate real-observation-set experiment: dates within one field/year form a subspace; annual subspaces are compared by first/second DS. | IrrMapper paper/catalog, temporal SITS resources, `notes/methods.md`, and `notes/experiments.md` |
+| Seasonal irrigation-regime change | Candidate real-observation-set experiment: dates within one field/year form a subspace; annual subspaces are compared by first/second DS. | IrrMapper paper/catalog, temporal SITS resources, `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md`, and `docs/active/RESEARCH_LANES_AND_DECISION_GATES.md` |
 | Hyperspectral change and unmixing | Separate pivot testing spectral/spatial geometry with hundreds of bands and established HSI baselines. | `Research / 02 Methods - Subspace Geometry / 04 Hyperspectral Geometry Unmixing And Spectral Methods` and `Research / 04 Datasets - Current Candidate Future / 05 Hyperspectral Change And Analysis Datasets` |
 
 ## 5. Zotero Queue
@@ -70,7 +70,7 @@ Do not import every bookmarked tutorial or tool into Zotero. Keep general learni
 
 ## 6. Rules For Future Paper Imports
 
-- If a paper is used to implement code, record the source-to-code trail in `notes/methods.md` and the method file docstring.
-- If a paper only motivates a future idea, put it in `notes/literature.md` and leave it in Chrome/Zotero.
+- If a paper is used to implement code, record the source-to-code trail in `docs/active/METHODS_AND_IMPLEMENTATION_REFERENCE.md` and the method file docstring.
+- If a paper only motivates a future idea, put it in `docs/active/LITERATURE_DATASETS_AND_BASELINES.md` and leave it in Chrome/Zotero.
 - If a paper is physically copied into `references/reference_papers/`, explain why it must live in the repo instead of Zotero.
 - If a paper has supplementary code, connect the paper and code in `references/REFERENCE_CODE_INVENTORY.md`.

@@ -73,7 +73,7 @@ finalized. Main references:
 ```text
 temporal/experiments/
 docs/experiment_reports/multispectral_temporal_difference_subspaces_2026-06-19.md
-docs/research/claude_temporal/METHOD.md
+docs/pending_deletion_review/old_research_material/claude_temporal/METHOD.md
 ```
 
 ## Cleanup Checks

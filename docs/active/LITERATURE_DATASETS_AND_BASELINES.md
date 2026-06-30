@@ -106,7 +106,7 @@ paper equation -> sample definition -> shape test -> toy check -> one-dataset ou
 
 ## Knowledge-Base Concepts Absorbed
 
-From `docs/kb/` and `docs/research/*novelty*`, preserve these literature
+From `docs/pending_deletion_review/old_knowledge_base/` and `docs/pending_deletion_review/old_research_material/*novelty*`, preserve these literature
 boundaries:
 
 | Concept cluster | What it teaches | Project implication |

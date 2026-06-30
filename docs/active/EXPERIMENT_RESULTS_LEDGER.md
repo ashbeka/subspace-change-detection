@@ -61,7 +61,7 @@ not thesis claims until reproduced or audited.
 
 | Claim | Source group | Current label | Required action |
 |---|---|---|---|
-| DS-specific multi-prior U-Net improves over no-DS and matched-cross controls | `docs/research/*DSprior*`, Claude temporal synthesis | `needs rerun` | reproduce exact split/config/seeds in main |
+| DS-specific multi-prior U-Net improves over no-DS and matched-cross controls | `docs/pending_deletion_review/old_research_material/*DSprior*`, Claude temporal synthesis | `needs rerun` | reproduce exact split/config/seeds in main |
 | teacher-student / pseudo-label distillation could produce label-scarce payoff | `MASTER_NARRATIVE_2026-06-22.md` | `hypothesis` | design controlled low-label experiment |
 | MultiSenGE pretraining then OSCD fine-tuning may improve label scarcity | `MASTER_NARRATIVE_2026-06-22.md` | `hypothesis` | require multi-seed and leakage-safe protocol |
 | temporal DS can become an ACCV-style paper route | `DESIGN_TEMPORAL_DS_ACCV2026.md` | `candidate` | needs labeled sequence and baseline ladder |
@@ -73,8 +73,8 @@ Do not delete yet. These are likely candidates after this ledger is checked:
 
 | Group | Reason |
 |---|---|
-| old seminar drafts in `docs/research/` | current framing now lives in active control docs |
-| Claude AI synthesis docs under `docs/research/claude_temporal/` | useful points are lane/method/ledger rows |
-| overlapping old `notes/*.md` | being replaced by active docs |
+| old seminar drafts in `docs/pending_deletion_review/old_research_material/` | current framing now lives in active control docs |
+| Claude AI synthesis docs under `docs/pending_deletion_review/old_research_material/claude_temporal/` | useful points are lane/method/ledger rows |
+| overlapping old `docs/pending_deletion_review/old_notes/*.md` | being replaced by active docs |
 | duplicated report narratives | summarized here; keep only reports with unique figures/details |
 | `research-notes/` nested repo | old note structure already distilled repeatedly |
