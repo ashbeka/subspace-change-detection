@@ -8,7 +8,8 @@
 - [4. Senpai Feedback: Spatial And Green Learning](#senpai-feedback-spatial-and-green-learning)
 - [5. Seminar Feedback](#seminar-feedback)
 - [6. Sensei/Seminar Coverage Table](#senseiseminar-coverage-table)
-- [7. Current Decisions](#current-decisions)
+- [7. Detailed Human Feedback Preserved From Old Notes](#detailed-human-feedback-preserved-from-old-notes)
+- [8. Current Decisions](#current-decisions)
 
 ## Purpose
 
@@ -120,6 +121,54 @@ Decision:
 | Band selection / combinations | preserved as future attribution/HSI lane, not current core | paused |
 | CCA/S3CCA/TRCCA | preserved as structured temporal/view-matching lane | future |
 | Pseudo-change vs real change | central failure-analysis concern; seasonal/radiometric failures must be reported | active boundary |
+
+## Detailed Human Feedback Preserved From Old Notes
+
+This section keeps the durable human feedback once, so old feedback files do
+not need to remain active.
+
+### Jang / Aono Consultations
+
+| Person | What was asked / discussed | Current status |
+|---|---|---|
+| Jang | multi-channel data, EEG-style/sample-definition analogies, and whether channel/depth-axis construction makes sense | orientation only; not final validation |
+| Aono | first/second DS, geodesic decomposition, and lab implementation details | orientation only; not final validation |
+
+### First Seminar Feedback Actions
+
+| Feedback / question | Durable action |
+|---|---|
+| Explain why ResNet34/backbone choices were used | keep model choices as baselines, not thesis novelty |
+| Raw input sometimes beats prior channels | report raw baselines honestly; do not assume priors help |
+| PriorsFusionUNet weakness | do not claim fusion until rerun with matched no-DS controls |
+| IR-MAD comparison | audit formula and include as classical pressure before DS claims |
+| Runtime/resource cost | report if claiming efficiency or label-free practicality |
+| Metrics confusion | explain AUROC, AP/PR-AUC, F1/IoU, Otsu threshold separately |
+| Related work vs proposed method boundary | separate DS/PixelHop/source methods from project adaptation |
+| Alternative prior integration | test prior channels only after standalone prior evidence is clear |
+
+### Submitted QA Report Takeaways
+
+| Topic | Preserved takeaway |
+|---|---|
+| OSCD labels | OSCD binary labels do not equal semantic/damage truth; spectral/radiometric change can disagree with labels |
+| ranking vs thresholding | AUROC/AP and thresholded F1/IoU answer different questions |
+| MultiSenGE earliest/latest | can be dominated by seasonality; use with temporal protocol, not as direct OSCD replacement |
+| snow/seasonality | robustness/failure-analysis cases, not trivial noise to hide |
+| IR-MAD weakness | cannot be claimed unless the implementation and tuning are fair |
+
+### Expanded Sensei Ask Coverage
+
+| Sensei/lab ask | Current handling |
+|---|---|
+| Kanai SSA / learned normal-reference `D_N` | not implemented as the Kanai detector; temporal DS work is related but not equivalent |
+| SFA / Slow Feature Subspace | preserved as structured temporal lane; needs explicit baseline protocol |
+| RTW | tested and currently negative; reopen only with phase/shape gate and simple controls |
+| CMSM/MSM / local MSM | useful reference family; not current detector claim |
+| KGDS/Venus | Venus construction reproduced conceptually; satellite KDS/KGDS needs nonlinear hypothesis |
+| VLM/foundation features as subspace | future-only; do not claim without encoder/object definition |
+| CCA/S3CCA/TRCCA | preserved for structured temporal/view attribution, not yet detector |
+| Google Harmonized Sentinel-2 / time-sequential data | future temporal data source if temporal lane resumes |
 
 ## Current Decisions
 

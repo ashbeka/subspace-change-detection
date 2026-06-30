@@ -6,14 +6,15 @@
 - [2. Review Labels](#review-labels)
 - [3. Current Active Control Docs](#current-active-control-docs)
 - [4. Coverage Summary](#coverage-summary)
-- [5. Notes Folder Review](#notes-folder-review)
-- [6. Knowledge-Base Folder Review](#knowledge-base-folder-review)
-- [7. Research Folder Review](#research-folder-review)
-- [8. Experiment Reports Review](#experiment-reports-review)
-- [9. Other Top-Level Docs Review](#other-top-level-docs-review)
-- [10. Source Records And Non-Markdown Data](#source-records-and-non-markdown-data)
-- [11. Deletion Decision Rules](#deletion-decision-rules)
-- [12. Next Review Pass](#next-review-pass)
+- [5. Stage 1 Detailed Pass Outcome](#stage-1-detailed-pass-outcome)
+- [6. Notes Folder Review](#notes-folder-review)
+- [7. Knowledge-Base Folder Review](#knowledge-base-folder-review)
+- [8. Research Folder Review](#research-folder-review)
+- [9. Experiment Reports Review](#experiment-reports-review)
+- [10. Other Top-Level Docs Review](#other-top-level-docs-review)
+- [11. Source Records And Non-Markdown Data](#source-records-and-non-markdown-data)
+- [12. Deletion Decision Rules](#deletion-decision-rules)
+- [13. Next Review Pass](#next-review-pass)
 
 ## Purpose
 
@@ -64,7 +65,7 @@ Reviewed in this pass:
 | top-level legacy docs | 6 | absorb or keep only if still serving a distinct purpose |
 | `docs/experiment_reports/**/*.md` | many | curated evidence; keep until exact metrics/figures are represented |
 
-High-level result:
+High-level result after the first structural pass:
 
 - Core current direction is now in `CURRENT_RESEARCH_DIRECTION.md`.
 - Research routes are now in `RESEARCH_LANES_AND_DECISION_GATES.md`.
@@ -74,6 +75,51 @@ High-level result:
 - Experiment results and AI-reported unverified claims are now in
   `EXPERIMENT_RESULTS_LEDGER.md`.
 - Sensei/seminar asks are now in `ADVISOR_FEEDBACK_AND_DECISIONS.md`.
+
+## Stage 1 Detailed Pass Outcome
+
+Date: 2026-06-30.
+
+This pass used parallel file audits over old notes, old project docs, old
+knowledge-base files, old research material, experiment reports, and source
+records. The goal was not to rewrite every sentence from old files. The goal
+was to preserve unique knowledge in the smallest active surface.
+
+New durable details absorbed into active docs:
+
+| Detail class | Active destination |
+|---|---|
+| DS, GDS boundary, Grassmann/projector/covariance formulas | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` |
+| first/second DS and geodesic caveats | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` |
+| Venus KDS/KGDS dimensions and no-preimage caveat | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` |
+| HSI local moment/orientation construction and fair baselines | `METHODS_AND_IMPLEMENTATION_REFERENCE.md`, `LITERATURE_DATASETS_AND_BASELINES.md` |
+| reference code and MATLAB toolbox crosswalk | `LITERATURE_DATASETS_AND_BASELINES.md` |
+| bookmark/resource exact state | `LITERATURE_DATASETS_AND_BASELINES.md` |
+| OSCD supervised/prior numbers and Claude-side unverified claims | `EXPERIMENT_RESULTS_LEDGER.md` |
+| xBD-S12 matched controls, retrieval, budget, and registration numbers | `EXPERIMENT_RESULTS_LEDGER.md` |
+| negative/closed route numbers for RTW, HSI, SpaceNet7, component/pseudo-change, small-sample subspace CD | `EXPERIMENT_RESULTS_LEDGER.md` |
+| Jang/Aono consultations, first seminar feedback, QA-report takeaways, and expanded Sensei asks | `ADVISOR_FEEDBACK_AND_DECISIONS.md` |
+| long-run commands from the old runbook | `REPRODUCIBLE_COMMANDS.md` |
+
+Current Stage 1 status:
+
+| Group | Status |
+|---|---|
+| former active `notes/*.md` | absorbed into active docs; first deletion-review candidates after user review |
+| old knowledge-base files | absorbed at concept/formula level; first deletion-review candidates after user review |
+| AI research-mining/Claude synthesis docs | mostly absorbed; delete candidates after checking no unique figure/script is needed |
+| seminar scripts/Q&A | preserve/review, because slide wording can still be useful even when research claims are absorbed |
+| curated experiment reports | preserve for now, because they contain exact figures, command provenance, and output links |
+| source records | preserve; raw provenance, not active truth |
+| code, data, outputs | out of Stage 1 scope; no deletion |
+
+Conclusion:
+
+```text
+Normal reading path = docs/active/.
+Old synthesis files = pending deletion review, not active truth.
+Curated reports/source records = provenance, not clutter to delete casually.
+```
 
 ## Notes Folder Review
 
@@ -85,7 +131,7 @@ High-level result:
 | `docs/pending_deletion_review/old_notes/methods.md` | `[method-reference] [absorbed]` | `METHODS_AND_IMPLEMENTATION_REFERENCE.md` | `[delete-candidate]` after method-card check |
 | `docs/pending_deletion_review/old_notes/reference_bookmarks.md` | `[literature-resource] [absorbed]` | `LITERATURE_DATASETS_AND_BASELINES.md` | `[delete-candidate]` after bookmark import path check |
 | `docs/pending_deletion_review/old_notes/research_paper_plan.md` | `[ai-synthesis] [human-source] [absorbed]` | `CURRENT_RESEARCH_DIRECTION.md`, `RESEARCH_LANES_AND_DECISION_GATES.md` | `[delete-candidate]` after thesis-lane check |
-| `docs/pending_deletion_review/old_notes/README.md` | `[active-transition]` | this review file and docs README | keep until `docs/pending_deletion_review/old_notes/` folder is empty or removed |
+| `docs/pending_deletion_review/old_notes/README.md` | `[active-transition] [absorbed]` | this review file and docs README | `[delete-candidate]` with old notes folder after user approval |
 
 ## Knowledge-Base Folder Review
 
@@ -132,8 +178,9 @@ High-level result:
 ## Experiment Reports Review
 
 Experiment reports are more valuable than AI synthesis because they contain
-specific commands, metrics, figures, and decisions. Keep them until the ledger
-has enough exact detail or a curated figure/result package replaces them.
+specific commands, metrics, figures, and decisions. The active ledger now
+preserves the main result numbers, but reports should remain until a future
+figure/provenance cleanup decides which assets are still needed.
 
 | File/group | Labels | Distilled into | Proposed fate |
 |---|---|---|---|
@@ -141,7 +188,7 @@ has enough exact detail or a curated figure/result package replaces them.
 | `docs/experiment_reports/successive_saab_trainfit_external_gate_2026-06-23.md` | `[curated-evidence] [absorbed]` | current direction, ledger | keep as key report |
 | `docs/experiment_reports/xbd_s12_external_validation_2026-06-22.md` | `[curated-evidence] [absorbed]` | current direction, ledger | keep as key external report |
 | `docs/experiment_reports/oscd_band_image_matched_spatial_controls_2026-06-22.md` | `[curated-evidence] [absorbed]` | ledger/methods | keep for now |
-| `docs/experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md` | `[curated-evidence] [absorbed]` | ledger/lanes | `[delete-candidate]` only after exact rows checked |
+| `docs/experiment_reports/cross_branch_research_evidence_matrix_2026-06-22.md` | `[curated-evidence] [absorbed]` | ledger/lanes | `[delete-candidate]` after user confirms the compact ledger table is enough |
 | `docs/experiment_reports/oscd_spatial_*.md` and `oscd_band_image_*.md` | `[curated-evidence] [absorbed]` | ledger | keep until spatial history is fully compressed |
 | `docs/experiment_reports/hsi_*.md` | `[curated-evidence] [absorbed]` | HSI lane/ledger | keep until HSI lane is closed or revived |
 | `docs/experiment_reports/spacenet7_*.md` | `[curated-evidence] [absorbed]` | transfer-negative ledger rows | keep until transfer failures are fully summarized |
@@ -155,7 +202,7 @@ has enough exact detail or a curated figure/result package replaces them.
 | `docs/pending_deletion_review/old_project_docs/PROJECT_BRIEF.md` | `[ai-synthesis] [absorbed]` | current direction | `[delete-candidate]` if no unique truth remains |
 | `docs/pending_deletion_review/old_project_docs/RESEARCH_RESET_AUDIT.md` | `[ai-synthesis] [absorbed]` | current direction, lanes, literature | `[delete-candidate]` after user confirms reset concerns are covered |
 | `docs/pending_deletion_review/old_project_docs/SECOND_OPINION_RESEARCH_CONTEXT.md` | `[ai-synthesis] [external-review-context]` | partially active | keep for now |
-| `docs/pending_deletion_review/old_project_docs/RUNBOOK.md` | `[command-reference] [needs-review]` | reproducible commands partially | shrink/delete-candidate after command coverage |
+| `docs/pending_deletion_review/old_project_docs/RUNBOOK.md` | `[command-reference] [absorbed]` | reproducible commands | `[delete-candidate]` after user confirms active commands are enough |
 | `docs/pending_deletion_review/old_project_docs/CD_TAXONOMY.md` | `[ai-synthesis] [literature-resource] [absorbed]` | lanes/literature | `[delete-candidate]` |
 | `docs/README.md` | `[active-control]` | active docs index | keep |
 | root `README.md` | `[active-control]` | project entry point | keep |
@@ -185,15 +232,13 @@ Before deleting a file or folder:
 
 ## Next Review Pass
 
-Recommended next pass:
+Recommended next pass after the user reviews the active docs:
 
-1. Compare `docs/pending_deletion_review/old_notes/experiments.md` against `EXPERIMENT_RESULTS_LEDGER.md` section
-   by section.
-2. Compare `docs/pending_deletion_review/old_notes/methods.md` and
-   `docs/pending_deletion_review/old_research_material/claude_temporal/SUBSPACE_CONSTRUCTION_LEDGER.md` against
-   `METHODS_AND_IMPLEMENTATION_REFERENCE.md`.
-3. Compare `docs/pending_deletion_review/old_research_material/SEMINAR_TALK_FULL.md` and
-   `docs/pending_deletion_review/old_research_material/seminar_defense_QA_2026-06-22.md` against the current seminar
-   needs, then keep only one seminar-facing file if needed.
-4. After user review, delete the first batch of `[ai-synthesis]
-   [delete-candidate]` files.
+1. Delete or move the first batch of `[ai-synthesis] [delete-candidate]`
+   files from old notes, old knowledge-base files, and Claude synthesis files.
+2. Keep source records and curated experiment reports unless a separate
+   provenance/figure cleanup explicitly replaces them.
+3. Choose whether to preserve one seminar script/Q&A packet or compress the
+   remaining useful slide wording into future presentation material.
+4. Start Stage 2 code/data cleanup only after Stage 1 deletion decisions are
+   approved.

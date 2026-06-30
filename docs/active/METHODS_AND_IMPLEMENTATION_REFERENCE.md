@@ -4,12 +4,15 @@
 
 - [1. Purpose](#purpose)
 - [2. Method Status Labels](#method-status-labels)
-- [3. Subspace / Geometry Cards](#subspace--geometry-cards)
-- [4. Classical Baseline Cards](#classical-baseline-cards)
-- [5. Neural / Foundation Cards](#neural--foundation-cards)
-- [6. Temporal / Structured Method Cards](#temporal--structured-method-cards)
-- [7. Dataset Cards](#dataset-cards)
-- [8. Source-To-Code Rule](#source-to-code-rule)
+- [3. Core Geometry Formulas And Caveats](#core-geometry-formulas-and-caveats)
+- [4. Subspace / Geometry Cards](#subspace--geometry-cards)
+- [5. Classical Baseline Cards](#classical-baseline-cards)
+- [6. Neural / Foundation Cards](#neural--foundation-cards)
+- [7. Temporal / Structured Method Cards](#temporal--structured-method-cards)
+- [8. HSI / Spectral Distribution Cards](#hsi--spectral-distribution-cards)
+- [9. Dataset Cards](#dataset-cards)
+- [10. Implementation Caveats](#implementation-caveats)
+- [11. Source-To-Code Rule](#source-to-code-rule)
 
 ## Purpose
 
@@ -25,6 +28,66 @@ cards.
 | experimental | runs but claim is not settled |
 | reference-only | useful source material, not active code |
 | paused | implemented or discussed, but not current positive route |
+
+## Core Geometry Formulas And Caveats
+
+These are the durable geometry facts extracted from old notes, KB files, and
+Claude temporal method ledgers. Keep them here once; other docs should refer
+to this section instead of repeating the formulas.
+
+### Difference Subspace Magnitude
+
+For two subspaces with principal angles `theta_i`, the DS/geometric magnitude
+used in the lab lineage is:
+
+```text
+Mag(D(U,V)) = 2 * sum_i (1 - cos(theta_i))
+```
+
+This is closely related to standard Grassmann distances. Before claiming a new
+DS score is distinct, compare it against:
+
+- Grassmann chordal distance;
+- projector Frobenius distance;
+- covariance/SPD orientation terms when covariance features are used.
+
+### Rank-1 Warning
+
+Rank-1 spectral DS can collapse into a monotone version of spectral-angle-like
+behavior. If a method uses only one dominant spectral direction, compare it
+against SAM/cosine angle before claiming a subspace contribution.
+
+### GDS / gFDA Boundary
+
+GDS is meaningful when there are real multiple subspaces/classes/regimes. Do
+not create circular pseudo-classes merely so GDS can be applied. If the
+classes are generated from the same score being evaluated, the experiment is
+not a clean GDS test.
+
+### Second-Order DS
+
+For a trajectory of subspaces `(S1, S2, S3)`, the second-order DS compares the
+middle subspace with the geodesic midpoint between its neighbors:
+
+```text
+D2(S1,S2,S3) = D(S2, M(S1,S3))
+```
+
+where `M(S1,S3)` is the midpoint, usually estimated by a Karcher or
+principal-geodesic midpoint. A low second-order value can mean smooth motion
+or no acceleration; it is not automatically a bug.
+
+### Spatial Contribution Score
+
+For two bases or projected directions, a per-coordinate contribution diagnostic
+can be written as:
+
+```text
+c_j = sum_i (u_i[j] - v_i[j])^2
+```
+
+Use it only as an attribution/diagnostic, not as proof of causal changed
+pixels.
 
 ## Subspace / Geometry Cards
 
@@ -55,6 +118,8 @@ Evidence:
 
 - weak on OSCD compared with raw L2/PCA-diff.
 - supports Sensei's criticism that spatial information is broken.
+- early canonical/global DS evidence was weak: canonical DS AUROC `0.6246`,
+  pixel spectral difference AUROC `0.7559`, PCA-diff AUROC `0.8134`.
 
 Code trail:
 
@@ -101,12 +166,27 @@ Preserves:
 Risk:
 
 - only 13 band samples, so rank and robustness are constrained.
+- centered rank is at most `B-1`; for OSCD `B=13`, so rank `<=12`.
+- ambient dimension is the valid-pixel grid; the score is spatial because each
+  basis vector lives over the image grid.
 
 Evidence:
 
 - stronger than global pixel DS;
 - useful for xBD-S12 candidate localization;
 - not a universal detector.
+
+Matched-control formulas:
+
+```text
+spatial Gram: normalized U_pre^T U_post style band/feature relation
+projector distance: row norm of (U_pre U_pre^T - U_post U_post^T)
+cross reconstruction: reconstruction error of one date features by the other date subspace
+```
+
+For OSCD Band-Image controls, computations are kept in the small
+band/feature-space products where possible, rather than explicitly materializing
+huge pixel-by-pixel projectors.
 
 ### Successive Saab-DS
 
@@ -156,6 +236,7 @@ first DS magnitude -> change velocity between adjacent subspaces
 second DS magnitude -> abruptness/curvature over triples
 geodesic along component -> smooth drift
 orthogonal component -> off-geodesic abrupt behavior
+d_pre(t) -> recovery/distance-to-pre-event diagnostic, not signed recovery proof
 ```
 
 Evidence:
@@ -168,6 +249,12 @@ Code trail:
 - `temporal/subspace.py`
 - `temporal/dynamics.py`
 - `temporal/experiments/`
+
+Provenance/correction:
+
+- This implements first/second DS and geodesic-style descriptors.
+- It does not implement Kanai's learned normal-reference `D_N` detector unless
+  that construction is added explicitly.
 
 ## Classical Baseline Cards
 
@@ -259,6 +346,18 @@ Purpose:
 - model slowly varying background or seasonal components;
 - detect change as residual outside a learned invariant/slow subspace.
 
+Core object:
+
+```text
+solve a generalized eigenproblem that finds projections with low temporal
+variation subject to variance/normalization constraints
+```
+
+Variants to know:
+
+- USFA, SSFA, and ISFA-style remote-sensing variants;
+- transformed residual scoring rather than raw post/pre subtraction.
+
 Current boundary:
 
 - useful conceptual pressure for temporal satellite sequences;
@@ -301,6 +400,13 @@ Purpose:
 - generate time-warped samples so sequences with different speeds can form
   comparable subspaces.
 
+Construction:
+
+```text
+sequence -> random monotone time-warped tuples -> hypo-subspace
+compare sequences by subspace distance under timing variation
+```
+
 Evidence:
 
 - current satellite/crop tests did not beat simpler controls.
@@ -309,6 +415,7 @@ Reopen only if:
 
 - a new timing-invariance task is defined and simple shift/RMS/PCA controls are
   beaten.
+- the gate separates phase shift from cycle-shape/material change.
 
 ### CCA / KCCA / S3CCA / Temporally Regularized CCA
 
@@ -329,6 +436,30 @@ Gate:
 
 - define which two views are being correlated;
 - compare against IR-MAD, PCA, and raw correlation controls.
+- treat S3CCA/TRCCA primarily as attribution/structured-view tools unless a
+  detector protocol is explicitly defined.
+
+### Venus KDS / KGDS Construction
+
+Status: reference-only / understanding aid.
+
+Purpose:
+
+- preserve what Sensei sent and clarify the original TPAMI image-set setting.
+
+Construction:
+
+```text
+raw Venus data: approximately (480, 640, 1, 300)
+downsampled view: 63 x 48 = 3024-D vector
+KDS: compare two 100-D kernel subspaces
+KGDS: compare three 150-D kernel subspaces to form a 300-D KGDS object
+```
+
+Boundary:
+
+- this is image-set classification geometry, not a direct satellite change map;
+- kernel preimage reconstruction is not part of the current project.
 
 ### Tensor / n-Mode GDS / Product Grassmann
 
@@ -342,6 +473,47 @@ Purpose:
 Gate:
 
 - show that mode-preserving geometry adds information beyond flattening.
+
+## HSI / Spectral Distribution Cards
+
+### Local Moment / Orientation HSI Geometry
+
+Status: paused candidate.
+
+Purpose:
+
+- test whether many-band HSI data give a more natural subspace setting than
+  13-band Sentinel-2 images;
+- separate spectral mean, dispersion, and orientation changes.
+
+Candidate construction:
+
+```text
+local window spectra -> mu_t
+center spectra -> covariance C_t
+dispersion features -> eigenvalues / trace / log spectrum
+orientation features -> trace-normalized top-r eigenspace
+DS/projector score -> orientation change
+diag(P_D) -> wavelength leverage / attribution
+```
+
+Minimum falsifiers:
+
+- covariance/SPD distances;
+- SAM/CVA and IR-MAD;
+- SFA/ISFA;
+- MMD/energy tests;
+- sparse PCA/band selection;
+- spectral unmixing;
+- at least one competitive deep HSI-CD model if the task becomes a detector
+  claim.
+
+Forbidden without evidence:
+
+- first subspace HSI change detector;
+- first covariance/distributional HSI change detector;
+- superior to IR-MAD/SFA/unmixing/deep HSI baselines;
+- DS uniquely detects mean-preserving change.
 
 ## Dataset Cards
 
@@ -378,6 +550,23 @@ Use:
 Limitation:
 
 - labels/evaluation must be defined before detector claims.
+
+## Implementation Caveats
+
+These details are preserved once here so old runbooks and method notes can be
+retired later.
+
+| Topic | Durable caveat |
+|---|---|
+| Legacy residual priors | Old `residual` / `oscd_saved_priors_fast` maps are legacy residual-stack priors, not the repaired canonical DS route. A Beirut audit found old residual-like maps nearly raw-L2-correlated (`0.999990`), while eig/canonical variants had about `0.19037` raw-L2 correlation. |
+| OSCD masks | Validity should use `valid_pre AND valid_post`; old notes used `min_valid_bands: 3`. Do not imply full cloud/SCL masking unless implemented. |
+| Band statistics | OSCD normalization depends on the saved band-statistics path used by the relevant run. Record the path with each reproducible experiment. |
+| Celik / IR-MAD | These are baseline pressure methods. Their prior folders and formulas require audit before strong claims. |
+| City evaluation | Stitched city-level evaluation is different from patch-level sampling. Record which unit is used. |
+| Augmentation | `RandomGaussianNoise` was raw-only in older phase2 notes. Verify before applying it to prior channels. |
+| PriorsFusionUNet | Older branch assumptions are not current truth; reproduce before claiming DS-specific gain. |
+| DamageDatasetAdapter | This was not a completed xBD-S12 training/evaluation pipeline. |
+| Spatial wording | A method is not spatially faithful merely because it uses a window; it must preserve within-window arrangement or explicitly state what spatial structure is lost. |
 
 ## Source-To-Code Rule
 

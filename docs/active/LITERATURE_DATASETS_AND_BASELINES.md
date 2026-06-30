@@ -9,7 +9,9 @@
 - [5. Baseline Pressure](#baseline-pressure)
 - [6. Reference Code](#reference-code)
 - [7. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
-- [8. Bookmark Policy](#bookmark-policy)
+- [8. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
+- [9. Bookmark Policy](#bookmark-policy)
+- [10. Exact Resource State](#exact-resource-state)
 
 ## Purpose
 
@@ -104,6 +106,19 @@ Do not copy reference code into active methods without:
 paper equation -> sample definition -> shape test -> toy check -> one-dataset output
 ```
 
+Reference-code crosswalk preserved from old notes:
+
+| Reference area | Files/functions to inspect | Project use |
+|---|---|---|
+| DS utilities | `DS/utils.py`, `MagTool` magnitude functions | verify DS magnitudes, principal angles, first/second DS behavior |
+| MATLAB subspace functions | `cvtPCA.m`, `cvtKernelPCA.m`, `cvtCCA.m`, `cvtKernelCCA.m`, `cvtBasisVector.m` | paper-to-code checks for PCA/KPCA/CCA/KCCA bases |
+| external toolboxes | SubspaceMethodsToolBox, SubspacesToolkit, subspyces | avoid hallucinated geometry formulas |
+
+Pending source action:
+
+- The user has at least three additional senpai reference codebases to add.
+  Inventory them before major DS/GDS/KDS/KGDS/CCA implementation changes.
+
 ## Knowledge-Base Concepts Absorbed
 
 From `docs/pending_deletion_review/old_knowledge_base/` and `docs/pending_deletion_review/old_research_material/*novelty*`, preserve these literature
@@ -120,6 +135,41 @@ boundaries:
 | SiROC/spatial context CD | spatial context is established in optical CD | spatial DS must beat matched spatial nulls |
 | Signal Latent Subspace | deep latent features as subspaces/product Grassmann | bridge to foundation/deep-feature lane |
 
+## HSI Fair Baseline And Novelty Boundary
+
+Do not revive the HSI lane without this baseline pressure. Generic
+"subspace-based HSI change detection" already exists.
+
+Minimum fair baseline roster:
+
+| Family | Baselines / closest priors |
+|---|---|
+| direct spectral change | raw L2/CVA, SAM |
+| low-rank difference | PCA-diff, PCA-kmeans/Celik |
+| correlation/invariant transforms | MAD/IR-MAD, CCA/KCCA, SFA/ISFA |
+| HSI subspace CD | Wu/Du/Zhang 2013 HSI subspace CD, DOI `10.1109/JSTARS.2013.2241396`; Chen/Wang 2017 LRSD_SS |
+| covariance/statistical change | Schaum/Stocker covariance equalization, Theiler quadratic ACD, shrinkage covariance/SPD distances |
+| distribution tests | MMD, energy distance |
+| band attribution | sparse PCA, band selection, contiguous wavelength attribution |
+| mixture/material models | collaborative coupled unmixing, fast multitemporal unmixing, SMSL |
+| modern HSI CD pressure | ECDBS, StripeCD, patch tensor HSI CD, at least one competitive deep HSI-CD model |
+| spatial/radar context | SiROC/SemiSiROC, PWTT |
+
+Search before HSI coding:
+
+```text
+hyperspectral change detection AND (Grassmann OR eigenspace orientation OR covariance orientation) AND (band attribution OR spectral interval)
+```
+
+Additional resource leads preserved from old research material:
+
+- DSAMNet, DRMAT, RaVAE/RaVAE-like representation papers, CGNet;
+- affinity-prior unsupervised change detection;
+- DSFA and sample-efficient change-detection surveys;
+- SST / mSSA-CUSUM for temporal change;
+- PolSAR covariance/geometry work;
+- GrNet and foundation-feature geometry references.
+
 ## Bookmark Policy
 
 Chrome bookmarks are a reading queue, not active project truth. Important
@@ -130,3 +180,23 @@ resources should be promoted here only when they affect one of:
 - a dataset;
 - a method implementation;
 - a citation boundary.
+
+## Exact Resource State
+
+Latest bookmark/resource state preserved from old notes:
+
+| Item | State |
+|---|---|
+| latest cleaned import target | `docs/source_records/bookmarks/chrome_bookmarks_research_labeled_cleaned_2026-06-25.html` |
+| total bookmark entries | `1869` |
+| research entries | `740` |
+| exact duplicate URLs | `0` |
+| priority label counts | `54 / 198 / 414 / 74` |
+| deduplication unit | intellectual item, not URL wrapper |
+
+Deduplication preference:
+
+- prefer arXiv abstract pages over direct Chrome PDF wrappers;
+- preserve DOI/publisher pages when they are the citation authority;
+- remove search-result and duplicate wrapper links after the real paper/tool
+  link is preserved.
