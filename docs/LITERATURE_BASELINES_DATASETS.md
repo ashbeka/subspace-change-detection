@@ -102,6 +102,7 @@ putting them in a paper.
 | Ding et al., "A Survey of Sample-Efficient Deep Learning for Change Detection in Remote Sensing", GRSM/arXiv 2025 | recent survey; citation count still young | Explicitly organizes sample-efficient CD and newer foundation/self-supervised directions. Use it for modern framing, but avoid over-relying on citation count. |
 | Kakogeorgiou and Karantzalos, "Evaluating Explainable Artificial Intelligence Methods for Multi-label Deep Learning Classification Tasks in Remote Sensing", IJAEOG 2021 | 2021 XAI remote-sensing reference | Remote sensing needs explanations, but explanation evaluation is nontrivial. Our DS maps should be evaluated as interpretable priors, not just visually attractive heatmaps. |
 | DINOv2/DINOv3 and VFM change-detection papers | DINOv2/DINOv3 dense features, robust scene-change papers using DINOv2, and remote-sensing foundation-model CD papers | A modern baseline can be as simple as frozen dense feature difference. If our DS prior only beats PCA/CVA but loses to DINO feature difference, the contribution must be reframed around geometry over foundation features or dropped. |
+| DINOv3 efficiency pressure | Meta DINOv3 page and technical report emphasize frozen dense features plus efficient model variants for resource-constrained/on-device use | This directly challenges any DS/GDS "low compute" claim. The fair question is not "does GDS beat DINO?" but "does GDS offer a better compute/interpretability/usefulness tradeoff for the selected satellite task?" |
 
 Problem implication:
 
@@ -172,6 +173,16 @@ Every deep/foundation-feature lane should compare against:
 - DINOv2/DINOv3 feature differences when image modality/resolution permits;
 - remote-sensing foundation model features when available;
 - shallow classifier or linear probe where labels exist.
+
+Every compute-efficiency claim should report:
+
+- preprocessing time;
+- inference time;
+- CPU/GPU used;
+- peak GPU memory and CPU memory when feasible;
+- trainable parameter count and training time;
+- output quality per cost, such as AP per second, F1 per second, or review-budget
+  recall at a fixed compute budget.
 
 Every SSC or change-type clustering claim should compare against:
 

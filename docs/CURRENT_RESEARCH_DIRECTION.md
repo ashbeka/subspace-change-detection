@@ -166,10 +166,30 @@ This means the project is looking for one of these wins, in priority order:
 | Priority | Win | What would count |
 |---:|---|---|
 | 1 | Complementary-prior win | adding DS/GDS prior features improves a supervised detector beyond raw bands, non-DS priors, and frozen-feature controls |
-| 2 | Foundation-feature geometry win | DS/GDS over DINO/SAM/remote-sensing foundation features beats or explains raw feature-distance maps |
-| 3 | Label-efficiency win | DS/GDS priors help more when training labels are reduced |
-| 4 | Analyst-triage win | DS/GDS ranks useful candidate regions/objects at a fixed review budget better than simpler scores |
-| 5 | Diagnostic/theory win | DS/GDS gives a reproducible explanation of where subspace geometry helps, fails, or becomes redundant |
+| 2 | Compute-quality win | DS/GDS gives a useful accuracy/interpretability result at lower training/inference cost than modern frozen-feature alternatives |
+| 3 | Foundation-feature geometry win | DS/GDS over DINO/SAM/remote-sensing foundation features beats or explains raw feature-distance maps |
+| 4 | Label-efficiency win | DS/GDS priors help more when training labels are reduced |
+| 5 | Analyst-triage win | DS/GDS ranks useful candidate regions/objects at a fixed review budget better than simpler scores |
+| 6 | Diagnostic/theory win | DS/GDS gives a reproducible explanation of where subspace geometry helps, fails, or becomes redundant |
+
+Senpai's DINO/DINOv3 pressure is a compute-claim challenge, not a demand that
+GDS must beat foundation models:
+
+```text
+If frozen DINOv3 features are strong and deployable, what efficiency,
+training-free, or interpretability claim remains for DS/GDS?
+```
+
+Therefore any "computationally cheaper" claim must be measured as a Pareto
+curve, not asserted:
+
+| Measurement | Needed for the claim |
+|---|---|
+| wall-clock preprocessing and inference time | does DS/GDS actually run faster on the target hardware? |
+| GPU memory and CPU memory | can DS/GDS run where DINO/SAM cannot, or with less memory? |
+| trainable parameters and training time | is the method genuinely training-free or low-training? |
+| energy/power proxy if available | does it support a green/edge-compute argument? |
+| AP/F1/IoU or review-budget recall per compute unit | is the lower cost still useful enough? |
 
 What does **not** count as the main win:
 
