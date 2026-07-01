@@ -541,9 +541,20 @@ Possible sample units:
 - building-level descriptors;
 - U-Net/foundation-model encoder features.
 
+Personal/source-note uses preserved:
+
+- image-level reconstruction for compression or denoising;
+- feature-level reconstruction for anomaly/change scoring;
+- preprocessing before U-Net or another detector, but only with a matched raw
+  and non-reconstructed control;
+- visualization of what the leading subspace keeps and what the residual
+  removes.
+
 Boundary:
 
 - this is a baseline and explanation tool, not DS novelty.
+- if used as "cloud/shadow mitigation," verify the claim with cloud/shadow or
+  pseudo-change labels; otherwise call it a denoising hypothesis only.
 
 ### Sparse Subspace Clustering For Change Types
 
@@ -805,6 +816,9 @@ Possible bridge to this project:
 - use DS/GDS/KDS/SSC to explain or cluster changed objects/regions;
 - use subspace constraints as a light interpretable head, not as the whole
   semantic model.
+- change-captioning datasets such as LEVIR-CC, Dubai-CC, and SECOND-CC show a
+  related "describe what changed" problem, but they are mostly RGB/text
+  resources and should not be treated as multispectral DS evidence.
 
 Gate:
 

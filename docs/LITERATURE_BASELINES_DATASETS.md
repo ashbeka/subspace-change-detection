@@ -71,6 +71,17 @@ Use this table when choosing what to read or cite for a route.
 | MGRS / Sentinel-2 tiles | Sentinel-2 tile metadata and MGRS mapping references | needed when matching xBD-style locations back to Sentinel-2/HLS tiles |
 | Snow/cloud masking | NDSI, Sentinel-2 cloud masks, QA bands | required if claiming seasonality or snow robustness |
 
+Second-pass clarifications from the independent audit:
+
+| Concept | Concrete source anchor | How to use it |
+|---|---|---|
+| xBD-S12 / Sentinel matching | official xBD-S12 repo `https://github.com/prs-eth/xbd-s12`; Zenodo `https://zenodo.org/records/18960454` | xBD-S12 is the current real example of aligning xBD-style disaster labels with Sentinel-1/2. Use it as external pressure for multispectral disaster claims, not as proof that OSCD results transfer to damage severity. |
+| MGRS / HLS tiling | NASA HLS tiling notes `https://hls.gsfc.nasa.gov/products-description/tiling-system/`; NASA Earthdata HLS page | HLS uses the Sentinel-2/MGRS-style tiling system. This matters if reconstructing a reproducible event pipeline from xBD/MultiSenGE coordinates and Sentinel/HLS source imagery. |
+| Change captioning / semantic descriptions | LEVIR-CC repo `https://github.com/Chen-Yang-Liu/LEVIR-CC-Dataset`; LEVIR dataset page; Dubai-CC and SECOND-CC papers/resources | These are evidence that "describe what changed" is a real route. They are mostly RGB/text datasets, so they support semantic/foundation routes but do not validate the current multispectral DS detector. |
+| HSI subspace/unmixing boundary | Wu, Du, Zhang 2013 HSI subspace CD DOI `10.1109/JSTARS.2013.2241396`; Erturk/Plaza 2015 unmixing CD; SMSL/HACD and covariance-equalization/Chronochrome references | Generic "subspace for HSI CD" is already occupied. A future HSI lane must claim a narrower object: wavelength attribution, local orientation, material-subspace explanation, or a specific robustness/computation advantage. |
+| IrrMapper / irrigation regime labels | Earth Engine `UMT/Climate/IrrMapper_RF/v1_2`; IrrMapper Remote Sensing 2020 DOI `10.3390/rs12142328` | Useful for annual irrigation on/off candidates and phenology/regime-change tests. Treat labels as classifier-derived annual maps, not direct manual switch-year ground truth. |
+| Bookmark imports | old reference notes point to `docs/source_records/bookmarks/chrome_bookmarks_research_labeled_cleaned_2026-06-25.html`, but the current tree may not contain every historical import artifact | Do not delete bookmark source notes until the latest import file is recovered, regenerated, or explicitly abandoned. |
+
 ## Must-Cite Boundaries
 
 Do not claim novelty over:
@@ -92,7 +103,7 @@ sample construction + satellite adaptation + controlled evidence boundary
 | Dataset | Role | Labels | Current use | Limitation |
 |---|---|---|---|---|
 | OSCD | main benchmark | binary changed areas | Successive Saab-DS, spatial DS, U-Net priors | two-date, binary, not damage |
-| xBD-S12 | external disaster pressure | xBD-derived building damage labels | candidate localization | not generic OSCD-style change |
+| xBD-S12 | external disaster pressure | xBD-derived building damage labels with co-registered Sentinel-1/2 | candidate localization | not generic OSCD-style change; original Sentinel tiles are a separate large download |
 | MultiSenGE | multi-date exploration | weak/unclear | temporal DS/RTW exploration | no clean target labels |
 | Harmonized Sentinel-2 L2A | Sensei-requested sequence source | depends on chosen event | future temporal DS/GDS | needs audit |
 | xView2 | disaster damage / building assessment family | building/damage labels | future context only | RGB-centric and not current active pipeline |
@@ -101,6 +112,7 @@ sample construction + satellite adaptation + controlled evidence boundary
 | IPOL/SITS sequences | registered time-series tests | detector maps/events | temporal DS characterization | detector maps not ground truth |
 | HSI datasets | spectral geometry pressure | scene-dependent labels | HSI transfer probes | not current positive route |
 | SpaceNet7 | RGB building appearance | building/temporal labels | transfer stress test | raw L2 stronger |
+| IrrMapper | annual irrigation status maps | classifier-derived irrigated/non-irrigated yearly labels | temporal regime-change candidate | useful for irrigation start/stop hypotheses, but switch labels need independent verification |
 
 ## Baseline Pressure
 

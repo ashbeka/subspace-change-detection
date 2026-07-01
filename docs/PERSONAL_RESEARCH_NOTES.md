@@ -59,7 +59,7 @@ Future workflow note:
 
 ## 3. Current Rough Notes
 
-These notes are distilled from Apple Notes, Slack notes, Sensei messages, the updated Word research notes, and supporting source files preserved in `docs/source_records/final_organization_2026-06-12/`.
+These notes are distilled from Apple Notes, Slack notes, Sensei messages, the updated Word research notes, and supporting source files preserved under `docs/source_records/`. The old top-level `docs/source_records/final_organization_2026-06-12/` path no longer exists in the current tree; only a partial overlap snapshot exists under the absorbed Claude source records.
 
 ### 3.1 Main Research Doubt
 

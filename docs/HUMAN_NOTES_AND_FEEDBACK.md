@@ -109,6 +109,21 @@ Recurring issue:
 What axis does the method win on?
 ```
 
+Exact questions that should remain answerable from the active docs:
+
+| Question family | Why it matters |
+|---|---|
+| Why ResNet34 / U-Net-ResNet was used | architecture must be framed as baseline or convenience, not thesis novelty |
+| Why raw Sentinel-2 bands sometimes beat DS/PCA-diff priors | forces honest comparison between priors and raw information |
+| Why PriorsFusionUNet underperformed | prevents claiming naive prior fusion before matched reruns |
+| Why IR-MAD was weak in our results despite being a strong multiband baseline | requires formula/tuning audit before citing negative IR-MAD evidence |
+| What Phase 1 objective is, and why PCA-diff can beat DS | requires explaining detection score maps separately from segmentation training |
+| Where related work ends and the proposed method begins | must separate DS, PixelHop/Saab, U-Net, IR-MAD, and our satellite adaptation/evaluation |
+| Why Sentinel-2/multispectral data are used for disaster assessment | requires a band/value argument over RGB-only imagery |
+| Whether non-disaster construction before/after imagery could answer the same technical question | keeps the task problem-driven instead of disaster-themed by habit |
+| What the computational-cost/accuracy tradeoff is | matters if claiming efficiency, label-free practicality, or edge deployment |
+| Whether priors should be used as loss weighting, curriculum, gating, or attention instead of raw concatenation | preserves the strongest neural-prior improvement ideas |
+
 Current answer:
 
 - not SOTA segmentation accuracy;

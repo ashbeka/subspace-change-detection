@@ -212,10 +212,20 @@ Not delete without explicit approval:
 
 | Source | Reason |
 |---|---|
-| `docs/source_records/final_organization_2026-06-12/` | raw Apple/Slack/bookmark/source batch |
+| `docs/source_records/` | raw Apple/Slack/bookmark/source records, including `apple_notes.md`, `slack_messages_with_sensei.md`, `slack_notes_to_myself.md`, `All research notes - this is the updated one not the one on the laptop.docx`, `student_feedback_channel4_2025-11-20.xlsx`, and `qa_report_response_2025-11-20.pdf` |
 | `docs/PERSONAL_RESEARCH_NOTES.md` | user rough-note intake |
 | curated experiment reports with unique figures or exact metrics | evidence provenance |
 | code and datasets | require separate code/data cleanup stages |
+
+Current source-record caveat:
+
+- The former top-level `docs/source_records/final_organization_2026-06-12/`
+  folder is not present in the current tree. Do not cite it as an active
+  source path. A partial overlap snapshot exists under
+  `docs/source_records/claude_temporal/overlap_versions/docs/source_records/final_organization_2026-06-12/`,
+  but active source-record references should point to the current
+  `docs/source_records/` files unless a missing raw import is recovered from
+  Git history.
 
 ## First File-Fate Checklist
 

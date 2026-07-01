@@ -11,6 +11,7 @@
 - [7. Deletion Readiness](#7-deletion-readiness)
 - [8. How You Can Verify Without Reading 200 Files](#8-how-you-can-verify-without-reading-200-files)
 - [9. Remaining Checks](#9-remaining-checks)
+- [10. Second-Pass Independent Audit Response](#10-second-pass-independent-audit-response)
 
 ## 1. Purpose
 
@@ -56,10 +57,10 @@ Current count after moving active docs to the root `docs/` folder:
 | Group | Files |
 |---|---:|
 | `docs/experiment_reports/` | 116 |
-| `docs/source_records/` | 59 |
+| `docs/source_records/` | 60 |
 | `docs/pending_deletion_review/` | 49 |
 | `docs/figures/` | 10 |
-| Total non-active files in ledger | 234 |
+| Total non-active files in ledger | 235 |
 
 The active root docs themselves are not counted as files to distill.
 
@@ -188,3 +189,61 @@ Before any deletion:
   Git history if needed;
 - choose whether seminar scripts should be kept as presentation material or
   compressed into future slide notes.
+
+## 10. Second-Pass Independent Audit Response
+
+Audit source:
+
+```text
+docs/source_records/independent_distillation_audit_2026-07-01.md
+```
+
+Verdict accepted:
+
+```text
+The distillation is useful, but not deletion-grade for bulk deletion yet.
+```
+
+What was fixed or strengthened after the independent audit:
+
+| Issue | Action |
+|---|---|
+| stale `docs/source_records/final_organization_2026-06-12/` references | active docs now point to `docs/source_records/`; the missing old folder is explicitly documented as absent except for a partial Claude overlap snapshot |
+| audit file absent from ledger | added as a source-record audit row so file counts stay honest |
+| MGRS / Sentinel-2 tile matching too thin | `LITERATURE_BASELINES_DATASETS.md` now records HLS/MGRS and xBD-S12 matching anchors |
+| xBD-S12 source boundary too thin | literature/dataset map now records official repo and Zenodo roles and warns that damage severity is not OSCD-style change |
+| change captioning / semantic route too thin | LEVIR-CC, Dubai-CC, and SECOND-CC are promoted as route-reading leads, not current DS evidence |
+| HSI ACD / unmixing / covariance pressure too compressed | HSI boundary now explicitly names Wu/Du/Zhang, unmixing, SMSL, Chronochrome/covariance-equalization families |
+| exact student feedback Q&A too compressed | `HUMAN_NOTES_AND_FEEDBACK.md` now keeps the concrete question families that must remain answerable |
+| PCA reconstruction uses too compressed | `METHODS_REFERENCE.md` now distinguishes reconstruction error, denoising, preprocessing, and visualization uses |
+| IrrMapper / irrigation seasonal route too buried | `RESEARCH_ROUTES.md` and `LITERATURE_BASELINES_DATASETS.md` now preserve the irrigation-regime route and label caveats |
+| bookmark import artifacts unresolved | still unresolved; active docs now keep this as a deletion blocker rather than pretending the HTML imports are present |
+
+Local review performed:
+
+- all current `docs/` files were counted against the ledger;
+- all non-active Markdown files were scanned for headings and the audit's
+  missing/thin concepts;
+- high-priority human/source files were re-extracted or searched directly:
+  Apple Notes, Slack notes, Sensei messages, Word notes, Excel feedback,
+  source coverage audit, old notes, old knowledge base, and Claude temporal
+  absorption material;
+- source-heavy concepts were compared against active docs before adding only
+  missing nuance.
+
+External checks used for the thin concepts:
+
+- xBD-S12 official repository and Zenodo record;
+- NASA HLS/MGRS tiling references;
+- LEVIR-CC / remote-sensing change-captioning resources;
+- HSI subspace/unmixing/anomalous-change references;
+- IrrMapper Earth Engine / Remote Sensing 2020 references.
+
+Deletion stance after this pass:
+
+- still do not bulk-delete `old_notes/`, `old_knowledge_base/`,
+  source records, or bookmark records;
+- AI synthesis files can move toward review only after confirming no exact
+  experiment number, figure, command, or route-specific caveat remains unique;
+- the active docs are now a better reading path, but deletion still requires
+  targeted review by group.
