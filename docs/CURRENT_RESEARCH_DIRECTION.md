@@ -129,20 +129,39 @@ Expanded:
 ```text
 If a satellite tile, object, region, or time window is represented by the
 subspace spanned by its local multispectral or foundation-model patch features,
-then subspace geometry can provide label-efficient, interpretable, and
-compute-aware evidence for Earth-observation tasks such as classification,
-retrieval, change/anomaly detection, or temporal event characterization.
+then comparing those subspaces should improve at least one concrete task
+measurement over comparing ordinary pooled feature vectors.
 ```
 
-This hypothesis is positive. It says what should be true if the idea is useful:
+Operational version:
+
+```text
+Build U_R from patch features inside region R. Compare regions by canonical
+angles/MSM, DS, GDS, or second-order DS. The method is useful only if these
+subspace comparisons outperform or explain results better than mean pooling,
+raw feature distances, and shallow vector classifiers under the same data.
+```
+
+This hypothesis is positive. It says what should be true if the idea is useful,
+without relying on vague phrases:
 
 | Hypothesis part | Expected observation |
 |---|---|
-| Representation | subspaces preserve patch-distribution structure that mean pooling loses |
-| Label efficiency | subspace matching or shallow models need fewer labels than ordinary feature vectors |
-| Interpretability | basis vectors, principal angles, and patch contributions reveal which local patterns drive similarity/change |
-| Compute tradeoff | explicit feature extraction plus SVD/subspace comparison gives useful evidence with less training than heavy fine-tuning |
-| Downstream transfer | the same representation can support change/anomaly/temporal tasks after it works on a cleaner first task |
+| Representation | same feature source, same labels: subspace distance/classifier beats mean-pooled vectors or gives better retrieval ranking |
+| Low-label behavior | with fewer labeled samples per class/event, subspace matching loses less performance than ordinary vector classifiers |
+| Explanation | the leading basis directions, principal angles, and patch/band contributions can be visualized and tied to specific local spectral-spatial patterns |
+| Compute | training cost is mostly feature extraction plus SVD and comparison; report wall time, memory, parameters, and accuracy/retrieval per cost |
+| Downstream use | after the representation works on a clean task, test paired pre/post regions with DS/GDS for change, anomaly, or temporal-event evidence |
+
+Plain Sensei-facing version:
+
+```text
+The proposed object is not a pixel and not a single image vector.
+The proposed object is a subspace built from many local patch features inside
+one satellite region. The claim is that this subspace keeps the region's
+internal variation, and that canonical-angle/DS/GDS comparisons of these
+regions are more useful than comparing only their average feature vectors.
+```
 
 The falsifier is also clear:
 
