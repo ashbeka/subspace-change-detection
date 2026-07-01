@@ -6,17 +6,18 @@
 - [2. Current Umbrella](#current-umbrella)
 - [3. Current Working Direction](#current-working-direction)
 - [4. Literature-Grounded Problem Statement](#literature-grounded-problem-statement)
-- [5. Contribution Hypothesis](#contribution-hypothesis)
-- [6. Win Axis](#win-axis)
-- [7. Current Best Result](#current-best-result)
-- [8. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
-- [9. Safe Claims](#safe-claims)
-- [10. Forbidden Claims](#forbidden-claims)
-- [11. Active Reading Path](#active-reading-path)
-- [12. Stage 1 Distillation Policy](#stage-1-distillation-policy)
-- [13. Transition Map](#transition-map)
-- [14. Deletion Review Queue](#deletion-review-queue)
-- [15. First File-Fate Checklist](#first-file-fate-checklist)
+- [5. Working Hypothesis](#working-hypothesis)
+- [6. Contribution Hypothesis](#contribution-hypothesis)
+- [7. Win Axis](#win-axis)
+- [8. Current Best Result](#current-best-result)
+- [9. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
+- [10. Safe Claims](#safe-claims)
+- [11. Forbidden Claims](#forbidden-claims)
+- [12. Active Reading Path](#active-reading-path)
+- [13. Stage 1 Distillation Policy](#stage-1-distillation-policy)
+- [14. Transition Map](#transition-map)
+- [15. Deletion Review Queue](#deletion-review-queue)
+- [16. First File-Fate Checklist](#first-file-fate-checklist)
 
 ## Purpose
 
@@ -112,6 +113,44 @@ real need:
 The thesis should not claim that DS is a new remote-sensing method. The possible
 contribution is the construction and controlled evaluation of **spatial,
 label-free subspace priors** for multispectral change detection.
+
+## Working Hypothesis
+
+The positive research hypothesis is:
+
+```text
+Satellite image regions have meaningful local spectral-spatial structure that is
+better represented as a low-dimensional subspace of patch-level features than as
+a single pooled feature vector.
+```
+
+Expanded:
+
+```text
+If a satellite tile, object, region, or time window is represented by the
+subspace spanned by its local multispectral or foundation-model patch features,
+then subspace geometry can provide label-efficient, interpretable, and
+compute-aware evidence for Earth-observation tasks such as classification,
+retrieval, change/anomaly detection, or temporal event characterization.
+```
+
+This hypothesis is positive. It says what should be true if the idea is useful:
+
+| Hypothesis part | Expected observation |
+|---|---|
+| Representation | subspaces preserve patch-distribution structure that mean pooling loses |
+| Label efficiency | subspace matching or shallow models need fewer labels than ordinary feature vectors |
+| Interpretability | basis vectors, principal angles, and patch contributions reveal which local patterns drive similarity/change |
+| Compute tradeoff | explicit feature extraction plus SVD/subspace comparison gives useful evidence with less training than heavy fine-tuning |
+| Downstream transfer | the same representation can support change/anomaly/temporal tasks after it works on a cleaner first task |
+
+The falsifier is also clear:
+
+```text
+If mean-pooled or frozen-feature vectors consistently match or beat the subspace
+representation under the same feature source, label budget, and compute budget,
+then the broad Satellite Latent Subspace hypothesis should be narrowed or paused.
+```
 
 ## Contribution Hypothesis
 
