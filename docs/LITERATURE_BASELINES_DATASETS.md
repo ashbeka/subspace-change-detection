@@ -5,14 +5,15 @@
 - [1. Purpose](#purpose)
 - [2. Reading Priorities](#reading-priorities)
 - [3. Concept-To-Reading Map](#concept-to-reading-map)
-- [4. Must-Cite Boundaries](#must-cite-boundaries)
-- [5. Dataset Map](#dataset-map)
-- [6. Baseline Pressure](#baseline-pressure)
-- [7. Reference Code](#reference-code)
-- [8. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
-- [9. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
-- [10. Bookmark Policy](#bookmark-policy)
-- [11. Exact Resource State](#exact-resource-state)
+- [4. Recent Literature Pressure For The Problem Statement](#recent-literature-pressure-for-the-problem-statement)
+- [5. Must-Cite Boundaries](#must-cite-boundaries)
+- [6. Dataset Map](#dataset-map)
+- [7. Baseline Pressure](#baseline-pressure)
+- [8. Reference Code](#reference-code)
+- [9. Knowledge-Base Concepts Absorbed](#knowledge-base-concepts-absorbed)
+- [10. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
+- [11. Bookmark Policy](#bookmark-policy)
+- [12. Exact Resource State](#exact-resource-state)
 
 ## Purpose
 
@@ -81,6 +82,32 @@ Second-pass clarifications from the independent audit:
 | HSI subspace/unmixing boundary | Wu, Du, Zhang 2013 HSI subspace CD DOI `10.1109/JSTARS.2013.2241396`; Erturk/Plaza 2015 unmixing CD; SMSL/HACD and covariance-equalization/Chronochrome references | Generic "subspace for HSI CD" is already occupied. A future HSI lane must claim a narrower object: wavelength attribution, local orientation, material-subspace explanation, or a specific robustness/computation advantage. |
 | IrrMapper / irrigation regime labels | Earth Engine `UMT/Climate/IrrMapper_RF/v1_2`; IrrMapper Remote Sensing 2020 DOI `10.3390/rs12142328` | Useful for annual irrigation on/off candidates and phenology/regime-change tests. Treat labels as classifier-derived annual maps, not direct manual switch-year ground truth. |
 | Bookmark imports | old reference notes point to `docs/source_records/bookmarks/chrome_bookmarks_research_labeled_cleaned_2026-06-25.html`, but the current tree may not contain every historical import artifact | Do not delete bookmark source notes until the latest import file is recovered, regenerated, or explicitly abandoned. |
+
+## Recent Literature Pressure For The Problem Statement
+
+Use these as the first external anchors when explaining why the project matters.
+Citation counts below are approximate public web/Semantic Scholar/ResearchGate
+signals observed during the 2026-07-01 framing pass; verify exact counts before
+putting them in a paper.
+
+| Source | Recent/cited status | What it says for this project |
+|---|---|---|
+| Cheng et al., "Change Detection Methods for Remote Sensing in the Last Decade: A Comprehensive Review", Remote Sensing 2024, DOI `10.3390/rs16132355` | 2024 review; public pages show over 200 citations | CD is a broad, active field with challenges from noise, registration, illumination, complex landscapes, and spatial heterogeneity. Our problem must be framed as a specific response to representation/label/interpretability pressure, not generic CD. |
+| Wang et al., "Advances and Challenges in Deep Learning-Based Change Detection for Remote Sensing Images: A Review through Various Learning Paradigms", Remote Sensing 2024, DOI `10.3390/rs16050804` | 2024 review; public pages show tens of citations | Reviews fully supervised, semi-supervised, weakly supervised, and unsupervised paradigms. This supports a sample-efficient/label-efficient framing. |
+| Jiang et al., "A Survey on Deep Learning-Based Change Detection from High-Resolution Remote Sensing Images", Remote Sensing 2022, DOI `10.3390/rs14071552` | 2022 review; public pages show hundreds of citations | Establishes deep CD taxonomy, datasets, metrics, and SOTA pressure. We should not claim SOTA unless comparing to strong deep baselines. |
+| Chen, Qi, and Shi, "Remote Sensing Image Change Detection With Transformers", TGRS 2021, DOI `10.1109/TGRS.2021.3095166` | 2021 transformer baseline; public pages show over 1000 citations | Strong deep models exist. Our win axis should be complementary prior evidence, interpretability, label efficiency, or lightweight computation, not beating transformers outright. |
+| Zheng et al., "Change is Everywhere: Single-Temporal Supervised Object Change Detection in Remote Sensing Imagery", ICCV 2021 | 2021 weak/single-temporal supervision method; well-known code and paper | Confirms that reducing paired bitemporal annotation cost is a real problem. Our label-free priors can be positioned as a different route to reduce dependence on dense change labels. |
+| Ding et al., "A Survey of Sample-Efficient Deep Learning for Change Detection in Remote Sensing", GRSM/arXiv 2025 | recent survey; citation count still young | Explicitly organizes sample-efficient CD and newer foundation/self-supervised directions. Use it for modern framing, but avoid over-relying on citation count. |
+| Kakogeorgiou and Karantzalos, "Evaluating Explainable Artificial Intelligence Methods for Multi-label Deep Learning Classification Tasks in Remote Sensing", IJAEOG 2021 | 2021 XAI remote-sensing reference | Remote sensing needs explanations, but explanation evaluation is nontrivial. Our DS maps should be evaluated as interpretable priors, not just visually attractive heatmaps. |
+
+Problem implication:
+
+```text
+The meaningful contribution is not "DS detects changes." It is a controlled
+answer to whether label-free, spatially structured subspace priors give
+interpretable and complementary change evidence under the annotation and
+generalization pressures recognized by recent remote-sensing CD literature.
+```
 
 ## Must-Cite Boundaries
 

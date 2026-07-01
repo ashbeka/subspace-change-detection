@@ -5,15 +5,16 @@
 - [1. Purpose](#purpose)
 - [2. Current Umbrella](#current-umbrella)
 - [3. Current Working Direction](#current-working-direction)
-- [4. Current Best Result](#current-best-result)
-- [5. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
-- [6. Safe Claims](#safe-claims)
-- [7. Forbidden Claims](#forbidden-claims)
-- [8. Active Reading Path](#active-reading-path)
-- [9. Stage 1 Distillation Policy](#stage-1-distillation-policy)
-- [10. Transition Map](#transition-map)
-- [11. Deletion Review Queue](#deletion-review-queue)
-- [12. First File-Fate Checklist](#first-file-fate-checklist)
+- [4. Literature-Grounded Problem Statement](#literature-grounded-problem-statement)
+- [5. Current Best Result](#current-best-result)
+- [6. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
+- [7. Safe Claims](#safe-claims)
+- [8. Forbidden Claims](#forbidden-claims)
+- [9. Active Reading Path](#active-reading-path)
+- [10. Stage 1 Distillation Policy](#stage-1-distillation-policy)
+- [11. Transition Map](#transition-map)
+- [12. Deletion Review Queue](#deletion-review-queue)
+- [13. First File-Fate Checklist](#first-file-fate-checklist)
 
 ## Purpose
 
@@ -52,6 +53,40 @@ Current best evidence:
   Sensei-aligned, but currently characterization rather than a strong detector.
 - Global pixel DS, fixed-grid pyramid DS, wavelet DS, RTW, broad HSI transfer,
   and SpaceNet7 RGB transfer are paused as primary routes.
+
+## Literature-Grounded Problem Statement
+
+Recent remote-sensing change-detection surveys and methods point to the same
+field pressure: high-performing deep models exist, but they rely on expensive
+bitemporal labels, can be opaque, and may be fragile across sensors, regions,
+and nuisance changes. Classical unsupervised difference methods are label-free
+and interpretable, but simple spectral differences, PCA/MAD-style maps, or
+global subspaces often miss local spatial context or confuse pseudo-change with
+real object/land-cover change.
+
+The project should therefore be framed around this problem:
+
+```text
+How can label-free, spatially structured subspace representations be built from
+multispectral satellite image neighborhoods to produce interpretable change
+prior maps that complement supervised change detectors under limited labeled
+bitemporal data?
+```
+
+This is stronger than "can DS work on satellite images" because it names the
+real need:
+
+- limited and expensive change labels;
+- local spatial context instead of unordered pixel spectra;
+- interpretable prior evidence instead of a black-box-only detector;
+- controlled comparison against raw difference, PCA/IR-MAD, and DS-free
+  feature controls;
+- usefulness either as standalone changed-area evidence or as an auxiliary
+  prior for a supervised model.
+
+The thesis should not claim that DS is a new remote-sensing method. The possible
+contribution is the construction and controlled evaluation of **spatial,
+label-free subspace priors** for multispectral change detection.
 
 ## Current Best Result
 
