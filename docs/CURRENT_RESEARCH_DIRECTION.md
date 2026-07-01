@@ -6,15 +6,16 @@
 - [2. Current Umbrella](#current-umbrella)
 - [3. Current Working Direction](#current-working-direction)
 - [4. Literature-Grounded Problem Statement](#literature-grounded-problem-statement)
-- [5. Current Best Result](#current-best-result)
-- [6. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
-- [7. Safe Claims](#safe-claims)
-- [8. Forbidden Claims](#forbidden-claims)
-- [9. Active Reading Path](#active-reading-path)
-- [10. Stage 1 Distillation Policy](#stage-1-distillation-policy)
-- [11. Transition Map](#transition-map)
-- [12. Deletion Review Queue](#deletion-review-queue)
-- [13. First File-Fate Checklist](#first-file-fate-checklist)
+- [5. Contribution Hypothesis](#contribution-hypothesis)
+- [6. Current Best Result](#current-best-result)
+- [7. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
+- [8. Safe Claims](#safe-claims)
+- [9. Forbidden Claims](#forbidden-claims)
+- [10. Active Reading Path](#active-reading-path)
+- [11. Stage 1 Distillation Policy](#stage-1-distillation-policy)
+- [12. Transition Map](#transition-map)
+- [13. Deletion Review Queue](#deletion-review-queue)
+- [14. First File-Fate Checklist](#first-file-fate-checklist)
 
 ## Purpose
 
@@ -87,6 +88,46 @@ real need:
 The thesis should not claim that DS is a new remote-sensing method. The possible
 contribution is the construction and controlled evaluation of **spatial,
 label-free subspace priors** for multispectral change detection.
+
+## Contribution Hypothesis
+
+The contribution we are testing is:
+
+```text
+A label-free spatial subspace-prior construction for multispectral bitemporal
+imagery, plus a controlled evaluation showing whether that prior adds
+interpretable and complementary change evidence beyond raw spectral difference,
+PCA/IR-MAD, and DS-free learned/local-feature controls.
+```
+
+This contribution has three separable parts:
+
+| Part | What is new or useful here | What would prove it |
+|---|---|---|
+| Construction | Build DS priors from spatially organized local/multispectral feature maps instead of unordered pixel spectra. | The prior is more spatially coherent or more informative than global pixel DS and simple spectral/PCA maps. |
+| Complementarity | Use the DS prior as auxiliary evidence for a supervised detector, not as a SOTA replacement. | Adding DS improves over raw bands and strong no-DS prior controls across seeds/cities. |
+| Interpretability | Treat the DS map as a geometric explanation of what kind of local feature-space change the model sees. | Visual/quantitative analysis shows where DS highlights true change, pseudo-change, or failure modes. |
+
+The closest literature pressure is:
+
+- sample-efficient CD surveys: labels are expensive and practical deployment
+  needs methods that work with limited annotations;
+- unsupervised CD methods: label-free maps remain important, but pseudo-change
+  from shadows, vegetation, atmosphere, clouds, and seasons is a hard problem;
+- prior-guided CD networks: "change priors" are already a recognized mechanism
+  in modern neural CD, but those priors are usually learned internally rather
+  than built as explicit, label-free geometric evidence;
+- foundation/open-vocabulary CD: the field is moving toward more flexible
+  change queries, but those routes increase model/data complexity and do not
+  remove the need for interpretable low-label evidence.
+
+Therefore the project is not trying to win on raw SOTA accuracy. It is trying
+to win on this narrower axis:
+
+```text
+Can an explicit spatial DS prior give a supervised or human analyst a useful,
+interpretable signal that simple spectral/PCA/IR-MAD priors do not provide?
+```
 
 ## Current Best Result
 
