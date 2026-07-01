@@ -222,6 +222,69 @@ Source trail:
 - Green Learning overview;
 - Fukui/Maki DS.
 
+### Satellite Latent Subspace
+
+Status: strategic candidate.
+
+Purpose: define the natural satellite version of the lab recipe before choosing
+the final downstream task.
+
+Construction:
+
+```text
+one satellite unit = tile, object, region, or time window
+split the unit into patches or model tokens
+extract one feature vector per patch/token:
+  raw multispectral patch stats, Saab/PixelHop features, or frozen foundation features
+X_unit in R^(d x N_patches)
+center/normalize X_unit
+PCA/SVD basis U_unit in R^(d x r)
+U_unit is the Satellite Latent Subspace for that unit
+```
+
+Comparison/scoring options:
+
+```text
+same-class or similar units -> small Grassmann/MSM distance
+different classes or changed units -> larger distance
+paired pre/post units -> DS or projector-distance score
+multi-class/regime units -> GDS-style discriminative geometry
+time-window sequence -> first/second DS trajectory descriptors
+```
+
+What this preserves:
+
+- local patch distribution inside a satellite tile/object/region;
+- multispectral or foundation-model feature variation, not only the mean vector;
+- a geometric object that can be compared by canonical angles, MSM, DS, GDS, or
+  second-order DS.
+
+Minimum controls:
+
+- raw multispectral vector or simple band/index statistics;
+- mean-pooled patch/foundation features;
+- Euclidean/cosine feature distance;
+- PCA reconstruction residual if doing anomaly/change;
+- linear probe or shallow classifier when labels exist.
+
+Pass condition:
+
+- improves low-label classification, retrieval, candidate triage, or calibration
+  over the same features without subspace geometry;
+- or gives a reproducible failure/interpretability axis that mean pooling hides.
+
+Boundary:
+
+- this is not proof that DS beats deep learning;
+- this is not automatically change detection;
+- the task must be chosen because the region-as-subspace object is useful.
+
+Source analogy:
+
+- Signal Latent Subspace: learned latent features become subspaces for audio.
+- G-LMSM/MSM: an image set is represented as a subspace and compared by geometry.
+- Second-order DS: a sequence of subspaces can be analyzed as dynamics.
+
 ### Temporal First/Second DS And Geodesic Decomposition
 
 Status: implemented characterization.

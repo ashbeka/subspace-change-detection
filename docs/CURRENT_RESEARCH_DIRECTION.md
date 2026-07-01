@@ -265,32 +265,40 @@ Do not add another unrelated method family yet.
 Next task:
 
 ```text
-Independently reproduce the reported DS-specific U-Net/multi-prior fusion gain.
+Run a representation-first Satellite Latent Subspace proof gate.
 ```
 
 Why:
 
-- It is the most consequential unverified positive claim.
-- If it holds, it gives a clear win axis: DS as complementary learned-prior
-  evidence.
-- If it fails, the main story returns to label-free spatial Saab-DS plus
-  candidate-localization and diagnostics.
+- It tests the stronger lab-pattern thesis before more OSCD-only tuning.
+- It answers whether satellite regions naturally become useful subspaces,
+  similar to signal latent subspaces for audio.
+- It can use cleaner labels than pixel-level change masks, so the representation
+  value is easier to verify.
+- If it passes, change detection becomes a downstream application of a proven
+  representation. If it fails, we should narrow back to OSCD/Saab-DS or DS-fusion
+  instead of pretending the broad route is real.
 
 Required comparison:
 
-| Model/input | Purpose |
+| Method/input | Purpose |
 |---|---|
-| raw bands | supervised floor |
-| bands + DS | direct DS-prior test |
-| bands + smoothed PCA + IR-MAD | strong no-DS prior control |
-| bands + DS + smoothed PCA + IR-MAD | multi-prior fusion |
-| bands + cross-reconstruction + smoothed PCA + IR-MAD | matched non-DS control |
+| raw multispectral feature vector | simplest satellite baseline |
+| mean-pooled patch/foundation features | strong non-subspace representation control |
+| linear probe or shallow classifier | standard low-label supervised control |
+| Satellite Latent Subspace + MSM/Grassmann distance | direct subspace representation test |
+| Satellite Latent Subspace + DS/GDS if the task is paired or multi-class | lab-geometry extension |
+| frozen-feature distance if using DINO/Prithvi/SAM/RemoteCLIP | modern feature-difference pressure |
 
 Decision:
 
-- **Continue** if DS improves beyond no-DS and matched-cross controls across
-  seeds/cities without leakage.
-- **Pause neural-prior lane** if no-DS or matched-cross catches up.
+- **Continue** if subspace geometry improves low-label accuracy, retrieval,
+  candidate triage, or calibration over mean-pooled/frozen-feature controls at
+  comparable feature source and compute.
+- **Narrow** if the feature extractor wins but the subspace geometry adds
+  nothing.
+- **Return to OSCD/Saab-DS or DS-fusion** if satellite latent subspace does not
+  show a clean first-task advantage.
 
 ## Safe Claims
 
