@@ -8,6 +8,7 @@
 - [4. Route Bank](#4-route-bank)
 - [5. Closed Or Paused Routes](#5-closed-or-paused-routes)
 - [6. Cross-Route Gates](#6-cross-route-gates)
+- [7. Lab Recipe From Sensei Publication Pattern](#7-lab-recipe-from-sensei-publication-pattern)
 
 ## 1. Purpose
 
@@ -34,11 +35,11 @@ problem, it gets added here even if it was not previously named.
 
 | Rank | Route | Win axis | Status | Next gate |
 |---:|---|---|---|---|
-| 1 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
-| 2 | Compute-quality DS/GDS route | test whether subspace priors retain useful evidence at lower training/inference cost than frozen VFM features | candidate | compare DS/GDS, DINO feature difference, and DINO+DS with wall-clock/GPU-memory/AP/F1 |
-| 3 | Deep/foundation-feature subspace geometry | test DS as a geometry layer over modern dense features, not only over raw bands | candidate | DINOv2/DINOv3 feature-difference vs DINO-feature DS on one suitable benchmark |
-| 4 | DS-specific neural-prior fusion | complementary prior for supervised segmentation | verify | rerun raw/no-DS/DS/matched-cross/foundation-feature controls across seeds |
-| 5 | Band-Image/projector candidate localization on xBD-S12 | analyst triage and damaged-building candidate recall | candidate | object-level retrieval protocol on fresh events |
+| 1 | Satellite latent subspace | represent a satellite tile/object/time window as a subspace of patch, spectral, or foundation-model features | strategic candidate | pick one task: low-label scene/land-cover classification, region-level change/anomaly triage, or temporal event detection |
+| 2 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current evidence | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
+| 3 | Compute-quality DS/GDS route | test whether subspace priors retain useful evidence at lower training/inference cost than frozen VFM features | candidate | compare DS/GDS, DINO feature difference, and DINO+DS with wall-clock/GPU-memory/AP/F1 |
+| 4 | Deep/foundation-feature subspace geometry | test DS as a geometry layer over modern dense features, not only over raw bands | candidate | DINOv2/DINOv3 feature-difference vs DINO-feature DS on one suitable benchmark |
+| 5 | DS-specific neural-prior fusion | complementary prior for supervised segmentation | verify | rerun raw/no-DS/DS/matched-cross/foundation-feature controls across seeds |
 | 6 | HSI spectral geometry and wavelength attribution | many-band spectral interpretation | parked | real labeled bitemporal HSI benchmark against SAM/CVA/IR-MAD/HSI-CD baselines |
 | 7 | Structured temporal CCA/SFA/S3CCA/TRCCA | invariant/background modeling and attributable temporal change | candidate | one sequence task with raw residual, shift, PCA, SSA, and seasonal controls |
 | 8 | Tensor/Product-Grassmann satellite cubes | preserve spectral-spatial-temporal modes | future | define tensor object and prove benefit over flattening |
@@ -52,6 +53,7 @@ These routes are preserved so they remain searchable. They are not all current.
 
 | Route | Problem angle | Possible method | Needed evidence/gate |
 |---|---|---|---|
+| Satellite latent subspace | satellite imagery has natural sets: patches, bands, dates, objects, foundation tokens | build a subspace per tile/object/time window from multispectral, DINO/Prithvi/SAM, or local patch features; compare via MSM/DS/GDS/second-order DS | first run a low-risk task where labels are clean, then transfer to change/anomaly |
 | Spatially faithful Saab-DS | global pixel DS loses spatial context | PixelHop/Saab-like local features plus Band-Image DS | replicate OSCD positive and pressure with matched controls |
 | True Green Learning / PixelHop route | local-to-global label-free features may help before DS | source-faithful Saab hops, not fixed-grid proxy | cite Kuo papers; compare to plain PCA/L2 and DS-free Saab controls |
 | Wavelet-inspired subspace pyramid | multiscale LL/LH/HL/HH detail may preserve spatial structure | DWT/SWT per band then subspaces per coefficient family | compare against true wavelet energy/L2 and Saab route |
@@ -131,3 +133,42 @@ These routes are preserved so they remain searchable. They are not all current.
 - Do not treat AI-generated positive claims as thesis evidence until rerun in the active code path.
 - If a route fails, record the failure mode; it may become part of the diagnostic paper.
 - Sensei-requested first/second DS, geodesic projection, CCA/SFA, KDS/KGDS, and deeper math remain important even if the current best empirical route is Saab-DS.
+
+## 7. Lab Recipe From Sensei Publication Pattern
+
+The lab pattern from recent Fukui/senpai papers is:
+
+```text
+domain object -> natural set/sequence/tensor/latent representation -> subspace
+geometry -> task-specific win axis -> controlled baselines
+```
+
+Examples:
+
+| Paper/style | Data object | Subspace move | Win axis |
+|---|---|---|---|
+| Signal Latent Subspace | environmental audio signal | CNN/deep latent features become signal subspaces | better audio representation by combining DNN features with subspace geometry |
+| Slow Feature Subspace | video/action sequence | preserve slow temporal structure that plain PCA image-set subspaces lose | temporal invariance/action representation |
+| Second-order DS | sequence of subspaces | first/second DS become velocity/acceleration on Grassmann geometry | analyze dynamics, not just pairwise difference |
+| n-mode GDS/Product Grassmann | tensor/time/action data | preserve tensor modes instead of flattening | multilinear structure and discriminative subspace features |
+| OSA-DAS | DNN feature space | perturbation/augmentation subspaces explain model predictions | interpretability of deep models |
+| Point-cloud latent novelty | point clouds | general feature extractor creates latent vectors, then novelty detection happens in latent space | avoid retraining and use condensed shape representation |
+
+Implication for this project:
+
+```text
+The stronger lab-style thesis is not "apply DS to OSCD." It is to define a
+natural satellite subspace representation first.
+```
+
+Best current abstraction:
+
+```text
+Satellite Latent Subspace:
+represent a satellite tile, object, region, or time window as a subspace of
+patch-level multispectral/foundation features, then use MSM/DS/GDS/second-order
+DS for classification, change, anomaly, or trajectory analysis.
+```
+
+Task choice should follow the representation. Binary pixel-level change
+segmentation is only one possible downstream task, not the required center.

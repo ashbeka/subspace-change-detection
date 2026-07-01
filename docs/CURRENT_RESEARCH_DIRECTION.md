@@ -38,7 +38,7 @@ has labels and working code.
 
 ## Current Working Direction
 
-The strongest current direction is:
+The strongest current evidence track is:
 
 ```text
 Can spatially faithful, label-free feature/subspace construction make
@@ -55,6 +55,29 @@ Current best evidence:
   Sensei-aligned, but currently characterization rather than a strong detector.
 - Global pixel DS, fixed-grid pyramid DS, wavelet DS, RTW, broad HSI transfer,
   and SpaceNet7 RGB transfer are paused as primary routes.
+
+The strongest strategic thesis abstraction, after comparing the project against
+Sensei/senpai publication patterns, is broader:
+
+```text
+Satellite Latent Subspace:
+represent a satellite tile, object, region, or time window as a subspace of
+patch-level multispectral/foundation features, then use MSM/DS/GDS/second-order
+DS for classification, change, anomaly, or trajectory analysis.
+```
+
+This is closer to the lab's recurring recipe than "apply DS to OSCD":
+
+```text
+domain object -> natural set/sequence/tensor/latent representation -> subspace
+geometry -> task-specific win axis -> controlled baselines
+```
+
+For this project, binary pixel-level change detection should be treated as one
+downstream test, not necessarily the only or best task. A cleaner first proof
+may be low-label satellite scene/land-cover classification, region-level
+change/anomaly triage, or temporal event characterization if those tasks expose
+the value of the satellite subspace representation more directly.
 
 ## Literature-Grounded Problem Statement
 
@@ -92,7 +115,7 @@ label-free subspace priors** for multispectral change detection.
 
 ## Contribution Hypothesis
 
-The contribution we are testing is:
+The contribution we are testing on the current change-detection track is:
 
 ```text
 A label-free spatial subspace-prior construction for multispectral bitemporal
@@ -108,6 +131,18 @@ This contribution has three separable parts:
 | Construction | Build DS priors from spatially organized local/multispectral feature maps instead of unordered pixel spectra. | The prior is more spatially coherent or more informative than global pixel DS and simple spectral/PCA maps. |
 | Complementarity | Use the DS prior as auxiliary evidence for a supervised detector, not as a SOTA replacement. | Adding DS improves over raw bands and strong no-DS prior controls across seeds/cities. |
 | Interpretability | Treat the DS map as a geometric explanation of what kind of local feature-space change the model sees. | Visual/quantitative analysis shows where DS highlights true change, pseudo-change, or failure modes. |
+
+The broader lab-pattern contribution candidate is:
+
+```text
+A satellite latent-subspace representation that turns multispectral/foundation
+patch features from a tile, object, region, or time window into a geometric
+object on which MSM/DS/GDS/second-order DS can operate.
+```
+
+This candidate must still earn its task choice experimentally. The task should
+be selected because it reveals a win axis, not because OSCD was the first code
+that worked.
 
 The closest literature pressure is:
 

@@ -53,6 +53,8 @@ Use this table when choosing what to read or cite for a route.
 | Temporally regularized CCA | IEEE `7477238` and related Fukui/Kobayashi work | sequence/view matching route |
 | SFA / slow feature subspace | AIST BMVC 2017 SFA paper; Slow Feature Subspace paper | invariant/background route and nuisance control |
 | Signal Latent Subspace | ScienceDirect `S0003682X24003323` | analogy for building subspaces from learned latent features |
+| Lab recipe for new modalities | Signal Latent Subspace, Slow Feature Subspace, second-order DS, n-mode GDS/Product Grassmann, G-LMSM, OSA-DAS, point-cloud latent novelty | recurring pattern: define the natural set/sequence/tensor/latent object first, then apply subspace geometry and pick a task-specific win axis |
+| Satellite Latent Subspace | EuroSAT/BigEarthNet for clean satellite patch classification; OSCD/xBD-S12/MultiSenGE/HLS for change/anomaly/temporal tests; DINO/Prithvi/SAM/RemoteCLIP features for modern latent inputs | candidate main abstraction: satellite tile/object/region/time-window as a subspace of patch-level multispectral or foundation features |
 | Spatial context CD | SiROC/spatial-context unsupervised CD resources | closest pressure for spatially aware unsupervised CD |
 | HSI subspace CD | Wu/Du/Zhang 2013 HSI subspace CD and HSI-CD surveys | novelty boundary: subspace HSI CD already exists |
 | Anomalous change detection | Chronochrome, covariance equalization, whitened TLSQ/ACD family | controls for nuisance-invariant residual claims |

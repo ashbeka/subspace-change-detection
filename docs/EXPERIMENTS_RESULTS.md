@@ -8,7 +8,8 @@
 - [4. Detailed Metrics Preserved From Old Reports](#detailed-metrics-preserved-from-old-reports)
 - [5. Current Evidence Interpretation](#current-evidence-interpretation)
 - [6. Unverified / AI-Reported Claims](#unverified--ai-reported-claims)
-- [7. Delete-Candidate Report Groups After Absorption](#delete-candidate-report-groups-after-absorption)
+- [7. Candidate Next Gates](#candidate-next-gates)
+- [8. Delete-Candidate Report Groups After Absorption](#delete-candidate-report-groups-after-absorption)
 
 ## Purpose
 
@@ -111,6 +112,17 @@ not thesis claims until reproduced or audited.
 | MultiSenGE pretraining then OSCD fine-tuning may improve label scarcity | `MASTER_NARRATIVE_2026-06-22.md` | `hypothesis` | require multi-seed and leakage-safe protocol |
 | temporal DS can become an ACCV-style paper route | `DESIGN_TEMPORAL_DS_ACCV2026.md` | `candidate` | needs labeled sequence and baseline ladder |
 | HSI N<<B distributional change is a possible niche | `bet1_design.md`, `challenges_ranked.md` | `candidate/paused` | needs real labeled bitemporal HSI benchmark |
+
+## Candidate Next Gates
+
+These are not results. They are the next small tests that decide whether the
+route deserves implementation effort.
+
+| Gate | Question | Dataset/task | Minimum controls | Pass condition |
+|---|---|---|---|---|
+| Satellite latent subspace proof | does a tile/object/region represented as a subspace of patch-level satellite features add value? | clean satellite patch classification first, then change/anomaly triage | mean-pooled features, raw/foundation feature vector, linear probe, non-subspace distance | subspace geometry improves low-label accuracy, retrieval, or calibrated triage at equal feature source |
+| Foundation-feature DS pressure | does DS/GDS add geometry beyond frozen DINO/Prithvi/SAM/RemoteCLIP feature differences? | one benchmark where frozen features can be extracted reliably | raw embedding L2/cosine, PCA/cross-reconstruction, shallow classifier | DS/GDS improves or explains errors beyond feature distance without huge compute cost |
+| OSCD/Saab evidence confirmation | is the Successive Saab-DS gain reproducible and not just feature extraction? | OSCD official split plus one external multispectral test if available | Saab L2, Saab PCA, matched cross-reconstruction, IR-MAD/CVA | DS-specific score beats matched controls across held-out cities/seeds |
 
 ## Delete-Candidate Report Groups After Absorption
 
