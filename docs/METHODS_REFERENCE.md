@@ -235,7 +235,8 @@ Construction:
 one satellite unit = tile, object, region, or time window
 split the unit into patches or model tokens
 extract one feature vector per patch/token:
-  raw multispectral patch stats, Saab/PixelHop features, or frozen foundation features
+  raw multispectral patch stats, Saab/PixelHop features,
+  AlphaEarth/Satellite Embedding vectors, or frozen foundation features
 X_unit in R^(d x N_patches)
 center/normalize X_unit
 PCA/SVD basis U_unit in R^(d x r)
@@ -263,6 +264,7 @@ Minimum controls:
 
 - raw multispectral vector or simple band/index statistics;
 - mean-pooled patch/foundation features;
+- mean-pooled AlphaEarth/Satellite Embedding vectors when available;
 - Euclidean/cosine feature distance;
 - PCA reconstruction residual if doing anomaly/change;
 - linear probe or shallow classifier when labels exist.
