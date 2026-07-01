@@ -10,6 +10,7 @@
 - [6. Cross-Route Gates](#6-cross-route-gates)
 - [7. Lab Recipe From Sensei Publication Pattern](#7-lab-recipe-from-sensei-publication-pattern)
 - [8. Sensei Paper Corpus Mining 2026-07-02](#8-sensei-paper-corpus-mining-2026-07-02)
+- [9. Remote-Sensing Field Map Intake 2026-07-02](#9-remote-sensing-field-map-intake-2026-07-02)
 
 ## 1. Purpose
 
@@ -36,7 +37,7 @@ problem, it gets added here even if it was not previously named.
 
 | Rank | Route | Win axis | Status | Next gate |
 |---:|---|---|---|---|
-| 1 | AlphaEarth / satellite-embedding region subspace | represent one satellite region as a subspace of many local EO embedding vectors, not as one averaged vector | best strategic gate | region-subspace vs mean-vector vs shallow classifier on clean land-cover/scene labels |
+| 1 | AlphaEarth / satellite-embedding region subspace | represent one satellite region as a subspace of many local EO embedding vectors, not as one averaged vector | best strategic gate | region-subspace vs mean-vector vs shallow classifier on a geographically disjoint low-label region task |
 | 2 | Annual satellite subspace dynamics | represent each region-year as a subspace and analyze yearly motion with first/second DS and geodesic decomposition | Sensei-aligned candidate | AlphaEarth 2017-2024 or HLS sequence: compare DS dynamics to mean-embedding change and simple temporal residuals |
 | 3 | Object/parcel/building/greenhouse state subspaces | represent one object/parcel as a set/subspace of local pixels or foundation features | applied candidate | secure masks/labels and test object retrieval, state classification, or change triage |
 | 4 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current evidence | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
@@ -55,6 +56,9 @@ These routes are preserved so they remain searchable. They are not all current.
 | Route | Problem angle | Possible method | Needed evidence/gate |
 |---|---|---|---|
 | AlphaEarth / satellite-embedding region subspace | a satellite region contains a distribution of local Earth-observation states; averaging that distribution can erase internal structure | sample 64-D AlphaEarth or other EO embeddings inside each region/tile/object, fit a low-rank basis, compare by MSM/canonical angles or subspace-kNN | same feature source: subspace representation must beat mean-pooled embeddings, raw pixel aggregation, and shallow vector classifiers under a clean label task |
+| Land-cover / scene retrieval proof gate | scene and land-cover classification are benchmark-mature and cleaner than pixel-level CD for testing representation quality | use EuroSAT/BigEarthNet/OpenEarthMap-style regions or AlphaEarth region samples; evaluate subspace kNN/MSM vs mean-vector kNN/classifier | geographically disjoint or region-disjoint split; low-label sweep; report OA/F1/mAP/retrieval@K plus compute |
+| Cross-region generalization route | benchmark scores often fail under geographic shift | train/prototype subspaces in one geography and test in another | subspace must degrade less than mean vectors or shallow probes under the same feature source |
+| Multimodal region subspace | remote sensing is naturally optical/SAR/time/modal, not just RGB or S2 | build one product/tensor/subspace object from Sentinel-1/Sentinel-2 or multimodal embeddings | compare to concatenated mean vectors and modality-specific classifiers on BigEarthNet-MM/OpenEarthMap-SAR-style tasks |
 | Annual satellite subspace dynamics | yearly EO embeddings make each place a sequence of subspaces, not just a sequence of scalar indices | first DS as subspace velocity, second DS/geodesic split as acceleration/abruptness, optional SFA/SSA controls | labeled or weakly labeled yearly events must show information beyond mean-embedding dot product, NDVI/index residuals, and simple temporal differences |
 | Object/parcel/building state subspaces | many satellite tasks are object/region-level, not pixel-level | build subspaces from local pixels, AlphaEarth vectors, DINO/Prithvi/SAM tokens, or Saab features inside object masks | retrieval/classification/change triage must improve over object mean features and standard object descriptors |
 | Satellite latent subspace | satellite imagery has natural sets: patches, bands, dates, objects, foundation tokens | build a subspace per tile/object/time window from multispectral, DINO/Prithvi/SAM, or local patch features; compare via MSM/DS/GDS/second-order DS | first run a low-risk task where labels are clean, then transfer to change/anomaly |
@@ -237,3 +241,49 @@ This gives a stronger first gate than another OSCD-only change-map sweep because
 it tests the representation claim directly. If it works, binary change
 detection, annual event detection, object-state monitoring, and disaster triage
 can become downstream applications of the same satellite subspace object.
+
+## 9. Remote-Sensing Field Map Intake 2026-07-02
+
+Source: external ChatGPT deep-research report,
+`C:/Users/shbik/Downloads/deep-research-report.md`. Treat it as a synthesis
+lead, not primary evidence.
+
+Durable lessons:
+
+1. Remote sensing is broader than change detection. The central task families
+   are land-cover/semantic segmentation, object detection, change detection,
+   scene classification/retrieval, multimodal fusion/restoration,
+   hyperspectral learning, vision-language retrieval, and
+   geolocalization/registration.
+2. Benchmark ecosystems shape the field. A good route should attach to a real
+   benchmark family, not only to an internally convenient dataset.
+3. The biggest field pressures are cross-region generalization, label scarcity,
+   label noise, leakage, huge context/tiny targets, temporal reasoning,
+   multimodal alignment, physics-awareness, uncertainty calibration, and
+   operational metrics.
+4. Foundation and pretrained EO features are now standard pressure. A subspace
+   route must compare against mean-pooled or distance-based frozen features,
+   not only against PCA/CVA/IR-MAD.
+5. The highest-return evaluation rule is geographic discipline: avoid random
+   patch leakage, use disjoint regions where possible, and report metadata for
+   sensor, resolution, time span, and label budget.
+
+Implication for the current route ranking:
+
+```text
+The first experiment should not be another detector-only OSCD sweep. It should
+be a representation proof: same feature source, same labels, mean-vector
+baseline versus region-subspace representation under a clean split.
+```
+
+Best first benchmark families to inspect for this gate:
+
+| Family | Why it matters for us |
+|---|---|
+| AlphaEarth annual embeddings | already provides 64-D EO feature vectors at 10 m and supports classification/change-style use cases |
+| EuroSAT / BigEarthNet | clean satellite classification/multilabel labels for low-label representation testing |
+| BigEarthNet-MM | multimodal Sentinel-1/Sentinel-2 route if optical-only subspace is too narrow |
+| OpenEarthMap / LoveDA | land-cover segmentation and domain-shift pressure; useful if region masks are needed |
+| DynamicEarthNet | temporal semantic change route; useful after the representation proof |
+| LEVIR-CD / HRSCD / SpaceNet | change/object/disaster downstream routes, not the first representation proof |
+| RemoteCLIP / SatMAE / Prithvi / CROMA resources | modern feature baselines and possible feature sources |

@@ -15,6 +15,7 @@
 - [11. Bookmark Policy](#bookmark-policy)
 - [12. Exact Resource State](#exact-resource-state)
 - [13. Sensei Paper Corpus State](#sensei-paper-corpus-state)
+- [14. External Remote-Sensing Field Map Intake](#external-remote-sensing-field-map-intake)
 
 ## Purpose
 
@@ -147,7 +148,11 @@ sample construction + satellite adaptation + controlled evidence boundary
 | MultiSenGE | multi-date exploration | weak/unclear | temporal DS/RTW exploration | no clean target labels |
 | Harmonized Sentinel-2 L2A | Sensei-requested sequence source | depends on chosen event | future temporal DS/GDS | needs audit |
 | xView2 | disaster damage / building assessment family | building/damage labels | future context only | RGB-centric and not current active pipeline |
-| EuroSAT | land-use classification | land-use class labels | historical candidate | not change detection by itself |
+| EuroSAT | land-use classification | land-use class labels | candidate representation proof | not change detection by itself; useful because labels are clean |
+| BigEarthNet | Sentinel land-cover multilabel classification/retrieval | multi-label land-cover labels | candidate representation proof | large and more realistic than EuroSAT, but label handling/splits matter |
+| BigEarthNet-MM | Sentinel-1/Sentinel-2 multimodal classification/retrieval | multi-label land-cover labels | future multimodal region-subspace gate | useful if optical-only route is too narrow |
+| OpenEarthMap / LoveDA | land-cover segmentation and domain shift | land-cover semantic labels | future cross-region/domain-shift pressure | higher-resolution and segmentation-oriented; region extraction required |
+| DynamicEarthNet | daily multispectral semantic change segmentation | monthly semantic labels | future temporal subspace dynamics gate | more complex than first proof gate, but aligned with sequence reasoning |
 | Data Fusion Contest resources | multimodal remote-sensing benchmarks | varies by year | future resource pool | route must be selected before use |
 | IPOL/SITS sequences | registered time-series tests | detector maps/events | temporal DS characterization | detector maps not ground truth |
 | HSI datasets | spectral geometry pressure | scene-dependent labels | HSI transfer probes | not current positive route |
@@ -363,3 +368,54 @@ High-value local papers for our satellite direction:
 | Slow Feature Subspace / SFA-related work | temporal relationships can be lost by ordinary PCA/image-set subspaces | satellite time series should compare against temporal controls, not only static feature distances |
 | OSA-DAS and visual explanation papers | subspaces in deep feature space can support explanation | foundation-feature subspaces may be useful for explaining EO model behavior |
 | HSI cone/sparse modeling papers | physical constraints such as non-negativity can define a better object than generic subspaces | HSI route must be physically constrained and baseline-aware, because generic HSI subspace CD is already occupied |
+
+## External Remote-Sensing Field Map Intake
+
+Source: external ChatGPT report
+`C:/Users/shbik/Downloads/deep-research-report.md`, ingested on 2026-07-02.
+Treat it as a research-navigation synthesis, not as a primary citation source.
+
+Main lesson:
+
+```text
+Remote sensing is benchmark- and problem-formulation-driven. The task must be
+chosen to expose the claimed subspace win, not inherited from the first code
+path we happened to build.
+```
+
+Task families to keep visible:
+
+| Task family | Project relevance |
+|---|---|
+| Land-cover mapping / semantic segmentation | mature labels and domain-shift benchmarks; good for proving representation quality before CD |
+| Scene classification / retrieval | clean low-label and retrieval gate for region-subspace vs mean-vector comparisons |
+| Change detection / temporal understanding | important downstream task, but should not be the only proof of the representation |
+| Multimodal fusion / restoration | points toward product/tensor/multimodal subspace objects over optical+SAR/time |
+| Hyperspectral spectral-spatial learning | natural high-dimensional setting, but generic HSI subspace novelty is already crowded |
+| Vision-language / retrieval | future route for open-vocabulary or semantic region subspaces; evaluate carefully because text metrics can be weak |
+| Geolocalization / registration | operationally important, especially for disaster and cross-modal alignment, but not the first subspace proof |
+
+Field pressures that should shape experiments:
+
+| Pressure | What to do in this project |
+|---|---|
+| cross-region generalization | prefer geographically disjoint splits over random patch splits |
+| label scarcity/noise | run low-label sweeps and report label budget |
+| evaluation leakage | avoid overlapping patches/near-duplicate regions across train/test |
+| huge context and tiny targets | avoid claiming object-level success from coarse region metrics alone |
+| temporal reasoning beyond two dates | keep annual/sequence subspace dynamics as a major route |
+| multimodal alignment | BigEarthNet-MM/OpenEarthMap-SAR-style routes are natural future tests |
+| foundation-model pressure | compare against mean-pooled and distance-based frozen features from AlphaEarth, Prithvi, SatMAE/CROMA/RemoteCLIP/DINO-style sources where feasible |
+| operational metrics | report runtime, memory, annotation burden, calibration, and review-budget recall when relevant |
+
+Dataset/resource implications:
+
+| Dataset/resource | Why it matters |
+|---|---|
+| AlphaEarth / Google Satellite Embeddings | immediate feature field for region-subspace tests |
+| EuroSAT / BigEarthNet | clean first classification/low-label gates |
+| BigEarthNet-MM | multimodal Sentinel-1/2 region-subspace route |
+| OpenEarthMap / LoveDA | segmentation and geographic/domain-shift pressure |
+| DynamicEarthNet | temporal semantic change route after representation proof |
+| LEVIR-CD / HRSCD / SpaceNet | downstream change/object/disaster tests, not enough alone for broad satellite-subspace claim |
+| SatMAE / CROMA / Prithvi / RemoteCLIP | modern feature sources and baselines that prevent weak classical-only comparisons |

@@ -102,6 +102,21 @@ region, tile, object, parcel, or yearly place-state containing many local
 satellite feature vectors. The first test should ask whether representing that
 internal distribution as a subspace adds value over simply averaging it.
 
+The 2026-07-02 external deep-research report on remote-sensing CV reinforces one
+correction: the field is broader than change detection. The most mature task
+families include land-cover/semantic segmentation, object detection, change
+detection, scene classification/retrieval, multimodal fusion, hyperspectral
+learning, and vision-language retrieval. Therefore the next task should be
+chosen because it exposes a measurable subspace win, not because OSCD happened
+to be the first implemented benchmark.
+
+The report also strengthens three evaluation rules:
+
+- use geographically disjoint or cross-region validation when possible;
+- report sensor, resolution, time, and label-budget metadata;
+- compare against modern foundation/pretrained-feature baselines, not only
+  classical PCA/CVA/IR-MAD controls.
+
 ## Literature-Grounded Problem Statement
 
 Recent remote-sensing change-detection surveys and methods point to the same
@@ -111,6 +126,16 @@ and nuisance changes. Classical unsupervised difference methods are label-free
 and interpretable, but simple spectral differences, PCA/MAD-style maps, or
 global subspaces often miss local spatial context or confuse pseudo-change with
 real object/land-cover change.
+
+The broader field-level problem is:
+
+```text
+Remote-sensing models often collapse a region into a single vector, mask, or
+class score even though the region contains structured variation across space,
+spectrum, time, and modality. We need to test whether subspace geometry can
+preserve that internal variation in a way that improves low-label, cross-region,
+or temporal satellite analysis over ordinary pooled feature representations.
+```
 
 The project should therefore be framed around this problem:
 
