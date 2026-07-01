@@ -35,10 +35,10 @@ problem, it gets added here even if it was not previously named.
 | Rank | Route | Win axis | Status | Next gate |
 |---:|---|---|---|---|
 | 1 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
-| 2 | DS-specific neural-prior fusion | complementary prior for supervised segmentation | verify | rerun raw/no-DS/DS/matched-cross controls across seeds |
-| 3 | Band-Image/projector candidate localization on xBD-S12 | analyst triage and damaged-building candidate recall | candidate | object-level retrieval protocol on fresh events |
-| 4 | Temporal first/second DS and geodesic decomposition | change trajectory characterization | candidate | labeled or weakly annotated sequence with BFAST/CCDC/MOSUM/SSA/raw controls |
-| 5 | Deep/foundation-feature subspace geometry | explain or compress strong learned features instead of competing with them directly | candidate | choose one encoder, one task, and compare DS/GDS to raw feature distance |
+| 2 | Deep/foundation-feature subspace geometry | test DS as a geometry layer over modern dense features, not only over raw bands | candidate | DINOv2/DINOv3 feature-difference vs DINO-feature DS on one suitable benchmark |
+| 3 | DS-specific neural-prior fusion | complementary prior for supervised segmentation | verify | rerun raw/no-DS/DS/matched-cross/foundation-feature controls across seeds |
+| 4 | Band-Image/projector candidate localization on xBD-S12 | analyst triage and damaged-building candidate recall | candidate | object-level retrieval protocol on fresh events |
+| 5 | Temporal first/second DS and geodesic decomposition | change trajectory characterization | candidate | labeled or weakly annotated sequence with BFAST/CCDC/MOSUM/SSA/raw controls |
 | 6 | HSI spectral geometry and wavelength attribution | many-band spectral interpretation | parked | real labeled bitemporal HSI benchmark against SAM/CVA/IR-MAD/HSI-CD baselines |
 | 7 | Structured temporal CCA/SFA/S3CCA/TRCCA | invariant/background modeling and attributable temporal change | candidate | one sequence task with raw residual, shift, PCA, SSA, and seasonal controls |
 | 8 | Tensor/Product-Grassmann satellite cubes | preserve spectral-spatial-temporal modes | future | define tensor object and prove benefit over flattening |

@@ -33,9 +33,10 @@ inventories, and dataset reminders as the active reading map.
 | 5 | Nielsen IR-MAD | strong classical multivariate baseline |
 | 6 | Celik PCA-kmeans, CVA, PCA-diff | classical unsupervised CD pressure |
 | 7 | Remote-sensing CD surveys | field gaps, baselines, and evaluation expectations |
-| 8 | xBD-S12 | external Sentinel-2 disaster validation context |
-| 9 | second-order/time-series DS papers | Sensei-aligned temporal subspace dynamics |
-| 10 | foundation-model CD papers | future deep-feature geometry lane |
+| 8 | DINOv2/DINOv3 and remote-sensing foundation features | modern frozen-feature pressure for any feature/prior claim |
+| 9 | xBD-S12 | external Sentinel-2 disaster validation context |
+| 10 | second-order/time-series DS papers | Sensei-aligned temporal subspace dynamics |
+| 11 | foundation-model CD papers | future deep-feature geometry lane |
 
 ## Concept-To-Reading Map
 
@@ -56,6 +57,7 @@ Use this table when choosing what to read or cite for a route.
 | HSI subspace CD | Wu/Du/Zhang 2013 HSI subspace CD and HSI-CD surveys | novelty boundary: subspace HSI CD already exists |
 | Anomalous change detection | Chronochrome, covariance equalization, whitened TLSQ/ACD family | controls for nuisance-invariant residual claims |
 | Open-vocabulary / foundation CD | open-vocabulary, open vocabulary, semantic, and foundation-model CD papers from bookmarks | future route for object-specific or text-conditioned change |
+| Frozen dense feature priors | DINOv2/DINOv3, SAM/SAM2, RemoteCLIP, Prithvi/Clay/SatMAE/SSL4EO-style RS foundation models | mandatory modern pressure if claiming feature extraction or prior-map value; compare raw feature L2/cosine to feature-space DS/GDS |
 | Semantic/object-level change | SCD surveys, SAM/CLIP/GeoAI object proposals, ChangeStar-style resources | route for "what changed into what?" beyond OSCD binary masks |
 | Greenhouse monitoring | Global greenhouse maps, plastic greenhouse index, abandoned greenhouse project links | applied route only if labels/evaluation become available |
 | Building-level descriptors | xBD/xBD-S12, object-detection/segmentation and damage-assessment references | object-level damage/candidate triage route |
@@ -99,6 +101,7 @@ putting them in a paper.
 | Zheng et al., "Change is Everywhere: Single-Temporal Supervised Object Change Detection in Remote Sensing Imagery", ICCV 2021 | 2021 weak/single-temporal supervision method; well-known code and paper | Confirms that reducing paired bitemporal annotation cost is a real problem. Our label-free priors can be positioned as a different route to reduce dependence on dense change labels. |
 | Ding et al., "A Survey of Sample-Efficient Deep Learning for Change Detection in Remote Sensing", GRSM/arXiv 2025 | recent survey; citation count still young | Explicitly organizes sample-efficient CD and newer foundation/self-supervised directions. Use it for modern framing, but avoid over-relying on citation count. |
 | Kakogeorgiou and Karantzalos, "Evaluating Explainable Artificial Intelligence Methods for Multi-label Deep Learning Classification Tasks in Remote Sensing", IJAEOG 2021 | 2021 XAI remote-sensing reference | Remote sensing needs explanations, but explanation evaluation is nontrivial. Our DS maps should be evaluated as interpretable priors, not just visually attractive heatmaps. |
+| DINOv2/DINOv3 and VFM change-detection papers | DINOv2/DINOv3 dense features, robust scene-change papers using DINOv2, and remote-sensing foundation-model CD papers | A modern baseline can be as simple as frozen dense feature difference. If our DS prior only beats PCA/CVA but loses to DINO feature difference, the contribution must be reframed around geometry over foundation features or dropped. |
 
 Problem implication:
 
@@ -130,6 +133,8 @@ sample construction + satellite adaptation + controlled evidence boundary
 | Dataset | Role | Labels | Current use | Limitation |
 |---|---|---|---|---|
 | OSCD | main benchmark | binary changed areas | Successive Saab-DS, spatial DS, U-Net priors | two-date, binary, not damage |
+| LEVIR-CD / WHU-CD / S2Looking / SYSU-CD / DSIFN-CD | high-resolution RGB building/change benchmarks | binary building/change masks | candidate for DINO/SAM/foundation-feature pressure | not multispectral Sentinel-2; less aligned with DS-on-bands unless using deep features |
+| SECOND / semantic CD datasets | semantic from-to change | semantic labels | candidate for semantic/object-level route | different task from OSCD binary CD |
 | xBD-S12 | external disaster pressure | xBD-derived building damage labels with co-registered Sentinel-1/2 | candidate localization | not generic OSCD-style change; original Sentinel tiles are a separate large download |
 | MultiSenGE | multi-date exploration | weak/unclear | temporal DS/RTW exploration | no clean target labels |
 | Harmonized Sentinel-2 L2A | Sensei-requested sequence source | depends on chosen event | future temporal DS/GDS | needs audit |
@@ -164,6 +169,8 @@ Every deep/foundation-feature lane should compare against:
 - raw embedding distance;
 - cosine or Euclidean feature distance;
 - PCA/cross-reconstruction controls;
+- DINOv2/DINOv3 feature differences when image modality/resolution permits;
+- remote-sensing foundation model features when available;
 - shallow classifier or linear probe where labels exist.
 
 Every SSC or change-type clustering claim should compare against:

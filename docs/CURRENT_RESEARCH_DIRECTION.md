@@ -121,12 +121,27 @@ The closest literature pressure is:
   change queries, but those routes increase model/data complexity and do not
   remove the need for interpretable low-label evidence.
 
+Important correction:
+
+```text
+PCA, CVA, Saab, and IR-MAD are not the full modern comparison set.
+They are the low-level sanity controls.
+```
+
+Modern pressure must also include frozen dense feature extractors such as
+DINOv2/DINOv3, SAM-style segmentation features, RemoteCLIP/remote-sensing
+foundation models, and CD-specific deep baselines. If a frozen DINO feature
+difference already explains the change map, then a DS prior must be tested as a
+geometry layer **on top of or against** that feature space, not only against
+classical spectral baselines.
+
 Therefore the project is not trying to win on raw SOTA accuracy. It is trying
 to win on this narrower axis:
 
 ```text
 Can an explicit spatial DS prior give a supervised or human analyst a useful,
-interpretable signal that simple spectral/PCA/IR-MAD priors do not provide?
+interpretable signal that simple spectral, classical, DS-free local-feature,
+and frozen foundation-feature priors do not provide?
 ```
 
 ## Current Best Result
