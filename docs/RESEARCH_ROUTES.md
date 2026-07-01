@@ -9,6 +9,7 @@
 - [5. Closed Or Paused Routes](#5-closed-or-paused-routes)
 - [6. Cross-Route Gates](#6-cross-route-gates)
 - [7. Lab Recipe From Sensei Publication Pattern](#7-lab-recipe-from-sensei-publication-pattern)
+- [8. Sensei Paper Corpus Mining 2026-07-02](#8-sensei-paper-corpus-mining-2026-07-02)
 
 ## 1. Purpose
 
@@ -35,16 +36,16 @@ problem, it gets added here even if it was not previously named.
 
 | Rank | Route | Win axis | Status | Next gate |
 |---:|---|---|---|---|
-| 1 | Satellite latent subspace | represent a satellite tile/object/time window as a subspace of patch, spectral, or foundation-model features | strategic candidate | pick one task: low-label scene/land-cover classification, region-level change/anomaly triage, or temporal event detection |
-| 2 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current evidence | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
-| 3 | Compute-quality DS/GDS route | test whether subspace priors retain useful evidence at lower training/inference cost than frozen VFM features | candidate | compare DS/GDS, DINO feature difference, and DINO+DS with wall-clock/GPU-memory/AP/F1 |
-| 4 | Deep/foundation-feature subspace geometry | test DS as a geometry layer over modern dense features, not only over raw bands | candidate | DINOv2/DINOv3 feature-difference vs DINO-feature DS on one suitable benchmark |
-| 5 | DS-specific neural-prior fusion | complementary prior for supervised segmentation | verify | rerun raw/no-DS/DS/matched-cross/foundation-feature controls across seeds |
-| 6 | HSI spectral geometry and wavelength attribution | many-band spectral interpretation | parked | real labeled bitemporal HSI benchmark against SAM/CVA/IR-MAD/HSI-CD baselines |
-| 7 | Structured temporal CCA/SFA/S3CCA/TRCCA | invariant/background modeling and attributable temporal change | candidate | one sequence task with raw residual, shift, PCA, SSA, and seasonal controls |
-| 8 | Tensor/Product-Grassmann satellite cubes | preserve spectral-spatial-temporal modes | future | define tensor object and prove benefit over flattening |
-| 9 | KDS/KGDS nonlinear satellite change | nonlinear spectral/material geometry | parked | define a nonlinear failure case for DS/PCA first |
-| 10 | Application-specific object/state monitoring | greenhouse/building/urban infrastructure use case | parked | secure labels and define task: mapping, classification, or change |
+| 1 | AlphaEarth / satellite-embedding region subspace | represent one satellite region as a subspace of many local EO embedding vectors, not as one averaged vector | best strategic gate | region-subspace vs mean-vector vs shallow classifier on clean land-cover/scene labels |
+| 2 | Annual satellite subspace dynamics | represent each region-year as a subspace and analyze yearly motion with first/second DS and geodesic decomposition | Sensei-aligned candidate | AlphaEarth 2017-2024 or HLS sequence: compare DS dynamics to mean-embedding change and simple temporal residuals |
+| 3 | Object/parcel/building/greenhouse state subspaces | represent one object/parcel as a set/subspace of local pixels or foundation features | applied candidate | secure masks/labels and test object retrieval, state classification, or change triage |
+| 4 | Successive Saab-DS for OSCD changed-area evidence | label-free spatial representation plus interpretable DS evidence | current evidence | reproduce DS-specific neural-prior claim; find second labeled multispectral test |
+| 5 | Deep/foundation-feature subspace geometry | test DS/GDS as a geometry layer over modern dense features, not only over raw bands | candidate | DINO/remote-sensing foundation feature distance vs feature-subspace MSM/DS on one suitable benchmark |
+| 6 | Compute-quality DS/GDS route | test whether subspace geometry retains useful evidence at lower training/inference cost than frozen VFM features | candidate | compare wall-clock, memory, parameters, AP/F1/retrieval, and explanation quality |
+| 7 | Tensor/Product-Grassmann satellite cubes | preserve spectral-spatial-temporal modes | future | define tensor object and prove benefit over flattening |
+| 8 | HSI spectral geometry and wavelength attribution | many-band spectral interpretation | parked | real labeled bitemporal HSI benchmark against SAM/CVA/IR-MAD/HSI-CD baselines |
+| 9 | Structured temporal CCA/SFA/S3CCA/TRCCA | invariant/background modeling and attributable temporal change | candidate | one sequence task with raw residual, shift, PCA, SSA, and seasonal controls |
+| 10 | Application-specific infrastructure or disaster triage | greenhouse/building/urban infrastructure use case | parked | secure labels and define task: mapping, classification, ranking, or change |
 | 11 | Diagnostic benchmark paper | honest boundary of subspace methods | fallback | consolidate positive and negative evidence into one defensible matrix |
 
 ## 4. Route Bank
@@ -53,6 +54,9 @@ These routes are preserved so they remain searchable. They are not all current.
 
 | Route | Problem angle | Possible method | Needed evidence/gate |
 |---|---|---|---|
+| AlphaEarth / satellite-embedding region subspace | a satellite region contains a distribution of local Earth-observation states; averaging that distribution can erase internal structure | sample 64-D AlphaEarth or other EO embeddings inside each region/tile/object, fit a low-rank basis, compare by MSM/canonical angles or subspace-kNN | same feature source: subspace representation must beat mean-pooled embeddings, raw pixel aggregation, and shallow vector classifiers under a clean label task |
+| Annual satellite subspace dynamics | yearly EO embeddings make each place a sequence of subspaces, not just a sequence of scalar indices | first DS as subspace velocity, second DS/geodesic split as acceleration/abruptness, optional SFA/SSA controls | labeled or weakly labeled yearly events must show information beyond mean-embedding dot product, NDVI/index residuals, and simple temporal differences |
+| Object/parcel/building state subspaces | many satellite tasks are object/region-level, not pixel-level | build subspaces from local pixels, AlphaEarth vectors, DINO/Prithvi/SAM tokens, or Saab features inside object masks | retrieval/classification/change triage must improve over object mean features and standard object descriptors |
 | Satellite latent subspace | satellite imagery has natural sets: patches, bands, dates, objects, foundation tokens | build a subspace per tile/object/time window from multispectral, DINO/Prithvi/SAM, or local patch features; compare via MSM/DS/GDS/second-order DS | first run a low-risk task where labels are clean, then transfer to change/anomaly |
 | Spatially faithful Saab-DS | global pixel DS loses spatial context | PixelHop/Saab-like local features plus Band-Image DS | replicate OSCD positive and pressure with matched controls |
 | True Green Learning / PixelHop route | local-to-global label-free features may help before DS | source-faithful Saab hops, not fixed-grid proxy | cite Kuo papers; compare to plain PCA/L2 and DS-free Saab controls |
@@ -172,3 +176,64 @@ DS for classification, change, anomaly, or trajectory analysis.
 
 Task choice should follow the representation. Binary pixel-level change
 segmentation is only one possible downstream task, not the required center.
+
+## 8. Sensei Paper Corpus Mining 2026-07-02
+
+Source corpus:
+
+- `references/sensei-papers/` contains 91 readable PDFs plus
+  `all_papers_table.md`.
+- The table reports 102 Google Scholar entries checked, 93 downloaded, and 9 not
+  downloaded.
+- Two table-listed downloaded 2010 PDFs were not present on disk during this
+  pass:
+  - `2010/2010-11-08_3D object recognition based on canonical angles between shape subspaces.pdf`
+  - `2010/2010-11-08_Compound mutual subspace method for 3d object recognition a theoretical extension of mutual subspace method.pdf`
+
+Corpus pattern:
+
+```text
+The lab usually wins by changing the representation object first.
+```
+
+The repeated move is not "use subspace methods because the lab likes them." It
+is:
+
+1. Pick a domain object that naturally contains a set, sequence, tensor, cone, or
+   latent-feature cloud.
+2. Identify what a normal vector, average, frame, or CNN feature loses.
+3. Construct a subspace, cone, tensor/product-Grassmann point, latent subspace,
+   or difference subspace that preserves the missing structure.
+4. Use a geometry that matches the object: canonical angles/MSM, DS/GDS/KDS,
+   first/second DS, SFA/SFS, n-mode GDS, cone sparse models, or Grassmann
+   learning.
+5. Choose one specific win axis: low labels, compute, robustness, distribution
+   preservation, temporal dynamics, physical constraints, or interpretability.
+6. Compare against the simpler object that the new representation claims to
+   improve, such as mean vectors, raw distances, ordinary PCA, ordinary CNN
+   features, scalar temporal differences, or flattening.
+
+Satellite implication:
+
+```text
+Our most lab-faithful move is to define the satellite object before choosing the
+task.
+```
+
+The cleanest first object is:
+
+```text
+one region/tile/object/year = a set of local satellite embedding vectors
+```
+
+Then the question becomes:
+
+```text
+Does the subspace spanned by local satellite embeddings preserve useful internal
+variation that a mean embedding vector loses?
+```
+
+This gives a stronger first gate than another OSCD-only change-map sweep because
+it tests the representation claim directly. If it works, binary change
+detection, annual event detection, object-state monitoring, and disaster triage
+can become downstream applications of the same satellite subspace object.

@@ -58,7 +58,8 @@ Current best evidence:
   and SpaceNet7 RGB transfer are paused as primary routes.
 
 The strongest strategic thesis abstraction, after comparing the project against
-Sensei/senpai publication patterns, is broader:
+Sensei/senpai publication patterns and the local Sensei paper corpus, is
+broader:
 
 ```text
 Satellite Latent Subspace:
@@ -79,6 +80,27 @@ downstream test, not necessarily the only or best task. A cleaner first proof
 may be low-label satellite scene/land-cover classification, region-level
 change/anomaly triage, or temporal event characterization if those tasks expose
 the value of the satellite subspace representation more directly.
+
+The most concrete immediate version of that abstraction is:
+
+```text
+AlphaEarth / satellite-embedding region subspace:
+represent one satellite region as the subspace spanned by its local 64-D
+satellite embedding vectors, then compare that region-subspace against simpler
+mean-pooled vector baselines.
+```
+
+This is the current best "fight topic" because it matches the lab recipe:
+
+```text
+domain object -> natural set/sequence/tensor/latent representation -> subspace
+geometry -> task-specific win axis -> controlled baselines
+```
+
+Here, the domain object is not one pixel and not one whole-image vector. It is a
+region, tile, object, parcel, or yearly place-state containing many local
+satellite feature vectors. The first test should ask whether representing that
+internal distribution as a subspace adds value over simply averaging it.
 
 ## Literature-Grounded Problem Statement
 
@@ -323,16 +345,21 @@ Do not add another unrelated method family yet.
 Next task:
 
 ```text
-Run a representation-first Satellite Latent Subspace proof gate.
+Run a representation-first AlphaEarth / satellite-embedding region-subspace
+proof gate.
 ```
 
 Why:
 
 - It tests the stronger lab-pattern thesis before more OSCD-only tuning.
 - It answers whether satellite regions naturally become useful subspaces,
-  similar to signal latent subspaces for audio.
+  similar to signal latent subspaces for audio and image-set subspaces for
+  vision.
 - It can use cleaner labels than pixel-level change masks, so the representation
   value is easier to verify.
+- AlphaEarth or similar satellite embeddings already provide a modern EO feature
+  field. Our question is whether subspace geometry over local embeddings adds
+  value beyond mean vectors and shallow vector baselines.
 - If it passes, change detection becomes a downstream application of a proven
   representation. If it fails, we should narrow back to OSCD/Saab-DS or DS-fusion
   instead of pretending the broad route is real.
@@ -341,12 +368,22 @@ Required comparison:
 
 | Method/input | Purpose |
 |---|---|
-| raw multispectral feature vector | simplest satellite baseline |
-| mean-pooled patch/foundation features | strong non-subspace representation control |
+| raw multispectral feature vector or hand-crafted indices | simplest satellite baseline |
+| mean-pooled AlphaEarth/DINO/Prithvi/SAM/local features | strongest non-subspace representation control |
 | linear probe or shallow classifier | standard low-label supervised control |
 | Satellite Latent Subspace + MSM/Grassmann distance | direct subspace representation test |
 | Satellite Latent Subspace + DS/GDS if the task is paired or multi-class | lab-geometry extension |
 | frozen-feature distance if using DINO/Prithvi/SAM/RemoteCLIP | modern feature-difference pressure |
+
+Suggested first task shape:
+
+| Choice | Practical option |
+|---|---|
+| object | tile/region/parcel/object mask, not individual pixels |
+| feature field | AlphaEarth annual 64-D embeddings first; DINO/Prithvi/SAM or Sentinel-2 patch features as pressure tests later |
+| representation | sample local vectors inside each object and fit a rank-k PCA basis |
+| comparison | mean-vector cosine/L2, shallow classifier, subspace MSM/canonical-angle distance, optional DS/GDS for paired or multi-class variants |
+| win axis | better low-label classification/retrieval/calibration or better temporal/event ranking at comparable feature source and compute |
 
 Decision:
 

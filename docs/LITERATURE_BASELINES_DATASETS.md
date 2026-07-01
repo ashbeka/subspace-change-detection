@@ -14,6 +14,7 @@
 - [10. HSI Fair Baseline And Novelty Boundary](#hsi-fair-baseline-and-novelty-boundary)
 - [11. Bookmark Policy](#bookmark-policy)
 - [12. Exact Resource State](#exact-resource-state)
+- [13. Sensei Paper Corpus State](#sensei-paper-corpus-state)
 
 ## Purpose
 
@@ -55,6 +56,8 @@ Use this table when choosing what to read or cite for a route.
 | Signal Latent Subspace | ScienceDirect `S0003682X24003323` | analogy for building subspaces from learned latent features |
 | Lab recipe for new modalities | Signal Latent Subspace, Slow Feature Subspace, second-order DS, n-mode GDS/Product Grassmann, G-LMSM, OSA-DAS, point-cloud latent novelty | recurring pattern: define the natural set/sequence/tensor/latent object first, then apply subspace geometry and pick a task-specific win axis |
 | Satellite Latent Subspace | EuroSAT/BigEarthNet for clean satellite patch classification; OSCD/xBD-S12/MultiSenGE/HLS for change/anomaly/temporal tests; DINO/Prithvi/SAM/RemoteCLIP features for modern latent inputs | candidate main abstraction: satellite tile/object/region/time-window as a subspace of patch-level multispectral or foundation features |
+| AlphaEarth region subspace | Google Earth Engine `GOOGLE/SATELLITE_EMBEDDING/V1/ANNUAL`; AlphaEarth Foundations paper and release material; land-cover/scene labels such as EuroSAT/BigEarthNet/WorldCover-derived regions if compatible | best first proof gate: test whether a region subspace of local 64-D satellite embeddings beats mean-pooled vectors under the same feature source |
+| Annual satellite subspace dynamics | AlphaEarth annual embeddings 2017-2024; second-order DS paper; time-series anomaly DS paper; HLS/Sentinel-2 sequence resources | strongest Sensei-aligned temporal route: first DS as subspace velocity, second DS/geodesic split as acceleration/abruptness |
 | Spatial context CD | SiROC/spatial-context unsupervised CD resources | closest pressure for spatially aware unsupervised CD |
 | HSI subspace CD | Wu/Du/Zhang 2013 HSI subspace CD and HSI-CD surveys | novelty boundary: subspace HSI CD already exists |
 | Anomalous change detection | Chronochrome, covariance equalization, whitened TLSQ/ACD family | controls for nuisance-invariant residual claims |
@@ -316,3 +319,47 @@ Deduplication preference:
 - preserve DOI/publisher pages when they are the citation authority;
 - remove search-result and duplicate wrapper links after the real paper/tool
   link is preserved.
+
+## Sensei Paper Corpus State
+
+Local corpus location:
+
+```text
+references/sensei-papers/
+```
+
+Inventory from the 2026-07-02 pass:
+
+| Item | Count / status |
+|---|---:|
+| readable PDFs on disk | 91 |
+| corpus metadata table | 1 Markdown file |
+| table entries checked | 102 |
+| table entries marked downloaded | 93 |
+| table entries marked not downloaded | 9 |
+| downloaded table files missing on disk | 2 |
+
+The two missing table-listed downloaded files are:
+
+- `2010/2010-11-08_3D object recognition based on canonical angles between shape subspaces.pdf`
+- `2010/2010-11-08_Compound mutual subspace method for 3d object recognition a theoretical extension of mutual subspace method.pdf`
+
+Main pattern extracted from the corpus:
+
+```text
+The lab repeatedly defines a better representation object for a domain, then
+uses subspace/cone/tensor/Grassmann geometry to compare those objects.
+```
+
+High-value local papers for our satellite direction:
+
+| Local paper cluster | What it teaches | Satellite implication |
+|---|---|---|
+| Difference Subspace / GDS / KDS / KGDS | DS/GDS are established lab methods for comparing class or object subspaces | do not claim DS invention; claim only a satellite-specific representation/evaluation if evidence supports it |
+| Signal Latent Subspace | learned latent features can be turned into subspaces for a new modality | satellite embeddings/foundation features can become region subspaces |
+| Grassmannian Learning MSM | an image set is represented by a low-dimensional subspace and compared by canonical-angle similarity | a satellite region/object can be treated as an image/patch/embedding set |
+| Second-order DS | first/second DS describe subspace velocity/acceleration across a sequence | annual region subspaces can represent land-cover or condition dynamics |
+| Tensor n-mode GDS / Product Grassmann | flattening can lose tensor mode structure | future satellite cubes should preserve spectral, spatial, and temporal modes if tensor route is selected |
+| Slow Feature Subspace / SFA-related work | temporal relationships can be lost by ordinary PCA/image-set subspaces | satellite time series should compare against temporal controls, not only static feature distances |
+| OSA-DAS and visual explanation papers | subspaces in deep feature space can support explanation | foundation-feature subspaces may be useful for explaining EO model behavior |
+| HSI cone/sparse modeling papers | physical constraints such as non-negativity can define a better object than generic subspaces | HSI route must be physically constrained and baseline-aware, because generic HSI subspace CD is already occupied |
