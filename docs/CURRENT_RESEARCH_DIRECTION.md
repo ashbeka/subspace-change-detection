@@ -7,15 +7,16 @@
 - [3. Current Working Direction](#current-working-direction)
 - [4. Literature-Grounded Problem Statement](#literature-grounded-problem-statement)
 - [5. Contribution Hypothesis](#contribution-hypothesis)
-- [6. Current Best Result](#current-best-result)
-- [7. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
-- [8. Safe Claims](#safe-claims)
-- [9. Forbidden Claims](#forbidden-claims)
-- [10. Active Reading Path](#active-reading-path)
-- [11. Stage 1 Distillation Policy](#stage-1-distillation-policy)
-- [12. Transition Map](#transition-map)
-- [13. Deletion Review Queue](#deletion-review-queue)
-- [14. First File-Fate Checklist](#first-file-fate-checklist)
+- [6. Win Axis](#win-axis)
+- [7. Current Best Result](#current-best-result)
+- [8. Immediate Next Evidence Gate](#immediate-next-evidence-gate)
+- [9. Safe Claims](#safe-claims)
+- [10. Forbidden Claims](#forbidden-claims)
+- [11. Active Reading Path](#active-reading-path)
+- [12. Stage 1 Distillation Policy](#stage-1-distillation-policy)
+- [13. Transition Map](#transition-map)
+- [14. Deletion Review Queue](#deletion-review-queue)
+- [15. First File-Fate Checklist](#first-file-fate-checklist)
 
 ## Purpose
 
@@ -143,6 +144,40 @@ Can an explicit spatial DS prior give a supervised or human analyst a useful,
 interpretable signal that simple spectral, classical, DS-free local-feature,
 and frozen foundation-feature priors do not provide?
 ```
+
+## Win Axis
+
+Keep the previous problem statement available as the **classical multispectral
+track**:
+
+```text
+DS gives complementary, interpretable prior evidence that improves or explains
+multispectral change detection beyond simpler priors.
+```
+
+The broader win axis is:
+
+```text
+subspace geometry as an interpretable change-prior layer
+```
+
+This means the project is looking for one of these wins, in priority order:
+
+| Priority | Win | What would count |
+|---:|---|---|
+| 1 | Complementary-prior win | adding DS/GDS prior features improves a supervised detector beyond raw bands, non-DS priors, and frozen-feature controls |
+| 2 | Foundation-feature geometry win | DS/GDS over DINO/SAM/remote-sensing foundation features beats or explains raw feature-distance maps |
+| 3 | Label-efficiency win | DS/GDS priors help more when training labels are reduced |
+| 4 | Analyst-triage win | DS/GDS ranks useful candidate regions/objects at a fixed review budget better than simpler scores |
+| 5 | Diagnostic/theory win | DS/GDS gives a reproducible explanation of where subspace geometry helps, fails, or becomes redundant |
+
+What does **not** count as the main win:
+
+- beating only a weak baseline;
+- showing a visually nice heatmap without a metric or controlled comparison;
+- claiming SOTA against modern deep CD methods without actually evaluating
+  against them;
+- proving only that Saab/DINO/PCA features are good while DS adds nothing.
 
 ## Current Best Result
 
